@@ -1,0 +1,16 @@
+This is a GWenerator project file (a "GWen"). Visit GWenerator on the Web: http://sf.net/projects/gnavi
+RC_NAME LEA.rc
+RC_LISTEN TRUE
+RC_AUTO_TRANS TRUE
+RC_COMPILE WINDRES -- compilation of .rc script to a .rbj object file
+SEPARATE_ITEMS FALSE
+BASE_X           6
+BASE_Y          13
+BASE_DEFAULTS TRUE
+INITIALIZE_CONTROLS FALSE
+ADA_MAIN lea.exe
+ADA_LISTEN TRUE
+ADA_AUTO_BUILD TRUE
+ADA_COMMAND gprbuild.exe lea -Plea.gpr -d -XBuild_Mode=Debug
+SHOW_DETAILS TRUE -- in the UI, show the bottom part with message boxes
+SHOW_ADA_BUILD TRUE -- in the UI, show the right part with ada build

@@ -2,13 +2,23 @@
 -- for the LEA ( http://l-e-a.sf.net/ )
 -- Build me with "gnatmake -P lea", or open me with GPS
 --
+-- *** External libraries ***
+--   You need to make the following projects' source files visible to this project
+--   through the ad-hoc GNAT_SOURCE_PATH environment variable:
+--
+-- * GWindows and contributions:
+--   [gnavi]\gwindows\framework
+--   [gnavi]\gwindows\contrib
+--   [gnavi]\gnatcom\framework
+--   Project URL: http://sf.net/projects/gnavi/
+
 project LEA is
 
    type Build_Mode_Type is
       ("Debug", "Fast");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
    for Main use ("lea.adb");
-   for Source_Dirs use (".");
+   for Source_Dirs use (".") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
 
    case Build_Mode is
