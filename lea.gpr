@@ -1,0 +1,46 @@
+-- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
+-- for the LEA ( http://l-e-a.sf.net/ )
+-- Build me with "gnatmake -P lea", or open me with GPS
+--
+project LEA is
+
+   type Build_Mode_Type is
+      ("Debug", "Fast");
+   Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
+   for Main use ("lea.adb");
+   for Source_Dirs use (".");
+   for Exec_Dir use ".";
+
+   case Build_Mode is
+      when "Debug" =>
+         for Object_Dir use "obj/debug";
+
+      when "Fast" =>
+         for Object_Dir use "obj/fast";
+   end case;
+
+   package Compiler is
+
+      case Build_Mode is
+
+         when "Debug" =>
+            for Default_Switches ("ada") use (
+              "-gnatyaknpr",  --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
+              "-gnatybfhiu",  --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
+              "-gnatyx",      --  Style: check x:no extra parens
+              "-gnato", "-fno-inline", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatecdebug.pra");
+
+         when "Fast" =>
+            for Default_Switches ("ada") use ("-O2", "-gnatn", "-gnatp", "-gnatwa", "-fno-strict-aliasing", "-funroll-loops", "-fpeel-loops", "-ftracer", "-funswitch-loops", "-fweb", "-frename-registers");
+      end case;
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-j2");
+   end Builder;
+
+   package Ide is
+      for Default_Switches ("adacontrol") use ("-f", "verif.aru");
+   end Ide;
+
+end LEA;
