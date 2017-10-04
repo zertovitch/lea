@@ -13,7 +13,7 @@ package body LEA_Common.User_options is
     pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
 
     procedure Load(opt: out Option_Pack_Type) is
-      defaults: Option_Pack_Type;
+      --  !! (useless) defaults: Option_Pack_Type;
     begin
       for k in Key loop
         begin

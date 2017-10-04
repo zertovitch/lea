@@ -45,6 +45,10 @@ project LEA is
       end case;
    end Compiler;
 
+   package Linker is
+      for Default_Switches ("ada") use ("-g", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+   end Linker;
+
    package Builder is
       for Default_Switches ("ada") use ("-j2");
    end Builder;

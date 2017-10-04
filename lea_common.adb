@@ -1,5 +1,3 @@
-with Zip_Streams;
-
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;

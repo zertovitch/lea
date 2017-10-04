@@ -9,8 +9,8 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Registry;
-with GWindows.Static_Controls;          use GWindows.Static_Controls;
-with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
+--  with GWindows.Static_Controls;          use GWindows.Static_Controls;
+--  with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
 
 with GWin_Util;
 
@@ -396,9 +396,7 @@ package body LEA_GWin.MDI_Main is
 
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     Array_Of_File_Names) is
-    New_Window : constant MDI_Child_Access := new MDI_Child_Type;
-    encrypt   : Boolean:= False;
-    yes       : Boolean;
+    -- !! prob. useless New_Window : constant MDI_Child_Access := new MDI_Child_Type;
   begin
     Window.Focus;
     for i in File_Names'Range loop
@@ -443,7 +441,7 @@ package body LEA_GWin.MDI_Main is
     case Item is
       when IDM_NEW_ARCHIVE =>
         On_File_New (Window, extra_first_doc => False);
-      when IDM_OPEN_ARCHIVE =>
+      when IDM_Open_File =>
         On_File_Open (Window);
       when IDM_Web =>
         GWin_Util.Start(LEA_web_page);

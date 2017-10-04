@@ -59,7 +59,6 @@ package body LEA_GWin.MDI_Child is
     bar.Enabled(IDM_RECOMPRESS_ARCHIVE, not_empty_archive);
     if not Window.is_closing then
       bar.Enabled(IDM_ADD_FILES, True);
-      bar.Enabled(IDM_Add_Files_Encryption, True);
     end if;
   end Update_tool_bar;
 
@@ -156,11 +155,8 @@ package body LEA_GWin.MDI_Child is
     Window.Splitter_dashes.Dock(Fill);
     Window.Splitter_dashes.Enabled(False); -- Just give a grey look...
 
-    --  Editor window here !!
-    --  !!  Window.Directory_List.Create(Window.Bar_and_List, 50,1,20,20, Multiple, Report_View, Sort_Custom);
-    --  !!  Window.Directory_List.Set_Extended_Style(LEA_LV_Ex.Full_Row_Select);
-    --  !!  Window.Directory_List.Color_Mode(LEA_LV_Ex.Subitem);
-    --  !!  Window.Directory_List.Dock(Fill);
+    Window.Editor.Create(Window.Bar_and_List, 50,1,20,20);
+    Window.Editor.Dock(Fill);
 
     Window.Status_Bar.Create(Window, "No archive");
     Window.Status_Bar.Parts((1 => 200, 2 => -1));
@@ -233,7 +229,7 @@ package body LEA_GWin.MDI_Child is
     if not Success then
       return;
     end if;
-    if Zip.Exists(To_UTF_8(GU2G(New_File_Name))) then
+    if Exists(To_UTF_8(GU2G(New_File_Name))) then
       if Message_Box (
         Window,
         "Save as",
@@ -410,7 +406,6 @@ package body LEA_GWin.MDI_Child is
       -- In case there is no more child window, disable toolbar items.
       -- This is reversed if another child window is focused.
       Window.Parent.Tool_Bar.Enabled(IDM_ADD_FILES, False);
-      Window.Parent.Tool_Bar.Enabled(IDM_Add_Files_Encryption, False);
       Window.is_closing:= True;
     end if;
   end On_Close;

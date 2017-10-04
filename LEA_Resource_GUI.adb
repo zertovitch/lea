@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/03  16:12:58
+-- Transcription time: 2017/10/04  05:10:52
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -30,7 +30,7 @@ package body LEA_Resource_GUI is
     Menu.Popup_0001:= Create_Popup;
     Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
     Append_Item(Menu.Popup_0001, "&New" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
-    Append_Item(Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_Open_File);
     Append_Item(Menu.Popup_0001, "&Save as..." & To_GString_From_String((1=>ASCII.HT)) & "F12", IDM_SAVE_ARCHIVE_AS);
     Append_Item(Menu.Popup_0001, "&Close" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_CLOSE_ARCHIVE);
     Append_Separator(Menu.Popup_0001);
@@ -82,7 +82,7 @@ package body LEA_Resource_GUI is
     Menu.Popup_0001:= Create_Popup;
     Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
     Append_Item(Menu.Popup_0001, "&New" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
-    Append_Item(Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_Open_File);
     Append_Separator(Menu.Popup_0001);
     Menu.Popup_0002:= Create_Popup;
     Append_Menu(Menu.Popup_0001, "&Recent", Menu.Popup_0002);
@@ -221,6 +221,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 216
+  -- Last line of resource script file: 204
 
 end LEA_Resource_GUI;

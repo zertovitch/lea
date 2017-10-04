@@ -18,7 +18,7 @@ Folders_BMP        BITMAP         "ico_bmp/folders.bmp"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Toolbar_BMP        BITMAP         "ico_bmp/az_tools.bmp"
+Toolbar_BMP        BITMAP         "ico_bmp/lea_tools.bmp"
 
 
 
@@ -31,7 +31,7 @@ Menu_MDI_Child MENU
     POPUP "&File"
     {
         MENUITEM "&New\tCtrl+N", IDM__NEW_ARCHIVE
-        MENUITEM "&Open...\tCtrl+O", IDM__OPEN_ARCHIVE
+        MENUITEM "&Open...\tCtrl+O", IDM_Open_File
         MENUITEM "&Save as...\tF12", IDM_SAVE_ARCHIVE_AS
         MENUITEM "&Close\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
         MENUITEM SEPARATOR
@@ -63,7 +63,7 @@ Menu_MDI_Child MENU
     POPUP "&View"
     {
         MENUITEM "&Notepad view", IDM__FLAT_VIEW
-        MENUITEM "&Studio view",  IDM__TREE_VIEW
+        MENUITEM "&Studio view", IDM__TREE_VIEW
     }
     POPUP "&Window"
     {
@@ -89,7 +89,7 @@ Menu_MDI_Main MENU
     POPUP "&File"
     {
         MENUITEM "&New\tCtrl+N", IDM__NEW_ARCHIVE
-        MENUITEM "&Open...\tCtrl+O", IDM__OPEN_ARCHIVE
+        MENUITEM "&Open...\tCtrl+O", IDM_Open_File
         MENUITEM SEPARATOR
         POPUP "&Recent"
         {
@@ -131,7 +131,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Main_Menu ACCELERATORS
 {
     "N",            IDM__NEW_ARCHIVE, VIRTKEY, CONTROL
-    "O",            IDM__OPEN_ARCHIVE, VIRTKEY, CONTROL
+    "O",            IDM_Open_File, VIRTKEY, CONTROL
     "W",            IDM__CLOSE_ARCHIVE, VIRTKEY, CONTROL
     "A",            IDM_Select_all, VIRTKEY, CONTROL
     "U",            IDM_Unselect_all, VIRTKEY, CONTROL
@@ -152,23 +152,11 @@ Main_Menu ACCELERATORS
 // Icon resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-AAA_Main_Icon      ICON           "ico_bmp/azip.ico"
+AAA_Main_Icon      ICON           "ico_bmp/lea.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-AZip_Doc_Icon_Name ICON           "ico_bmp/azip_doc.ico"
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Box_Closed_Icon_Name ICON           "ico_bmp/box_closed.ico"
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-AZip_Doc_Icon      ICON           "ico_bmp/azip_doc.ico"
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-AZip_Icon          ICON           "ico_bmp/azip.ico"
+LEA_Doc_Icon_Name  ICON           "ico_bmp/lea_doc.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
@@ -176,11 +164,11 @@ Binoculars_Icon    ICON           "ico_bmp/find.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Key_Icon           ICON           "ico_bmp/key.ico"
+LEA_Doc_Icon       ICON           "ico_bmp/lea_doc.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Plus_icon          ICON           "ico_bmp/plus.ico"
+LEA_Icon           ICON           "ico_bmp/lea.ico"
 
 
 
