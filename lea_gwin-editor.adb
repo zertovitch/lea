@@ -1,10 +1,13 @@
 --  LEA_GWin.Editor is derived from: gnavi\gwindows\samples\scintilla
 
 with LEA_Common;                        use LEA_Common;
-with LEA_GWin.MDI_Child;
+with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
+with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 with GWindows.Colors;
 with GWindows.Windows;
+
+with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 
 package body LEA_GWin.Editor is
 
@@ -74,8 +77,7 @@ package body LEA_GWin.Editor is
              character  => Yellow)
         );
       --
-      parent: LEA_GWin.MDI_Child.MDI_Child_Type renames
-        LEA_GWin.MDI_Child.MDI_Child_Type(Window.mdi_parent.all);
+      parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
    begin
       Window.On_Character_Added_Handler (Do_Character_Added'Unrestricted_Access);
 
@@ -123,5 +125,19 @@ package body LEA_GWin.Editor is
 
       Window.Focus;
    end On_Create;
+
+  procedure Load_text (Window : in out LEA_Scintilla_Type) is
+    f: File_Type;
+    parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+  begin
+    Open(f, In_File, G2S(GU2G(parent.File_Name)));
+    declare
+      l: constant Count:= Size(f);
+      s: String(1..Integer(l));
+    begin
+      String'Read(Stream(f), s);
+      Window.AddText(S2G(s));
+    end;
+  end;
 
 end LEA_GWin.Editor;

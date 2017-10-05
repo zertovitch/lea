@@ -125,7 +125,7 @@ package body LEA_GWin.MDI_Main is
       New_Window.Short_Name:= File_Title;
       MDI_Active_Window (Window, New_Window.all);
       Update_Common_Menus(Window, GU2G(New_Window.File_Name));
-      --  Load text into editor !!
+      New_Window.Editor.Load_text;
       Finish_subwindow_opening(Window, New_Window.all);
       New_Window.Focus;
     end;
@@ -346,7 +346,7 @@ package body LEA_GWin.MDI_Main is
       end if;
     end Suffix;
 
-    File_Title: constant GString:= "New Archive" & Suffix;
+    File_Title: constant GString:= "Untitled" & Suffix;
 
   begin
     New_Window.Extra_first_doc:= extra_first_doc;
@@ -385,8 +385,8 @@ package body LEA_GWin.MDI_Main is
     Success    : Boolean;
   begin
     Open_File (
-      Window, "Open Zip archive",
-      File_Name, Zip_archives_filters, ".zip", File_Title,
+      Window, "Open Ada source file",
+      File_Name, Ada_files_filters, ".ad*", File_Title,
       Success
     );
     if Success then

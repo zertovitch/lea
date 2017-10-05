@@ -1,7 +1,7 @@
-with LEA_Common.User_options;          use LEA_Common.User_options;
+with LEA_Common.User_options;           use LEA_Common.User_options;
 with LEA_GWin.Editor;
-with LEA_GWin.MDI_Main;                use LEA_GWin.MDI_Main;
-with LEA_Resource_GUI;                 use LEA_Resource_GUI;
+with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
+with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;

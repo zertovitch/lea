@@ -223,8 +223,8 @@ package body LEA_GWin.MDI_Child is
   begin
     New_File_Name := Window.File_Name;
     Save_File (
-      Window, "Save file as...", New_File_Name, Zip_archives_filters,
-      ".zip", File_Title,
+      Window, "Save file as...", New_File_Name, Ada_files_filters,
+      ".ada", File_Title,
       Success
     );
     if not Success then
@@ -371,7 +371,6 @@ package body LEA_GWin.MDI_Child is
 
   overriding procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean) is
-    sd: LEA_LV_Ex.Sort_Direction_Type;
   begin
     Can_Close:= True;
     if Is_file_saved(Window) then

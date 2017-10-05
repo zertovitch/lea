@@ -12,4 +12,6 @@ package LEA_GWin.Editor is
   overriding
   procedure On_Create (Window : in out LEA_Scintilla_Type);
 
+  procedure Load_text (Window : in out LEA_Scintilla_Type);
+
 end LEA_GWin.Editor;

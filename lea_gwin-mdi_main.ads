@@ -96,9 +96,9 @@ package LEA_GWin.MDI_Main is
 
   NL: constant GString:= S2G((1=> ASCII.LF));
 
-  Zip_archives_filters: GWindows.Common_Dialogs.Filter_Array:=
-    ((G2GU ("Zip archives (*.zip)"),        G2GU ("*.zip" )),
-     (G2GU ("JAR (Java archives) (*.jar)"), G2GU ("*.jar" )),
+  Ada_files_filters: GWindows.Common_Dialogs.Filter_Array:=
+    ((G2GU ("Ada specification (*.ads)"),   G2GU ("*.ads" )),
+     (G2GU ("Ada body (*.adb)"),            G2GU ("*.adb" )),
      (G2GU ("All files (*.*)"),             G2GU ("*.*")));
 
 end LEA_GWin.MDI_Main;
