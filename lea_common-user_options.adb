@@ -3,7 +3,7 @@ package body LEA_Common.User_options is
   package body Persistence is
 
     type Key is
-      ( view_mode,
+      ( view_mode, color_theme,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
         tree_portion,
@@ -24,6 +24,8 @@ package body LEA_Common.User_options is
             case k is
               when view_mode =>
                 opt.view_mode:= View_Mode_Type'Wide_Value(s);
+              when color_theme =>
+                opt.color_theme:= Color_Theme_Type'Wide_Value(s);
               when win_left =>
                 opt.win_left:= Integer'Wide_Value(s);
               when win_top =>
@@ -66,6 +68,8 @@ package body LEA_Common.User_options is
           case k is
             when view_mode =>
               R(View_Mode_Type'Wide_Image(opt.view_mode));
+            when color_theme =>
+              R(Color_Theme_Type'Wide_Image(opt.color_theme));
             when win_left =>
               R(Integer'Wide_Image(opt.win_left));
             when win_top =>

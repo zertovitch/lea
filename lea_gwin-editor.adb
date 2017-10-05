@@ -1,6 +1,8 @@
---  Derived from: gnavi\gwindows\samples\scintilla
+--  LEA_GWin.Editor is derived from: gnavi\gwindows\samples\scintilla
 
-with GWindows.Base;
+with LEA_Common;                        use LEA_Common;
+with LEA_GWin.MDI_Child;
+
 with GWindows.Colors;
 with GWindows.Windows;
 
@@ -51,6 +53,29 @@ package body LEA_GWin.Editor is
       App_default_font      : constant GString := "Courier New";
       App_default_font_size : constant := 10;
       --
+      type Color_topic is (foreground, background, keyword, number, comment, string, character);
+      theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
+        (
+          NPP_default =>
+            (foreground => Black,
+             background => White,
+             keyword    => Dark_Blue,
+             number     => Orange,
+             comment    => Green,
+             string     => Dark_Gray,
+             character  => Dark_Gray),
+          Dark_side   =>
+            (foreground => Light_Gray,
+             background => Dark_Gray,
+             keyword    => Dark_Orange,
+             number     => Red,
+             comment    => 16#CF9F72#,
+             string     => Yellow,
+             character  => Yellow)
+        );
+      --
+      parent: LEA_GWin.MDI_Child.MDI_Child_Type renames
+        LEA_GWin.MDI_Child.MDI_Child_Type(Window.mdi_parent.all);
    begin
       Window.On_Character_Added_Handler (Do_Character_Added'Unrestricted_Access);
 
@@ -65,23 +90,23 @@ package body LEA_GWin.Editor is
       Window.SetLexer (SCLEX_ADA);
       Window.SetKeyWords (0, Key_Words);
 
-      Window.StyleSetFore (STYLE_DEFAULT, Black);
-      Window.StyleSetBack (STYLE_DEFAULT, White);
+      Window.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
+      Window.StyleSetBack (STYLE_DEFAULT, theme_color(parent.opt.color_theme, background));
       Window.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
       Window.StyleSetFont (STYLE_DEFAULT, App_default_font);
       Window.StyleClearAll;
 
-      Window.StyleSetFore (SCE_ADA_DEFAULT, Black);
-      Window.StyleSetBack (SCE_ADA_DEFAULT, White);
+      Window.StyleSetFore (SCE_ADA_DEFAULT, theme_color(parent.opt.color_theme, foreground));
+      Window.StyleSetBack (SCE_ADA_DEFAULT, theme_color(parent.opt.color_theme, background));
       Window.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
       Window.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
 
-      Window.StyleSetFore (SCE_ADA_COMMENTLINE, Red);
-      Window.StyleSetFore (SCE_ADA_NUMBER,      Blue);
-      Window.StyleSetFore (SCE_ADA_WORD,        Dark_Green);
-      Window.StyleSetFore (SCE_ADA_STRING,      Dark_Red);
-      Window.StyleSetFore (SCE_ADA_CHARACTER,   Blue);
-      Window.StyleSetFore (SCE_ADA_IDENTIFIER,  Black);
+      Window.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(parent.opt.color_theme, comment));
+      Window.StyleSetFore (SCE_ADA_NUMBER,      theme_color(parent.opt.color_theme, number));
+      Window.StyleSetFore (SCE_ADA_WORD,        theme_color(parent.opt.color_theme, keyword));
+      Window.StyleSetFore (SCE_ADA_STRING,      theme_color(parent.opt.color_theme, string));
+      Window.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(parent.opt.color_theme, character));
+      Window.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(parent.opt.color_theme, foreground));
 
       --  Cases where the text is obviously wrong
       --  (unfinished character or string, illegal identifier)
@@ -92,7 +117,7 @@ package body LEA_GWin.Editor is
       Window.StyleSetFore (SCE_ADA_ILLEGAL, White);
       Window.StyleSetBack (SCE_ADA_ILLEGAL, Dark_Red);
 
-      Window.SetMarginTypeN (1, SC_MARGIN_NUMBER);
+      Window.SetMarginTypeN (1, SC_MARGIN_NUMBER);  --  Display line numbers
       Window.SetMarginWidthN (1, 40);
       Window.SetMarginWidthN (2, 10);
 

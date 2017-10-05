@@ -155,6 +155,7 @@ package body LEA_GWin.MDI_Child is
     Window.Splitter_dashes.Dock(Fill);
     Window.Splitter_dashes.Enabled(False); -- Just give a grey look...
 
+    Window.Editor.mdi_parent:= Window'Unrestricted_Access;
     Window.Editor.Create(Window.Bar_and_List, 50,1,20,20);
     Window.Editor.Dock(Fill);
 
@@ -396,7 +397,7 @@ package body LEA_GWin.MDI_Child is
       end loop;
     end if;
     if Can_Close then
-      --  !! Empty editor memory
+      --  !! Empty the editor's memory if needed
       --
       -- Pass view mode and the tree width portion to parent,
       -- this will memorize choice of last closed window.
