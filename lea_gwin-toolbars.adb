@@ -84,18 +84,8 @@ package body LEA_GWin.Toolbars is
     Set_Extended_Style(tb, TBSTYLE_EX_MIXEDBUTTONS);
 
     Create_Full_Menu(Fake_Menu);
-    Add_Button_with_Tip (2, IDM_EXTRACT);
+    Add_Button_with_Tip (0, IDM_NEW_ARCHIVE);
     Add_Separator(tb, sep_width);
-    Add_Button_with_Tip (0, IDM_ADD_FILES);
-    Add_Button_with_Tip (1, IDM_Delete_selected);
-    Add_Separator(tb, sep_width);
-    Add_Button_with_Tip (4, IDM_TEST_ARCHIVE);
-    Add_Button_with_Tip (3, IDM_FIND_IN_ARCHIVE);
-    Add_Separator(tb, sep_width);
-    Add_Button_with_Tip (5, IDM_UPDATE_ARCHIVE);
-    Add_Button_with_Tip (9, IDM_RECOMPRESS_ARCHIVE);
-    Add_Separator(tb, sep_width);
-    Add_Button_with_Tip (7, IDM_Properties);
   end Init_Main_toolbar;
 
 end LEA_GWin.Toolbars;
