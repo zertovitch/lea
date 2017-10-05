@@ -34,6 +34,7 @@ Menu_MDI_Child MENU
         MENUITEM "&Open...\tCtrl+O", IDM_Open_File
         MENUITEM "Save\tCtrl+S", IDM_Save_File
         MENUITEM "Save &as...\tF12", IDM_Save_As
+        MENUITEM "Sav&e all", IDM_Save_All
         MENUITEM "&Close\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
         MENUITEM SEPARATOR
         MENUITEM "&Properties\tCtrl+D", IDM_Properties

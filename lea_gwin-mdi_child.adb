@@ -159,7 +159,7 @@ package body LEA_GWin.MDI_Child is
     Window.Editor.Create(Window.Bar_and_List, 50,1,20,20);
     Window.Editor.Dock(Fill);
 
-    Window.Status_Bar.Create(Window, "No archive");
+    Window.Status_Bar.Create(Window, "No file");
     Window.Status_Bar.Parts((1 => 200, 2 => -1));
     Window.Status_Bar.Dock(At_Bottom);
 
@@ -357,6 +357,8 @@ package body LEA_GWin.MDI_Child is
         Window.On_Save_As;
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
+      when IDM_Select_all =>
+        Window.Editor.SelectAll;
       when IDM_FLAT_VIEW =>
         Change_View(Window, Notepad, force => False);
       when IDM_TREE_VIEW =>

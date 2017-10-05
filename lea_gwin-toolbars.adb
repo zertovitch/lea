@@ -87,6 +87,7 @@ package body LEA_GWin.Toolbars is
     Add_Button_with_Tip (0, IDM_New_File);
     Add_Button_with_Tip (1, IDM_Open_File);
     Add_Button_with_Tip (2, IDM_Save_File);
+    Add_Button_with_Tip (4, IDM_Save_All);
     Add_Separator(tb, sep_width);
   end Init_Main_toolbar;
 

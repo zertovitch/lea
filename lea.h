@@ -12,6 +12,7 @@
 #define IDM_New_File                            40000
 #define IDM_Open_File                           40001
 #define IDM_MRU_1                               40002
+#define IDM_Save_All                            40003
 #define IDM_Unselect_all                        40003
 #define IDM_Save_File                           40004
 #define IDM__ABOUT                              40005
