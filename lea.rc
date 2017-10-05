@@ -56,6 +56,9 @@ Menu_MDI_Child MENU
     }
     POPUP "&Edit"
     {
+        MENUITEM "&Undo\tCtrl+Z", IDM_Undo
+        MENUITEM "&Redo\tCtrl+Y", IDM_Redo
+        MENUITEM SEPARATOR
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
     }
     POPUP "&Tools"
@@ -147,6 +150,8 @@ Main_Menu ACCELERATORS
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
     "R",            IDM__RECOMPRESS_ARCHIVE, VIRTKEY, CONTROL
     "D",            IDM_Properties, VIRTKEY, CONTROL
+    "Z",            IDM_Undo, VIRTKEY, CONTROL
+    "Y",            IDM_Redo, VIRTKEY, CONTROL
 }
 
 

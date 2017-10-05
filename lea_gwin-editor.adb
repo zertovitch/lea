@@ -5,7 +5,6 @@ with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 with GWindows.Colors;
-with GWindows.Windows;
 
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 
@@ -21,13 +20,15 @@ package body LEA_GWin.Editor is
     "record rem renames requeue return reverse select separate some subtype synchronized tagged " &
     "task terminate then type until use when while with xor";
 
-  procedure Do_Character_Added
-    (Window      : in out GWindows.Base.Base_Window_Type'Class;
+  overriding
+  procedure On_Character_Added
+    (Control     : in out LEA_Scintilla_Type;
      Special_Key : in     GWindows.Windows.Special_Key_Type;
      Value       : in     GWindows.GCharacter)
   is
   pragma Unreferenced (Special_Key);
-     CurPos : constant Position := GetCurrentPos (Scintilla_Type (Window));
+    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+    CurPos : constant Position := GetCurrentPos (Control);
   begin
      if
        Value = GWindows.GCharacter'Val (10)
@@ -35,19 +36,18 @@ package body LEA_GWin.Editor is
        Value = GWindows.GCharacter'Val (13)
      then
         declare
-           Line     : constant Integer := LineFromPosition
-             (Scintilla_Type (Window), CurPos);
-           Prev_Loc : constant Integer := GetLineIndentation
-             (Scintilla_Type (Window), Line - 1);
+           Line     : constant Integer := LineFromPosition (Control, CurPos);
+           Prev_Loc : constant Integer := GetLineIndentation (Control, Line - 1);
         begin
            if Line > 0 and Prev_Loc > 0 then
-              SetLineIndentation (Scintilla_Type (Window),
+              SetLineIndentation (Control,
                                   Line,
                                   Prev_Loc - Tab_Width);
            end if;
         end;
      end if;
-  end Do_Character_Added;
+     parent.Update_display(toolbar_and_menu);
+  end On_Character_Added;
 
   overriding
   procedure On_Create (Window : in out LEA_Scintilla_Type) is
@@ -79,8 +79,6 @@ package body LEA_GWin.Editor is
       --
       parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
    begin
-      Window.On_Character_Added_Handler (Do_Character_Added'Unrestricted_Access);
-
       --  Set up editor
       Window.SetEOLMode (SC_EOL_CRLF);
       Window.SetTabWidth (Tab_Width);
@@ -137,6 +135,7 @@ package body LEA_GWin.Editor is
     begin
       String'Read(Stream(f), s);
       Window.AddText(S2G(s));
+      Window.EmptyUndoBuffer;
     end;
     Close(f);
   end;

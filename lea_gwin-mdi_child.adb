@@ -51,16 +51,23 @@ package body LEA_GWin.MDI_Child is
     not_empty_archive: constant Boolean:= True;
     bar: MDI_Toolbar_Type renames Window.Parent.Tool_Bar;
   begin
-    bar.Enabled(IDM_EXTRACT, not_empty_archive);
-    bar.Enabled(IDM_Delete_selected, not_empty_archive);
-    bar.Enabled(IDM_FIND_IN_ARCHIVE, not_empty_archive);
-    bar.Enabled(IDM_TEST_ARCHIVE, not_empty_archive);
-    bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
-    bar.Enabled(IDM_RECOMPRESS_ARCHIVE, not_empty_archive);
+    bar.Enabled(IDM_Undo, Window.Editor.CanUndo);
+    bar.Enabled(IDM_Redo, Window.Editor.CanRedo);
     if not Window.is_closing then
-      bar.Enabled(IDM_ADD_FILES, True);
+      null;  --  bar.Enabled(IDM_ADD_FILES, True);
     end if;
   end Update_tool_bar;
+
+  procedure Update_display(
+    Window : in out MDI_Child_Type;
+    need   :        Update_need
+  )
+  is
+  pragma Unreferenced (need);
+  begin
+    Update_status_bar(Window);
+    Update_tool_bar(Window);
+  end Update_display;
 
   procedure Memorize_splitter(Window: in out MDI_Child_Type) is
   begin
@@ -105,7 +112,7 @@ package body LEA_GWin.MDI_Child is
         Window.Folder_Tree.Show;
     end case;
     Window.On_Size(Window.Width, Window.Height);
-    Update_display(Window, archive_changed);
+    Update_display(Window, status_bar);
     case new_view is
       when Notepad =>
         null;
@@ -357,6 +364,12 @@ package body LEA_GWin.MDI_Child is
         Window.On_Save_As;
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
+      when IDM_Undo =>
+        Window.Editor.Undo;
+        Window.Update_display(toolbar_and_menu);  --  Eventually disable Undo if no more available
+      when IDM_Redo =>
+        Window.Editor.Redo;
+        Window.Update_display(toolbar_and_menu);  --  Eventually disable Redo if no more available
       when IDM_Select_all =>
         Window.Editor.SelectAll;
       when IDM_FLAT_VIEW =>

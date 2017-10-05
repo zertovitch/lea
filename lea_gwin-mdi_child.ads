@@ -109,18 +109,15 @@ package LEA_GWin.MDI_Child is
   );
 
   type Update_need is
-    (first_display,   -- first display ever, no columns set
-     archive_changed, -- directory list needs to be refilled
-     node_selected,   -- same archive, but partial directory list needs to be refilled
-     results_refresh, -- same directory, only results changed
-     status_bar,      -- status bar and topics listed below
+    (first_display,   -- first display ever
+     status_bar,      -- status bar, and topics listed below
      toolbar_and_menu -- update enable/disable of toolbar items and menu items
     );
 
   procedure Update_display (
     Window : in out MDI_Child_Type;
     need   :        Update_need
-  ) is null;  --  !!
+  );
 
   overriding procedure On_Size (
     Window : in out MDI_Child_Type;

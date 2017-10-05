@@ -11,10 +11,11 @@
 #define Binoculars_Icon                         132
 #define IDM_New_File                            40000
 #define IDM_Open_File                           40001
-#define IDM_MRU_1                               40002
+#define IDM_Undo                                40002
 #define IDM_Save_All                            40003
 #define IDM_Unselect_all                        40003
 #define IDM_Save_File                           40004
+#define IDM_Redo                                40005
 #define IDM__ABOUT                              40005
 #define IDM_TEST_ARCHIVE                        40006
 #define IDM_Save_As                             40007
@@ -24,6 +25,7 @@
 #define IDM_FIND_IN_ARCHIVE                     40011
 #define IDM__FLAT_VIEW                          40012
 #define IDM__TREE_VIEW                          40013
+#define IDM_MRU_1                               40034
 #define IDM_MRU_2                               40014
 #define IDM_MRU_3                               40015
 #define IDM_MRU_4                               40016
