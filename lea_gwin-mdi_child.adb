@@ -194,7 +194,7 @@ package body LEA_GWin.MDI_Child is
 
   procedure On_Save (Window : in out MDI_Child_Type) is
   begin
-    null; -- nothing to be saved in this application
+    null; -- !!! nothing to be saved in this application
   end On_Save;
 
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean is
@@ -351,7 +351,9 @@ package body LEA_GWin.MDI_Child is
         Item   : in     Integer        ) is
   begin
     case Item is
-      when IDM_SAVE_ARCHIVE_AS =>
+      when IDM_Save_File =>
+        Window.On_Save;
+      when IDM_Save_As =>
         Window.On_Save_As;
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;

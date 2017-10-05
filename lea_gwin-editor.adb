@@ -138,6 +138,7 @@ package body LEA_GWin.Editor is
       String'Read(Stream(f), s);
       Window.AddText(S2G(s));
     end;
+    Close(f);
   end;
 
 end LEA_GWin.Editor;

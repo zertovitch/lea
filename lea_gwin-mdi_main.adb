@@ -439,7 +439,7 @@ package body LEA_GWin.MDI_Main is
         Item   : in     Integer        ) is
   begin
     case Item is
-      when IDM_NEW_ARCHIVE =>
+      when IDM_New_File=>
         On_File_New (Window, extra_first_doc => False);
       when IDM_Open_File =>
         On_File_Open (Window);

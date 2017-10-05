@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/04  05:10:52
+-- Transcription time: 2017/10/05  13:36:32
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -40,7 +40,7 @@ package LEA_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 81
+  -- Menu at line 82
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -52,7 +52,7 @@ package LEA_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 122
+  -- Menu at line 123
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -80,39 +80,40 @@ package LEA_Resource_GUI is
   Toolbar_BMP               : constant:=    123;
   Folders_BMP               : constant:=    124;
   Binoculars_Icon           : constant:=    132;
-  IDM_NEW_ARCHIVE           : constant:=  40000;
+  IDM_New_File              : constant:=  40000;
   IDM_Open_File             : constant:=  40001;
   IDM_MRU_1                 : constant:=  40002;
-  IDM_Unselect_all          : constant:=  40002;
-  IDM_ABOUT                 : constant:=  40003;
-  IDM_TEST_ARCHIVE          : constant:=  40004;
-  IDM_QUIT                  : constant:=  40005;
-  IDM_RECOMPRESS_ARCHIVE    : constant:=  40006;
-  IDM_EXTRACT               : constant:=  40007;
-  IDM_FIND_IN_ARCHIVE       : constant:=  40008;
-  IDM_FLAT_VIEW             : constant:=  40010;
-  IDM_TREE_VIEW             : constant:=  40011;
-  IDM_MRU_2                 : constant:=  40012;
-  IDM_MRU_3                 : constant:=  40013;
-  IDM_MRU_4                 : constant:=  40014;
-  IDM_MRU_5                 : constant:=  40015;
-  IDM_MRU_6                 : constant:=  40016;
-  IDM_MRU_7                 : constant:=  40017;
-  IDM_MRU_8                 : constant:=  40018;
-  IDM_MRU_9                 : constant:=  40019;
-  IDM_WINDOW_CASCADE        : constant:=  40020;
-  IDM_WINDOW_TILE_HORIZONTAL: constant:=  40021;
-  IDM_WINDOW_TILE_VERTICAL  : constant:=  40022;
-  IDM_WINDOW_CLOSE_ALL      : constant:=  40023;
+  IDM_Unselect_all          : constant:=  40003;
+  IDM_Save_File             : constant:=  40004;
+  IDM_ABOUT                 : constant:=  40005;
+  IDM_TEST_ARCHIVE          : constant:=  40006;
+  IDM_Save_As               : constant:=  40007;
+  IDM_QUIT                  : constant:=  40008;
+  IDM_RECOMPRESS_ARCHIVE    : constant:=  40009;
+  IDM_EXTRACT               : constant:=  40010;
+  IDM_FIND_IN_ARCHIVE       : constant:=  40011;
+  IDM_FLAT_VIEW             : constant:=  40012;
+  IDM_TREE_VIEW             : constant:=  40013;
+  IDM_MRU_2                 : constant:=  40014;
+  IDM_MRU_3                 : constant:=  40015;
+  IDM_MRU_4                 : constant:=  40016;
+  IDM_MRU_5                 : constant:=  40017;
+  IDM_MRU_6                 : constant:=  40018;
+  IDM_MRU_7                 : constant:=  40019;
+  IDM_MRU_8                 : constant:=  40020;
+  IDM_MRU_9                 : constant:=  40021;
+  IDM_WINDOW_CASCADE        : constant:=  40022;
+  IDM_WINDOW_TILE_HORIZONTAL: constant:=  40023;
+  IDM_WINDOW_TILE_VERTICAL  : constant:=  40024;
+  IDM_WINDOW_CLOSE_ALL      : constant:=  40025;
   IDM_Delete_selected       : constant:=  40026;
   IDM_ADD_FILES             : constant:=  40027;
   IDM_UPDATE_ARCHIVE        : constant:=  40028;
   IDM_CLOSE_ARCHIVE         : constant:=  40029;
-  IDM_Properties            : constant:=  40032;
-  IDM_Quick_Help            : constant:=  40035;
-  IDM_Web                   : constant:=  40036;
-  IDM_SAVE_ARCHIVE_AS       : constant:=  40037;
-  IDM_Select_all            : constant:=  40038;
+  IDM_Properties            : constant:=  40030;
+  IDM_Quick_Help            : constant:=  40031;
+  IDM_Web                   : constant:=  40032;
+  IDM_Select_all            : constant:=  40033;
 
   -- ** Some helper utilities (spec).
 
@@ -124,6 +125,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 204
+  -- Last line of resource script file: 206
 
 end LEA_Resource_GUI;

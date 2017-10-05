@@ -30,9 +30,10 @@ Menu_MDI_Child MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&New\tCtrl+N", IDM__NEW_ARCHIVE
+        MENUITEM "&New\tCtrl+N", IDM_New_File
         MENUITEM "&Open...\tCtrl+O", IDM_Open_File
-        MENUITEM "&Save as...\tF12", IDM_SAVE_ARCHIVE_AS
+        MENUITEM "Save\tCtrl+S", IDM_Save_File
+        MENUITEM "Save &as...\tF12", IDM_Save_As
         MENUITEM "&Close\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
         MENUITEM SEPARATOR
         MENUITEM "&Properties\tCtrl+D", IDM_Properties
@@ -88,7 +89,7 @@ Menu_MDI_Main MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&New\tCtrl+N", IDM__NEW_ARCHIVE
+        MENUITEM "&New\tCtrl+N", IDM_New_File
         MENUITEM "&Open...\tCtrl+O", IDM_Open_File
         MENUITEM SEPARATOR
         POPUP "&Recent"
@@ -130,8 +131,10 @@ Menu_MDI_Main MENU
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Main_Menu ACCELERATORS
 {
-    "N",            IDM__NEW_ARCHIVE, VIRTKEY, CONTROL
+    "N",            IDM_New_File, VIRTKEY, CONTROL
     "O",            IDM_Open_File, VIRTKEY, CONTROL
+    "S",            IDM_Save_File, VIRTKEY, CONTROL
+    VK_F12,        IDM_Save_As, VIRTKEY
     "W",            IDM__CLOSE_ARCHIVE, VIRTKEY, CONTROL
     "A",            IDM_Select_all, VIRTKEY, CONTROL
     "U",            IDM_Unselect_all, VIRTKEY, CONTROL
@@ -140,7 +143,6 @@ Main_Menu ACCELERATORS
     "T",            IDM_TEST_ARCHIVE, VIRTKEY, CONTROL
     "F",            IDM_FIND_IN_ARCHIVE, VIRTKEY, CONTROL
     VK_ADD,        IDM_ADD_FILES, VIRTKEY
-    VK_F12,        IDM_SAVE_ARCHIVE_AS, VIRTKEY
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
     "R",            IDM__RECOMPRESS_ARCHIVE, VIRTKEY, CONTROL
     "D",            IDM_Properties, VIRTKEY, CONTROL
