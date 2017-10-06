@@ -127,7 +127,7 @@ package body LEA_GWin.MDI_Main is
       Update_Common_Menus(Window, GU2G(New_Window.File_Name));
       New_Window.Editor.Load_text;
       Finish_subwindow_opening(Window, New_Window.all);
-      New_Window.Focus;
+      New_Window.Editor.Focus;
     end;
   exception
 --    when E : TC.Input.Load_Error =>
