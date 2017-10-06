@@ -368,6 +368,7 @@ package body LEA_GWin.MDI_Main is
     Update_Common_Menus(Window);
 
     Finish_subwindow_opening(Window, New_Window.all);
+    New_Window.Editor.Focus;
   end On_File_New;
 
   procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean) is
