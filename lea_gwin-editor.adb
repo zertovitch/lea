@@ -21,13 +21,19 @@ package body LEA_GWin.Editor is
     "task terminate then type until use when while with xor";
 
   overriding
+  procedure On_Change (Control : in out LEA_Scintilla_Type) is
+    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  begin
+    parent.Update_display(toolbar_and_menu);
+  end On_Change;
+
+  overriding
   procedure On_Character_Added
     (Control     : in out LEA_Scintilla_Type;
      Special_Key : in     GWindows.Windows.Special_Key_Type;
      Value       : in     GWindows.GCharacter)
   is
   pragma Unreferenced (Special_Key);
-    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
     CurPos : constant Position := GetCurrentPos (Control);
   begin
      if
@@ -46,7 +52,6 @@ package body LEA_GWin.Editor is
            end if;
         end;
      end if;
-     parent.Update_display(toolbar_and_menu);
   end On_Character_Added;
 
   overriding
@@ -63,8 +68,8 @@ package body LEA_GWin.Editor is
             (foreground => Black,
              background => White,
              keyword    => Dark_Blue,
-             number     => Orange,
-             comment    => Green,
+             number     => Dark_Orange,
+             comment    => Dark_Green,
              string     => Dark_Gray,
              character  => Dark_Gray),
           Dark_side   =>
@@ -124,6 +129,24 @@ package body LEA_GWin.Editor is
       Window.Focus;
    end On_Create;
 
+  overriding
+  procedure On_Save_Point_Reached (Control : in out LEA_Scintilla_Type) is
+    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  begin
+    --  We have had enough Undo's to make the document unmodified again.
+    Control.modified:= False;
+    parent.Update_display(toolbar_and_menu);
+  end;
+
+  overriding
+  procedure On_Save_Point_Left (Control : in out LEA_Scintilla_Type) is
+    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  begin
+    --  Either new changes, or Undo's from the last saved state.
+    Control.modified:= True;
+    parent.Update_display(toolbar_and_menu);
+  end;
+
   procedure Load_text (Window : in out LEA_Scintilla_Type) is
     f: File_Type;
     parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
@@ -136,6 +159,8 @@ package body LEA_GWin.Editor is
       String'Read(Stream(f), s);
       Window.AddText(S2G(s));
       Window.EmptyUndoBuffer;
+      Window.SetSavePoint;
+      Window.modified:= False;
     end;
     Close(f);
   end;

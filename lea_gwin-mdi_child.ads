@@ -91,6 +91,7 @@ package LEA_GWin.MDI_Child is
         is_closing       : Boolean:= False;
         last_op_comment_1: GString_Unbounded;
         last_op_comment_2: GString_Unbounded;
+        save_all_hint    : Boolean;  --  Used during Update_display only.
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);

@@ -1,4 +1,4 @@
-with LEA_Common;                       use LEA_Common;
+with LEA_Common;                        use LEA_Common;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
@@ -53,10 +53,21 @@ package body LEA_GWin.MDI_Child is
   begin
     bar.Enabled(IDM_Undo, Window.Editor.CanUndo);
     bar.Enabled(IDM_Redo, Window.Editor.CanRedo);
+    bar.Enabled(IDM_Save_File, Window.Editor.modified);
+    bar.Enabled(IDM_Save_All, Window.save_all_hint);
     if not Window.is_closing then
       null;  --  bar.Enabled(IDM_ADD_FILES, True);
     end if;
   end Update_tool_bar;
+
+  procedure Update_menus(Window : in out MDI_Child_Type) is
+    bool_to_state: constant array(Boolean) of State_Type := (Disabled, Enabled);
+  begin
+    State(Window.Menu.Main, Command, IDM_Undo, bool_to_state(Window.Editor.CanUndo));
+    State(Window.Menu.Main, Command, IDM_Redo, bool_to_state(Window.Editor.CanRedo));
+    State(Window.Menu.Main, Command, IDM_Save_File, bool_to_state(Window.Editor.modified));
+    State(Window.Menu.Main, Command, IDM_Save_All, bool_to_state(Window.save_all_hint));
+  end;
 
   procedure Update_display(
     Window : in out MDI_Child_Type;
@@ -64,9 +75,29 @@ package body LEA_GWin.MDI_Child is
   )
   is
   pragma Unreferenced (need);
+    any_modified: Boolean:= False;
+    --
+    procedure Check_any_modified (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
+    --  Enumeration call back to check if any MDI child window has a modified document
+    is
+    begin
+      if Any_Window.all in MDI_Child_Type'Class then
+        any_modified := any_modified or MDI_Child_Type(Any_Window.all).Editor.modified;
+      end if;
+    end Check_any_modified;
+
   begin
+    GWindows.Base.Enumerate_Children (MDI_Client_Window (Window.Parent.all).all,
+                                      Check_any_modified'Unrestricted_Access);
+    Window.save_all_hint := any_modified;
+    if Window.Editor.modified then
+      Window.Text("* " & GU2G(Window.Short_Name));
+    else
+      Window.Text(GU2G(Window.Short_Name));
+    end if;
     Update_status_bar(Window);
     Update_tool_bar(Window);
+    Update_menus(Window);
   end Update_display;
 
   procedure Memorize_splitter(Window: in out MDI_Child_Type) is
@@ -132,7 +163,7 @@ package body LEA_GWin.MDI_Child is
   procedure On_Create (Window : in out MDI_Child_Type) is
     use GWindows.Packing_Boxes;
   begin
-    Window.Small_Icon("Box_Closed_Icon_Name");
+    Window.Small_Icon("LEA_Doc_Icon_Name");
 
     -- Filial feelings:
     Window.Parent:= MDI_Main_Access(Controlling_Parent(Window));
@@ -201,13 +232,12 @@ package body LEA_GWin.MDI_Child is
 
   procedure On_Save (Window : in out MDI_Child_Type) is
   begin
-    null; -- !!! nothing to be saved in this application
+    null; -- !!! save me !!!
   end On_Save;
 
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean is
-    pragma Unreferenced (Window);
   begin
-    return True;
+    return not Window.Editor.modified;
   end Is_file_saved;
 
   ----------------
