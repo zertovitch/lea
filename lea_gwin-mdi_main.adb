@@ -226,7 +226,7 @@ package body LEA_GWin.MDI_Main is
     Replace_default(Window.opt.win_top);
     Replace_default(Window.opt.win_height);
 
-    Small_Icon (Window, "AAA_Main_Icon");
+    Small_Icon (Window, "LEA_Icon_Small");
     Large_Icon (Window, "AAA_Main_Icon");
 
     -- ** Menus and accelerators:

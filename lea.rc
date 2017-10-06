@@ -162,21 +162,20 @@ Main_Menu ACCELERATORS
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 AAA_Main_Icon      ICON           "ico_bmp/lea.ico"
 
-
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 LEA_Doc_Icon_Name  ICON           "ico_bmp/lea_doc.ico"
-
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Binoculars_Icon    ICON           "ico_bmp/find.ico"
 
-
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 LEA_Doc_Icon       ICON           "ico_bmp/lea_doc.ico"
 
-
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 LEA_Icon           ICON           "ico_bmp/lea.ico"
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+LEA_Icon_Small     ICON           "ico_bmp/lea16.ico"
 
 
 
