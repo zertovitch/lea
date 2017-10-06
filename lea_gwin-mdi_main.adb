@@ -429,7 +429,7 @@ package body LEA_GWin.MDI_Main is
                                       My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
 
-  LEA_web_page: constant String:= "http://lea.sf.net/";
+  LEA_web_page: constant String:= "http://l-e-a.sf.net/";
 
   --------------------
   -- On_Menu_Select --
