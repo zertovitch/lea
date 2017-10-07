@@ -198,7 +198,15 @@ package body LEA_GWin.MDI_Child is
     Window.Editor.Dock(Fill);
 
     Window.Status_Bar.Create(Window, "No file");
-    Window.Status_Bar.Parts((1 => 200, 2 => -1));
+    Window.Status_Bar.Parts(
+      (1 =>  -1,  --  General info ("Ada file", ...)
+       2 => 200,  --  Length & lines
+       3 => 262,  --  Line / Col /sel
+       4 =>  90,  --  Unix / Windows / Mac EOLs
+       5 => 121,  --  ANSI / Unicode
+       6 =>  30   --  Ins / Ovr
+       )
+    );
     Window.Status_Bar.Dock(At_Bottom);
 
     Window.Dock_Children;
