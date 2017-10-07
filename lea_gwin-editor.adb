@@ -155,8 +155,23 @@ package body LEA_GWin.Editor is
     declare
       l: constant Count:= Size(f);
       s: String(1..Integer(l));
+      p: Character:= ' ';
     begin
       String'Read(Stream(f), s);
+      Window.SetEOLMode (SC_EOL_CRLF);
+      for c of s loop
+        if c = ASCII.LF then
+          exit when p = ASCII.CR;           --  CR LF
+          Window.SetEOLMode (SC_EOL_LF);    --  non-CR LF
+          exit;
+        else
+          if p = ASCII.CR then              --  CR non-LF
+            Window.SetEOLMode (SC_EOL_CR);
+            exit;
+          end if;
+        end if;
+        p:= c;
+      end loop;
       Window.AddText(S2G(s));
       Window.EmptyUndoBuffer;
       Window.SetSavePoint;

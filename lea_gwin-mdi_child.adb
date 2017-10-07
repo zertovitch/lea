@@ -9,6 +9,7 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Scintilla;                use GWindows.Scintilla;
 with GWindows.Taskbar;                  use GWindows.Taskbar;
 
 with GWin_Util;
@@ -35,16 +36,27 @@ package body LEA_GWin.MDI_Child is
   end Folder_Focus;
 
   procedure Update_status_bar(Window : in out MDI_Child_Type) is
-    sel: Natural;
   begin
     if Window.File_Name = Null_GString_Unbounded then
-      Text(Window.Status_Bar,"No file",0);
+      Window.Status_Bar.Text("No file",0);
       return;
     end if;
     if Folder_Focus(Window) then
-      Text(Window.Status_Bar,"Folder selected",0);
+      Window.Status_Bar.Text("Folder selected",0);
       return;
+    else
+      Window.Status_Bar.Text("Text file",0);
     end if;
+    case Window.Editor.GetEOLMode is
+      when SC_EOL_CR =>
+        Window.Status_Bar.Text("Mac", 4);
+      when SC_EOL_CRLF =>
+        Window.Status_Bar.Text("Windows", 4);
+      when SC_EOL_LF =>
+        Window.Status_Bar.Text("Unix", 4);
+      when others =>
+        null;
+    end case;
   end Update_status_bar;
 
   procedure Update_tool_bar(Window : in out MDI_Child_Type) is
@@ -199,7 +211,7 @@ package body LEA_GWin.MDI_Child is
 
     Window.Status_Bar.Create(Window, "No file");
     Window.Status_Bar.Parts(
-      (1 =>  -1,  --  General info ("Ada file", ...)
+      (1 => 200,  --  General info ("Ada file", ...)
        2 => 200,  --  Length & lines
        3 => 262,  --  Line / Col /sel
        4 =>  90,  --  Unix / Windows / Mac EOLs
