@@ -24,6 +24,10 @@ package LEA_GWin.Editor is
   procedure On_Create (Window : in out LEA_Scintilla_Type);
 
   overriding
+  procedure On_Position_Changed (Control : in out LEA_Scintilla_Type;
+                                 Pos     : in     Position);
+
+  overriding
   procedure On_Save_Point_Reached (Control : in out LEA_Scintilla_Type);
 
   overriding

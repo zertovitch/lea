@@ -130,6 +130,16 @@ package body LEA_GWin.Editor is
    end On_Create;
 
   overriding
+  procedure On_Position_Changed (Control : in out LEA_Scintilla_Type;
+                                 Pos     : in     Position)
+  is
+    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  begin
+    --  !!  Doesn't seem to work ???
+    parent.Update_display(status_bar);
+  end;
+
+  overriding
   procedure On_Save_Point_Reached (Control : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
   begin

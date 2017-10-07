@@ -36,24 +36,34 @@ package body LEA_GWin.MDI_Child is
   end Folder_Focus;
 
   procedure Update_status_bar(Window : in out MDI_Child_Type) is
+    pos: Scintilla.Position;
   begin
     if Window.File_Name = Null_GString_Unbounded then
-      Window.Status_Bar.Text("No file",0);
+      Window.Status_Bar.Text("No file", 0);
       return;
     end if;
     if Folder_Focus(Window) then
-      Window.Status_Bar.Text("Folder selected",0);
+      Window.Status_Bar.Text("Folder selected", 0);
       return;
     else
-      Window.Status_Bar.Text("Text file",0);
+      Window.Status_Bar.Text("Text file", 0);
     end if;
+    Window.Status_Bar.Text(
+      "Length:" & Integer'Wide_Image(Window.Editor.GetLength) &
+      "     Lines:" & Integer'Wide_Image(Window.Editor.GetLineCount),
+      1);
+    pos:= Window.Editor.GetCurrentPos;
+    Window.Status_Bar.Text(
+      "Line:" & Integer'Wide_Image(Window.Editor.LineFromPosition(pos)) &
+      " Col:" & Integer'Wide_Image(Window.Editor.GetColumn(pos)),
+      2);
     case Window.Editor.GetEOLMode is
       when SC_EOL_CR =>
-        Window.Status_Bar.Text("Mac", 4);
+        Window.Status_Bar.Text("Mac EOL", 3);
       when SC_EOL_CRLF =>
-        Window.Status_Bar.Text("Windows", 4);
+        Window.Status_Bar.Text("Windows EOL", 3);
       when SC_EOL_LF =>
-        Window.Status_Bar.Text("Unix", 4);
+        Window.Status_Bar.Text("Unix EOL", 3);
       when others =>
         null;
     end case;
@@ -211,12 +221,12 @@ package body LEA_GWin.MDI_Child is
 
     Window.Status_Bar.Create(Window, "No file");
     Window.Status_Bar.Parts(
-      (1 => 200,  --  General info ("Ada file", ...)
-       2 => 200,  --  Length & lines
-       3 => 262,  --  Line / Col /sel
-       4 =>  90,  --  Unix / Windows / Mac EOLs
-       5 => 121,  --  ANSI / Unicode
-       6 =>  30   --  Ins / Ovr
+      (0 => 200,  --  General info ("Ada file", ...)
+       1 => 400,  --  Length & lines
+       2 => 560,  --  Line / Col /sel
+       3 => 650,  --  Unix / Windows / Mac EOLs
+       4 => 770,  --  ANSI / Unicode
+       5 => 800   --  Ins / Ovr
        )
     );
     Window.Status_Bar.Dock(At_Bottom);
