@@ -61,7 +61,12 @@ package body LEA_GWin.Editor is
       App_default_font      : constant GString := "Courier New";
       App_default_font_size : constant := 10;
       --
-      type Color_topic is (foreground, background, keyword, number, comment, string, character);
+      type Color_topic is (
+        foreground, background,
+        keyword, number, comment, string, character,
+        caret
+      );
+      --
       theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
         (
           NPP_default =>
@@ -71,7 +76,8 @@ package body LEA_GWin.Editor is
              number     => Dark_Orange,
              comment    => Dark_Green,
              string     => Dark_Gray,
-             character  => Dark_Gray),
+             character  => Dark_Gray,
+             caret      => Black),
           Dark_side   =>
             (foreground => Light_Gray,
              background => Dark_Gray,
@@ -79,7 +85,8 @@ package body LEA_GWin.Editor is
              number     => Red,
              comment    => 16#CF9F72#,
              string     => Yellow,
-             character  => Yellow)
+             character  => Yellow,
+             caret      => White)
         );
       --
       parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
@@ -122,12 +129,42 @@ package body LEA_GWin.Editor is
       Window.StyleSetFore (SCE_ADA_ILLEGAL, White);
       Window.StyleSetBack (SCE_ADA_ILLEGAL, Dark_Red);
 
+      Window.SetCaretFore (theme_color(parent.opt.color_theme, caret));
+
       Window.SetMarginTypeN (1, SC_MARGIN_NUMBER);  --  Display line numbers
       Window.SetMarginWidthN (1, 40);
       Window.SetMarginWidthN (2, 10);
 
       Window.Focus;
    end On_Create;
+
+  overriding
+  procedure On_Message
+    (Window       : in out LEA_Scintilla_Type;
+     message      : in     Interfaces.C.unsigned;
+     wParam       : in     GWindows.Types.Wparam;
+     lParam       : in     GWindows.Types.Lparam;
+     Return_Value : in out GWindows.Types.Lresult)
+  is
+    WM_KEYDOWN                 : constant := 256;
+    WM_LBUTTONDOWN             : constant := 513;
+    WM_RBUTTONDOWN             : constant := 516;
+    status_refresh_needed: Boolean:= False;
+    parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+  begin
+    case message is
+      when WM_KEYDOWN | WM_LBUTTONDOWN | WM_RBUTTONDOWN =>
+        status_refresh_needed := True;  --  Likely, cursor has moved; refresh Line / Col indicator
+      when others =>
+        null;
+    end case;
+    --  Call parent method.
+    Scintilla_Type(Window).On_Message(message, wParam, lParam, Return_Value);
+    --
+    if status_refresh_needed then
+      parent.Update_display(status_bar);
+    end if;
+  end On_Message;
 
   overriding
   procedure On_Position_Changed (Control : in out LEA_Scintilla_Type;
@@ -182,12 +219,12 @@ package body LEA_GWin.Editor is
         end if;
         p:= c;
       end loop;
-      Window.AddText(S2G(s));
+      Window.InsertText(0, S2G(s));
       Window.EmptyUndoBuffer;
       Window.SetSavePoint;
       Window.modified:= False;
     end;
     Close(f);
-  end;
+  end Load_text;
 
 end LEA_GWin.Editor;

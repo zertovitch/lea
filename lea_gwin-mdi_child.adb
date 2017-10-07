@@ -54,19 +54,24 @@ package body LEA_GWin.MDI_Child is
       1);
     pos:= Window.Editor.GetCurrentPos;
     Window.Status_Bar.Text(
-      "Line:" & Integer'Wide_Image(Window.Editor.LineFromPosition(pos)) &
-      " Col:" & Integer'Wide_Image(Window.Editor.GetColumn(pos)),
+      "Line:" & Integer'Wide_Image(1 + Window.Editor.LineFromPosition(pos)) &
+      " Col:" & Integer'Wide_Image(1 + Window.Editor.GetColumn(pos)),
       2);
     case Window.Editor.GetEOLMode is
       when SC_EOL_CR =>
-        Window.Status_Bar.Text("Mac EOL", 3);
+        Window.Status_Bar.Text("EOL: Mac", 3);
       when SC_EOL_CRLF =>
-        Window.Status_Bar.Text("Windows EOL", 3);
+        Window.Status_Bar.Text("EOL: Windows", 3);
       when SC_EOL_LF =>
-        Window.Status_Bar.Text("Unix EOL", 3);
+        Window.Status_Bar.Text("EOL: Unix", 3);
       when others =>
         null;
     end case;
+    if Window.Editor.GetOvertype then
+      Window.Status_Bar.Text("OVR", 5);
+    else
+      Window.Status_Bar.Text("INS", 5);
+    end if;
   end Update_status_bar;
 
   procedure Update_tool_bar(Window : in out MDI_Child_Type) is

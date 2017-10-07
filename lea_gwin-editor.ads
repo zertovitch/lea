@@ -1,6 +1,9 @@
 with GWindows.Base;
 with GWindows.Scintilla;                use GWindows.Scintilla;
 with GWindows.Windows;
+with GWindows.Types;
+
+with Interfaces.C;
 
 package LEA_GWin.Editor is
 
@@ -22,6 +25,14 @@ package LEA_GWin.Editor is
 
   overriding
   procedure On_Create (Window : in out LEA_Scintilla_Type);
+
+  overriding
+  procedure On_Message
+    (Window       : in out LEA_Scintilla_Type;
+     message      : in     Interfaces.C.unsigned;
+     wParam       : in     GWindows.Types.Wparam;
+     lParam       : in     GWindows.Types.Lparam;
+     Return_Value : in out GWindows.Types.Lresult);
 
   overriding
   procedure On_Position_Changed (Control : in out LEA_Scintilla_Type;
