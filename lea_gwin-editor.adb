@@ -170,11 +170,11 @@ package body LEA_GWin.Editor is
   procedure On_Position_Changed (Control : in out LEA_Scintilla_Type;
                                  Pos     : in     Position)
   is
+  pragma Unreferenced (Pos);
     parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
   begin
-    --  !!  Doesn't seem to work ???
     parent.Update_display(status_bar);
-  end;
+  end On_Position_Changed;
 
   overriding
   procedure On_Save_Point_Reached (Control : in out LEA_Scintilla_Type) is
@@ -183,7 +183,7 @@ package body LEA_GWin.Editor is
     --  We have had enough Undo's to make the document unmodified again.
     Control.modified:= False;
     parent.Update_display(toolbar_and_menu);
-  end;
+  end On_Save_Point_Reached;
 
   overriding
   procedure On_Save_Point_Left (Control : in out LEA_Scintilla_Type) is
@@ -192,13 +192,15 @@ package body LEA_GWin.Editor is
     --  Either new changes, or Undo's from the last saved state.
     Control.modified:= True;
     parent.Update_display(toolbar_and_menu);
-  end;
+  end On_Save_Point_Left;
+
+  Form_For_IO_Open_and_Create: constant String:= "encoding=utf8";
 
   procedure Load_text (Window : in out LEA_Scintilla_Type) is
     f: File_Type;
     parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
   begin
-    Open(f, In_File, G2S(GU2G(parent.File_Name)));
+    Open(f, In_File, To_UTF_8(GU2G(parent.File_Name)), Form_For_IO_Open_and_Create);
     declare
       l: constant Count:= Size(f);
       s: String(1..Integer(l));
@@ -219,7 +221,7 @@ package body LEA_GWin.Editor is
         end if;
         p:= c;
       end loop;
-      Window.InsertText(0, S2G(s));
+      Window.InsertText(0, S2G(s));  --  ASCII to Unicode (UTF-16) conversion
       Window.EmptyUndoBuffer;
       Window.SetSavePoint;
       Window.modified:= False;
