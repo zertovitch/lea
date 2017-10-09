@@ -5,11 +5,14 @@ package LEA_Common.User_options is
   -- MRU (Most Recently Used) files names:
   type MRU_List is array(1..9) of UTF_16_Unbounded_String;
 
+  type Backup_mode is (none, bak);
+
   -- The GUI-agnostic part of user options are stored in this record
   --
   type Option_Pack_Type is record
     view_mode    : View_Mode_Type   := Notepad;
     color_theme  : Color_Theme_Type := NPP_default;
+    backup       : Backup_mode      := none;
     -- Horizontal portion of the window for the tree, when view_mode = Studio
     tree_portion : Float:= 0.25;
     win_left,

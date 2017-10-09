@@ -3,28 +3,20 @@ with LEA_Common;                        use LEA_Common;
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Colors;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
+with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Scintilla;                use GWindows.Scintilla;
 with GWindows.Taskbar;                  use GWindows.Taskbar;
 
-with GWin_Util;
-
-with Ada.Calendar;
 with Ada.Directories;
 with Ada.Environment_Variables;         use Ada.Environment_Variables;
-with Ada.Exceptions;
-with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with Ada.Unchecked_Deallocation;
-
-with Interfaces;
 
 package body LEA_GWin.MDI_Child is
 
@@ -75,7 +67,6 @@ package body LEA_GWin.MDI_Child is
   end Update_status_bar;
 
   procedure Update_tool_bar(Window : in out MDI_Child_Type) is
-    not_empty_archive: constant Boolean:= True;
     bar: MDI_Toolbar_Type renames Window.Parent.Tool_Bar;
   begin
     bar.Enabled(IDM_Undo, Window.Editor.CanUndo);
@@ -265,9 +256,95 @@ package body LEA_GWin.MDI_Child is
     Ada.Numerics.Float_Random.Reset(Window.temp_name_gen);
   end On_Create;
 
-  procedure On_Save (Window : in out MDI_Child_Type) is
+  procedure Save (Window    : in out MDI_Child_Type;
+                  File_Name : in     GWindows.GString)
+  is
+    written_name: GString_Unbounded:=
+      To_GString_Unbounded(File_Name);
+    temp_ext: constant GString:= ".$$$";
+    backup_name: constant GString:= File_Name & ".bak";
+
+    with_backup: constant Boolean:= Window.opt.backup = bak;
+
+    ok : Boolean;
+    save_error, backup_error: exception;
+
+    use Ada.Directories;
+
   begin
-    null; -- !!! save me !!!
+    if with_backup then
+      written_name:= written_name & temp_ext;
+    end if;
+    Window.Editor.Save_text(GU2G(written_name));
+    if with_backup then
+      --  If there was an exception at writing,
+      --  the original file is untouched.
+      --
+      --  1/ delete old backup
+      if Ada.Directories.Exists(G2S(backup_name)) then
+        begin
+          Delete_File(G2S(backup_name));
+        exception
+          when others =>
+            raise backup_error;
+        end;
+      end if;
+      --  2/ file -> backup
+      if Ada.Directories.Exists(To_String(File_Name)) then
+        begin
+          Rename(
+            G2S(File_Name),
+            G2S(backup_name)
+          );
+        exception
+          when others =>
+            raise backup_error;
+        end;
+      end if;
+      --  3/ new file -> file
+      begin
+        Rename(
+          G2S(GU2G(written_name)),
+          G2S(File_Name)
+        );
+      exception
+        when others =>
+          raise save_error;
+      end;
+    end if;
+    --  The eventual startup extra new window is now saved.
+    --  So, in any case, we won't close it now on next window open.
+    Window.Extra_first_doc:= False;
+    Update_Common_Menus(Window, File_Name);
+    Window.Editor.SetSavePoint;
+    Window.Editor.modified:= False;
+  exception
+    when backup_error =>
+      begin
+        Message_Box (Window,
+                     "Save",
+                     "Cannot create backup" & NL & "-> " & backup_name,
+                     OK_Box,
+                     Exclamation_Icon);
+      end;
+    when others =>
+      begin
+        Message_Box (Window,
+                     "Save",
+                     "Cannot save" & NL & "-> " & File_Name,
+                     OK_Box,
+                     Exclamation_Icon);
+      end;
+  end Save;
+
+  procedure On_Save (Window : in out MDI_Child_Type) is
+    File_Name : constant GWindows.GString := To_GString_From_Unbounded (Window.File_Name);
+  begin
+    if File_Name = "" then
+      On_Save_As (Window);
+    else
+      Save (Window, File_Name);
+    end if;
   end On_Save;
 
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean is

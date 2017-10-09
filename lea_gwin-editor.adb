@@ -56,7 +56,7 @@ package body LEA_GWin.Editor is
 
   overriding
   procedure On_Create (Window : in out LEA_Scintilla_Type) is
-      use GWindows, GWindows.Colors;
+      use GWindows.Colors;
       --
       App_default_font      : constant GString := "Courier New";
       App_default_font_size : constant := 10;
@@ -228,5 +228,17 @@ package body LEA_GWin.Editor is
     end;
     Close(f);
   end Load_text;
+
+  procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString) is
+    f: File_Type;
+    b: constant GString:= Window.GetTextRange(Min => 0, Max => Window.GetLength);
+  begin
+    Create(f, Out_File, To_UTF_8(under), Form_For_IO_Open_and_Create);
+    String'Write(Stream(f), G2S(b));
+    Close(f);
+    --  We do *not* change Window.SetSavePoint and Window.modified until
+    --  all operations around backups are successful. This is managed by
+    --  the parent window's method, MDI_Child_Type.Save.
+  end Save_text;
 
 end LEA_GWin.Editor;
