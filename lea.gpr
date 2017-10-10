@@ -46,7 +46,12 @@ project LEA is
    end Compiler;
 
    package Linker is
-      for Default_Switches ("ada") use ("-g", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+      case Build_Mode is
+         when "Debug"  =>
+            for Default_Switches ("ada") use ("-g",                                   "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+         when "Fast" =>
+            for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+       end case;
    end Linker;
 
    package Builder is

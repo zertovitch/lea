@@ -10,6 +10,7 @@ with LEA_GWin.MDI_Main;           use LEA_GWin.MDI_Main;
 
 with Ada.Exceptions;
 with GNAT.Traceback.Symbolic;
+with GWindows.Scintilla;
 
 procedure LEA is
 
@@ -36,7 +37,15 @@ procedure LEA is
   end Interactive_crash;
 
 begin
-    GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
-    Create_MDI_Top (Top, "LEA");
+  GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
+  Create_MDI_Top (Top, "LEA");
+  if GWindows.Scintilla.SCI_Lexer_DLL_Successfully_Loaded then
     Message_Loop;
+  else
+    Message_Box
+      ("LEA",
+       "Installation error: file ""scilexer.dll"" is needed beside ""lea.exe""",
+        OK_Box
+      );
+  end if;
 end LEA;
