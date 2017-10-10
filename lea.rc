@@ -34,8 +34,8 @@ Menu_MDI_Child MENU
         MENUITEM "&Open...\tCtrl+O", IDM_Open_File
         MENUITEM "Save\tCtrl+S", IDM_Save_File
         MENUITEM "Save &as...\tF12", IDM_Save_As
-        MENUITEM "Sav&e all", IDM_Save_All
-        MENUITEM "&Close\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
+        MENUITEM "Sav&e all modified", IDM_Save_All
+        MENUITEM "&Close\tCtrl+W / Ctrl+F4", IDM_Close
         MENUITEM SEPARATOR
         MENUITEM "&Properties\tCtrl+D", IDM_Properties
         MENUITEM SEPARATOR
@@ -127,7 +127,30 @@ Menu_MDI_Main MENU
     }
 }
 
-
+//
+// Dialog resources
+//
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+About_box DIALOG 0, 0, 289, 210
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "About LEA"
+FONT 8, "Ms Shell Dlg"
+{
+    ICON            LEA_Icon, IDC_STATIC, 12, 14, 87, 80, SS_ICON | SS_RIGHTJUST | SS_CENTERIMAGE | SS_SUNKEN | SS_REALSIZEIMAGE, WS_EX_LEFT
+    LTEXT           "LEA - a Lightweight Editor for Ada", IDC_STATIC, 110, 14, 165, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Copyright © Gautier de Montmollin 2017 .. 2071", Copyright_label, 110, 29, 165, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "MIT Open Source License", IDC_STATIC, 110, 44, 120, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Internet:", IDC_STATIC, 110, 61, 30, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "http://l-e-a.sf.net/", AZip_URL, 157, 61, 89, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Version:", IDC_STATIC, 110, 81, 30, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "(ver)", Version_label, 157, 81, 118, 8, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Software made with the following free, open source components:", IDC_STATIC, 5, 105, 278, 78, 0, WS_EX_LEFT
+    LTEXT           "GNAT -  free Ada compiler", GNAT_URL, 23, 119, 100, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "GNAT_Version", GNAT_Version, 132, 119, 147, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "GNAVI / GWindows", GNAVI_URL, 23, 134, 118, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "ResEdit", ResEdit_URL, 23, 149, 170, 8, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "Close", IDOK, 87, 186, 115, 18, 0, WS_EX_LEFT
+}
 
 //
 // Accelerator resources
@@ -139,11 +162,10 @@ Main_Menu ACCELERATORS
     "O",            IDM_Open_File, VIRTKEY, CONTROL
     "S",            IDM_Save_File, VIRTKEY, CONTROL
     VK_F12,        IDM_Save_As, VIRTKEY
-    "W",            IDM__CLOSE_ARCHIVE, VIRTKEY, CONTROL
+    "W",            IDM_Close, VIRTKEY, CONTROL
     "A",            IDM_Select_all, VIRTKEY, CONTROL
     "U",            IDM_Unselect_all, VIRTKEY, CONTROL
     "E",            IDM_EXTRACT, VIRTKEY, CONTROL
-    VK_DELETE,     IDM_Delete_selected, VIRTKEY
     "T",            IDM_TEST_ARCHIVE, VIRTKEY, CONTROL
     "F",            IDM_FIND_IN_ARCHIVE, VIRTKEY, CONTROL
     VK_ADD,        IDM_ADD_FILES, VIRTKEY
@@ -162,20 +184,25 @@ Main_Menu ACCELERATORS
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 AAA_Main_Icon      ICON           "ico_bmp/lea.ico"
 
+
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 LEA_Doc_Icon_Name  ICON           "ico_bmp/lea_doc.ico"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+LEA_Icon_Small     ICON           "ico_bmp/lea16.ico"
+
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Binoculars_Icon    ICON           "ico_bmp/find.ico"
 
+
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 LEA_Doc_Icon       ICON           "ico_bmp/lea_doc.ico"
 
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-LEA_Icon           ICON           "ico_bmp/lea.ico"
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-LEA_Icon_Small     ICON           "ico_bmp/lea16.ico"
+LEA_Icon           ICON           "ico_bmp/lea.ico"
 
 
 

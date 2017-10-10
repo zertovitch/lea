@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/06  22:02:00
+-- Transcription time: 2017/10/10  18:14:47
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -56,6 +56,56 @@ package LEA_Resource_GUI is
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
+  type About_box_Type is new Window_Type with record
+
+    Static_0001: Icon_Type;
+    -- Label: IDC_STATIC
+    Copyright_label: Label_Type;
+    -- Label: IDC_STATIC
+    -- Label: IDC_STATIC
+    AZip_URL: Label_Type;
+    -- Label: IDC_STATIC
+    Version_label: Label_Type;
+    Static_0006: Group_Box_Type;
+    GNAT_URL: Label_Type;
+    GNAT_Version: Label_Type;
+    GNAVI_URL: Label_Type;
+    ResEdit_URL: Label_Type;
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+  end record; -- About_box_Type
+
+  -- Dialog at resource line 152
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out About_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out About_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "About LEA";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out About_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
@@ -73,6 +123,13 @@ package LEA_Resource_GUI is
   -- These constants are needed for getting button and menu feedbacks.
 
   IDC_STATIC                : constant:=     -1;
+  Copyright_label           : constant:=     -1;
+  AZip_URL                  : constant:=     -1;
+  Version_label             : constant:=     -1;
+  GNAT_URL                  : constant:=     -1;
+  GNAT_Version              : constant:=     -1;
+  GNAVI_URL                 : constant:=     -1;
+  ResEdit_URL               : constant:=     -1;
   Menu_MDI_Main             : constant:=    102;
   Menu_MDI_Child            : constant:=    104;
   LEA_Doc_Icon              : constant:=    112;
@@ -91,6 +148,7 @@ package LEA_Resource_GUI is
   IDM_TEST_ARCHIVE          : constant:=  40006;
   IDM_Save_As               : constant:=  40007;
   IDM_QUIT                  : constant:=  40008;
+  IDM_Close                 : constant:=  40009;
   IDM_RECOMPRESS_ARCHIVE    : constant:=  40009;
   IDM_EXTRACT               : constant:=  40010;
   IDM_FIND_IN_ARCHIVE       : constant:=  40011;
@@ -108,10 +166,8 @@ package LEA_Resource_GUI is
   IDM_WINDOW_TILE_HORIZONTAL: constant:=  40023;
   IDM_WINDOW_TILE_VERTICAL  : constant:=  40024;
   IDM_WINDOW_CLOSE_ALL      : constant:=  40025;
-  IDM_Delete_selected       : constant:=  40026;
   IDM_ADD_FILES             : constant:=  40027;
   IDM_UPDATE_ARCHIVE        : constant:=  40028;
-  IDM_CLOSE_ARCHIVE         : constant:=  40029;
   IDM_Properties            : constant:=  40030;
   IDM_Quick_Help            : constant:=  40031;
   IDM_Web                   : constant:=  40032;
@@ -128,6 +184,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 211
+  -- Last line of resource script file: 238
 
 end LEA_Resource_GUI;

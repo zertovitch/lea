@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/06  22:02:00
+-- Transcription time: 2017/10/10  18:14:47
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -33,8 +33,8 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_Open_File);
     Append_Item(Menu.Popup_0001, "Save" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+S", IDM_Save_File);
     Append_Item(Menu.Popup_0001, "Save &as..." & To_GString_From_String((1=>ASCII.HT)) & "F12", IDM_Save_As);
-    Append_Item(Menu.Popup_0001, "Sav&e all", IDM_Save_All);
-    Append_Item(Menu.Popup_0001, "&Close" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_CLOSE_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "Sav&e all modified", IDM_Save_All);
+    Append_Item(Menu.Popup_0001, "&Close" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_Close);
     Append_Separator(Menu.Popup_0001);
     Append_Item(Menu.Popup_0001, "&Properties" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Properties);
     Append_Separator(Menu.Popup_0001);
@@ -115,6 +115,115 @@ package body LEA_Resource_GUI is
     Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
+
+  -- Dialog at resource line 137
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out About_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out About_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "About LEA";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 289, 210, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- About_box_Type
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out About_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 289, 210, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  12, 14, 87, 80, x,y,w,h);
+    Create( Window.Static_0001, Window, Num_resource(LEA_Icon), x,y,w,h, GWindows.Static_Controls.Static_Size, Half_Sunken);
+    Dlg_to_Scn(  110, 14, 165, 8, x,y,w,h);
+    Create_Label( Window, "LEA - a Lightweight Editor for Ada", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  110, 29, 165, 8, x,y,w,h);
+    Create( Window.Copyright_label, Window, "Copyright © Gautier de Montmollin 2017 .. 2071", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Copyright_label);
+    Dlg_to_Scn(  110, 44, 120, 8, x,y,w,h);
+    Create_Label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  110, 61, 30, 8, x,y,w,h);
+    Create_Label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  157, 61, 89, 8, x,y,w,h);
+    Create( Window.AZip_URL, Window, "http://l-e-a.sf.net/", x,y,w,h, GWindows.Static_Controls.Left, None, ID => AZip_URL);
+    Dlg_to_Scn(  110, 81, 30, 8, x,y,w,h);
+    Create_Label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  157, 81, 118, 8, x,y,w,h);
+    Create( Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
+    Dlg_to_Scn(  5, 105, 278, 78, x,y,w,h);
+    Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
+    Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
+    Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
+    Dlg_to_Scn(  132, 119, 147, 8, x,y,w,h);
+    Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_Version);
+    Dlg_to_Scn(  23, 134, 118, 8, x,y,w,h);
+    Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
+    Dlg_to_Scn(  23, 149, 170, 8, x,y,w,h);
+    Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ResEdit_URL);
+    Dlg_to_Scn(  87, 186, 115, 18, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+  end Create_Contents;  --  About_box_Type
 
   -- ** Generated code ends here /\ /\ /\.
 
@@ -226,6 +335,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 211
+  -- Last line of resource script file: 238
 
 end LEA_Resource_GUI;

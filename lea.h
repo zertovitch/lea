@@ -20,12 +20,12 @@
 #define IDM_TEST_ARCHIVE                        40006
 #define IDM_Save_As                             40007
 #define IDM__QUIT                               40008
+#define IDM_Close                               40009
 #define IDM__RECOMPRESS_ARCHIVE                 40009
 #define IDM_EXTRACT                             40010
 #define IDM_FIND_IN_ARCHIVE                     40011
 #define IDM__FLAT_VIEW                          40012
 #define IDM__TREE_VIEW                          40013
-#define IDM_MRU_1                               40034
 #define IDM_MRU_2                               40014
 #define IDM_MRU_3                               40015
 #define IDM_MRU_4                               40016
@@ -38,11 +38,10 @@
 #define IDM_WINDOW_TILE_HORIZONTAL              40023
 #define IDM_WINDOW_TILE_VERTICAL                40024
 #define IDM_WINDOW_CLOSE_ALL                    40025
-#define IDM_Delete_selected                     40026
 #define IDM_ADD_FILES                           40027
 #define IDM_UPDATE_ARCHIVE                      40028
-#define IDM__CLOSE_ARCHIVE                      40029
 #define IDM_Properties                          40030
 #define IDM_Quick_Help                          40031
 #define IDM_Web                                 40032
 #define IDM_Select_all                          40033
+#define IDM_MRU_1                               40034

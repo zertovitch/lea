@@ -1,4 +1,3 @@
-with LEA_Common.User_options;           use LEA_Common.User_options;
 with LEA_GWin.Editor;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;

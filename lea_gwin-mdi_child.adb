@@ -1,4 +1,5 @@
 with LEA_Common;                        use LEA_Common;
+with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
@@ -488,7 +489,7 @@ package body LEA_GWin.MDI_Child is
         Window.On_Save_As;
       when IDM_Save_All =>
         Window.On_Save_All;
-      when IDM_CLOSE_ARCHIVE =>
+      when IDM_Close =>
         Window.Close;
       when IDM_Undo =>
         Window.Editor.Undo;
