@@ -20,6 +20,8 @@ package LEA_Common is
   subtype UTF_16_Unbounded_String is Unbounded_Wide_String;
 
   --  Format for file names on Open / Create operations: UTF-8
+  --  See RM A.8.2: File Management
+  --  Example: "encoding=8bits", "encoding=utf8"
   Form_For_IO_Open_and_Create: constant String:= "encoding=utf8";
 
   subtype UTF_8_String is Ada.Strings.UTF_Encoding.UTF_8_String;

@@ -1,7 +1,6 @@
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Strings;                       use Ada.Strings;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
-with Ada.Wide_Text_IO;
+with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 with Ada.Strings.UTF_Encoding.Conversions;
@@ -23,11 +22,17 @@ package body LEA_Common is
   function File_Exists(s: UTF_8_String) return Boolean is
     f: File_Type;
   begin
+    if Index(s, "*") > 0 then
+      return False;
+    end if;
     Open(f, In_File, s, Form_For_IO_Open_and_Create);
+    Close(f);
     return True;
   exception
-    when others =>
-      return False;
+    when Name_Error =>
+      return False;  --  The file doesn't exist
+    when Use_Error =>
+      return True;   --  The file exists and is already opened
   end File_Exists;
 
 end LEA_Common;
