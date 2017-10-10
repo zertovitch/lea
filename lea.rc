@@ -70,6 +70,10 @@ Menu_MDI_Child MENU
         MENUITEM "&Notepad view", IDM__FLAT_VIEW
         MENUITEM "&Studio view", IDM__TREE_VIEW
     }
+    POPUP "&Options"
+    {
+        MENUITEM "&General options", IDM_General_options
+    }
     POPUP "&Window"
     {
         MENUITEM "&Cascade", IDM_WINDOW_CASCADE
@@ -127,6 +131,8 @@ Menu_MDI_Main MENU
     }
 }
 
+
+
 //
 // Dialog resources
 //
@@ -151,6 +157,27 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "ResEdit", ResEdit_URL, 23, 149, 170, 8, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "Close", IDOK, 87, 186, 115, 18, 0, WS_EX_LEFT
 }
+
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Option_box DIALOG 0, 0, 253, 121
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "Options"
+FONT 8, "Ms Shell Dlg"
+{
+    GROUPBOX        "Color theme", Group_color_theme, 6, 57, 180, 28, 0, WS_EX_LEFT
+    LISTBOX         Color_theme_list_box, 59, 65, 89, 16, WS_TABSTOP | WS_VSCROLL | LBS_NOINTEGRALHEIGHT | LBS_SORT | LBS_NOTIFY, WS_EX_LEFT
+    GROUPBOX        "Backup", Group_Backup, 6, 26, 174, 26, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "Simple (.bak)", Backup_bak_button, 80, 36, 91, 11, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "None", Backup_none_button, 15, 38, 43, 8, 0, WS_EX_LEFT
+    LTEXT           "Indentation", 0, 7, 10, 50, 13, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        Indentation_edit_box, 49, 9, 16, 12, ES_AUTOHSCROLL, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 191, 103, 50, 14, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 136, 103, 50, 14, 0, WS_EX_LEFT
+}
+
+
 
 //
 // Accelerator resources

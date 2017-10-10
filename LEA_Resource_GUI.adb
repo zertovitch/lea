@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/10  18:14:47
+-- Transcription time: 2017/10/10  20:29:29
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -65,20 +65,23 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&Notepad view", IDM_FLAT_VIEW);
     Append_Item(Menu.Popup_0005, "&Studio view", IDM_TREE_VIEW);
     Menu.Popup_0006:= Create_Popup;
-    Append_Menu(Menu.Main, "&Window", Menu.Popup_0006);
-    Append_Item(Menu.Popup_0006, "&Cascade", IDM_WINDOW_CASCADE);
-    Append_Item(Menu.Popup_0006, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
-    Append_Item(Menu.Popup_0006, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
-    Append_Item(Menu.Popup_0006, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    Append_Menu(Menu.Main, "&Options", Menu.Popup_0006);
+    Append_Item(Menu.Popup_0006, "&General options", IDM_General_options);
     Menu.Popup_0007:= Create_Popup;
-    Append_Menu(Menu.Main, "&Help", Menu.Popup_0007);
-    Append_Item(Menu.Popup_0007, "&Quick help", IDM_Quick_Help);
-    Append_Item(Menu.Popup_0007, "LEA &Web page (contact, support)", IDM_Web);
-    Append_Separator(Menu.Popup_0007);
-    Append_Item(Menu.Popup_0007, "&About LEA", IDM_ABOUT);
+    Append_Menu(Menu.Main, "&Window", Menu.Popup_0007);
+    Append_Item(Menu.Popup_0007, "&Cascade", IDM_WINDOW_CASCADE);
+    Append_Item(Menu.Popup_0007, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
+    Append_Item(Menu.Popup_0007, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
+    Append_Item(Menu.Popup_0007, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    Menu.Popup_0008:= Create_Popup;
+    Append_Menu(Menu.Main, "&Help", Menu.Popup_0008);
+    Append_Item(Menu.Popup_0008, "&Quick help", IDM_Quick_Help);
+    Append_Item(Menu.Popup_0008, "LEA &Web page (contact, support)", IDM_Web);
+    Append_Separator(Menu.Popup_0008);
+    Append_Item(Menu.Popup_0008, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 92
+  -- Menu at line 96
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -116,7 +119,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0004, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 137
+  -- Dialog at resource line 143
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -224,6 +227,100 @@ package body LEA_Resource_GUI is
       Hide(Window.IDOK);
     end if;
   end Create_Contents;  --  About_box_Type
+
+  -- Dialog at resource line 167
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Option_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Options";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 253, 121, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Option_box_Type
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Option_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 253, 121, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  6, 57, 180, 28, x,y,w,h);
+    Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
+    Dlg_to_Scn(  59, 65, 89, 16, x,y,w,h);
+    Create( Window.Color_theme_list_box, Window, x,y,w,h, True, ID => Color_theme_list_box);
+    Dlg_to_Scn(  6, 26, 174, 26, x,y,w,h);
+    Create( Window.Group_Backup, Window, "Backup", x,y,w,h);
+    Dlg_to_Scn(  80, 36, 91, 11, x,y,w,h);
+    Create( Window.Backup_bak_button, Window, "Simple (.bak)", x,y,w,h, ID => Backup_bak_button);
+    Dlg_to_Scn(  15, 38, 43, 8, x,y,w,h);
+    Create( Window.Backup_none_button, Window, "None", x,y,w,h, ID => Backup_none_button);
+    Dlg_to_Scn(  7, 10, 50, 13, x,y,w,h);
+    Create_Label( Window, "Indentation", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  49, 9, 16, 12, x,y,w,h);
+    Create( Window.Indentation_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Indentation_edit_box);
+    Dlg_to_Scn(  191, 103, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDCANCEL_permanent);
+    else -- hide the closing button
+      Hide(Window.IDCANCEL);
+    end if;
+    Dlg_to_Scn(  136, 103, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+  end Create_Contents;  --  Option_box_Type
 
   -- ** Generated code ends here /\ /\ /\.
 
@@ -335,6 +432,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 238
+  -- Last line of resource script file: 265
 
 end LEA_Resource_GUI;

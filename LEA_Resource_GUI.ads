@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/10  18:14:47
+-- Transcription time: 2017/10/10  20:29:29
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -36,11 +36,12 @@ package LEA_Resource_GUI is
     Popup_0003: Menu_Type;  -- level 1; title: "&Edit"
     Popup_0004: Menu_Type;  -- level 1; title: "&Tools"
     Popup_0005: Menu_Type;  -- level 1; title: "&View"
-    Popup_0006: Menu_Type;  -- level 1; title: "&Window"
-    Popup_0007: Menu_Type;  -- level 1; title: "&Help"
+    Popup_0006: Menu_Type;  -- level 1; title: "&Options"
+    Popup_0007: Menu_Type;  -- level 1; title: "&Window"
+    Popup_0008: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 86
+  -- Menu at line 90
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -52,7 +53,7 @@ package LEA_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 127
+  -- Menu at line 131
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -75,7 +76,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 152
+  -- Dialog at resource line 158
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -106,6 +107,45 @@ package LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
+  type Option_box_Type is new Window_Type with record
+
+    Group_color_theme: Group_Box_Type;
+    Color_theme_list_box: List_Box_Type;
+    Group_Backup: Group_Box_Type;
+    Backup_bak_button: Radio_Button_Type;
+    Backup_none_button: Radio_Button_Type;
+    -- Label: 0
+    Indentation_edit_box: Edit_Box_Type;
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+  end record; -- Option_box_Type
+
+  -- Dialog at resource line 177
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Option_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Options";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Option_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
@@ -123,13 +163,6 @@ package LEA_Resource_GUI is
   -- These constants are needed for getting button and menu feedbacks.
 
   IDC_STATIC                : constant:=     -1;
-  Copyright_label           : constant:=     -1;
-  AZip_URL                  : constant:=     -1;
-  Version_label             : constant:=     -1;
-  GNAT_URL                  : constant:=     -1;
-  GNAT_Version              : constant:=     -1;
-  GNAVI_URL                 : constant:=     -1;
-  ResEdit_URL               : constant:=     -1;
   Menu_MDI_Main             : constant:=    102;
   Menu_MDI_Child            : constant:=    104;
   LEA_Doc_Icon              : constant:=    112;
@@ -137,20 +170,34 @@ package LEA_Resource_GUI is
   Toolbar_BMP               : constant:=    123;
   Folders_BMP               : constant:=    124;
   Binoculars_Icon           : constant:=    132;
+  Backup_none_button        : constant:=  40000;
+  Copyright_label           : constant:=  40000;
+  Group_Backup              : constant:=  40000;
   IDM_New_File              : constant:=  40000;
+  AZip_URL                  : constant:=  40001;
   IDM_Open_File             : constant:=  40001;
+  Indentation_edit_box      : constant:=  40001;
+  Color_theme_list_box      : constant:=  40002;
   IDM_Undo                  : constant:=  40002;
+  Version_label             : constant:=  40002;
+  Backup_bak_button         : constant:=  40003;
+  GNAT_URL                  : constant:=  40003;
   IDM_Save_All              : constant:=  40003;
   IDM_Unselect_all          : constant:=  40003;
+  GNAT_Version              : constant:=  40004;
   IDM_Save_File             : constant:=  40004;
+  GNAVI_URL                 : constant:=  40005;
+  Group_color_theme         : constant:=  40005;
   IDM_Redo                  : constant:=  40005;
   IDM_ABOUT                 : constant:=  40005;
   IDM_TEST_ARCHIVE          : constant:=  40006;
+  ResEdit_URL               : constant:=  40006;
   IDM_Save_As               : constant:=  40007;
   IDM_QUIT                  : constant:=  40008;
   IDM_Close                 : constant:=  40009;
   IDM_RECOMPRESS_ARCHIVE    : constant:=  40009;
   IDM_EXTRACT               : constant:=  40010;
+  IDM_General_options       : constant:=  40010;
   IDM_FIND_IN_ARCHIVE       : constant:=  40011;
   IDM_FLAT_VIEW             : constant:=  40012;
   IDM_TREE_VIEW             : constant:=  40013;
@@ -184,6 +231,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 238
+  -- Last line of resource script file: 265
 
 end LEA_Resource_GUI;
