@@ -31,7 +31,6 @@ package body LEA_GWin.MDI_Child is
   begin
     if Window.File_Name = Null_GString_Unbounded then
       Window.Status_Bar.Text("No file", 0);
-      return;
     end if;
     if Folder_Focus(Window) then
       Window.Status_Bar.Text("Folder selected", 0);
@@ -384,6 +383,27 @@ package body LEA_GWin.MDI_Child is
     Window.Update_Common_Menus(GU2G(New_File_Name));
   end On_Save_As;
 
+  procedure On_Save_All (Window : in out MDI_Child_Type) is
+    --
+    procedure Save_any_modified (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
+    is
+    begin
+      if Any_Window.all in MDI_Child_Type'Class then
+        declare
+          one_child: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
+        begin
+          if not one_child.Is_file_saved then
+            one_child.Save(GU2G (one_child.File_Name));
+          end if;
+        end;
+      end if;
+    end Save_any_modified;
+    --
+  begin
+    GWindows.Base.Enumerate_Children (MDI_Client_Window (Window.Parent.all).all,
+                                      Save_any_modified'Unrestricted_Access);
+  end On_Save_All;
+
   function Temp_LEA_name(Window: MDI_Child_Type) return String is
   begin
     loop
@@ -464,6 +484,8 @@ package body LEA_GWin.MDI_Child is
         Window.On_Save;
       when IDM_Save_As =>
         Window.On_Save_As;
+      when IDM_Save_All =>
+        Window.On_Save_All;
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
       when IDM_Undo =>

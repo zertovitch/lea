@@ -97,12 +97,14 @@ package LEA_GWin.MDI_Child is
   overriding procedure On_Create (Window : in out MDI_Child_Type);
 
   procedure On_Save (Window : in out MDI_Child_Type);
-  -- This would be abstract in a 'generic' Office framework.
+  --  This would be abstract in a 'generic' Office framework.
 
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
-  -- This would be abstract in a 'generic' Office framework.
+  --  This would be abstract in a 'generic' Office framework.
 
   procedure On_Save_As (Window : in out MDI_Child_Type);
+
+  procedure On_Save_All (Window : in out MDI_Child_Type);
 
   overriding procedure On_File_Drop (
     Window     : in out MDI_Child_Type;
