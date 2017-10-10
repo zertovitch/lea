@@ -54,29 +54,37 @@ package body LEA_GWin.Editor is
       type Color_topic is (
         foreground, background,
         keyword, number, comment, string, character,
-        caret
+        caret,
+        selection_foreground,
+        selection_background
       );
       --
       theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
         (
           NPP_default =>
-            (foreground => Black,
-             background => White,
-             keyword    => Dark_Blue,
-             number     => Dark_Orange,
-             comment    => Dark_Green,
-             string     => Dark_Gray,
-             character  => Dark_Gray,
-             caret      => Black),
+            (foreground           => Black,
+             background           => White,
+             keyword              => Blue,
+             number               => Dark_Orange,
+             comment              => Dark_Green,
+             string               => Dark_Gray,
+             character            => Dark_Gray,
+             caret                => Black,
+             selection_foreground => Black,
+             selection_background => Light_Gray
+            ),
           Dark_side   =>
-            (foreground => Light_Gray,
-             background => Dark_Gray,
-             keyword    => Dark_Orange,
-             number     => Red,
-             comment    => 16#CF9F72#,
-             string     => Yellow,
-             character  => Yellow,
-             caret      => White)
+            (foreground           => Light_Gray,
+             background           => Dark_Gray,
+             keyword              => Dark_Orange,
+             number               => Red,
+             comment              => 16#CF9F72#,
+             string               => Yellow,
+             character            => Yellow,
+             caret                => White,
+             selection_foreground => White,
+             selection_background => 16#D28022#
+            )
         );
       --
       parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
@@ -100,7 +108,9 @@ package body LEA_GWin.Editor is
       Window.StyleClearAll;
 
       Window.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
+      Window.SetSelFore (True, theme_color(theme, selection_foreground));
       Window.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
+      Window.SetSelBack (True, theme_color(theme, selection_background));
       Window.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
       Window.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
 
