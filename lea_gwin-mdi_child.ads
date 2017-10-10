@@ -77,7 +77,7 @@ package LEA_GWin.MDI_Child is
         Splitter_dashes  : GWindows.Static_Controls.Label_Type;
         Folder_Tree      : aliased MDI_Child_Tree_View_Control_Type;
         selected_path    : GString_Unbounded:= Null_GString_Unbounded;
-        opt              : Option_Pack_Type;
+        --  opt              : Option_Pack_Type;  --  No per-child-window option in this app
         Status_Bar       : MDI_Child_Status_Bar_Type;
         name_search      : GString_Unbounded;
         content_search   : GString_Unbounded;

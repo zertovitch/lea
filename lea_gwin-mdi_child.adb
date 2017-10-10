@@ -22,7 +22,7 @@ package body LEA_GWin.MDI_Child is
   function Folder_Focus(Window : in MDI_Child_Type) return Boolean is
   begin
     return
-      Window.opt.view_mode = Studio and then
+      Window.Parent.opt.view_mode = Studio and then
       Window.Focus = Window.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
@@ -118,11 +118,11 @@ package body LEA_GWin.MDI_Child is
 
   procedure Memorize_splitter(Window: in out MDI_Child_Type) is
   begin
-    case Window.opt.view_mode is
+    case Window.Parent.opt.view_mode is
       when Notepad =>
         null; -- do nothing: the splitter is invisible and not used
       when Studio =>
-        Window.opt.tree_portion:=
+        Window.Parent.opt.tree_portion:=
           Float(Window.Folder_Tree.Width) / Float(Window.Client_Area_Width);
     end case;
   end Memorize_splitter;
@@ -142,10 +142,10 @@ package body LEA_GWin.MDI_Child is
     mem_sel_path: constant GString_Unbounded:= Window.selected_path;
     sel_node: Tree_Item_Node;
   begin
-    if Window.opt.view_mode = new_view and not force then
+    if Window.Parent.opt.view_mode = new_view and not force then
       return;
     end if;
-    Window.opt.view_mode:= new_view;
+    Window.Parent.opt.view_mode:= new_view;
     case new_view is
       when Notepad =>
         if not force then
@@ -181,10 +181,12 @@ package body LEA_GWin.MDI_Child is
   begin
     Window.Small_Icon("LEA_Doc_Icon_Name");
 
-    -- Filial feelings:
+    --  Filial feelings:
     Window.Parent:= MDI_Main_Access(Controlling_Parent(Window));
-    -- We copy options to child level:
-    Window.opt:= Window.Parent.opt;
+    --  No per-child-window option in this app
+    --
+    --  --  We copy options to child level:
+    --  Window.opt:= Window.Parent.opt;
 
     Window.Tree_Bar_and_List.Create(Window, Direction => Horizontal);
     Window.Tree_Bar_and_List.Dock(At_Top);
@@ -226,7 +228,7 @@ package body LEA_GWin.MDI_Child is
     Window.Status_Bar.Dock(At_Bottom);
 
     Window.Dock_Children;
-    if Window.opt.view_mode = Studio then
+    if Window.Parent.opt.view_mode = Studio then
       Change_View(Window, Studio, force => True);
     end if;
 
@@ -262,7 +264,7 @@ package body LEA_GWin.MDI_Child is
     temp_ext: constant GString:= ".$$$";
     backup_name: constant GString:= File_Name & ".bak";
 
-    with_backup: constant Boolean:= Window.opt.backup = bak;
+    with_backup: constant Boolean:= Window.Parent.opt.backup = bak;
 
     ok : Boolean;
     save_error, backup_error_1, backup_error_2, backup_error_3: exception;
@@ -452,14 +454,14 @@ package body LEA_GWin.MDI_Child is
     w: constant Natural:= Window.Client_Area_Width;
     h: constant Natural:= Integer'Max(2, Window.Client_Area_Height - Window.Status_Bar.Height);
     splitter_w: constant:= 4; -- between tree and list
-    tree_w: constant Integer:= Integer(Window.opt.tree_portion * Float(w)) - splitter_w / 2;
+    tree_w: constant Integer:= Integer(Window.Parent.opt.tree_portion * Float(w)) - splitter_w / 2;
     use GWindows.Types;
   begin
     if Window.Parent.User_maximize_restore then
       Window.Parent.opt.MDI_childen_maximized:= Zoom(Window);
     end if;
     Window.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
-    case Window.opt.view_mode is
+    case Window.Parent.opt.view_mode is
       when Notepad =>
         Window.Folder_Tree.Location(Rectangle_Type'(0, 0, 1, h));
         Window.Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
@@ -539,11 +541,14 @@ package body LEA_GWin.MDI_Child is
     if Can_Close then
       --  !! Empty the editor's memory if needed
       --
-      -- Pass view mode and the tree width portion to parent,
-      -- this will memorize choice of last closed window.
-      Window.Parent.opt.view_mode:= Window.opt.view_mode;
+      --  No per-child-window option in this app
+      --  -- Pass view mode and the tree width portion to parent,
+      --  -- this will memorize choice of last closed window.
+      --  Window.Parent.opt.view_mode:= Window.opt.view_mode;
+      --
       Memorize_splitter(Window);
-      Window.Parent.opt.tree_portion:= Window.opt.tree_portion;
+      --  Window.Parent.opt.tree_portion:= Window.opt.tree_portion;
+      --
       -- In case there is no more child window, disable toolbar items.
       -- This is reversed if another child window is focused.
       Window.Parent.Tool_Bar.Enabled(IDM_ADD_FILES, False);

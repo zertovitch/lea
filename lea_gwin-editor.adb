@@ -80,6 +80,7 @@ package body LEA_GWin.Editor is
         );
       --
       parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+      theme: Color_Theme_Type renames parent.Parent.opt.color_theme;
    begin
       --  Set up editor
       Window.SetEOLMode (SC_EOL_CRLF);
@@ -93,22 +94,22 @@ package body LEA_GWin.Editor is
       Window.SetKeyWords (0, Key_Words);
 
       Window.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
-      Window.StyleSetBack (STYLE_DEFAULT, theme_color(parent.opt.color_theme, background));
+      Window.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
       Window.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
       Window.StyleSetFont (STYLE_DEFAULT, App_default_font);
       Window.StyleClearAll;
 
-      Window.StyleSetFore (SCE_ADA_DEFAULT, theme_color(parent.opt.color_theme, foreground));
-      Window.StyleSetBack (SCE_ADA_DEFAULT, theme_color(parent.opt.color_theme, background));
+      Window.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
+      Window.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
       Window.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
       Window.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
 
-      Window.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(parent.opt.color_theme, comment));
-      Window.StyleSetFore (SCE_ADA_NUMBER,      theme_color(parent.opt.color_theme, number));
-      Window.StyleSetFore (SCE_ADA_WORD,        theme_color(parent.opt.color_theme, keyword));
-      Window.StyleSetFore (SCE_ADA_STRING,      theme_color(parent.opt.color_theme, string));
-      Window.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(parent.opt.color_theme, character));
-      Window.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(parent.opt.color_theme, foreground));
+      Window.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
+      Window.StyleSetFore (SCE_ADA_NUMBER,      theme_color(theme, number));
+      Window.StyleSetFore (SCE_ADA_WORD,        theme_color(theme, keyword));
+      Window.StyleSetFore (SCE_ADA_STRING,      theme_color(theme, string));
+      Window.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(theme, character));
+      Window.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
 
       --  Cases where the text is obviously wrong
       --  (unfinished character or string, illegal identifier)
@@ -119,7 +120,7 @@ package body LEA_GWin.Editor is
       Window.StyleSetFore (SCE_ADA_ILLEGAL, White);
       Window.StyleSetBack (SCE_ADA_ILLEGAL, Dark_Red);
 
-      Window.SetCaretFore (theme_color(parent.opt.color_theme, caret));
+      Window.SetCaretFore (theme_color(theme, caret));
 
       Window.SetMarginTypeN (1, SC_MARGIN_NUMBER);  --  Display line numbers
       Window.SetMarginWidthN (1, 40);
