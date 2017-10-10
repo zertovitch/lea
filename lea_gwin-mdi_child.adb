@@ -14,8 +14,7 @@ with GWindows.Taskbar;                  use GWindows.Taskbar;
 
 with Ada.Directories;
 with Ada.Environment_Variables;         use Ada.Environment_Variables;
-with Ada.Sequential_IO;
-with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.MDI_Child is
@@ -206,7 +205,7 @@ package body LEA_GWin.MDI_Child is
     Window.Splitter.Dock(At_Left);
     Window.Splitter_dashes.Create(Window.Splitter,
       Alignment => GWindows.Static_Controls.Center,
-      Text => S2G(1000 * ". ") -- A cheap grip design for the split bar...
+      Text => 1000 * ". " -- A cheap grip design for the split bar...
     );
     Window.Splitter_dashes.Dock(Fill);
     Window.Splitter_dashes.Enabled(False); -- Just give a grey look...
@@ -267,7 +266,7 @@ package body LEA_GWin.MDI_Child is
     with_backup: constant Boolean:= Window.opt.backup = bak;
 
     ok : Boolean;
-    save_error, backup_error: exception;
+    save_error, backup_error_1, backup_error_2, backup_error_3: exception;
 
     use Ada.Directories;
 
@@ -280,36 +279,38 @@ package body LEA_GWin.MDI_Child is
       --  If there was an exception at writing,
       --  the original file is untouched.
       --
+      --  !!  !!  !! MESS with Ada.Directories, UTF, whatever -> use another tactic...
+      --
       --  1/ delete old backup
-      if Ada.Directories.Exists(G2S(backup_name)) then
+      if File_Exists(To_UTF_8(backup_name)) then
         begin
-          Delete_File(G2S(backup_name));
+          Delete_File(To_UTF_8(backup_name));
         exception
           when others =>
-            raise backup_error;
+            raise backup_error_1;
         end;
       end if;
       --  2/ file -> backup
-      if Ada.Directories.Exists(To_String(File_Name)) then
+      if File_Exists(To_UTF_8(File_Name)) then
         begin
           Rename(
-            G2S(File_Name),
-            G2S(backup_name)
+            To_UTF_8(File_Name),
+            To_UTF_8(backup_name)
           );
         exception
           when others =>
-            raise backup_error;
+            raise backup_error_2;
         end;
       end if;
       --  3/ new file -> file
       begin
         Rename(
-          G2S(GU2G(written_name)),
-          G2S(File_Name)
+          To_UTF_8(GU2G(written_name)),
+          To_UTF_8(File_Name)
         );
       exception
         when others =>
-          raise save_error;
+          raise backup_error_3;
       end;
     end if;
     --  The eventual startup extra new window is now saved.
@@ -319,22 +320,14 @@ package body LEA_GWin.MDI_Child is
     Window.Editor.SetSavePoint;
     Window.Editor.modified:= False;
   exception
-    when backup_error =>
-      begin
-        Message_Box (Window,
-                     "Save",
-                     "Cannot create backup" & NL & "-> " & backup_name,
-                     OK_Box,
-                     Exclamation_Icon);
-      end;
+    when backup_error_1 =>
+      Message_Box (Window, "Save", "Cannot delete old backup" & NL & "-> " & backup_name, OK_Box, Exclamation_Icon);
+    when backup_error_2 =>
+      Message_Box (Window, "Save", "Cannot rename old version to backup" & NL & "-> " & backup_name, OK_Box, Exclamation_Icon);
+    when backup_error_3 =>
+      Message_Box (Window, "Save", "Cannot rename new version to actual file" & NL & "-> " & File_Name, OK_Box, Exclamation_Icon);
     when others =>
-      begin
-        Message_Box (Window,
-                     "Save",
-                     "Cannot save" & NL & "-> " & File_Name,
-                     OK_Box,
-                     Exclamation_Icon);
-      end;
+      Message_Box (Window, "Save", "Cannot save" & NL & "-> " & File_Name, OK_Box, Exclamation_Icon);
   end Save;
 
   procedure On_Save (Window : in out MDI_Child_Type) is
@@ -361,14 +354,6 @@ package body LEA_GWin.MDI_Child is
     New_File_Name : GWindows.GString_Unbounded;
     File_Title    : GWindows.GString_Unbounded;
     Success       : Boolean;
-    --
-    -- If needed, an empty Zip file is created with the contents below.
-    --
-    package CIO is new Ada.Sequential_IO(Character);
-    use CIO;
-    empty_zip: File_Type;
-    -- This is the empty Zip archive:
-    contents: constant String:= "PK" & ASCII.ENQ & ASCII.ACK & 18 * ASCII.NUL;
   begin
     New_File_Name := Window.File_Name;
     Save_File (
@@ -379,7 +364,7 @@ package body LEA_GWin.MDI_Child is
     if not Success then
       return;
     end if;
-    if Exists(To_UTF_8(GU2G(New_File_Name))) then
+    if File_Exists(To_UTF_8(GU2G(New_File_Name))) then
       if Message_Box (
         Window,
         "Save as",
@@ -392,32 +377,7 @@ package body LEA_GWin.MDI_Child is
       end if;
     end if;
 
-    if Window.File_Name /= Null_GString_Unbounded then
-      begin
-        --  !! ok only if exists !!
-        Ada.Directories.Copy_File(
-          To_UTF_8(GU2G (Window.File_Name)),
-          To_UTF_8(GU2G (New_File_Name)),
-          "encoding=utf8"
-        );
-      exception
-        when others =>
-          Message_Box(
-            Window,
-            "'Save as' failed",
-            "Copy of file under new name failed.",
-            OK_Box,
-            Exclamation_Icon
-          );
-          return;
-      end;
-    else -- we don't have a file yet
-      Create(empty_zip, Out_File, To_UTF_8(GU2G(New_File_Name)), "encoding=utf8");
-      for i in contents'Range loop
-        Write(empty_zip, contents(i));
-      end loop;
-      Close(empty_zip);
-    end if;
+    Save(Window, GU2G(New_File_Name));
     Window.File_Name := New_File_Name;
     Window.Text(GU2G(File_Title));
     Window.Short_Name:= File_Title;
@@ -432,9 +392,9 @@ package body LEA_GWin.MDI_Child is
           Float'Image(Ada.Numerics.Float_Random.Random(Window.temp_name_gen));
         num: constant String:= num0(num0'First+1 .. num0'Last);
         -- ^ Skip the @#*% leading space
-        test_name: constant String:= Value("TEMP") & "\LEA_Temp_" & num & ".zip";
+        test_name: constant UTF_8_String:= Value("TEMP") & "\LEA_Temp_" & num & ".lea";
       begin
-        if not Ada.Directories.Exists(test_name) then
+        if not File_Exists(test_name) then
           return test_name;
         end if;
       end;

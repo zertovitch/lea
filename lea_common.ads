@@ -15,16 +15,18 @@ package LEA_Common is
   -- Strings --
   -------------
 
-  -- Internal format for LEA: UTF-16
-  -- Format for file names on Open / Create operations: UTF-8
-
-  subtype UTF_8_String is Ada.Strings.UTF_Encoding.UTF_8_String;
-
+  --  Internal format for LEA: UTF-16
   subtype UTF_16_String is Ada.Strings.UTF_Encoding.UTF_16_Wide_String;
   subtype UTF_16_Unbounded_String is Unbounded_Wide_String;
 
-  function To_UTF_16(s: UTF_8_String) return UTF_16_String;
+  --  Format for file names on Open / Create operations: UTF-8
+  Form_For_IO_Open_and_Create: constant String:= "encoding=utf8";
 
+  subtype UTF_8_String is Ada.Strings.UTF_Encoding.UTF_8_String;
+  function File_Exists(s: UTF_8_String) return Boolean;
+
+  --  Conversions UTF-8 <-> UTF-16
+  function To_UTF_16(s: UTF_8_String) return UTF_16_String;
   function To_UTF_8(s: UTF_16_String) return UTF_8_String;
 
 end LEA_Common;

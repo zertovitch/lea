@@ -3,6 +3,7 @@ with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Ada.Wide_Text_IO;
 
+with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 with Ada.Strings.UTF_Encoding.Conversions;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
@@ -18,5 +19,15 @@ package body LEA_Common is
   begin
     return Ada.Strings.UTF_Encoding.Conversions.Convert(s);
   end To_UTF_8;
+
+  function File_Exists(s: UTF_8_String) return Boolean is
+    f: File_Type;
+  begin
+    Open(f, In_File, s, Form_For_IO_Open_and_Create);
+    return True;
+  exception
+    when others =>
+      return False;
+  end File_Exists;
 
 end LEA_Common;

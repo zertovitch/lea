@@ -7,6 +7,7 @@ with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 with GWindows.Colors;
 
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
+with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 
 package body LEA_GWin.Editor is
 
@@ -35,22 +36,11 @@ package body LEA_GWin.Editor is
   is
   pragma Unreferenced (Special_Key);
     CurPos : constant Position := GetCurrentPos (Control);
+    Line     : constant Integer := LineFromPosition (Control, CurPos);
+    Prev_Ind : constant Integer := GetLineIndentation (Control, Line - 1);
   begin
-     if
-       Value = GWindows.GCharacter'Val (10)
-       or
-       Value = GWindows.GCharacter'Val (13)
-     then
-        declare
-           Line     : constant Integer := LineFromPosition (Control, CurPos);
-           Prev_Loc : constant Integer := GetLineIndentation (Control, Line - 1);
-        begin
-           if Line > 0 and Prev_Loc > 0 then
-              SetLineIndentation (Control,
-                                  Line,
-                                  Prev_Loc - Tab_Width);
-           end if;
-        end;
+     if Value = GWindows.GCharacter'Val (13) and Line > 0 and Prev_Ind > 0 then
+       Control.AddText(Prev_Ind * " ");
      end if;
   end On_Character_Added;
 
@@ -95,7 +85,7 @@ package body LEA_GWin.Editor is
       Window.SetEOLMode (SC_EOL_CRLF);
       Window.SetTabWidth (Tab_Width);
       Window.SetUseTabs (False);
-      Window.SetEdgeColumn (80);
+      Window.SetEdgeColumn (100);
       Window.SetEdgeMode (EDGE_LINE);
       --  Window.SetIndentationGuides (True);
 
@@ -194,15 +184,13 @@ package body LEA_GWin.Editor is
     parent.Update_display(toolbar_and_menu);
   end On_Save_Point_Left;
 
-  Form_For_IO_Open_and_Create: constant String:= "encoding=utf8";
-
   procedure Load_text (Window : in out LEA_Scintilla_Type) is
     f: File_Type;
     parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
   begin
     Open(f, In_File, To_UTF_8(GU2G(parent.File_Name)), Form_For_IO_Open_and_Create);
     declare
-      l: constant Count:= Size(f);
+      l: constant Ada.Streams.Stream_IO.Count:= Size(f);
       s: String(1..Integer(l));
       p: Character:= ' ';
     begin
