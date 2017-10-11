@@ -10,8 +10,9 @@ tools like GNAT.
 Platforms supported:
 
   * Windows
-  * Some effort has been made to make LEA cross-UI-toolkits
-    without redoing it from scratch on another platform
+  * Some effort has been made to make LEA cross-UI-toolkits-portable
+    without redoing it from scratch on another platform.
+    See the LEA_Common package and children.
   
 How to build & modify LEA
 
