@@ -13,6 +13,7 @@ package LEA_Common.User_options is
     view_mode    : View_Mode_Type   := Notepad;
     color_theme  : Color_Theme_Type := NPP_default;
     backup       : Backup_mode      := none;
+    indentation  : Integer          := 2;
     -- Horizontal portion of the window for the tree, when view_mode = Studio
     tree_portion : Float:= 0.25;
     win_left,

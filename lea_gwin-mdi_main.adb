@@ -1,5 +1,6 @@
 with LEA_Common;                       use LEA_Common;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
+with LEA_GWin.Options; use LEA_GWin.Options;
 with LEA_GWin.Toolbars;
 
 with GWindows.Application;              use GWindows.Application;
@@ -488,6 +489,8 @@ package body LEA_GWin.MDI_Main is
         MDI_Tile_Vertical (Window);
       when IDM_WINDOW_CLOSE_ALL =>
         My_MDI_Close_All(Window);
+      when IDM_General_options =>
+        On_General_Options(Window);
       when IDM_ABOUT =>
         On_About (Window);
       when others =>

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/10  20:29:29
+-- Transcription time: 2017/10/11  07:58:53
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -106,20 +106,23 @@ package body LEA_Resource_GUI is
     Append_Separator(Menu.Popup_0001);
     Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
-    Append_Menu(Menu.Main, "&Window", Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "&Cascade", IDM_WINDOW_CASCADE);
-    Append_Item(Menu.Popup_0003, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
-    Append_Item(Menu.Popup_0003, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
-    Append_Item(Menu.Popup_0003, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    Append_Menu(Menu.Main, "&Options", Menu.Popup_0003);
+    Append_Item(Menu.Popup_0003, "&General options", IDM_General_options);
     Menu.Popup_0004:= Create_Popup;
-    Append_Menu(Menu.Main, "&Help", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Quick help", IDM_Quick_Help);
-    Append_Item(Menu.Popup_0004, "LEA &Web page (contact, support)", IDM_Web);
-    Append_Separator(Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&About LEA", IDM_ABOUT);
+    Append_Menu(Menu.Main, "&Window", Menu.Popup_0004);
+    Append_Item(Menu.Popup_0004, "&Cascade", IDM_WINDOW_CASCADE);
+    Append_Item(Menu.Popup_0004, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
+    Append_Item(Menu.Popup_0004, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
+    Append_Item(Menu.Popup_0004, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    Menu.Popup_0005:= Create_Popup;
+    Append_Menu(Menu.Main, "&Help", Menu.Popup_0005);
+    Append_Item(Menu.Popup_0005, "&Quick help", IDM_Quick_Help);
+    Append_Item(Menu.Popup_0005, "LEA &Web page (contact, support)", IDM_Web);
+    Append_Separator(Menu.Popup_0005);
+    Append_Item(Menu.Popup_0005, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 143
+  -- Dialog at resource line 147
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -228,7 +231,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 167
+  -- Dialog at resource line 171
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -432,6 +435,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 265
+  -- Last line of resource script file: 271
 
 end LEA_Resource_GUI;

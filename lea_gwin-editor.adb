@@ -11,8 +11,6 @@ with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 
 package body LEA_GWin.Editor is
 
-  Tab_Width : constant := 2;
-
   Key_Words : constant GWindows.GString :=
     "abort abs abstract accept access aliased all and array at begin body case " &
     "constant declare delay delta digits do else elsif end entry exception " &
@@ -87,12 +85,13 @@ package body LEA_GWin.Editor is
             )
         );
       --
-      parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
-      theme: Color_Theme_Type renames parent.Parent.opt.color_theme;
+      parent   : MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+      mdi_root : MDI_Main_Type renames parent.Parent.all;
+      theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
    begin
       --  Set up editor
       Window.SetEOLMode (SC_EOL_CRLF);
-      Window.SetTabWidth (Tab_Width);
+      Window.SetTabWidth (mdi_root.opt.indentation);
       Window.SetUseTabs (False);
       Window.SetEdgeColumn (100);
       Window.SetEdgeMode (EDGE_LINE);

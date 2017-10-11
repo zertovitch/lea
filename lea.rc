@@ -115,6 +115,10 @@ Menu_MDI_Main MENU
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
+    POPUP "&Options"
+    {
+        MENUITEM "&General options", IDM_General_options
+    }
     POPUP "&Window"
     {
         MENUITEM "&Cascade", IDM_WINDOW_CASCADE
@@ -231,6 +235,8 @@ LEA_Doc_Icon       ICON           "ico_bmp/lea_doc.ico"
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 LEA_Icon           ICON           "ico_bmp/lea.ico"
 
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Options_Icon    ICON DISCARDABLE	"ico_bmp/options.ico"
 
 
 //

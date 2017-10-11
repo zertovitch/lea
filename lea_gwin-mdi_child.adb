@@ -1,6 +1,8 @@
 with LEA_Common;                        use LEA_Common;
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
+with LEA_GWin.Options;                  use LEA_GWin.Options;
+
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Buttons;                  use GWindows.Buttons;
@@ -513,6 +515,7 @@ package body LEA_GWin.MDI_Child is
   overriding procedure On_Focus (Window : in out MDI_Child_Type) is
   begin
     Update_display(Window, toolbar_and_menu);
+    Window.Editor.Focus;
   end On_Focus;
 
   overriding procedure On_Close (Window    : in out MDI_Child_Type;
