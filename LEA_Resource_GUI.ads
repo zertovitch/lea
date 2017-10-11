@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/11  07:58:53
+-- Transcription time: 2017/10/11  16:14:47
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -111,7 +111,7 @@ package LEA_Resource_GUI is
   type Option_box_Type is new Window_Type with record
 
     Group_color_theme: Group_Box_Type;
-    Color_theme_list_box: List_Box_Type;
+    Color_theme_list_box: Drop_Down_Combo_Box_Type;
     Group_Backup: Group_Box_Type;
     Backup_bak_button: Radio_Button_Type;
     Backup_none_button: Radio_Button_Type;
@@ -232,6 +232,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 271
+  -- Last line of resource script file: 273
 
 end LEA_Resource_GUI;

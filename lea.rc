@@ -171,7 +171,7 @@ CAPTION "Options"
 FONT 8, "Ms Shell Dlg"
 {
     GROUPBOX        "Color theme", Group_color_theme, 6, 57, 180, 28, 0, WS_EX_LEFT
-    LISTBOX         Color_theme_list_box, 59, 65, 89, 16, WS_TABSTOP | WS_VSCROLL | LBS_NOINTEGRALHEIGHT | LBS_SORT | LBS_NOTIFY, WS_EX_LEFT
+    COMBOBOX        Color_theme_list_box, 61, 68, 108, 20, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
     GROUPBOX        "Backup", Group_Backup, 6, 26, 174, 26, 0, WS_EX_LEFT
     AUTORADIOBUTTON "Simple (.bak)", Backup_bak_button, 80, 36, 91, 11, 0, WS_EX_LEFT
     AUTORADIOBUTTON "None", Backup_none_button, 15, 38, 43, 8, 0, WS_EX_LEFT
@@ -225,6 +225,10 @@ LEA_Icon_Small     ICON           "ico_bmp/lea16.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Options_Icon       ICON           "ico_bmp/options.ico"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Binoculars_Icon    ICON           "ico_bmp/find.ico"
 
 
@@ -235,8 +239,6 @@ LEA_Doc_Icon       ICON           "ico_bmp/lea_doc.ico"
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 LEA_Icon           ICON           "ico_bmp/lea.ico"
 
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Options_Icon    ICON DISCARDABLE	"ico_bmp/options.ico"
 
 
 //

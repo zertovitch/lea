@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/11  07:58:53
+-- Transcription time: 2017/10/11  16:14:47
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -289,8 +289,8 @@ package body LEA_Resource_GUI is
     Use_GUI_Font(Window);
     Dlg_to_Scn(  6, 57, 180, 28, x,y,w,h);
     Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
-    Dlg_to_Scn(  59, 65, 89, 16, x,y,w,h);
-    Create( Window.Color_theme_list_box, Window, x,y,w,h, True, ID => Color_theme_list_box);
+    Dlg_to_Scn(  61, 68, 108, 20, x,y,w,h);
+    Create( Window.Color_theme_list_box, Window, "", x,y,w,h, False, ID => Color_theme_list_box);
     Dlg_to_Scn(  6, 26, 174, 26, x,y,w,h);
     Create( Window.Group_Backup, Window, "Backup", x,y,w,h);
     Dlg_to_Scn(  80, 36, 91, 11, x,y,w,h);
@@ -435,6 +435,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 271
+  -- Last line of resource script file: 273
 
 end LEA_Resource_GUI;
