@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/11  16:14:47
+-- Transcription time: 2017/10/11  17:39:34
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -287,20 +287,24 @@ package body LEA_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  6, 57, 180, 28, x,y,w,h);
+    Dlg_to_Scn(  7, 10, 50, 15, x,y,w,h);
+    Create_Label( Window, "Indentation", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  49, 9, 16, 15, x,y,w,h);
+    Create( Window.Indentation_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Indentation_edit_box);
+    Dlg_to_Scn(  93, 10, 52, 15, x,y,w,h);
+    Create_Label( Window, "Right margin", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  147, 9, 31, 15, x,y,w,h);
+    Create( Window.Right_margin_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Right_margin_edit_box);
+    Dlg_to_Scn(  6, 57, 240, 28, x,y,w,h);
     Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
     Dlg_to_Scn(  61, 68, 108, 20, x,y,w,h);
     Create( Window.Color_theme_list_box, Window, "", x,y,w,h, False, ID => Color_theme_list_box);
-    Dlg_to_Scn(  6, 26, 174, 26, x,y,w,h);
+    Dlg_to_Scn(  6, 26, 240, 28, x,y,w,h);
     Create( Window.Group_Backup, Window, "Backup", x,y,w,h);
     Dlg_to_Scn(  80, 36, 91, 11, x,y,w,h);
     Create( Window.Backup_bak_button, Window, "Simple (.bak)", x,y,w,h, ID => Backup_bak_button);
     Dlg_to_Scn(  15, 38, 43, 8, x,y,w,h);
     Create( Window.Backup_none_button, Window, "None", x,y,w,h, ID => Backup_none_button);
-    Dlg_to_Scn(  7, 10, 50, 13, x,y,w,h);
-    Create_Label( Window, "Indentation", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  49, 9, 16, 12, x,y,w,h);
-    Create( Window.Indentation_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Indentation_edit_box);
     Dlg_to_Scn(  191, 103, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -435,6 +439,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 273
+  -- Last line of resource script file: 275
 
 end LEA_Resource_GUI;

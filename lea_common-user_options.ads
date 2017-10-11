@@ -11,9 +11,10 @@ package LEA_Common.User_options is
   --
   type Option_Pack_Type is record
     view_mode    : View_Mode_Type   := Notepad;
-    color_theme  : Color_Theme_Type := NPP_default;
+    color_theme  : Color_Theme_Type := Default;
     backup       : Backup_mode      := none;
     indentation  : Integer          := 2;
+    right_margin : Integer          := 100;  --  also called "vertical edge"
     -- Horizontal portion of the window for the tree, when view_mode = Studio
     tree_portion : Float:= 0.25;
     win_left,

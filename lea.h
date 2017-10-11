@@ -25,6 +25,7 @@
 #define IDM_Unselect_all                        40003
 #define GNAT_Version                            40004
 #define IDM_Save_File                           40004
+#define Right_margin_edit_box                   40004
 #define GNAVI_URL                               40005
 #define Group_color_theme                       40005
 #define IDM_Redo                                40005

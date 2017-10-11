@@ -11,7 +11,7 @@ with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 
 package body LEA_GWin.Editor is
 
-  Key_Words : constant GWindows.GString :=
+  Ada_keywords : constant GWindows.GString :=
     "abort abs abstract accept access aliased all and array at begin body case " &
     "constant declare delay delta digits do else elsif end entry exception " &
     "exit for function generic goto if in interface is limited loop mod new not null of " &
@@ -19,6 +19,9 @@ package body LEA_GWin.Editor is
     "record rem renames requeue return reverse select separate some subtype synchronized tagged " &
     "task terminate then type until use when while with xor";
 
+  --  Other keyword sets in mind:
+  --  - GNAT project files
+    
   overriding
   procedure On_Change (Control : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
@@ -59,7 +62,7 @@ package body LEA_GWin.Editor is
       --
       theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
         (
-          NPP_default =>
+          Default =>
             (foreground           => Black,
              background           => White,
              keyword              => Blue,
@@ -73,7 +76,7 @@ package body LEA_GWin.Editor is
             ),
           Dark_side   =>
             (foreground           => Light_Gray,
-             background           => Dark_Gray,
+             background           => 16#242322#,
              keyword              => Dark_Orange,
              number               => Red,
              comment              => 16#CF9F72#,
@@ -93,12 +96,12 @@ package body LEA_GWin.Editor is
       Window.SetEOLMode (SC_EOL_CRLF);
       Window.SetTabWidth (mdi_root.opt.indentation);
       Window.SetUseTabs (False);
-      Window.SetEdgeColumn (100);
+      Window.SetEdgeColumn (mdi_root.opt.right_margin);
       Window.SetEdgeMode (EDGE_LINE);
       --  Window.SetIndentationGuides (True);
 
       Window.SetLexer (SCLEX_ADA);
-      Window.SetKeyWords (0, Key_Words);
+      Window.SetKeyWords (0, Ada_keywords);
 
       Window.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
       Window.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));

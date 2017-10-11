@@ -9,7 +9,7 @@ package LEA_Common is
 
   type View_Mode_Type is (Notepad, Studio);
 
-  type Color_Theme_Type is (NPP_default, Dark_side);
+  type Color_Theme_Type is (Default, Dark_side);
 
   -------------
   -- Strings --

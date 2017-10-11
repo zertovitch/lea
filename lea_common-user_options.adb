@@ -4,7 +4,7 @@ package body LEA_Common.User_options is
 
     type Key is
       ( view_mode, color_theme,
-        backup, indent,
+        backup, indent, edge,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
         tree_portion,
@@ -31,6 +31,8 @@ package body LEA_Common.User_options is
                 opt.backup := Backup_mode'Wide_Value(s);
               when indent =>
                 opt.indentation := Integer'Wide_Value(s);
+              when edge =>
+                opt.right_margin := Integer'Wide_Value(s);
               when win_left =>
                 opt.win_left:= Integer'Wide_Value(s);
               when win_top =>
@@ -79,6 +81,8 @@ package body LEA_Common.User_options is
               R(Backup_mode'Wide_Image(opt.backup));
             when indent =>
               R(Integer'Wide_Image(opt.indentation));
+            when edge =>
+              R(Integer'Wide_Image(opt.right_margin));
             when win_left =>
               R(Integer'Wide_Image(opt.win_left));
             when win_top =>

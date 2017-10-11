@@ -1,0 +1,20 @@
+----------------------------------
+LEA - a Lightweight Editor for Ada
+----------------------------------
+
+LEA, a Lightweight Editor for Ada, aims to provide an easy,
+script-like, "look & feel" for developing Ada projects of
+any size, while enabling access to full-scale development
+tools like GNAT.
+
+Platforms supported:
+
+  * Windows
+  * Some effort has been made to make LEA cross-UI-toolkits
+    without redoing it from scratch on another platform
+  
+How to build & modify LEA
+
+  * You need the GNAT compiler: http://libre.adacore.com
+  * Read the comments in the lea.gpr (just open as text file) for further instructions.
+  
