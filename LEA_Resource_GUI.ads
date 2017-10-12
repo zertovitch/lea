@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/11  17:39:34
+-- Transcription time: 2017/10/12  18:41:40
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -174,56 +174,56 @@ package LEA_Resource_GUI is
   Folders_BMP               : constant:=    124;
   Binoculars_Icon           : constant:=    132;
   Backup_none_button        : constant:=  40000;
-  Copyright_label           : constant:=  40000;
-  Group_Backup              : constant:=  40000;
-  IDM_New_File              : constant:=  40000;
-  AZip_URL                  : constant:=  40001;
-  IDM_Open_File             : constant:=  40001;
-  Indentation_edit_box      : constant:=  40001;
-  Color_theme_list_box      : constant:=  40002;
-  IDM_Undo                  : constant:=  40002;
-  Version_label             : constant:=  40002;
-  Backup_bak_button         : constant:=  40003;
-  GNAT_URL                  : constant:=  40003;
-  IDM_Save_All              : constant:=  40003;
-  IDM_Unselect_all          : constant:=  40003;
-  GNAT_Version              : constant:=  40004;
-  IDM_Save_File             : constant:=  40004;
-  Right_margin_edit_box     : constant:=  40004;
-  GNAVI_URL                 : constant:=  40005;
-  Group_color_theme         : constant:=  40005;
-  IDM_Redo                  : constant:=  40005;
-  IDM_ABOUT                 : constant:=  40005;
-  IDM_TEST_ARCHIVE          : constant:=  40006;
-  ResEdit_URL               : constant:=  40006;
-  IDM_Save_As               : constant:=  40007;
-  IDM_QUIT                  : constant:=  40008;
-  IDM_Close                 : constant:=  40009;
-  IDM_RECOMPRESS_ARCHIVE    : constant:=  40009;
-  IDM_EXTRACT               : constant:=  40010;
-  IDM_General_options       : constant:=  40010;
-  IDM_FIND_IN_ARCHIVE       : constant:=  40011;
-  IDM_FLAT_VIEW             : constant:=  40012;
-  IDM_TREE_VIEW             : constant:=  40013;
-  IDM_MRU_2                 : constant:=  40014;
-  IDM_MRU_3                 : constant:=  40015;
-  IDM_MRU_4                 : constant:=  40016;
-  IDM_MRU_5                 : constant:=  40017;
-  IDM_MRU_6                 : constant:=  40018;
-  IDM_MRU_7                 : constant:=  40019;
-  IDM_MRU_8                 : constant:=  40020;
-  IDM_MRU_9                 : constant:=  40021;
-  IDM_WINDOW_CASCADE        : constant:=  40022;
-  IDM_WINDOW_TILE_HORIZONTAL: constant:=  40023;
-  IDM_WINDOW_TILE_VERTICAL  : constant:=  40024;
-  IDM_WINDOW_CLOSE_ALL      : constant:=  40025;
-  IDM_ADD_FILES             : constant:=  40027;
-  IDM_UPDATE_ARCHIVE        : constant:=  40028;
-  IDM_Properties            : constant:=  40030;
-  IDM_Quick_Help            : constant:=  40031;
-  IDM_Web                   : constant:=  40032;
-  IDM_Select_all            : constant:=  40033;
-  IDM_MRU_1                 : constant:=  40034;
+  Copyright_label           : constant:=  40001;
+  Group_Backup              : constant:=  40002;
+  IDM_New_File              : constant:=  40003;
+  AZip_URL                  : constant:=  40004;
+  IDM_Open_File             : constant:=  40005;
+  Indentation_edit_box      : constant:=  40006;
+  Color_theme_list_box      : constant:=  40007;
+  IDM_Undo                  : constant:=  40008;
+  Version_label             : constant:=  40009;
+  Backup_bak_button         : constant:=  40010;
+  GNAT_URL                  : constant:=  40011;
+  IDM_Save_All              : constant:=  40012;
+  IDM_Unselect_all          : constant:=  40013;
+  GNAT_Version              : constant:=  40014;
+  IDM_Save_File             : constant:=  40015;
+  Right_margin_edit_box     : constant:=  40016;
+  GNAVI_URL                 : constant:=  40017;
+  Group_color_theme         : constant:=  40018;
+  IDM_Redo                  : constant:=  40019;
+  IDM_ABOUT                 : constant:=  40020;
+  IDM_TEST_ARCHIVE          : constant:=  40021;
+  ResEdit_URL               : constant:=  40022;
+  IDM_Save_As               : constant:=  40023;
+  IDM_QUIT                  : constant:=  40024;
+  IDM_Close                 : constant:=  40025;
+  IDM_RECOMPRESS_ARCHIVE    : constant:=  40026;
+  IDM_EXTRACT               : constant:=  40027;
+  IDM_General_options       : constant:=  40028;
+  IDM_FIND_IN_ARCHIVE       : constant:=  40029;
+  IDM_FLAT_VIEW             : constant:=  40030;
+  IDM_TREE_VIEW             : constant:=  40031;
+  IDM_MRU_2                 : constant:=  40032;
+  IDM_MRU_3                 : constant:=  40033;
+  IDM_MRU_4                 : constant:=  40034;
+  IDM_MRU_5                 : constant:=  40035;
+  IDM_MRU_6                 : constant:=  40036;
+  IDM_MRU_7                 : constant:=  40037;
+  IDM_MRU_8                 : constant:=  40038;
+  IDM_MRU_9                 : constant:=  40039;
+  IDM_WINDOW_CASCADE        : constant:=  40040;
+  IDM_WINDOW_TILE_HORIZONTAL: constant:=  40041;
+  IDM_WINDOW_TILE_VERTICAL  : constant:=  40042;
+  IDM_WINDOW_CLOSE_ALL      : constant:=  40043;
+  IDM_ADD_FILES             : constant:=  40044;
+  IDM_UPDATE_ARCHIVE        : constant:=  40045;
+  IDM_Properties            : constant:=  40046;
+  IDM_Quick_Help            : constant:=  40047;
+  IDM_Web                   : constant:=  40048;
+  IDM_Select_all            : constant:=  40049;
+  IDM_MRU_1                 : constant:=  40050;
 
   -- ** Some helper utilities (spec).
 

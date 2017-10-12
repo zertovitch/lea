@@ -1,3 +1,4 @@
+del lea.exe
 gprbuild -P lea 
 copy lea.exe lea_debug.exe
 del lea.exe
