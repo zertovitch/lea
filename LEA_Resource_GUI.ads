@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/12  21:31:43
+-- Transcription time: 2017/10/12  22:47:55
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -41,7 +41,7 @@ package LEA_Resource_GUI is
     Popup_0008: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 93
+  -- Menu at line 96
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -54,7 +54,7 @@ package LEA_Resource_GUI is
     Popup_0005: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 138
+  -- Menu at line 141
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -77,7 +77,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 165
+  -- Dialog at resource line 168
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -125,7 +125,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  -- Dialog at resource line 186
+  -- Dialog at resource line 189
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -226,6 +226,8 @@ package LEA_Resource_GUI is
   IDM_MRU_1                 : constant:=  40050;
   IDM_Indent                : constant:=  40051;
   IDM_Unindent              : constant:=  40052;
+  IDM_Comment               : constant:=  40053;
+  IDM_Uncomment             : constant:=  40054;
 
   -- ** Some helper utilities (spec).
 
@@ -237,6 +239,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 278
+  -- Last line of resource script file: 283
 
 end LEA_Resource_GUI;

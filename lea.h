@@ -62,3 +62,5 @@
 #define IDM_MRU_1                               40050
 #define IDM_Indent                              40051
 #define IDM_Unindent                            40052
+#define IDM_Comment                             40053
+#define IDM_Uncomment                           40054

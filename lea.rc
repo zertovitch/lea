@@ -63,6 +63,9 @@ Menu_MDI_Child MENU
         MENUITEM SEPARATOR
         MENUITEM "&Indent\tTab", IDM_Indent
         MENUITEM "&Unindent\tShift+Tab", IDM_Unindent
+        MENUITEM SEPARATOR
+        MENUITEM "&Comment\tF7", IDM_Comment
+        MENUITEM "&Uncomment\tShift+F7", IDM_Uncomment
     }
     POPUP "&Tools"
     {
@@ -201,6 +204,8 @@ Main_Menu ACCELERATORS
     "W",            IDM_Close, VIRTKEY, CONTROL
     "A",            IDM_Select_all, VIRTKEY, CONTROL
     "U",            IDM_Unselect_all, VIRTKEY, CONTROL
+    VK_F7,         IDM_Comment, VIRTKEY
+    VK_F7,         IDM_Uncomment, VIRTKEY, SHIFT
     "E",            IDM_EXTRACT, VIRTKEY, CONTROL
     "T",            IDM_TEST_ARCHIVE, VIRTKEY, CONTROL
     "F",            IDM_FIND_IN_ARCHIVE, VIRTKEY, CONTROL
