@@ -503,6 +503,10 @@ package body LEA_GWin.MDI_Child is
         Window.Update_display(toolbar_and_menu);  --  Eventually disable Redo if no more available
       when IDM_Select_all =>
         Window.Editor.SelectAll;
+      when IDM_Indent =>
+        Window.Editor.Tab;
+      when IDM_Unindent =>
+        Window.Editor.BackTab;
       when IDM_FLAT_VIEW =>
         Change_View(Window, Notepad, force => False);
       when IDM_TREE_VIEW =>

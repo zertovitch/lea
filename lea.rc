@@ -60,6 +60,9 @@ Menu_MDI_Child MENU
         MENUITEM "&Redo\tCtrl+Y", IDM_Redo
         MENUITEM SEPARATOR
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
+        MENUITEM SEPARATOR
+        MENUITEM "&Indent\tTab", IDM_Indent
+        MENUITEM "&Unindent\tShift+Tab", IDM_Unindent
     }
     POPUP "&Tools"
     {

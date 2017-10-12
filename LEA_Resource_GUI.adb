@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/12  18:41:40
+-- Transcription time: 2017/10/12  21:31:43
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -57,6 +57,9 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0003, "&Redo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Y", IDM_Redo);
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &all" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
+    Append_Separator(Menu.Popup_0003);
+    Append_Item(Menu.Popup_0003, "&Indent" & To_GString_From_String((1=>ASCII.HT)) & "Tab", IDM_Indent);
+    Append_Item(Menu.Popup_0003, "&Unindent" & To_GString_From_String((1=>ASCII.HT)) & "Shift+Tab", IDM_Unindent);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Compile with HAC" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+T", IDM_TEST_ARCHIVE);
@@ -81,7 +84,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0008, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 96
+  -- Menu at line 99
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -122,7 +125,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 147
+  -- Dialog at resource line 150
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -231,7 +234,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 171
+  -- Dialog at resource line 174
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -439,6 +442,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 275
+  -- Last line of resource script file: 278
 
 end LEA_Resource_GUI;

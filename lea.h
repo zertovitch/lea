@@ -60,3 +60,5 @@
 #define IDM_Web                                 40048
 #define IDM_Select_all                          40049
 #define IDM_MRU_1                               40050
+#define IDM_Indent                              40051
+#define IDM_Unindent                            40052
