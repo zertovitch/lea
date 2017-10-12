@@ -46,8 +46,13 @@ package LEA_GWin.Editor is
   overriding
   procedure On_Save_Point_Left (Control : in out LEA_Scintilla_Type);
 
-  procedure Load_text (Window : in out LEA_Scintilla_Type);
+  overriding
+  procedure On_Update_UI (Control : in out LEA_Scintilla_Type);
 
+  --  Methods introduced in the LEA_Scintilla_Type class
+
+  procedure Load_text (Window : in out LEA_Scintilla_Type);
   procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString);
+  procedure Apply_options (Window : in out LEA_Scintilla_Type);
 
 end LEA_GWin.Editor;

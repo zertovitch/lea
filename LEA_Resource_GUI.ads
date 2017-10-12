@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/12  22:47:55
+-- Transcription time: 2017/10/13  00:02:19
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -202,7 +202,7 @@ package LEA_Resource_GUI is
   IDM_RECOMPRESS_ARCHIVE    : constant:=  40026;
   IDM_EXTRACT               : constant:=  40027;
   IDM_General_options       : constant:=  40028;
-  IDM_FIND_IN_ARCHIVE       : constant:=  40029;
+  IDM_Find                  : constant:=  40029;
   IDM_FLAT_VIEW             : constant:=  40030;
   IDM_TREE_VIEW             : constant:=  40031;
   IDM_MRU_2                 : constant:=  40032;

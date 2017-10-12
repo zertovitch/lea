@@ -21,7 +21,7 @@ package body LEA_GWin.Editor is
 
   --  Other keyword sets in mind:
   --  - GNAT project files
-    
+
   overriding
   procedure On_Change (Control : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
@@ -47,99 +47,24 @@ package body LEA_GWin.Editor is
 
   overriding
   procedure On_Create (Window : in out LEA_Scintilla_Type) is
-      use GWindows.Colors;
-      --
-      App_default_font      : constant GString := "Courier New";
-      App_default_font_size : constant := 10;
-      --
-      type Color_topic is (
-        foreground, background,
-        keyword, number, comment, string, character,
-        caret,
-        selection_foreground,
-        selection_background
-      );
-      --
-      theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
-        (
-          Default =>
-            (foreground           => Black,
-             background           => White,
-             keyword              => Blue,
-             number               => Dark_Orange,
-             comment              => Dark_Green,
-             string               => Dark_Gray,
-             character            => Dark_Gray,
-             caret                => Black,
-             selection_foreground => Black,
-             selection_background => Light_Gray
-            ),
-          Dark_side   =>
-            (foreground           => Light_Gray,
-             background           => 16#242322#,
-             keyword              => Dark_Orange,
-             number               => Red,
-             comment              => 16#CF9F72#,
-             string               => Yellow,
-             character            => Yellow,
-             caret                => White,
-             selection_foreground => White,
-             selection_background => 16#D28022#
-            )
-        );
-      --
-      parent   : MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
-      mdi_root : MDI_Main_Type renames parent.Parent.all;
-      theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
-   begin
-      --  Set up editor
-      Window.SetEOLMode (SC_EOL_CRLF);
-      Window.SetTabWidth (mdi_root.opt.indentation);
-      Window.SetUseTabs (False);
-      Window.SetEdgeColumn (mdi_root.opt.right_margin);
-      Window.SetEdgeMode (EDGE_LINE);
-      --  Window.SetIndentationGuides (True);
+  begin
+    --  Set up editor
+    Window.SetEOLMode (SC_EOL_CRLF);
+    Window.SetUseTabs (False);
+    Window.SetEdgeMode (EDGE_LINE);
+    --  Window.SetIndentationGuides (True);
 
-      Window.SetLexer (SCLEX_ADA);
-      Window.SetKeyWords (0, Ada_keywords);
+    Window.SetLexer (SCLEX_ADA);
+    Window.SetKeyWords (0, Ada_keywords);
 
-      Window.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
-      Window.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
-      Window.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
-      Window.StyleSetFont (STYLE_DEFAULT, App_default_font);
-      Window.StyleClearAll;
+    Window.Apply_options;
 
-      Window.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
-      Window.SetSelFore (True, theme_color(theme, selection_foreground));
-      Window.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
-      Window.SetSelBack (True, theme_color(theme, selection_background));
-      Window.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
-      Window.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
+    Window.SetMarginTypeN (1, SC_MARGIN_NUMBER);  --  Display line numbers
+    Window.SetMarginWidthN (1, 40);
+    Window.SetMarginWidthN (2, 10);
 
-      Window.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
-      Window.StyleSetFore (SCE_ADA_NUMBER,      theme_color(theme, number));
-      Window.StyleSetFore (SCE_ADA_WORD,        theme_color(theme, keyword));
-      Window.StyleSetFore (SCE_ADA_STRING,      theme_color(theme, string));
-      Window.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(theme, character));
-      Window.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
-
-      --  Cases where the text is obviously wrong
-      --  (unfinished character or string, illegal identifier)
-      Window.StyleSetFore (SCE_ADA_CHARACTEREOL, White);
-      Window.StyleSetBack (SCE_ADA_CHARACTEREOL, Dark_Red);
-      Window.StyleSetFore (SCE_ADA_STRINGEOL, White);
-      Window.StyleSetBack (SCE_ADA_STRINGEOL, Dark_Red);
-      Window.StyleSetFore (SCE_ADA_ILLEGAL, White);
-      Window.StyleSetBack (SCE_ADA_ILLEGAL, Dark_Red);
-
-      Window.SetCaretFore (theme_color(theme, caret));
-
-      Window.SetMarginTypeN (1, SC_MARGIN_NUMBER);  --  Display line numbers
-      Window.SetMarginWidthN (1, 40);
-      Window.SetMarginWidthN (2, 10);
-
-      Window.Focus;
-   end On_Create;
+    Window.Focus;
+  end On_Create;
 
   overriding
   procedure On_Message
@@ -197,6 +122,13 @@ package body LEA_GWin.Editor is
     parent.Update_display(toolbar_and_menu);
   end On_Save_Point_Left;
 
+  overriding
+  procedure On_Update_UI (Control : in out LEA_Scintilla_Type) is
+    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  begin
+    parent.Update_display(status_bar);
+  end;
+
   procedure Load_text (Window : in out LEA_Scintilla_Type) is
     f: File_Type;
     parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
@@ -241,5 +173,86 @@ package body LEA_GWin.Editor is
     --  all operations around backups are successful. This is managed by
     --  the parent window's method, MDI_Child_Type.Save.
   end Save_text;
+
+  procedure Apply_options (Window : in out LEA_Scintilla_Type) is
+      use GWindows.Colors;
+      --
+      App_default_font      : constant GString := "Courier New";
+      App_default_font_size : constant := 10;
+      --
+      type Color_topic is (
+        foreground, background,
+        keyword, number, comment, string, character,
+        caret,
+        selection_foreground,
+        selection_background
+      );
+      --
+      theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
+        (
+          Default =>
+            (foreground           => Black,
+             background           => White,
+             keyword              => Blue,
+             number               => Dark_Orange,
+             comment              => Dark_Green,
+             string               => Dark_Gray,
+             character            => Dark_Gray,
+             caret                => Black,
+             selection_foreground => Black,
+             selection_background => Light_Gray
+            ),
+          Dark_side   =>
+            (foreground           => Light_Gray,
+             background           => 16#242322#,
+             keyword              => Dark_Orange,
+             number               => Red,
+             comment              => 16#CF9F72#,
+             string               => Yellow,
+             character            => Yellow,
+             caret                => White,
+             selection_foreground => White,
+             selection_background => 16#D28022#
+            )
+        );
+      --
+      parent   : MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+      mdi_root : MDI_Main_Type renames parent.Parent.all;
+      theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
+   begin
+      Window.SetTabWidth (mdi_root.opt.indentation);
+      Window.SetEdgeColumn (mdi_root.opt.right_margin);
+
+      Window.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
+      Window.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
+      Window.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
+      Window.StyleSetFont (STYLE_DEFAULT, App_default_font);
+      Window.StyleClearAll;
+
+      Window.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
+      Window.SetSelFore (True, theme_color(theme, selection_foreground));
+      Window.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
+      Window.SetSelBack (True, theme_color(theme, selection_background));
+      Window.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
+      Window.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
+
+      Window.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
+      Window.StyleSetFore (SCE_ADA_NUMBER,      theme_color(theme, number));
+      Window.StyleSetFore (SCE_ADA_WORD,        theme_color(theme, keyword));
+      Window.StyleSetFore (SCE_ADA_STRING,      theme_color(theme, string));
+      Window.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(theme, character));
+      Window.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
+
+      --  Cases where the text is obviously wrong
+      --  (unfinished character or string, illegal identifier)
+      Window.StyleSetFore (SCE_ADA_CHARACTEREOL, White);
+      Window.StyleSetBack (SCE_ADA_CHARACTEREOL, Dark_Red);
+      Window.StyleSetFore (SCE_ADA_STRINGEOL, White);
+      Window.StyleSetBack (SCE_ADA_STRINGEOL, Dark_Red);
+      Window.StyleSetFore (SCE_ADA_ILLEGAL, White);
+      Window.StyleSetBack (SCE_ADA_ILLEGAL, Dark_Red);
+
+      Window.SetCaretFore (theme_color(theme, caret));
+  end Apply_options;
 
 end LEA_GWin.Editor;

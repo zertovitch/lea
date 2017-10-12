@@ -30,7 +30,7 @@ package body LEA_GWin.MDI_Child is
   end Folder_Focus;
 
   procedure Update_status_bar(Window : in out MDI_Child_Type) is
-    pos: Scintilla.Position;
+    pos, sel_a, sel_z: Scintilla.Position;
   begin
     if Window.File_Name = Null_GString_Unbounded then
       Window.Status_Bar.Text("No file", 0);
@@ -46,24 +46,33 @@ package body LEA_GWin.MDI_Child is
       "     Lines:" & Integer'Wide_Image(Window.Editor.GetLineCount),
       1);
     pos:= Window.Editor.GetCurrentPos;
+    sel_a:= Window.Editor.GetSelectionStart;
+    sel_z:= Window.Editor.GetSelectionEnd;
     Window.Status_Bar.Text(
-      "Line:" & Integer'Wide_Image(1 + Window.Editor.LineFromPosition(pos)) &
+      "Line:"  & Integer'Wide_Image(1 + Window.Editor.LineFromPosition(pos)) &
       " Col:" & Integer'Wide_Image(1 + Window.Editor.GetColumn(pos)),
       2);
+    Window.Status_Bar.Text("Sel:" & Integer'Wide_Image(sel_z - sel_a) &
+      " (ln:" & Integer'Wide_Image(
+         1 +
+         Window.Editor.LineFromPosition(sel_z) -
+         Window.Editor.LineFromPosition(sel_a)
+      ) & ')',
+      3);
     case Window.Editor.GetEOLMode is
       when SC_EOL_CR =>
-        Window.Status_Bar.Text("EOL: Mac", 3);
+        Window.Status_Bar.Text("EOL: Mac",     4);
       when SC_EOL_CRLF =>
-        Window.Status_Bar.Text("EOL: Windows", 3);
+        Window.Status_Bar.Text("EOL: Windows", 4);
       when SC_EOL_LF =>
-        Window.Status_Bar.Text("EOL: Unix", 3);
+        Window.Status_Bar.Text("EOL: Unix",    4);
       when others =>
         null;
     end case;
     if Window.Editor.GetOvertype then
-      Window.Status_Bar.Text("OVR", 5);
+      Window.Status_Bar.Text("OVR", 6);
     else
-      Window.Status_Bar.Text("INS", 5);
+      Window.Status_Bar.Text("INS", 6);
     end if;
   end Update_status_bar;
 
@@ -74,6 +83,11 @@ package body LEA_GWin.MDI_Child is
     bar.Enabled(IDM_Redo, Window.Editor.CanRedo);
     bar.Enabled(IDM_Save_File, Window.Editor.modified);
     bar.Enabled(IDM_Save_All, Window.save_all_hint);
+    bar.Enabled(IDM_Indent, True);
+    bar.Enabled(IDM_Unindent, True);
+    bar.Enabled(IDM_Comment, False);    --  tbd
+    bar.Enabled(IDM_Uncomment, False);  --  tbd
+    bar.Enabled(IDM_Find, True);
     if not Window.is_closing then
       null;  --  bar.Enabled(IDM_ADD_FILES, True);
     end if;
@@ -220,12 +234,13 @@ package body LEA_GWin.MDI_Child is
 
     Window.Status_Bar.Create(Window, "No file");
     Window.Status_Bar.Parts(
-      (0 => 200,  --  General info ("Ada file", ...)
-       1 => 400,  --  Length & lines
-       2 => 560,  --  Line / Col /sel
-       3 => 650,  --  Unix / Windows / Mac EOLs
-       4 => 770,  --  ANSI / Unicode
-       5 => 800   --  Ins / Ovr
+      (0 => 150,  --  General info ("Ada file", ...)
+       1 => 320,  --  Length & lines
+       2 => 440,  --  Line / Col
+       3 => 560,  --  Selection
+       4 => 650,  --  Unix / Windows / Mac EOLs
+       5 => 770,  --  ANSI / Unicode
+       6 => 800   --  Ins / Ovr
        )
     );
     Window.Status_Bar.Dock(At_Bottom);
@@ -559,9 +574,17 @@ package body LEA_GWin.MDI_Child is
       Memorize_splitter(Window);
       --  Window.Parent.opt.tree_portion:= Window.opt.tree_portion;
       --
-      -- In case there is no more child window, disable toolbar items.
-      -- This is reversed if another child window is focused.
-      Window.Parent.Tool_Bar.Enabled(IDM_ADD_FILES, False);
+      --  For the case there is no more child window, disable toolbar items.
+      --  This action is reversed as soon as another child window is focused.
+      Window.Parent.Tool_Bar.Enabled(IDM_Save_File, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Save_All, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Undo, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Redo, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Comment, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Uncomment, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Indent, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Unindent, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Find, False);
       Window.is_closing:= True;
     end if;
   end On_Close;

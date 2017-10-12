@@ -208,7 +208,7 @@ Main_Menu ACCELERATORS
     VK_F7,         IDM_Uncomment, VIRTKEY, SHIFT
     "E",            IDM_EXTRACT, VIRTKEY, CONTROL
     "T",            IDM_TEST_ARCHIVE, VIRTKEY, CONTROL
-    "F",            IDM_FIND_IN_ARCHIVE, VIRTKEY, CONTROL
+    "F",            IDM_Find, VIRTKEY, CONTROL
     VK_ADD,        IDM_ADD_FILES, VIRTKEY
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
     "R",            IDM__RECOMPRESS_ARCHIVE, VIRTKEY, CONTROL

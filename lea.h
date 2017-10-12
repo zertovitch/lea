@@ -38,7 +38,7 @@
 #define IDM__RECOMPRESS_ARCHIVE                 40026
 #define IDM_EXTRACT                             40027
 #define IDM_General_options                     40028
-#define IDM_FIND_IN_ARCHIVE                     40029
+#define IDM_Find                                40029
 #define IDM__FLAT_VIEW                          40030
 #define IDM__TREE_VIEW                          40031
 #define IDM_MRU_2                               40032

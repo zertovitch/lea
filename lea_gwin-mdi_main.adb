@@ -38,7 +38,7 @@ package body LEA_GWin.MDI_Main is
         begin
           if pw.File_Name = File_Name then
             is_open:= True;
-            Focus(pw);
+            pw.Focus;  --  Focus on document already open in our app.
           end if;
         end;
       end if;
@@ -110,7 +110,7 @@ package body LEA_GWin.MDI_Main is
   begin
     Focus_an_already_opened_window( Window, File_Name, is_open );
     if is_open then
-      return;        -- nothing to do, archive already in a window
+      return;        -- nothing to do, document already in a window
     end if;
     declare
       New_Window : constant MDI_Child_Access := new MDI_Child_Type;
