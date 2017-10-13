@@ -211,6 +211,9 @@ package body LEA_GWin.Editor is
   end Apply_options;
 
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type) is
+    --
+    blank_line_code: constant:= -1;
+    --
     function Get_visible_indentation(s: GString) return Integer is
     begin
       for i in s'Range loop
@@ -218,12 +221,12 @@ package body LEA_GWin.Editor is
           when ' ' | GWindows.GCharacter'Val (8) =>
             null;  --  only white space
           when GWindows.GCharacter'Val (13) | GWindows.GCharacter'Val (10) =>
-            return 0;
+            return blank_line_code;
           when others =>
             return i - s'First;
         end case;
       end loop;
-      return 0;
+      return blank_line_code;
     end Get_visible_indentation;
     --
     function Get_visible_indentation(line: Integer) return Integer is
@@ -232,7 +235,7 @@ package body LEA_GWin.Editor is
       pos     := Editor.PositionFromLine(line);
       pos_next:= Editor.PositionFromLine(line+1);
       if pos = pos_next then
-        return 0;  --  Empty document case
+        return blank_line_code;  --  Empty document case
       end if;
       return Get_visible_indentation(Editor.GetTextRange(pos, pos_next));  --  analyse whole line
     end Get_visible_indentation;
@@ -257,7 +260,7 @@ package body LEA_GWin.Editor is
     ind_min:= Integer'Last;
     for l in lin_a .. lin_z loop
       ind:= Get_visible_indentation(l);
-      if ind = 0 then
+      if ind = blank_line_code then
         null;  --  Ignore blank lines for minimal indentation calculation
       else
         ind_min:= Integer'Min(ind_min, ind);
@@ -272,7 +275,7 @@ package body LEA_GWin.Editor is
       --  First, remove leading blanks up to ind_min column.
       pos:= Position'Min(
         Editor.PositionFromLine(l) + ind_min,
-        --  A blank line (ignroed by ind_min) may have less than ind_min columns.
+        --  A blank line (ignored by ind_min) may have less than ind_min columns.
         Editor.GetLineIndentPosition(l)
       );
       Editor.SetCurrentPos(pos);
