@@ -85,7 +85,7 @@ package body LEA_GWin.MDI_Child is
     bar.Enabled(IDM_Save_All, Window.save_all_hint);
     bar.Enabled(IDM_Indent, True);
     bar.Enabled(IDM_Unindent, True);
-    bar.Enabled(IDM_Comment, False);    --  tbd
+    bar.Enabled(IDM_Comment, True);
     bar.Enabled(IDM_Uncomment, False);  --  tbd
     bar.Enabled(IDM_Find, True);
     if not Window.is_closing then
@@ -522,6 +522,8 @@ package body LEA_GWin.MDI_Child is
         Window.Editor.Tab;
       when IDM_Unindent =>
         Window.Editor.BackTab;
+      when IDM_Comment =>
+        Window.Editor.Selection_comment;
       when IDM_FLAT_VIEW =>
         Change_View(Window, Notepad, force => False);
       when IDM_TREE_VIEW =>

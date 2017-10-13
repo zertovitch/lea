@@ -129,51 +129,6 @@ package body LEA_GWin.Editor is
     parent.Update_display(status_bar);
   end;
 
-  procedure Load_text (Window : in out LEA_Scintilla_Type) is
-    f: File_Type;
-    parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
-  begin
-    Open(f, In_File, To_UTF_8(GU2G(parent.File_Name)), Form_For_IO_Open_and_Create);
-    declare
-      l: constant Ada.Streams.Stream_IO.Count:= Size(f);
-      s: String(1..Integer(l));
-      p: Character:= ' ';
-    begin
-      String'Read(Stream(f), s);
-      Window.SetEOLMode (SC_EOL_CRLF);
-      for c of s loop
-        if c = ASCII.LF then
-          exit when p = ASCII.CR;           --  CR LF
-          Window.SetEOLMode (SC_EOL_LF);    --  non-CR LF
-          exit;
-        else
-          if p = ASCII.CR then              --  CR non-LF
-            Window.SetEOLMode (SC_EOL_CR);
-            exit;
-          end if;
-        end if;
-        p:= c;
-      end loop;
-      Window.InsertText(0, S2G(s));  --  ASCII to Unicode (UTF-16) conversion
-      Window.EmptyUndoBuffer;
-      Window.SetSavePoint;
-      Window.modified:= False;
-    end;
-    Close(f);
-  end Load_text;
-
-  procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString) is
-    f: File_Type;
-    b: constant GString:= Window.GetTextRange(Min => 0, Max => Window.GetLength);
-  begin
-    Create(f, Out_File, To_UTF_8(under), Form_For_IO_Open_and_Create);
-    String'Write(Stream(f), G2S(b));
-    Close(f);
-    --  We do *not* change Window.SetSavePoint and Window.modified until
-    --  all operations around backups are successful. This is managed by
-    --  the parent window's method, MDI_Child_Type.Save.
-  end Save_text;
-
   procedure Apply_options (Window : in out LEA_Scintilla_Type) is
       use GWindows.Colors;
       --
@@ -254,5 +209,131 @@ package body LEA_GWin.Editor is
 
       Window.SetCaretFore (theme_color(theme, caret));
   end Apply_options;
+
+  procedure Selection_comment (Editor : in out LEA_Scintilla_Type) is
+    function Get_visible_indentation(s: GString) return Integer is
+    begin
+      for i in s'Range loop
+        case s(i) is
+          when ' ' | GWindows.GCharacter'Val (8) =>
+            null;  --  only white space
+          when GWindows.GCharacter'Val (13) | GWindows.GCharacter'Val (10) =>
+            return 0;
+          when others =>
+            return i - s'First;
+        end case;
+      end loop;
+      return 0;
+    end Get_visible_indentation;
+    --
+    function Get_visible_indentation(line: Integer) return Integer is
+      pos, pos_next: Scintilla.Position;
+    begin
+      pos     := Editor.PositionFromLine(line);
+      pos_next:= Editor.PositionFromLine(line+1);
+      if pos = pos_next then
+        return 0;  --  Empty document case
+      end if;
+      return Get_visible_indentation(Editor.GetTextRange(pos, pos_next));  --  analyse whole line
+    end Get_visible_indentation;
+    --
+    pos, sel_a, sel_z, lin_a, lin_z: Scintilla.Position;
+    ind, ind_prev_line, ind_min: Integer;
+  begin
+    sel_a:= Editor.GetSelectionStart;
+    sel_z:= Editor.GetSelectionEnd;
+    lin_a:= Editor.LineFromPosition(sel_a);
+    lin_z:= Editor.LineFromPosition(sel_z);
+    --  Look for indentation *before* the selected block.
+    ind_prev_line:= 0;
+    for l in reverse 1 .. lin_a - 1 loop
+      ind:= Get_visible_indentation(l);
+      if ind > 0 then
+        ind_prev_line:= ind;
+        exit;
+      end if;
+    end loop;
+    --  Look for the block's minimal indentation (but ignore blank lines for that).
+    ind_min:= Integer'Last;
+    for l in lin_a .. lin_z loop
+      ind:= Get_visible_indentation(l);
+      if ind = 0 then
+        null;  --  Ignore blank lines for minimal indentation calculation
+      else
+        ind_min:= Integer'Min(ind_min, ind);
+      end if;
+    end loop;
+    if ind_min = Integer'Last then
+      ind_min := 0;
+    end if;
+    --  The whole commenting can be undone and redone in a single "Undo" / Redo":
+    Editor.BeginUndoAction;
+    for l in lin_a .. lin_z loop
+      --  First, remove leading blanks up to ind_min column.
+      pos:= Position'Min(
+        Editor.PositionFromLine(l) + ind_min,
+        --  A blank line (ignroed by ind_min) may have less than ind_min columns.
+        Editor.GetLineIndentPosition(l)
+      );
+      Editor.SetCurrentPos(pos);
+      Editor.DelLineLeft;
+      --  Then, insert an indented "--  ", with a fixed indentation (ind_prev_line)
+      --    which is using indentation of any non-blank line above the block.
+      pos:= Editor.PositionFromLine(l);
+      Editor.InsertText(pos, ind_prev_line * ' ' & "--  ");
+    end loop;
+    Editor.EndUndoAction;
+    Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1) - 1);
+  end Selection_comment;
+
+  procedure Load_text (Window : in out LEA_Scintilla_Type) is
+    f: File_Type;
+    parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+  begin
+    Open(f, In_File, To_UTF_8(GU2G(parent.File_Name)), Form_For_IO_Open_and_Create);
+    declare
+      l: constant Ada.Streams.Stream_IO.Count:= Size(f);
+      s: String(1..Integer(l));
+      p: Character:= ' ';
+    begin
+      String'Read(Stream(f), s);
+      Window.SetEOLMode (SC_EOL_CRLF);
+      for c of s loop
+        if c = ASCII.LF then
+          exit when p = ASCII.CR;           --  CR LF
+          Window.SetEOLMode (SC_EOL_LF);    --  non-CR LF
+          exit;
+        else
+          if p = ASCII.CR then              --  CR non-LF
+            Window.SetEOLMode (SC_EOL_CR);
+            exit;
+          end if;
+        end if;
+        p:= c;
+      end loop;
+      Window.InsertText(0, S2G(s));  --  ASCII to Unicode (UTF-16) conversion
+      Window.EmptyUndoBuffer;
+      Window.SetSavePoint;
+      Window.modified:= False;
+    end;
+    Close(f);
+  end Load_text;
+
+  procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString) is
+    f: File_Type;
+  begin
+    Create(f, Out_File, To_UTF_8(under), Form_For_IO_Open_and_Create);
+    if Window.GetLength > 0 then
+      declare
+        b: constant GString:= Window.GetTextRange(Min => 0, Max => Window.GetLength);
+      begin
+        String'Write(Stream(f), G2S(b));
+      end;
+    end if;
+    Close(f);
+    --  We do *not* change Window.SetSavePoint and Window.modified until
+    --  all operations around backups are successful. This is managed by
+    --  the parent window's method, MDI_Child_Type.Save.
+  end Save_text;
 
 end LEA_GWin.Editor;

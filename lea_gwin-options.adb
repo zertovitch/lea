@@ -53,11 +53,7 @@ package body LEA_GWin.Options is
     procedure Apply_changes_to_child(Window : GWindows.Base.Pointer_To_Base_Window_Class) is
     begin
       if Window.all in MDI_Child_Type'Class then
-        declare
-          pw: MDI_Child_Type renames MDI_Child_Type(Window.all);
-        begin
-          pw.Editor.Apply_options;
-        end;
+        MDI_Child_Type(Window.all).Editor.Apply_options;
       end if;
     end Apply_changes_to_child;
 
