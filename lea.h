@@ -26,6 +26,7 @@
 #define Replace_and_find_next_button            40006
 #define Color_theme_list_box                    40007
 #define Replace_all_button                      40007
+#define Close_search_box                        40008
 #define IDM_Undo                                40008
 #define Version_label                           40009
 #define Backup_bak_button                       40010

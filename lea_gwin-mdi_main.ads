@@ -45,6 +45,8 @@ package LEA_GWin.MDI_Main is
         --
         Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
         Task_bar_gadget        : Taskbar_List;
+        --
+        Search_box             : Search_box_Type;
       end record;
 
   type MDI_Main_Access is access all MDI_Main_Type;

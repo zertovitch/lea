@@ -1,6 +1,7 @@
 with LEA_Common;                       use LEA_Common;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
-with LEA_GWin.Options; use LEA_GWin.Options;
+with LEA_GWin.Options;
+with LEA_GWin.Search;
 with LEA_GWin.Toolbars;
 
 with GWindows.Application;              use GWindows.Application;
@@ -277,8 +278,8 @@ package body LEA_GWin.MDI_Main is
         G2GU(To_UTF_16(Argument(I)))
       );
     end loop;
+    --  Dropping files on the MDI background will trigger opening a document:
     Window.Accept_File_Drag_And_Drop;
-    -- Dropping files on the background will trigger creating an archive
     Window.record_dimensions:= True;
     --
     begin
@@ -288,6 +289,7 @@ package body LEA_GWin.MDI_Main is
       when Taskbar_Interface_Not_Supported =>
         Window.Task_bar_gadget_ok := False;
     end;
+    LEA_GWin.Search.Create_search_box(Window);
   end On_Create;
 
   function Minimized(Window: GWindows.Base.Base_Window_Type'Class)
@@ -491,7 +493,7 @@ package body LEA_GWin.MDI_Main is
       when IDM_WINDOW_CLOSE_ALL =>
         My_MDI_Close_All(Window);
       when IDM_General_options =>
-        On_General_Options(Window);
+        LEA_GWin.Options.On_General_Options(Window);
       when IDM_ABOUT =>
         On_About (Window);
       when others =>

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/15  09:40:58
+-- Transcription time: 2017/10/15  17:05:38
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -149,6 +149,51 @@ package LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
+  type Search_box_Type is new Window_Type with record
+
+    Match_case: Check_Box_Type;
+    -- Label: 0
+    Find_box: Drop_Down_Combo_Box_Type;
+    -- Label: 0
+    Replace_Box: Drop_Down_Combo_Box_Type;
+    Close_search_box: Dialog_Button_Type;    -- closes parent window after click
+    Close_search_box_permanent: Button_Type; -- doesn't close parent window after click
+    Find_next_button: Default_Dialog_Button_Type;    -- closes parent window after click
+    Find_next_button_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Find_previous_button: Dialog_Button_Type;    -- closes parent window after click
+    Find_previous_button_permanent: Button_Type; -- doesn't close parent window after click
+    Find_all_button: Dialog_Button_Type;    -- closes parent window after click
+    Find_all_button_permanent: Button_Type; -- doesn't close parent window after click
+    Replace_and_find_next_button: Dialog_Button_Type;    -- closes parent window after click
+    Replace_and_find_next_button_permanent: Button_Type; -- doesn't close parent window after click
+    Replace_all_button: Dialog_Button_Type;    -- closes parent window after click
+    Replace_all_button_permanent: Button_Type; -- doesn't close parent window after click
+  end record; -- Search_box_Type
+
+  -- Dialog at resource line 214
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Search_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Search";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Search_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
@@ -165,70 +210,79 @@ package LEA_Resource_GUI is
   -- NB: only items with a defined symbol get a constant here
   -- These constants are needed for getting button and menu feedbacks.
 
-  IDC_STATIC                : constant:=     -1;
-  Menu_MDI_Main             : constant:=    102;
-  Menu_MDI_Child            : constant:=    104;
-  LEA_Doc_Icon              : constant:=    112;
-  LEA_Icon                  : constant:=    114;
-  Toolbar_BMP               : constant:=    123;
-  Folders_BMP               : constant:=    124;
-  Binoculars_Icon           : constant:=    132;
-  Backup_none_button        : constant:=  40000;
-  IDM_Open_Project          : constant:=  40000;
-  Copyright_label           : constant:=  40001;
-  Group_Backup              : constant:=  40002;
-  IDM_New_File              : constant:=  40003;
-  AZip_URL                  : constant:=  40004;
-  IDM_Open_File             : constant:=  40005;
-  Indentation_edit_box      : constant:=  40006;
-  Color_theme_list_box      : constant:=  40007;
-  IDM_Undo                  : constant:=  40008;
-  Version_label             : constant:=  40009;
-  Backup_bak_button         : constant:=  40010;
-  GNAT_URL                  : constant:=  40011;
-  IDM_Save_All              : constant:=  40012;
-  IDM_Unselect_all          : constant:=  40013;
-  GNAT_Version              : constant:=  40014;
-  IDM_Save_File             : constant:=  40015;
-  Right_margin_edit_box     : constant:=  40016;
-  GNAVI_URL                 : constant:=  40017;
-  Group_color_theme         : constant:=  40018;
-  IDM_Redo                  : constant:=  40019;
-  IDM_ABOUT                 : constant:=  40020;
-  IDM_TEST_ARCHIVE          : constant:=  40021;
-  ResEdit_URL               : constant:=  40022;
-  IDM_Save_As               : constant:=  40023;
-  IDM_QUIT                  : constant:=  40024;
-  IDM_Close                 : constant:=  40025;
-  IDM_RECOMPRESS_ARCHIVE    : constant:=  40026;
-  IDM_EXTRACT               : constant:=  40027;
-  IDM_General_options       : constant:=  40028;
-  IDM_Find                  : constant:=  40029;
-  IDM_FLAT_VIEW             : constant:=  40030;
-  IDM_TREE_VIEW             : constant:=  40031;
-  IDM_MRU_2                 : constant:=  40032;
-  IDM_MRU_3                 : constant:=  40033;
-  IDM_MRU_4                 : constant:=  40034;
-  IDM_MRU_5                 : constant:=  40035;
-  IDM_MRU_6                 : constant:=  40036;
-  IDM_MRU_7                 : constant:=  40037;
-  IDM_MRU_8                 : constant:=  40038;
-  IDM_MRU_9                 : constant:=  40039;
-  IDM_WINDOW_CASCADE        : constant:=  40040;
-  IDM_WINDOW_TILE_HORIZONTAL: constant:=  40041;
-  IDM_WINDOW_TILE_VERTICAL  : constant:=  40042;
-  IDM_WINDOW_CLOSE_ALL      : constant:=  40043;
-  IDM_ADD_FILES             : constant:=  40044;
-  IDM_UPDATE_ARCHIVE        : constant:=  40045;
-  IDM_Properties            : constant:=  40046;
-  IDM_Quick_Help            : constant:=  40047;
-  IDM_Web                   : constant:=  40048;
-  IDM_Select_all            : constant:=  40049;
-  IDM_MRU_1                 : constant:=  40050;
-  IDM_Indent                : constant:=  40051;
-  IDM_Unindent              : constant:=  40052;
-  IDM_Comment               : constant:=  40053;
-  IDM_Uncomment             : constant:=  40054;
+  IDC_STATIC                  : constant:=     -1;
+  Menu_MDI_Main               : constant:=    102;
+  Menu_MDI_Child              : constant:=    104;
+  LEA_Doc_Icon                : constant:=    112;
+  LEA_Icon                    : constant:=    114;
+  Toolbar_BMP                 : constant:=    123;
+  Folders_BMP                 : constant:=    124;
+  Binoculars_Icon             : constant:=    132;
+  Backup_none_button          : constant:=  40000;
+  IDM_Open_Project            : constant:=  40000;
+  Match_case                  : constant:=  40000;
+  Copyright_label             : constant:=  40001;
+  Find_box                    : constant:=  40001;
+  Group_Backup                : constant:=  40002;
+  Replace_Box                 : constant:=  40002;
+  Find_next_button            : constant:=  40003;
+  IDM_New_File                : constant:=  40003;
+  AZip_URL                    : constant:=  40004;
+  Find_previous_button        : constant:=  40004;
+  Find_all_button             : constant:=  40005;
+  IDM_Open_File               : constant:=  40005;
+  Indentation_edit_box        : constant:=  40006;
+  Replace_and_find_next_button: constant:=  40006;
+  Color_theme_list_box        : constant:=  40007;
+  Replace_all_button          : constant:=  40007;
+  Close_search_box            : constant:=  40008;
+  IDM_Undo                    : constant:=  40008;
+  Version_label               : constant:=  40009;
+  Backup_bak_button           : constant:=  40010;
+  GNAT_URL                    : constant:=  40011;
+  IDM_Save_All                : constant:=  40012;
+  IDM_Unselect_all            : constant:=  40013;
+  GNAT_Version                : constant:=  40014;
+  IDM_Save_File               : constant:=  40015;
+  Right_margin_edit_box       : constant:=  40016;
+  GNAVI_URL                   : constant:=  40017;
+  Group_color_theme           : constant:=  40018;
+  IDM_Redo                    : constant:=  40019;
+  IDM_ABOUT                   : constant:=  40020;
+  IDM_TEST_ARCHIVE            : constant:=  40021;
+  ResEdit_URL                 : constant:=  40022;
+  IDM_Save_As                 : constant:=  40023;
+  IDM_QUIT                    : constant:=  40024;
+  IDM_Close                   : constant:=  40025;
+  IDM_RECOMPRESS_ARCHIVE      : constant:=  40026;
+  IDM_EXTRACT                 : constant:=  40027;
+  IDM_General_options         : constant:=  40028;
+  IDM_Find                    : constant:=  40029;
+  IDM_FLAT_VIEW               : constant:=  40030;
+  IDM_TREE_VIEW               : constant:=  40031;
+  IDM_MRU_2                   : constant:=  40032;
+  IDM_MRU_3                   : constant:=  40033;
+  IDM_MRU_4                   : constant:=  40034;
+  IDM_MRU_5                   : constant:=  40035;
+  IDM_MRU_6                   : constant:=  40036;
+  IDM_MRU_7                   : constant:=  40037;
+  IDM_MRU_8                   : constant:=  40038;
+  IDM_MRU_9                   : constant:=  40039;
+  IDM_WINDOW_CASCADE          : constant:=  40040;
+  IDM_WINDOW_TILE_HORIZONTAL  : constant:=  40041;
+  IDM_WINDOW_TILE_VERTICAL    : constant:=  40042;
+  IDM_WINDOW_CLOSE_ALL        : constant:=  40043;
+  IDM_ADD_FILES               : constant:=  40044;
+  IDM_UPDATE_ARCHIVE          : constant:=  40045;
+  IDM_Properties              : constant:=  40046;
+  IDM_Quick_Help              : constant:=  40047;
+  IDM_Web                     : constant:=  40048;
+  IDM_Select_all              : constant:=  40049;
+  IDM_MRU_1                   : constant:=  40050;
+  IDM_Indent                  : constant:=  40051;
+  IDM_Unindent                : constant:=  40052;
+  IDM_Comment                 : constant:=  40053;
+  IDM_Uncomment               : constant:=  40054;
 
   -- ** Some helper utilities (spec).
 
@@ -240,6 +294,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 287
+  -- Last line of resource script file: 308
 
 end LEA_Resource_GUI;
