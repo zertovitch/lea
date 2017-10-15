@@ -61,6 +61,9 @@ Menu_MDI_Child MENU
         MENUITEM "&Undo\tCtrl+Z", IDM_Undo
         MENUITEM "&Redo\tCtrl+Y", IDM_Redo
         MENUITEM SEPARATOR
+        MENUITEM "Find && Replace\tCtrl+F", IDM_Find
+        MENUITEM "Find next\tF3", IDM_Find_Next
+        MENUITEM SEPARATOR
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
         MENUITEM SEPARATOR
         MENUITEM "&Indent\tTab", IDM_Indent
@@ -198,6 +201,7 @@ FONT 8, "Ms Shell Dlg"
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Search_box DIALOG 0, 0, 238, 164
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+EXSTYLE WS_EX_TRANSPARENT
 CAPTION "Search"
 FONT 8, "Ms Shell Dlg"
 {
@@ -207,7 +211,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Replace with", 0, 11, 30, 41, 15, SS_LEFT, WS_EX_LEFT
     COMBOBOX        Replace_Box, 63, 30, 160, 15, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
     PUSHBUTTON      "Close", Close_search_box, 149, 143, 74, 17, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Find next", Find_next_button, 11, 53, 58, 18, 0, WS_EX_LEFT
+    PUSHBUTTON      "Find next", Find_next_button, 11, 53, 58, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Find previous", Find_previous_button, 82, 53, 58, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Find all", Find_all_button, 165, 53, 58, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Replace and find next", Replace_and_find_next_button, 11, 82, 110, 18, 0, WS_EX_LEFT
@@ -252,6 +256,18 @@ AAA_Main_Icon      ICON           "ico_bmp/lea.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Binoculars_Icon    ICON           "ico_bmp/find.ico"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Binoculars_Icon_Small ICON           "ico_bmp/find16.ico"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+LEA_Doc_Icon       ICON           "ico_bmp/lea_doc.ico"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 LEA_Doc_Icon_Name  ICON           "ico_bmp/lea_doc.ico"
 
 
@@ -261,14 +277,6 @@ LEA_Icon_Small     ICON           "ico_bmp/lea16.ico"
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Options_Icon       ICON           "ico_bmp/options.ico"
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Binoculars_Icon    ICON           "ico_bmp/find.ico"
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-LEA_Doc_Icon       ICON           "ico_bmp/lea_doc.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL

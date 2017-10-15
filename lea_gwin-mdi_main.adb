@@ -1,7 +1,6 @@
 with LEA_Common;                       use LEA_Common;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
 with LEA_GWin.Options;
-with LEA_GWin.Search;
 with LEA_GWin.Toolbars;
 
 with GWindows.Application;              use GWindows.Application;
@@ -289,7 +288,7 @@ package body LEA_GWin.MDI_Main is
       when Taskbar_Interface_Not_Supported =>
         Window.Task_bar_gadget_ok := False;
     end;
-    LEA_GWin.Search.Create_search_box(Window);
+    Window.Search_box.Create_as_search_box(Window);
   end On_Create;
 
   function Minimized(Window: GWindows.Base.Base_Window_Type'Class)
@@ -533,9 +532,11 @@ package body LEA_GWin.MDI_Main is
     --
     if Can_Close then
       Windows_persistence.Save(Window.opt);
-      GWindows.Base.On_Exception_Handler (Handler => null);
       -- !! Trick to remove a strange crash on Destroy_Children
       -- !! on certain Windows platforms - 29-Jun-2012
+      GWindows.Base.On_Exception_Handler (Handler => null);
+      --
+      Window.is_closing := True;
     end if;
   end On_Close;
 

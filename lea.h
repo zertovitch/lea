@@ -4,16 +4,15 @@
 
 #define Menu_MDI_Main                           102
 #define Menu_MDI_Child                          104
-#define LEA_Doc_Icon                            112
 #define LEA_Icon                                114
 #define Toolbar_BMP                             123
 #define Folders_BMP                             124
-#define Binoculars_Icon                         132
 #define Backup_none_button                      40000
 #define IDM_Open_Project                        40000
 #define Match_case                              40000
 #define Copyright_label                         40001
 #define Find_box                                40001
+#define IDM_Find_Next                           40001
 #define Group_Backup                            40002
 #define Replace_Box                             40002
 #define Find_next_button                        40003

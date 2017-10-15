@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/15  17:05:38
+-- Transcription time: 2017/10/15  22:24:48
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -41,7 +41,7 @@ package LEA_Resource_GUI is
     Popup_0008: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 98
+  -- Menu at line 101
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -54,7 +54,7 @@ package LEA_Resource_GUI is
     Popup_0005: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 145
+  -- Menu at line 148
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -77,7 +77,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 172
+  -- Dialog at resource line 175
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -125,7 +125,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  -- Dialog at resource line 193
+  -- Dialog at resource line 196
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -158,8 +158,8 @@ package LEA_Resource_GUI is
     Replace_Box: Drop_Down_Combo_Box_Type;
     Close_search_box: Dialog_Button_Type;    -- closes parent window after click
     Close_search_box_permanent: Button_Type; -- doesn't close parent window after click
-    Find_next_button: Default_Dialog_Button_Type;    -- closes parent window after click
-    Find_next_button_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Find_next_button: Dialog_Button_Type;    -- closes parent window after click
+    Find_next_button_permanent: Button_Type; -- doesn't close parent window after click
     Find_previous_button: Dialog_Button_Type;    -- closes parent window after click
     Find_previous_button_permanent: Button_Type; -- doesn't close parent window after click
     Find_all_button: Dialog_Button_Type;    -- closes parent window after click
@@ -170,7 +170,7 @@ package LEA_Resource_GUI is
     Replace_all_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Search_box_Type
 
-  -- Dialog at resource line 214
+  -- Dialog at resource line 218
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -213,16 +213,15 @@ package LEA_Resource_GUI is
   IDC_STATIC                  : constant:=     -1;
   Menu_MDI_Main               : constant:=    102;
   Menu_MDI_Child              : constant:=    104;
-  LEA_Doc_Icon                : constant:=    112;
   LEA_Icon                    : constant:=    114;
   Toolbar_BMP                 : constant:=    123;
   Folders_BMP                 : constant:=    124;
-  Binoculars_Icon             : constant:=    132;
   Backup_none_button          : constant:=  40000;
   IDM_Open_Project            : constant:=  40000;
   Match_case                  : constant:=  40000;
   Copyright_label             : constant:=  40001;
   Find_box                    : constant:=  40001;
+  IDM_Find_Next               : constant:=  40001;
   Group_Backup                : constant:=  40002;
   Replace_Box                 : constant:=  40002;
   Find_next_button            : constant:=  40003;
@@ -294,6 +293,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 308
+  -- Last line of resource script file: 316
 
 end LEA_Resource_GUI;

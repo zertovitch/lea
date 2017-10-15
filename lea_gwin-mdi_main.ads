@@ -1,4 +1,5 @@
 with LEA_Common.User_options;
+with LEA_GWin.Search;
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows;                          use GWindows;
@@ -46,7 +47,9 @@ package LEA_GWin.MDI_Main is
         Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
         Task_bar_gadget        : Taskbar_List;
         --
-        Search_box             : Search_box_Type;
+        Search_box             : LEA_GWin.Search.LEA_search_box_type;
+        --
+        is_closing             : Boolean:= False;  --  True only during and after On_Close
       end record;
 
   type MDI_Main_Access is access all MDI_Main_Type;

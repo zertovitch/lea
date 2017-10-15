@@ -88,7 +88,7 @@ package LEA_GWin.MDI_Child is
         last_sort_col    : Integer:= -1; -- -1 if none
         last_sort_direc  : LEA_LV_Ex.Sort_Direction_Type;
         refreshing_list  : Boolean:= False;
-        is_closing       : Boolean:= False;
+        is_closing       : Boolean:= False;  --  True only during and after On_Close
         last_op_comment_1: GString_Unbounded;
         last_op_comment_2: GString_Unbounded;
         save_all_hint    : Boolean;  --  Used during Update_display only.

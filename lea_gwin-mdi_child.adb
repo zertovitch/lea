@@ -87,7 +87,7 @@ package body LEA_GWin.MDI_Child is
     bar.Enabled(IDM_Unindent, True);
     bar.Enabled(IDM_Comment, True);
     bar.Enabled(IDM_Uncomment, True);
-    bar.Enabled(IDM_Find, False);  --  tbd
+    bar.Enabled(IDM_Find, True);
     if not Window.is_closing then
       null;  --  bar.Enabled(IDM_ADD_FILES, True);
     end if;
@@ -525,6 +525,9 @@ package body LEA_GWin.MDI_Child is
         Window.Editor.Selection_comment;
       when IDM_Uncomment =>
         Window.Editor.Selection_uncomment;
+      when IDM_Find =>
+        Window.Parent.Search_box.Show;
+        Window.Parent.Search_box.Find_box.Focus;
       when IDM_FLAT_VIEW =>
         Change_View(Window, Notepad, force => False);
       when IDM_TREE_VIEW =>

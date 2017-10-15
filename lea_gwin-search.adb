@@ -1,26 +1,35 @@
-with LEA_Resource_GUI;                  use LEA_Resource_GUI;
-
 package body LEA_GWin.Search is
 
-  procedure Create_search_box(main: in out MDI_Main_Type) is
-    sb: Search_box_Type renames main.Search_box;
+  overriding
+  procedure On_Close (SB        : in out LEA_search_box_type;
+                      Can_Close :    out Boolean)
+  is
   begin
-    sb.Create_Full_Dialog (Parent => main);
+    Can_Close:= False;
+    SB.Hide;
+  end On_Close;
+
+  procedure Create_as_search_box(
+    SB     : in out LEA_search_box_type;
+    Parent : in out GWindows.Base.Base_Window_Type'Class
+  )
+  is
+  begin
+    SB.Create_Full_Dialog (Parent);
+    SB.Small_Icon ("Binoculars_Icon_Small");
     --  Hide the versions of the buttons that close the dialog
-    sb.Find_next_button.Hide;
-    sb.Find_next_button_permanent.Show;
-    sb.Find_previous_button.Hide;
-    sb.Find_previous_button_permanent.Show;
-    sb.Find_all_button.Hide;
-    sb.Find_all_button_permanent.Show;
-    sb.Replace_and_find_next_button.Hide;
-    sb.Replace_and_find_next_button_permanent.Show;
-    sb.Replace_all_button.Hide;
-    sb.Replace_all_button_permanent.Show;
-    sb.Close_search_box.Hide;
-    sb.Close_search_box_permanent.Show;
-    sb.Center;
-    sb.Show;
-  end Create_search_box;
+    SB.Find_next_button.Hide;
+    SB.Find_next_button_permanent.Show;
+    SB.Find_previous_button.Hide;
+    SB.Find_previous_button_permanent.Show;
+    SB.Find_all_button.Hide;
+    SB.Find_all_button_permanent.Show;
+    SB.Replace_and_find_next_button.Hide;
+    SB.Replace_and_find_next_button_permanent.Show;
+    SB.Replace_all_button.Hide;
+    SB.Replace_all_button_permanent.Show;
+    --
+    SB.Center;
+  end Create_as_search_box;
 
 end LEA_GWin.Search;
