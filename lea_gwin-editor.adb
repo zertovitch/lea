@@ -240,8 +240,8 @@ package body LEA_GWin.Editor is
       return Get_visible_indentation(Editor.GetTextRange(pos, pos_next));  --  analyse whole line
     end Get_visible_indentation;
     --
-    pos, sel_a, sel_z, lin_a, lin_z: Scintilla.Position;
-    ind, ind_prev_line, ind_min: Integer;
+    pos, sel_a, sel_z: Scintilla.Position;
+    ind, ind_prev_line, ind_min, lin_a, lin_z: Integer;
   begin
     sel_a:= Editor.GetSelectionStart;
     sel_z:= Editor.GetSelectionEnd;
@@ -288,6 +288,27 @@ package body LEA_GWin.Editor is
     Editor.EndUndoAction;
     Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1) - 1);
   end Selection_comment;
+
+  procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type) is
+    pos, sel_a, sel_z: Scintilla.Position;
+    lin_a, lin_z: Integer;
+  begin
+    sel_a:= Editor.GetSelectionStart;
+    sel_z:= Editor.GetSelectionEnd;
+    lin_a:= Editor.LineFromPosition(sel_a);
+    lin_z:= Editor.LineFromPosition(sel_z);
+    --  The whole uncommenting can be undone and redone in a single "Undo" / Redo":
+    Editor.BeginUndoAction;
+    for l in lin_a .. lin_z loop
+      pos := Editor.GetLineIndentPosition(l);
+      if Editor.GetTextRange(pos, pos + 2) = "--" then
+        Editor.SetSel(pos, pos + 2);
+        Editor.Clear;
+      end if;
+    end loop;
+    Editor.EndUndoAction;
+    Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1) - 1);
+  end Selection_uncomment;
 
   procedure Load_text (Window : in out LEA_Scintilla_Type) is
     f: File_Type;

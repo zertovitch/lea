@@ -86,8 +86,8 @@ package body LEA_GWin.MDI_Child is
     bar.Enabled(IDM_Indent, True);
     bar.Enabled(IDM_Unindent, True);
     bar.Enabled(IDM_Comment, True);
-    bar.Enabled(IDM_Uncomment, False);  --  tbd
-    bar.Enabled(IDM_Find, True);
+    bar.Enabled(IDM_Uncomment, True);
+    bar.Enabled(IDM_Find, False);  --  tbd
     if not Window.is_closing then
       null;  --  bar.Enabled(IDM_ADD_FILES, True);
     end if;
@@ -444,13 +444,12 @@ package body LEA_GWin.MDI_Child is
   end Temp_LEA_name;
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
-                          File_Names : in     Array_Of_File_Names) is
-    yes       : Boolean;
-    cancelled : Boolean;
+                          File_Names : in     Array_Of_File_Names)
+  is
     parent    : MDI_Main_Access;
   begin
     Window.Focus;
-    --  We save the parent access since Window may be closed when
+    --  We save the parent access since this Window may be closed when
     --  i > File_Names'First if Window is a temporary MS-Office-like
     --  blank window - See procedure Close_extra_first_child.
     parent:= Window.Parent;
@@ -524,6 +523,8 @@ package body LEA_GWin.MDI_Child is
         Window.Editor.BackTab;
       when IDM_Comment =>
         Window.Editor.Selection_comment;
+      when IDM_Uncomment =>
+        Window.Editor.Selection_uncomment;
       when IDM_FLAT_VIEW =>
         Change_View(Window, Notepad, force => False);
       when IDM_TREE_VIEW =>

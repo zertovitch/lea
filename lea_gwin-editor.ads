@@ -53,6 +53,7 @@ package LEA_GWin.Editor is
 
   procedure Apply_options (Window : in out LEA_Scintilla_Type);
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type);
+  procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type);
   procedure Load_text (Window : in out LEA_Scintilla_Type);
   procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString);
 
