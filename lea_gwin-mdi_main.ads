@@ -26,6 +26,8 @@ package LEA_GWin.MDI_Main is
   type MDI_Main_Type is
     new GWindows.Windows.MDI.MDI_Main_Window_Type with
       record
+        Project_File_Name      : GString_Unbounded;
+        Project_Short_Name     : GString_Unbounded;
         Success_in_enumerated_close: Boolean;
         -- MRU (Most recently used) files names:
         -- Menu ID's stored into a handy array
@@ -97,8 +99,13 @@ package LEA_GWin.MDI_Main is
   NL: constant GString:= S2G((1=> ASCII.LF));
 
   Ada_files_filters: GWindows.Common_Dialogs.Filter_Array:=
-    ((G2GU ("Ada specification (*.ads)"),   G2GU ("*.ads" )),
-     (G2GU ("Ada body (*.adb)"),            G2GU ("*.adb" )),
-     (G2GU ("All files (*.*)"),             G2GU ("*.*")));
+    ((G2GU ("Ada files (*.ads, *.adb)"),          G2GU ("*.ads;*.adb" )),
+     (G2GU ("Ada specification files (*.ads)"),   G2GU ("*.ads" )),
+     (G2GU ("Ada body files (*.adb)"),            G2GU ("*.adb" )),
+     (G2GU ("All files (*.*)"),                   G2GU ("*.*")));
+
+  Project_files_filters: GWindows.Common_Dialogs.Filter_Array:=
+    ((G2GU ("GNAT project files (*.gpr)"),        G2GU ("*.gpr" )),
+     (G2GU ("ObjectAda project files (*.prj)"),   G2GU ("*.prj" )));
 
 end LEA_GWin.MDI_Main;
