@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/13  00:02:19
+-- Transcription time: 2017/10/15  09:40:58
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -41,7 +41,7 @@ package LEA_Resource_GUI is
     Popup_0008: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 96
+  -- Menu at line 98
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -54,7 +54,7 @@ package LEA_Resource_GUI is
     Popup_0005: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 141
+  -- Menu at line 145
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -77,7 +77,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 168
+  -- Dialog at resource line 172
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -125,7 +125,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  -- Dialog at resource line 189
+  -- Dialog at resource line 193
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -174,6 +174,7 @@ package LEA_Resource_GUI is
   Folders_BMP               : constant:=    124;
   Binoculars_Icon           : constant:=    132;
   Backup_none_button        : constant:=  40000;
+  IDM_Open_Project          : constant:=  40000;
   Copyright_label           : constant:=  40001;
   Group_Backup              : constant:=  40002;
   IDM_New_File              : constant:=  40003;
@@ -239,6 +240,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 283
+  -- Last line of resource script file: 287
 
 end LEA_Resource_GUI;

@@ -38,7 +38,8 @@ procedure LEA is
 
 begin
   GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
-  Create_MDI_Top (Top, "LEA");
+  Create_MDI_Top (Top, "LEA - starting");
+  Top.Update_Title;
   if GWindows.Scintilla.SCI_Lexer_DLL_Successfully_Loaded then
     Message_Loop;
   else

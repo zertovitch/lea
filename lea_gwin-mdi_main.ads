@@ -91,6 +91,8 @@ package LEA_GWin.MDI_Main is
   procedure Update_Common_Menus(Window    : in out MDI_Main_Type;
                                 top_entry : GString:= "" );
 
+  procedure Update_Title(Window : in out MDI_Main_Type);
+
   function S2G (Value : String) return GString renames To_GString_From_String;
   function G2S (Value : GString) return String renames To_String;
   function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;

@@ -10,6 +10,7 @@
 #define Folders_BMP                             124
 #define Binoculars_Icon                         132
 #define Backup_none_button                      40000
+#define IDM_Open_Project                        40000
 #define Copyright_label                         40001
 #define Group_Backup                            40002
 #define IDM_New_File                            40003

@@ -23,12 +23,13 @@ with GNAT.Compiler_Version;
 
 package body LEA_GWin.MDI_Main is
 
+  use type GString_Unbounded;
+
   procedure Focus_an_already_opened_window(
     Window    : MDI_Main_Type;
     File_Name : GString_Unbounded;
     is_open   : out Boolean )
   is
-    use type GString_Unbounded;
     procedure Identify (Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
     begin
@@ -617,5 +618,14 @@ package body LEA_GWin.MDI_Main is
       Update_Common_Menus_Child'Access
     );
   end Update_Common_Menus;
+
+  procedure Update_Title(Window : in out MDI_Main_Type) is
+  begin
+    if Window.Project_File_Name = "" then
+      Window.Text("LEA - [Projectless]");
+    else
+      Window.Text("LEA - [" & GU2G(Window.Project_Short_Name) & ']');
+    end if;
+  end;
 
 end LEA_GWin.MDI_Main;

@@ -52,6 +52,8 @@ Menu_MDI_Child MENU
             MENUITEM "mru_9", IDM_MRU_9
         }
         MENUITEM SEPARATOR
+        MENUITEM "Open &Project", IDM_Open_Project, INACTIVE
+        MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
     POPUP "&Edit"
@@ -118,6 +120,8 @@ Menu_MDI_Main MENU
             MENUITEM "mru_8", IDM_MRU_8
             MENUITEM "mru_9", IDM_MRU_9
         }
+        MENUITEM SEPARATOR
+        MENUITEM "Open &Project", IDM_Open_Project, INACTIVE
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
