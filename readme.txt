@@ -1,13 +1,11 @@
--------------------------------------------
-AZip - A free, portable Zip Archive Manager
--------------------------------------------
+----------------------------------
+LEA - a Lightweight Editor for Ada
+----------------------------------
 
-  AZip is a Zip Archive Manager with a portable user interface
-  and unique features such as: built-in content search, smart
-  archive update, archive recompression.
-
-  The goal is to keep the user interface as simple as possible and
-  bother the user the least possible with options or useless gadgets.
+LEA, a Lightweight Editor for Ada, aims to provide an easy,
+script-like, "look & feel" for developing Ada projects of
+any size, while enabling access to full-scale development
+tools like GNAT.
 
 ====
-Complete description in: azip.txt
+Complete description in: lea.txt

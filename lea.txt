@@ -17,5 +17,6 @@ Platforms supported:
 How to build & modify LEA
 
   * You need the GNAT compiler: http://libre.adacore.com
-  * Read the comments in the lea.gpr (just open as text file) for further instructions.
+  * Read the comments in the lea.gpr project file 
+      (just open as text file) for further instructions.
   

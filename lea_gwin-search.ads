@@ -10,9 +10,7 @@ with GWindows.Base;
 
 package LEA_GWin.Search is
 
-  type LEA_search_box_type is new Search_box_Type with record
-    Parent: GWindows.Base.Pointer_To_Base_Window_Class;
-  end record;
+  type LEA_search_box_type is new Search_box_Type with null record;
 
   overriding
   procedure On_Close (SB        : in out LEA_search_box_type;
