@@ -199,16 +199,16 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Search_box DIALOG 0, 0, 238, 164
+Search_box DIALOG 0, 0, 235, 164
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
 EXSTYLE WS_EX_TRANSPARENT
 CAPTION "Search"
 FONT 8, "Ms Shell Dlg"
 {
     AUTOCHECKBOX    "Match case", Match_case, 14, 114, 81, 11, 0, WS_EX_LEFT
-    LTEXT           "Find", 0, 11, 10, 41, 15, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Find", 0, 11, 10, 50, 15, SS_LEFT, WS_EX_LEFT
     COMBOBOX        Find_box, 63, 10, 160, 15, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
-    LTEXT           "Replace with", 0, 11, 30, 41, 15, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Replace with", 0, 11, 30, 50, 15, SS_LEFT, WS_EX_LEFT
     COMBOBOX        Replace_Box, 63, 30, 160, 15, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
     PUSHBUTTON      "Close", Close_search_box, 149, 143, 74, 17, 0, WS_EX_LEFT
     PUSHBUTTON      "Find next", Find_next_button, 11, 53, 58, 18, 0, WS_EX_LEFT

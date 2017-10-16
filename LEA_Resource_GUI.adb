@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/15  22:24:48
+-- Transcription time: 2017/10/16  02:25:05
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -361,7 +361,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 238, 164, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 235, 164, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -395,18 +395,18 @@ package body LEA_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 238, 164, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 235, 164, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  14, 114, 81, 11, x,y,w,h);
     Create( Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
-    Dlg_to_Scn(  11, 10, 41, 15, x,y,w,h);
+    Dlg_to_Scn(  11, 10, 50, 15, x,y,w,h);
     Create_Label( Window, "Find", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  63, 10, 160, 15, x,y,w,h);
     Create( Window.Find_box, Window, "", x,y,w,h, False, ID => Find_box);
-    Dlg_to_Scn(  11, 30, 41, 15, x,y,w,h);
+    Dlg_to_Scn(  11, 30, 50, 15, x,y,w,h);
     Create_Label( Window, "Replace with", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  63, 30, 160, 15, x,y,w,h);
     Create( Window.Replace_Box, Window, "", x,y,w,h, False, ID => Replace_Box);

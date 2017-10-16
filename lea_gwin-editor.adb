@@ -251,7 +251,7 @@ package body LEA_GWin.Editor is
     ind_prev_line:= 0;
     for l in reverse 1 .. lin_a - 1 loop
       ind:= Get_visible_indentation(l);
-      if ind > 0 then
+      if ind > blank_line_code then
         ind_prev_line:= ind;
         exit;
       end if;
@@ -272,20 +272,21 @@ package body LEA_GWin.Editor is
     --  The whole commenting can be undone and redone in a single "Undo" / Redo":
     Editor.BeginUndoAction;
     for l in lin_a .. lin_z loop
-      --  First, remove leading blanks up to ind_min column.
+      --  1) First, remove leading blanks up to ind_min column.
       pos:= Position'Min(
         Editor.PositionFromLine(l) + ind_min,
-        --  A blank line (ignored by ind_min) may have less than ind_min columns.
+        --  A blank line (ignored by ind_min) may have less than ind_min columns:
         Editor.GetLineIndentPosition(l)
       );
       Editor.SetCurrentPos(pos);
       Editor.DelLineLeft;
-      --  Then, insert an indented "--  ", with a fixed indentation (ind_prev_line)
+      --  2) Then, insert an indented "--  ", with a fixed indentation (ind_prev_line)
       --    which is using indentation of any non-blank line above the block.
       pos:= Editor.PositionFromLine(l);
       Editor.InsertText(pos, ind_prev_line * ' ' & "--  ");
     end loop;
     Editor.EndUndoAction;
+    --  Select the whole block again.
     Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1) - 1);
   end Selection_comment;
 
@@ -307,6 +308,7 @@ package body LEA_GWin.Editor is
       end if;
     end loop;
     Editor.EndUndoAction;
+    --  Select the whole block again.
     Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1) - 1);
   end Selection_uncomment;
 
