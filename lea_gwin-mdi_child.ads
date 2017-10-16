@@ -111,17 +111,6 @@ package LEA_GWin.MDI_Child is
     File_Names : in     Array_Of_File_Names
   );
 
-  type Update_need is
-    (first_display,   -- first display ever
-     status_bar,      -- status bar, and topics listed below
-     toolbar_and_menu -- update enable/disable of toolbar items and menu items
-    );
-
-  procedure Update_display (
-    Window : in out MDI_Child_Type;
-    need   :        Update_need
-  );
-
   overriding procedure On_Size (
     Window : in out MDI_Child_Type;
     Width  : in     Integer;
@@ -147,6 +136,17 @@ package LEA_GWin.MDI_Child is
   overriding procedure On_Close (
     Window    : in out MDI_Child_Type;
     Can_Close :    out Boolean
+  );
+
+  type Update_need is
+    (first_display,   -- first display ever
+     status_bar,      -- status bar, and topics listed below
+     toolbar_and_menu -- update enable/disable of toolbar items and menu items
+    );
+
+  procedure Update_display (
+    Window : in out MDI_Child_Type;
+    need   :        Update_need
   );
 
   procedure Update_Common_Menus(Window : MDI_Child_Type;

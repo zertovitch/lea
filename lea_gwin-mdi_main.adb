@@ -631,4 +631,13 @@ package body LEA_GWin.MDI_Main is
     end if;
   end;
 
+  procedure Perform_Search(
+    Window : in out MDI_Main_Type;
+    action :        LEA_GWin.Search.Search_action
+  )
+  is
+  begin
+    null;  --  Message_Box("",S2G(action'img));
+  end;
+
 end LEA_GWin.MDI_Main;
