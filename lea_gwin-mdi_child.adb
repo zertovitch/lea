@@ -9,7 +9,6 @@ with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
-with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Scintilla;                use GWindows.Scintilla;
@@ -19,6 +18,7 @@ with Ada.Directories;
 with Ada.Environment_Variables;         use Ada.Environment_Variables;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+with LEA_GWin.Search;
 
 package body LEA_GWin.MDI_Child is
 
@@ -526,8 +526,9 @@ package body LEA_GWin.MDI_Child is
       when IDM_Uncomment =>
         Window.Editor.Selection_uncomment;
       when IDM_Find =>
-        Window.Parent.Search_box.Show;
-        Window.Parent.Search_box.Find_box.Focus;
+        Window.Show_Search_Box;
+      when IDM_Find_Next =>
+        Window.Perform_Search(find_next);
       when IDM_FLAT_VIEW =>
         Change_View(Window, Notepad, force => False);
       when IDM_TREE_VIEW =>
@@ -594,5 +595,56 @@ package body LEA_GWin.MDI_Child is
       Window.is_closing:= True;
     end if;
   end On_Close;
+
+  procedure Show_Search_Box (MDI_Child : in out MDI_Child_Type) is
+  begin
+    MDI_Child.Parent.Search_box.Show;
+    MDI_Child.Parent.Search_box.Find_box.Focus;
+  end Show_Search_Box;
+
+  procedure Perform_Search (MDI_Child : in out MDI_Child_Type; action : LEA_Common.Search_action)
+  is
+    find_str    : constant GString:= MDI_Child.Parent.Search_box.Find_box.Text;
+    replace_str : GString:= MDI_Child.Parent.Search_box.Replace_Box.Text;
+    ed : LEA_GWin.Editor.LEA_Scintilla_Type renames MDI_Child.Editor;
+    pos: GWindows.Scintilla.Position;
+    procedure Give_up is
+    begin
+      Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
+    end;
+  begin
+    if find_str = "" then  --  Probably a "find next" (F3) with no search string.
+      MDI_Child.Show_Search_Box;
+      return;
+    end if;
+    case action is
+      when find_next | find_previous =>
+        for attempt in 1 .. 2 loop
+          if action = find_next then
+            ed.SetTargetStart (Integer'Max (ed.GetCurrentPos, ed.GetAnchor));
+            ed.SetTargetEnd (ed.GetLength);
+          else
+            ed.SetTargetStart (Integer'Min (ed.GetCurrentPos, ed.GetAnchor));
+            ed.SetTargetEnd (0);
+          end if;
+          pos := ed.SearchInTarget(find_str);
+          if pos >= 0 then
+            ed.SetSel (ed.GetTargetStart, ed.GetTargetEnd);
+            exit;
+          elsif attempt = 1 then  --  Not found: wrap around and try again.
+            if action = find_next then
+              ed.SetSel (0, 0);  --  Will search the entire document on attempt #2.
+            else
+              ed.SetSel (ed.GetLength , ed.GetLength);  --  Same, but from the bottom.
+            end if;
+          else  --  Not found *after* the wrap around: find_str is really nowhere!
+            Give_up;
+          end if;
+        end loop;
+      when find_all              => null;
+      when replace_and_find_next => null;
+      when replace_all           => null;
+    end case;
+  end Perform_Search;
 
 end LEA_GWin.MDI_Child;

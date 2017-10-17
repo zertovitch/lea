@@ -10,8 +10,6 @@ with GWindows.Base;                     use GWindows.Base;
 
 package LEA_GWin.Search is
 
-  type Search_action is (find_next, find_previous, find_all, replace_and_find_next, replace_all);
-
   type LEA_search_box_type is new Search_box_Type with record
     The_real_MDI_parent: Pointer_To_Base_Window_Class;
   end record;

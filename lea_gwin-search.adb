@@ -1,3 +1,5 @@
+with LEA_Common;                        use LEA_Common;
+
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 package body LEA_GWin.Search is

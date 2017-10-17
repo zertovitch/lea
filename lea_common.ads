@@ -31,4 +31,6 @@ package LEA_Common is
   function To_UTF_16(s: UTF_8_String) return UTF_16_String;
   function To_UTF_8(s: UTF_16_String) return UTF_8_String;
 
+  type Search_action is (find_next, find_previous, find_all, replace_and_find_next, replace_all);
+
 end LEA_Common;

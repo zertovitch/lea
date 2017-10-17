@@ -11,6 +11,7 @@
 --   [gnavi]\gwindows\contrib
 --   [gnavi]\gnatcom\framework
 --   Project URL: http://sf.net/projects/gnavi/
+--   NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
 
 project LEA is
 

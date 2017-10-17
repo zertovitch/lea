@@ -1,9 +1,10 @@
+with LEA_Common;
+
 with LEA_GWin.Editor;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
-with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Drawing;
@@ -151,5 +152,9 @@ package LEA_GWin.MDI_Child is
 
   procedure Update_Common_Menus(Window : MDI_Child_Type;
                                 top_entry : GString:= "" );
+
+  procedure Show_Search_Box (MDI_Child : in out MDI_Child_Type);
+
+  procedure Perform_Search (MDI_Child : in out MDI_Child_Type; action : LEA_Common.Search_action);
 
 end LEA_GWin.MDI_Child;

@@ -95,9 +95,6 @@ package LEA_GWin.MDI_Main is
 
   procedure Update_Title(Window : in out MDI_Main_Type);
 
-  procedure Perform_Search(
-    Window : in out MDI_Main_Type;
-    action :        LEA_GWin.Search.Search_action
-  );
+  procedure Perform_Search (MDI_Main : MDI_Main_Type; action : LEA_Common.Search_action);
 
 end LEA_GWin.MDI_Main;

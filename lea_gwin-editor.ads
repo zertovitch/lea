@@ -7,8 +7,6 @@ with Interfaces.C;
 
 package LEA_GWin.Editor is
 
-  use GWindows;
-
   type LEA_Scintilla_Type is new Scintilla_Type with record
     --  Direct access to the window owning the editor widget.
     --  This is needed to reach the options (color theme, etc.).

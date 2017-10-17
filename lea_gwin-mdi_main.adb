@@ -631,13 +631,21 @@ package body LEA_GWin.MDI_Main is
     end if;
   end;
 
-  procedure Perform_Search(
-    Window : in out MDI_Main_Type;
-    action :        LEA_GWin.Search.Search_action
-  )
-  is
+  procedure Perform_Search (MDI_Main : MDI_Main_Type; action : LEA_Common.Search_action) is
+    procedure Search_on_focused_editor (Child : GWindows.Base.Pointer_To_Base_Window_Class) is
+    begin
+      if Child /= null
+        and then Child.all in MDI_Child_Type'Class
+        and then MDI_Main.Focus = Child
+      then
+        MDI_Child_Type(Child.all).Perform_Search(action);
+      end if;
+    end Search_on_focused_editor;
   begin
-    null;  --  Message_Box("",S2G(action'img));
-  end;
+    Enumerate_Children(
+      MDI_Client_Window (MDI_Main).all,
+      Search_on_focused_editor'Unrestricted_Access
+    );
+  end Perform_Search;
 
 end LEA_GWin.MDI_Main;

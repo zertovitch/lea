@@ -1,8 +1,6 @@
 with LEA_Resource_GUI;                 use LEA_Resource_GUI;
 
-with GWindows;                          use GWindows;
 with GWindows.Base;
-with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Menus;                    use GWindows.Menus;
 
 with Interfaces.C;

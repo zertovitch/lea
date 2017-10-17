@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/17  02:02:28
+-- Transcription time: 2017/10/17  22:26:59
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -402,6 +402,8 @@ package body LEA_Resource_GUI is
     Use_GUI_Font(Window);
     Dlg_to_Scn(  14, 114, 81, 11, x,y,w,h);
     Create( Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
+    Disable(Window.Match_case);
+    Disable(Window.Match_case);
     Dlg_to_Scn(  11, 10, 50, 15, x,y,w,h);
     Create_Label( Window, "Find", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  63, 10, 160, 15, x,y,w,h);
@@ -454,6 +456,9 @@ package body LEA_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Find_all_button);
     end if;
+    Enabled(Window.Find_all_button_permanent, False);
+    Enabled(Window.Find_all_button, False);
+    Disable(Window.Find_all_button_permanent);
     Dlg_to_Scn(  11, 82, 110, 18, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -465,6 +470,9 @@ package body LEA_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Replace_and_find_next_button);
     end if;
+    Enabled(Window.Replace_and_find_next_button_permanent, False);
+    Enabled(Window.Replace_and_find_next_button, False);
+    Disable(Window.Replace_and_find_next_button_permanent);
     Dlg_to_Scn(  165, 82, 58, 18, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -476,6 +484,9 @@ package body LEA_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Replace_all_button);
     end if;
+    Enabled(Window.Replace_all_button_permanent, False);
+    Enabled(Window.Replace_all_button, False);
+    Disable(Window.Replace_all_button_permanent);
   end Create_Contents;  --  Search_box_Type
 
   -- ** Generated code ends here /\ /\ /\.
@@ -588,6 +599,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 316
+  -- Last line of resource script file: 317
 
 end LEA_Resource_GUI;
