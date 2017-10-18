@@ -306,7 +306,7 @@ package body LEA_GWin.Editor is
         Editor.SetSel(pos, pos + 4);
         Editor.Clear;
       elsif Editor.GetTextRange(pos, pos + 3) = "-- " then
-        Editor.SetSel(pos, pos + 4);
+        Editor.SetSel(pos, pos + 3);
         Editor.Clear;
       elsif Editor.GetTextRange(pos, pos + 2) = "--" then
         Editor.SetSel(pos, pos + 2);
