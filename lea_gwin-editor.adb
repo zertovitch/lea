@@ -302,7 +302,13 @@ package body LEA_GWin.Editor is
     Editor.BeginUndoAction;
     for l in lin_a .. lin_z loop
       pos := Editor.GetLineIndentPosition(l);
-      if Editor.GetTextRange(pos, pos + 2) = "--" then
+      if Editor.GetTextRange(pos, pos + 4) = "--  " then
+        Editor.SetSel(pos, pos + 4);
+        Editor.Clear;
+      elsif Editor.GetTextRange(pos, pos + 3) = "-- " then
+        Editor.SetSel(pos, pos + 4);
+        Editor.Clear;
+      elsif Editor.GetTextRange(pos, pos + 2) = "--" then
         Editor.SetSel(pos, pos + 2);
         Editor.Clear;
       end if;

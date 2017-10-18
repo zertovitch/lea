@@ -61,11 +61,11 @@ package body LEA_GWin.MDI_Child is
       3);
     case Window.Editor.GetEOLMode is
       when SC_EOL_CR =>
-        Window.Status_Bar.Text("EOL: Mac",     4);
+        Window.Status_Bar.Text("EOL: Mac (CR)",        4);
       when SC_EOL_CRLF =>
-        Window.Status_Bar.Text("EOL: Windows", 4);
+        Window.Status_Bar.Text("EOL: Windows (CR LF)", 4);
       when SC_EOL_LF =>
-        Window.Status_Bar.Text("EOL: Unix",    4);
+        Window.Status_Bar.Text("EOL: Unix (LF)",       4);
       when others =>
         null;
     end case;
@@ -234,13 +234,13 @@ package body LEA_GWin.MDI_Child is
 
     Window.Status_Bar.Create(Window, "No file");
     Window.Status_Bar.Parts(
-      (0 => 150,  --  General info ("Ada file", ...)
-       1 => 320,  --  Length & lines
-       2 => 440,  --  Line / Col
-       3 => 560,  --  Selection
-       4 => 650,  --  Unix / Windows / Mac EOLs
-       5 => 770,  --  ANSI / Unicode
-       6 => 800   --  Ins / Ovr
+      (0 => 130,  --  General info ("Ada file", ...)
+       1 => 300,  --  Length & lines
+       2 => 430,  --  Line / Col
+       3 => 540,  --  Selection
+       4 => 670,  --  Unix / Windows / Mac EOLs
+       5 => 790,  --  ANSI / Unicode
+       6 => 820   --  Ins / Ovr
        )
     );
     Window.Status_Bar.Dock(At_Bottom);
@@ -607,11 +607,7 @@ package body LEA_GWin.MDI_Child is
     find_str    : constant GString:= MDI_Child.Parent.Search_box.Find_box.Text;
     replace_str : GString:= MDI_Child.Parent.Search_box.Replace_Box.Text;
     ed : LEA_GWin.Editor.LEA_Scintilla_Type renames MDI_Child.Editor;
-    pos: GWindows.Scintilla.Position;
-    procedure Give_up is
-    begin
-      Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
-    end;
+    pos, old_sel_a, old_sel_z: GWindows.Scintilla.Position;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -628,17 +624,20 @@ package body LEA_GWin.MDI_Child is
             ed.SetTargetEnd (0);
           end if;
           pos := ed.SearchInTarget(find_str);
-          if pos >= 0 then
+          if pos >= 0 then  --  Found
             ed.SetSel (ed.GetTargetStart, ed.GetTargetEnd);
             exit;
           elsif attempt = 1 then  --  Not found: wrap around and try again.
+            old_sel_a:= ed.GetSelectionStart;
+            old_sel_z:= ed.GetSelectionEnd;
             if action = find_next then
-              ed.SetSel (0, 0);  --  Will search the entire document on attempt #2.
+              ed.SetSel (0, 0);  --  Will search the entire document from the top on 2nd attempt.
             else
               ed.SetSel (ed.GetLength , ed.GetLength);  --  Same, but from the bottom.
             end if;
           else  --  Not found *after* the wrap around: find_str is really nowhere!
-            Give_up;
+            ed.SetSel (old_sel_a, old_sel_z);
+            Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
           end if;
         end loop;
       when find_all              => null;
