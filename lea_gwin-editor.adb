@@ -323,7 +323,7 @@ package body LEA_GWin.Editor is
     MDI_Child : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
     MDI_Main  : MDI_Main_Type renames MDI_Child.Parent.all;
     find_str    : constant GString:= MDI_Main.Search_box.Find_box.Text;
-    replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
+    --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
     pos, old_sel_a, old_sel_z: GWindows.Scintilla.Position;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
@@ -362,6 +362,52 @@ package body LEA_GWin.Editor is
       when replace_all           => null;
     end case;
   end Search;
+
+  function EOL (Editor : LEA_Scintilla_Type) return GString is
+  begin
+    case Editor.GetEOLMode is
+      when SC_EOL_CRLF =>
+        return GWindows.GCharacter'Val (13) & GWindows.GCharacter'Val (10);
+      when SC_EOL_CR =>
+        return (1 => GWindows.GCharacter'Val (13));
+      when SC_EOL_LF =>
+        return (1 => GWindows.GCharacter'Val (10));
+      when others =>
+        return "";
+    end case;
+  end EOL;
+
+  procedure Duplicate (Editor : in out LEA_Scintilla_Type) is
+    pos, sel_a, sel_z, line_start, next_line_start: Scintilla.Position;
+    lin : Integer;
+  begin
+    sel_a:= Editor.GetSelectionStart;
+    sel_z:= Editor.GetSelectionEnd;
+    pos := Editor.GetCurrentPos;
+    if sel_a = sel_z then  --  No selection: we duplicate the current line
+      lin := Editor.LineFromPosition(sel_a);
+      line_start      := Editor.PositionFromLine(lin);
+      next_line_start := Editor.PositionFromLine(lin+1);
+      if line_start < next_line_start then
+        if Editor.LineFromPosition(next_line_start) = lin then
+          --  Special case: we are on last line. Actually, next_line_start is the
+          --  end of current line - and of the whole document as well.
+          --  We need to add an EOL first.
+          Editor.InsertText(next_line_start, EOL(Editor) & Editor.GetTextRange(line_start, next_line_start));
+        else
+          Editor.InsertText(next_line_start, Editor.GetTextRange(line_start, next_line_start));
+        end if;
+      end if;
+    else  --  There is a selection: we duplicate it.
+      Editor.InsertText(sel_z, Editor.GetTextRange(sel_a, sel_z));
+      --  Restore selection *and* cursor as before
+      if pos = sel_a then
+        Editor.SetSel(sel_z, sel_a);  --  Cursor at begin of selection
+      else
+        Editor.SetSel(sel_a, sel_z);  --  Cursor at end of selection
+      end if;
+    end if;
+  end Duplicate;
 
   procedure Load_text (Window : in out LEA_Scintilla_Type) is
     f: File_Type;

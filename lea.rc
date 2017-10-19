@@ -241,7 +241,7 @@ Main_Menu ACCELERATORS
     VK_ADD,        IDM_ADD_FILES, VIRTKEY
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
     "R",            IDM__RECOMPRESS_ARCHIVE, VIRTKEY, CONTROL
-    "D",            IDM_Properties, VIRTKEY, CONTROL
+    "D",            IDM_Duplicate, VIRTKEY, CONTROL
     "Z",            IDM_Undo, VIRTKEY, CONTROL
     "Y",            IDM_Redo, VIRTKEY, CONTROL
 }

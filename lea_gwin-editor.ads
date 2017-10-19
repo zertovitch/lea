@@ -58,7 +58,11 @@ package LEA_GWin.Editor is
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type);
   procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type);
 
+  --  Search & replace actions
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action);
+
+  --  Duplicate current line if no selection, or selection. Clipboard remains untouched
+  procedure Duplicate (Editor : in out LEA_Scintilla_Type);
 
   --  I/O
   procedure Load_text (Window : in out LEA_Scintilla_Type);

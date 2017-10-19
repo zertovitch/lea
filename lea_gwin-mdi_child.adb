@@ -529,6 +529,8 @@ package body LEA_GWin.MDI_Child is
         Window.Show_Search_Box;
       when IDM_Find_Next =>
         Window.Editor.Search(find_next);
+      when IDM_Duplicate =>
+        Window.Editor.Duplicate;
       when IDM_FLAT_VIEW =>
         Change_View(Window, Notepad, force => False);
       when IDM_TREE_VIEW =>

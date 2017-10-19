@@ -65,7 +65,6 @@
 #define IDM_WINDOW_CLOSE_ALL                    40043
 #define IDM_ADD_FILES                           40044
 #define IDM_UPDATE_ARCHIVE                      40045
-#define IDM_Properties                          40046
 #define IDM_Quick_Help                          40047
 #define IDM_Web                                 40048
 #define IDM_Select_all                          40049
