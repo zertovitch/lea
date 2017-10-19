@@ -1,5 +1,3 @@
-with LEA_Common;
-
 with LEA_GWin.Editor;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
@@ -154,7 +152,5 @@ package LEA_GWin.MDI_Child is
                                 top_entry : GString:= "" );
 
   procedure Show_Search_Box (MDI_Child : in out MDI_Child_Type);
-
-  procedure Perform_Search (MDI_Child : in out MDI_Child_Type; action : LEA_Common.Search_action);
 
 end LEA_GWin.MDI_Child;

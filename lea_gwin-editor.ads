@@ -1,3 +1,5 @@
+with LEA_Common;                        use LEA_Common;
+
 with GWindows.Base;
 with GWindows.Scintilla;                use GWindows.Scintilla;
 with GWindows.Windows;
@@ -47,11 +49,18 @@ package LEA_GWin.Editor is
   overriding
   procedure On_Update_UI (Control : in out LEA_Scintilla_Type);
 
-  --  Methods introduced in the LEA_Scintilla_Type class
+  ----------------------------------------------------------
+  --  Methods introduced in the LEA_Scintilla_Type class  --
 
   procedure Apply_options (Window : in out LEA_Scintilla_Type);
+
+  --  Comment / uncomment
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type);
   procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type);
+
+  procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action);
+
+  --  I/O
   procedure Load_text (Window : in out LEA_Scintilla_Type);
   procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString);
 

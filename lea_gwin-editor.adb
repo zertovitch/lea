@@ -1,10 +1,10 @@
 --  LEA_GWin.Editor is derived from: gnavi\gwindows\samples\scintilla
 
-with LEA_Common;                        use LEA_Common;
 with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 with GWindows.Colors;
+with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
@@ -317,6 +317,51 @@ package body LEA_GWin.Editor is
     --  Select the whole block again.
     Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1) - 1);
   end Selection_uncomment;
+
+  procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action)
+  is
+    MDI_Child : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    MDI_Main  : MDI_Main_Type renames MDI_Child.Parent.all;
+    find_str    : constant GString:= MDI_Main.Search_box.Find_box.Text;
+    replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
+    pos, old_sel_a, old_sel_z: GWindows.Scintilla.Position;
+  begin
+    if find_str = "" then  --  Probably a "find next" (F3) with no search string.
+      MDI_Child.Show_Search_Box;
+      return;
+    end if;
+    case action is
+      when find_next | find_previous =>
+        for attempt in 1 .. 2 loop
+          if action = find_next then
+            Editor.SetTargetStart (Integer'Max (Editor.GetCurrentPos, Editor.GetAnchor));
+            Editor.SetTargetEnd (Editor.GetLength);
+          else
+            Editor.SetTargetStart (Integer'Min (Editor.GetCurrentPos, Editor.GetAnchor));
+            Editor.SetTargetEnd (0);
+          end if;
+          pos := Editor.SearchInTarget(find_str);
+          if pos >= 0 then  --  Found
+            Editor.SetSel (Editor.GetTargetStart, Editor.GetTargetEnd);
+            exit;
+          elsif attempt = 1 then  --  Not found: wrap around and try again.
+            old_sel_a:= Editor.GetSelectionStart;
+            old_sel_z:= Editor.GetSelectionEnd;
+            if action = find_next then
+              Editor.SetSel (0, 0);  --  Will search the entire document from the top on 2nd attempt.
+            else
+              Editor.SetSel (Editor.GetLength , Editor.GetLength);  --  Same, but from the bottom.
+            end if;
+          else  --  Not found *after* the wrap around: find_str is really nowhere!
+            Editor.SetSel (old_sel_a, old_sel_z);
+            Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
+          end if;
+        end loop;
+      when find_all              => null;
+      when replace_and_find_next => null;
+      when replace_all           => null;
+    end case;
+  end Search;
 
   procedure Load_text (Window : in out LEA_Scintilla_Type) is
     f: File_Type;

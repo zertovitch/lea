@@ -8,7 +8,7 @@ with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows.Base;                     use GWindows.Base;
 
-package LEA_GWin.Search is
+package LEA_GWin.Search_box is
 
   type LEA_search_box_type is new Search_box_Type with record
     The_real_MDI_parent: Pointer_To_Base_Window_Class;
@@ -23,4 +23,4 @@ package LEA_GWin.Search is
     Parent : in out GWindows.Base.Base_Window_Type'Class
   );
 
-end LEA_GWin.Search;
+end LEA_GWin.Search_box;

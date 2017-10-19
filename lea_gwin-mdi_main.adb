@@ -638,7 +638,7 @@ package body LEA_GWin.MDI_Main is
         and then Child.all in MDI_Child_Type'Class
         and then MDI_Main.Focus = Child
       then
-        MDI_Child_Type(Child.all).Perform_Search(action);
+        MDI_Child_Type(Child.all).Editor.Search(action);
       end if;
     end Search_on_focused_editor;
   begin

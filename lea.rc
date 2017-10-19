@@ -32,14 +32,7 @@ Menu_MDI_Child MENU
     {
         MENUITEM "&New\tCtrl+N", IDM_New_File
         MENUITEM "&Open...\tCtrl+O", IDM_Open_File
-        MENUITEM "Save\tCtrl+S", IDM_Save_File
-        MENUITEM "Save &as...\tF12", IDM_Save_As
-        MENUITEM "Sav&e all modified", IDM_Save_All
-        MENUITEM "&Close\tCtrl+W / Ctrl+F4", IDM_Close
-        MENUITEM SEPARATOR
-        MENUITEM "&Properties\tCtrl+D", IDM_Properties
-        MENUITEM SEPARATOR
-        POPUP "&Recent"
+        POPUP "Open &recent"
         {
             MENUITEM "mru_1", IDM_MRU_1
             MENUITEM "mru_2", IDM_MRU_2
@@ -51,6 +44,10 @@ Menu_MDI_Child MENU
             MENUITEM "mru_8", IDM_MRU_8
             MENUITEM "mru_9", IDM_MRU_9
         }
+        MENUITEM "Save\tCtrl+S", IDM_Save_File
+        MENUITEM "Save &as...\tF12", IDM_Save_As
+        MENUITEM "Sav&e all modified", IDM_Save_All
+        MENUITEM "&Close\tCtrl+W / Ctrl+F4", IDM_Close
         MENUITEM SEPARATOR
         MENUITEM "Open &Project", IDM_Open_Project, INACTIVE
         MENUITEM SEPARATOR
@@ -71,6 +68,8 @@ Menu_MDI_Child MENU
         MENUITEM SEPARATOR
         MENUITEM "&Comment\tF7", IDM_Comment
         MENUITEM "&Uncomment\tShift+F7", IDM_Uncomment
+        MENUITEM SEPARATOR
+        MENUITEM "&Duplicate line or selection\tCtrl+D", IDM_Duplicate
     }
     POPUP "&Tools"
     {

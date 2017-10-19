@@ -2,7 +2,7 @@ with LEA_Common;                        use LEA_Common;
 
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
-package body LEA_GWin.Search is
+package body LEA_GWin.Search_box is
 
   overriding
   procedure On_Close (SB        : in out LEA_search_box_type;
@@ -85,4 +85,4 @@ package body LEA_GWin.Search is
     SB.Center;
   end Create_as_search_box;
 
-end LEA_GWin.Search;
+end LEA_GWin.Search_box;

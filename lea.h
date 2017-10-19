@@ -14,6 +14,7 @@
 #define Find_box                                40001
 #define IDM_Find_Next                           40001
 #define Group_Backup                            40002
+#define IDM_Duplicate                           40002
 #define Replace_Box                             40002
 #define Find_next_button                        40003
 #define IDM_New_File                            40003
