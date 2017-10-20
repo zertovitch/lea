@@ -52,7 +52,7 @@ package LEA_GWin.Editor is
   ----------------------------------------------------------
   --  Methods introduced in the LEA_Scintilla_Type class  --
 
-  procedure Apply_options (Window : in out LEA_Scintilla_Type);
+  procedure Apply_options (Editor : in out LEA_Scintilla_Type);
 
   --  Comment / uncomment
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type);

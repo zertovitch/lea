@@ -33,4 +33,6 @@ package LEA_Common is
 
   type Search_action is (find_next, find_previous, find_all, replace_and_find_next, replace_all);
 
+  type Show_special_symbol_mode is (none, spaces, spaces_eols);
+
 end LEA_Common;

@@ -529,6 +529,9 @@ package body LEA_GWin.MDI_Child is
         Window.Show_Search_Box;
       when IDM_Find_Next =>
         Window.Editor.Search(find_next);
+      when IDM_Show_special_symbols =>
+        Toggle_show_special(Window.Parent.opt);
+        Window.Editor.Apply_options;
       when IDM_Duplicate =>
         Window.Editor.Duplicate;
       when IDM_FLAT_VIEW =>

@@ -129,7 +129,7 @@ package body LEA_GWin.Editor is
     parent.Update_display(status_bar);
   end;
 
-  procedure Apply_options (Window : in out LEA_Scintilla_Type) is
+  procedure Apply_options (Editor : in out LEA_Scintilla_Type) is
       use GWindows.Colors;
       --
       App_default_font      : constant GString := "Courier New";
@@ -171,43 +171,56 @@ package body LEA_GWin.Editor is
             )
         );
       --
-      parent   : MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+      parent   : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
       mdi_root : MDI_Main_Type renames parent.Parent.all;
       theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
    begin
-      Window.SetTabWidth (mdi_root.opt.indentation);
-      Window.SetEdgeColumn (mdi_root.opt.right_margin);
+      Editor.SetTabWidth (mdi_root.opt.indentation);
+      Editor.SetEdgeColumn (mdi_root.opt.right_margin);
 
-      Window.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
-      Window.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
-      Window.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
-      Window.StyleSetFont (STYLE_DEFAULT, App_default_font);
-      Window.StyleClearAll;
+      Editor.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
+      Editor.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
+      Editor.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
+      Editor.StyleSetFont (STYLE_DEFAULT, App_default_font);
+      Editor.StyleClearAll;
 
-      Window.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
-      Window.SetSelFore (True, theme_color(theme, selection_foreground));
-      Window.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
-      Window.SetSelBack (True, theme_color(theme, selection_background));
-      Window.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
-      Window.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
+      Editor.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
+      Editor.SetSelFore (True, theme_color(theme, selection_foreground));
+      Editor.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
+      Editor.SetSelBack (True, theme_color(theme, selection_background));
+      Editor.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
+      Editor.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
 
-      Window.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
-      Window.StyleSetFore (SCE_ADA_NUMBER,      theme_color(theme, number));
-      Window.StyleSetFore (SCE_ADA_WORD,        theme_color(theme, keyword));
-      Window.StyleSetFore (SCE_ADA_STRING,      theme_color(theme, string));
-      Window.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(theme, character));
-      Window.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
+      Editor.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
+      Editor.StyleSetFore (SCE_ADA_NUMBER,      theme_color(theme, number));
+      Editor.StyleSetFore (SCE_ADA_WORD,        theme_color(theme, keyword));
+      Editor.StyleSetFore (SCE_ADA_STRING,      theme_color(theme, string));
+      Editor.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(theme, character));
+      Editor.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
 
       --  Cases where the text is obviously wrong
       --  (unfinished character or string, illegal identifier)
-      Window.StyleSetFore (SCE_ADA_CHARACTEREOL, White);
-      Window.StyleSetBack (SCE_ADA_CHARACTEREOL, Dark_Red);
-      Window.StyleSetFore (SCE_ADA_STRINGEOL, White);
-      Window.StyleSetBack (SCE_ADA_STRINGEOL, Dark_Red);
-      Window.StyleSetFore (SCE_ADA_ILLEGAL, White);
-      Window.StyleSetBack (SCE_ADA_ILLEGAL, Dark_Red);
+      Editor.StyleSetFore (SCE_ADA_CHARACTEREOL, White);
+      Editor.StyleSetBack (SCE_ADA_CHARACTEREOL, Dark_Red);
+      Editor.StyleSetFore (SCE_ADA_STRINGEOL, White);
+      Editor.StyleSetBack (SCE_ADA_STRINGEOL, Dark_Red);
+      Editor.StyleSetFore (SCE_ADA_ILLEGAL, White);
+      Editor.StyleSetBack (SCE_ADA_ILLEGAL, Dark_Red);
 
-      Window.SetCaretFore (theme_color(theme, caret));
+      Editor.SetCaretFore (theme_color(theme, caret));
+
+      case mdi_root.opt.show_special is
+        when none =>
+          Editor.SetViewWS(SCWS_INVISIBLE);
+          Editor.SetViewEOL(False);
+        when spaces =>
+          Editor.SetViewWS(SCWS_VISIBLEALWAYS);
+          Editor.SetViewEOL(False);
+        when spaces_eols =>
+          Editor.SetViewWS(SCWS_VISIBLEALWAYS);
+          Editor.SetViewEOL(True);
+      end case;
+
   end Apply_options;
 
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type) is

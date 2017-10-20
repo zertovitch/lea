@@ -73,3 +73,4 @@
 #define IDM_Unindent                            40052
 #define IDM_Comment                             40053
 #define IDM_Uncomment                           40054
+#define IDM_Show_special_symbols                40055

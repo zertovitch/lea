@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/19  18:26:53
+-- Transcription time: 2017/10/20  23:38:02
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -41,7 +41,7 @@ package LEA_Resource_GUI is
     Popup_0008: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 100
+  -- Menu at line 102
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -54,7 +54,7 @@ package LEA_Resource_GUI is
     Popup_0005: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 147
+  -- Menu at line 149
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -77,7 +77,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 174
+  -- Dialog at resource line 176
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -125,7 +125,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  -- Dialog at resource line 195
+  -- Dialog at resource line 197
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -170,7 +170,7 @@ package LEA_Resource_GUI is
     Replace_all_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Search_box_Type
 
-  -- Dialog at resource line 217
+  -- Dialog at resource line 219
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -282,6 +282,7 @@ package LEA_Resource_GUI is
   IDM_Unindent                : constant:=  40052;
   IDM_Comment                 : constant:=  40053;
   IDM_Uncomment               : constant:=  40054;
+  IDM_Show_special_symbols    : constant:=  40055;
 
   -- ** Some helper utilities (spec).
 
@@ -293,6 +294,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 316
+  -- Last line of resource script file: 318
 
 end LEA_Resource_GUI;

@@ -77,8 +77,10 @@ Menu_MDI_Child MENU
     }
     POPUP "&View"
     {
+        MENUITEM "Show special symbols", IDM_Show_special_symbols
+        MENUITEM SEPARATOR
         MENUITEM "&Notepad view", IDM__FLAT_VIEW
-        MENUITEM "&Studio view", IDM__TREE_VIEW
+        MENUITEM "&Studio view", IDM__TREE_VIEW, INACTIVE
     }
     POPUP "&Options"
     {

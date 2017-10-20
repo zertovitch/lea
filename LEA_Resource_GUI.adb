@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/19  18:26:53
+-- Transcription time: 2017/10/20  23:38:02
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -73,8 +73,11 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0004, "&Compile with HAC" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+T", IDM_TEST_ARCHIVE);
     Menu.Popup_0005:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
+    Append_Item(Menu.Popup_0005, "Show special symbols", IDM_Show_special_symbols);
+    Append_Separator(Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&Notepad view", IDM_FLAT_VIEW);
     Append_Item(Menu.Popup_0005, "&Studio view", IDM_TREE_VIEW);
+    State(Menu.Popup_0005, Command, IDM_TREE_VIEW, Disabled);
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "&General options", IDM_General_options);
@@ -92,7 +95,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0008, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 106
+  -- Menu at line 108
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -136,7 +139,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 159
+  -- Dialog at resource line 161
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -245,7 +248,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 183
+  -- Dialog at resource line 185
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -343,7 +346,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  -- Dialog at resource line 205
+  -- Dialog at resource line 207
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -598,6 +601,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 316
+  -- Last line of resource script file: 318
 
 end LEA_Resource_GUI;

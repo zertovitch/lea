@@ -500,7 +500,7 @@ package body LEA_GWin.MDI_Main is
           if Item = Window.IDM_MRU(i_mru) then
             Open_Child_Window_And_Load(
               Window,
-              Window.opt.mru( i_mru )
+              Window.opt.mru( i_mru ).name
             );
             exit;
           end if;
@@ -550,10 +550,10 @@ package body LEA_GWin.MDI_Main is
   begin
     To_Upper(up_name);
 
-    -- Search for name in the list
+    --  Search for name in the list.
     for m in Window.opt.mru'Range loop
       declare
-        up_mru_m: GString:= GU2G(Window.opt.mru(m));
+        up_mru_m: GString:= GU2G(Window.opt.mru(m).name);
       begin
         To_Upper(up_mru_m);
         if up_mru_m = up_name then -- case insensitive comparison (Jan-2007)
@@ -563,22 +563,22 @@ package body LEA_GWin.MDI_Main is
       end;
     end loop;
 
-    -- name exists in list ?
+    --  Does item's name exist in list ?
     if x /= 0 then
-      -- roll up entries after it, erasing it
+      --  Roll up entries after the item, erasing it.
       for i in x .. Window.opt.mru'Last-1 loop
         Window.opt.mru(i):= Window.opt.mru(i+1);
       end loop;
-      Window.opt.mru(Window.opt.mru'Last):= Null_GString_Unbounded;
+      Window.opt.mru(Window.opt.mru'Last).name:= Null_GString_Unbounded;
     end if;
 
-    -- roll down the full list
+    --  Roll down the full list
     for i in reverse Window.opt.mru'First .. Window.opt.mru'Last-1 loop
       Window.opt.mru(i+1):= Window.opt.mru(i);
     end loop;
 
-    -- name exists in list
-    Window.opt.mru(Window.opt.mru'First):= G2GU(name);
+    --  Name exists now in the list
+    Window.opt.mru(Window.opt.mru'First).name:= G2GU(name);
 
   end Add_MRU;
 
@@ -590,7 +590,7 @@ package body LEA_GWin.MDI_Main is
          '&' &
          S2G(Ada.Strings.Fixed.Trim(Integer'Image(i),Ada.Strings.Left)) &
          ' ' &
-         Shorten_file_name(GU2G(Window.opt.mru(i)))
+         Shorten_file_name(GU2G(Window.opt.mru(i).name))
       );
     end loop;
   end Update_MRU_Menu;

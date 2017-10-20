@@ -1,10 +1,20 @@
 package body LEA_Common.User_options is
 
+  procedure Toggle_show_special (o: in out Option_Pack_Type) is
+  begin
+    if o.show_special = Show_special_symbol_mode'Last then
+      o.show_special := Show_special_symbol_mode'First;
+    else
+      o.show_special := Show_special_symbol_mode'Succ(o.show_special);
+    end if;
+  end;
+
   package body Persistence is
 
     type Key is
       ( view_mode, color_theme,
         backup, indent, edge,
+        show_special,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
         tree_portion,
@@ -14,7 +24,7 @@ package body LEA_Common.User_options is
     pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
 
     procedure Load(opt: out Option_Pack_Type) is
-      --  !! (useless) defaults: Option_Pack_Type;
+      mru_idx: Positive;
     begin
       for k in Key loop
         begin
@@ -33,6 +43,8 @@ package body LEA_Common.User_options is
                 opt.indentation := Integer'Wide_Value(s);
               when edge =>
                 opt.right_margin := Integer'Wide_Value(s);
+              when show_special =>
+                opt.show_special := Show_special_symbol_mode'Wide_Value(s);
               when win_left =>
                 opt.win_left:= Integer'Wide_Value(s);
               when win_top =>
@@ -47,9 +59,9 @@ package body LEA_Common.User_options is
                 opt.MDI_childen_maximized:= Boolean'Wide_Value(s);
               when tree_portion =>
                 opt.tree_portion:= Float'Wide_Value(s);
-              when mru1..mru9 =>
-                opt.mru( Key'Pos(k)-Key'Pos(mru1)+1 ):=
-                  To_Unbounded_Wide_String(s);
+              when mru1 .. mru9 =>
+                mru_idx := Key'Pos(k) - Key'Pos(mru1) + 1;
+                opt.mru(mru_idx).name := To_Unbounded_Wide_String(s);
             end case;
           end;
         exception
@@ -63,6 +75,7 @@ package body LEA_Common.User_options is
     end Load;
 
     procedure Save(opt: in Option_Pack_Type) is
+      mru_idx: Positive;
     begin
       for k in Key loop
         declare
@@ -83,6 +96,8 @@ package body LEA_Common.User_options is
               R(Integer'Wide_Image(opt.indentation));
             when edge =>
               R(Integer'Wide_Image(opt.right_margin));
+            when show_special =>
+              R(Show_special_symbol_mode'Wide_Image(opt.show_special));
             when win_left =>
               R(Integer'Wide_Image(opt.win_left));
             when win_top =>
@@ -97,8 +112,9 @@ package body LEA_Common.User_options is
               R(Boolean'Wide_Image(opt.MDI_childen_maximized));
             when tree_portion =>
               R(Float'Wide_Image(opt.tree_portion));
-            when mru1..mru9 =>
-              R( To_Wide_String(opt.mru( Key'Pos(k)-Key'Pos(mru1)+1 )) );
+            when mru1 .. mru9 =>
+              mru_idx := Key'Pos(k) - Key'Pos(mru1) + 1;
+              R( To_Wide_String(opt.mru(mru_idx).name) );
           end case;
         end;
       end loop;
