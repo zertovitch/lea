@@ -18,6 +18,7 @@ with GWin_Util;
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
+with Ada.Unchecked_Deallocation;
 
 with GNAT.Compiler_Version;
 
@@ -398,29 +399,33 @@ package body LEA_GWin.MDI_Main is
   ------------------
 
   procedure On_File_Open (Window : in out MDI_Main_Type) is
-    File_Name, File_Title : GString_Unbounded;
+    File_Title : GString_Unbounded;
     Success    : Boolean;
+    File_Names: Array_Of_File_Names_Access;
+    procedure Dispose is new Ada.Unchecked_Deallocation(
+      Array_Of_File_Names,
+      Array_Of_File_Names_Access
+    );
   begin
-    Open_File (
-      Window, "Open Ada source file",
-      File_Name, Ada_files_filters, ".ad*", File_Title,
+    Open_Files (
+      Window, "Open file(s)",
+      File_Names, Ada_files_filters, ".ad*", File_Title,
       Success
     );
     if Success then
-      Open_Child_Window_And_Load( Window, File_Name, File_Title );
+      for File_Name of File_Names.all loop
+        Open_Child_Window_And_Load( Window, File_Name );
+      end loop;
+      Dispose(File_Names);
     end if;
   end On_File_Open;
 
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     Array_Of_File_Names) is
-    -- !! prob. useless New_Window : constant MDI_Child_Access := new MDI_Child_Type;
   begin
     Window.Focus;
-    for i in File_Names'Range loop
-      Open_Child_Window_And_Load(
-        Window,
-        File_Names(i)
-      );
+    for File_Name of File_Names loop
+      Open_Child_Window_And_Load( Window, File_Name );
     end loop;
   end On_File_Drop;
 
