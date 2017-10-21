@@ -25,7 +25,7 @@ package body LEA_Common.User_options is
 
     pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
 
-    sep: constant UTF_16_String:= ";";
+    sep: constant UTF_16_String:= ">";
 
     procedure Load(opt: out Option_Pack_Type) is
       mru_idx: Positive;
