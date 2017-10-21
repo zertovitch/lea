@@ -229,10 +229,21 @@ package body LEA_GWin.Editor is
   end;
 
   procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line: Integer) is
-    p : Position := Editor.PositionFromLine (line);
+    procedure Internal ( line: Integer) is
+      p : constant Position := Editor.PositionFromLine (line);
+    begin
+      Editor.SetSel (p, p);
+    end;
+    shake: constant:= 10;
   begin
-    Editor.SetSel (p, p);
-  end;
+    --  Tactic to show the desired line closer to the middle of the window,
+    --  avoiding top or bottom if possible.
+    if line > shake then
+      Internal(line - shake);  --  A bit too high
+    end if;
+    Internal(line + shake);    --  A bit too low
+    Internal(line);            --  Set the correct line
+  end Set_current_line;
 
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type) is
     --
