@@ -148,8 +148,11 @@ package LEA_GWin.MDI_Child is
     need   :        Update_need
   );
 
+  --  This will update File menu of parent, itself, and all brothers and sisters
   procedure Update_Common_Menus(Window : MDI_Child_Type;
-                                top_entry : GString:= "" );
+    top_entry_name : GString := "";
+    top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
+  );
 
   procedure Show_Search_Box (MDI_Child : in out MDI_Child_Type);
 

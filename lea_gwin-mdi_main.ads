@@ -90,8 +90,11 @@ package LEA_GWin.MDI_Main is
         Window    : in out MDI_Main_Type;
         Can_Close :    out Boolean        );
 
-  procedure Update_Common_Menus(Window    : in out MDI_Main_Type;
-                                top_entry : GString:= "" );
+  procedure Update_Common_Menus(
+    Window         : in out MDI_Main_Type;
+    top_entry_name : GString := "";
+    top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
+  );
 
   procedure Update_Title(Window : in out MDI_Main_Type);
 

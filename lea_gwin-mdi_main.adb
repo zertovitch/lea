@@ -108,6 +108,7 @@ package body LEA_GWin.MDI_Main is
   )
   is
     is_open: Boolean;
+    line : Natural := 0;
   begin
     Focus_an_already_opened_window( Window, File_Name, is_open );
     if is_open then
@@ -128,10 +129,20 @@ package body LEA_GWin.MDI_Main is
       );
       New_Window.Short_Name:= File_Title;
       MDI_Active_Window (Window, New_Window.all);
-      Update_Common_Menus(Window, GU2G(New_Window.File_Name));
+      for m of Window.opt.mru loop
+        if m.name = New_Window.File_Name then
+          line := m.line;
+          exit;
+        end if;
+      end loop;
+      Update_Common_Menus(Window, GU2G(New_Window.File_Name), line);
       New_Window.Editor.Load_text;
       Finish_subwindow_opening(Window, New_Window.all);
       New_Window.Editor.Focus;
+      if line > 0 then
+        --  Set cursor position to memorized line number
+        New_Window.Editor.Set_current_line (line);
+      end if;
     end;
   exception
 --    when E : TC.Input.Load_Error =>
@@ -369,7 +380,7 @@ package body LEA_GWin.MDI_Main is
 
     Current_MDI_Window := Current_MDI_Window + 1;
 
-    -- This is just to set the MRUs in the new window's menu:
+    --  This is just to set the MRUs in the new window's menu:
     Update_Common_Menus(Window);
 
     Finish_subwindow_opening(Window, New_Window.all);
@@ -544,9 +555,10 @@ package body LEA_GWin.MDI_Main is
   -- Add_MRU --
   -------------
 
-  procedure Add_MRU (Window: in out MDI_Main_Type; name: GString) is
+  procedure Add_MRU (Window: in out MDI_Main_Type; name: GString; line: Integer) is
     x: Integer:= Window.opt.mru'First-1;
     up_name: GString:= name;
+    mem_line: Natural := 0;
   begin
     To_Upper(up_name);
 
@@ -558,6 +570,7 @@ package body LEA_GWin.MDI_Main is
         To_Upper(up_mru_m);
         if up_mru_m = up_name then -- case insensitive comparison (Jan-2007)
           x:= m;
+          mem_line := Window.opt.mru(m).line;
           exit;
         end if;
       end;
@@ -577,8 +590,11 @@ package body LEA_GWin.MDI_Main is
       Window.opt.mru(i+1):= Window.opt.mru(i);
     end loop;
 
-    --  Name exists now in the list
-    Window.opt.mru(Window.opt.mru'First).name:= G2GU(name);
+    if line > 0 then
+      mem_line := line;
+    end if;
+    --  At least now, name will exist in the list
+    Window.opt.mru(Window.opt.mru'First):= (G2GU(name), mem_line);
 
   end Add_MRU;
 
@@ -608,11 +624,15 @@ package body LEA_GWin.MDI_Main is
     end if;
   end Update_Common_Menus_Child;
 
-  procedure Update_Common_Menus(Window    : in out MDI_Main_Type;
-                                top_entry : GString:= "" ) is
+  procedure Update_Common_Menus(
+    Window         : in out MDI_Main_Type;
+    top_entry_name : GString := "";
+    top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
+  )
+  is
   begin
-    if top_entry /= "" then
-      Add_MRU(Window, top_entry);
+    if top_entry_name /= "" then
+      Add_MRU (Window, top_entry_name, top_entry_line);
     end if;
     Update_MRU_Menu(Window, Window.Menu.Popup_0001);
     -- Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);

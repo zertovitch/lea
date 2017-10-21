@@ -51,8 +51,11 @@ package LEA_GWin.Editor is
 
   ----------------------------------------------------------
   --  Methods introduced in the LEA_Scintilla_Type class  --
+  ----------------------------------------------------------
 
   procedure Apply_options (Editor : in out LEA_Scintilla_Type);
+  function Get_current_line (Editor : LEA_Scintilla_Type) return Integer;
+  procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line: Integer);
 
   --  Comment / uncomment
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type);

@@ -1,3 +1,5 @@
+with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
+
 package body LEA_Common.User_options is
 
   procedure Toggle_show_special (o: in out Option_Pack_Type) is
@@ -23,8 +25,11 @@ package body LEA_Common.User_options is
 
     pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
 
+    sep: constant UTF_16_String:= ";";
+
     procedure Load(opt: out Option_Pack_Type) is
       mru_idx: Positive;
+      sep_pos_1: Natural;
     begin
       for k in Key loop
         begin
@@ -61,7 +66,13 @@ package body LEA_Common.User_options is
                 opt.tree_portion:= Float'Wide_Value(s);
               when mru1 .. mru9 =>
                 mru_idx := Key'Pos(k) - Key'Pos(mru1) + 1;
-                opt.mru(mru_idx).name := To_Unbounded_Wide_String(s);
+                sep_pos_1:= Index(s, sep);
+                if sep_pos_1 > 0 then
+                  opt.mru(mru_idx).name := To_Unbounded_Wide_String(s(s'First .. sep_pos_1-1));
+                  opt.mru(mru_idx).line := Integer'Wide_Value(s(sep_pos_1+1 .. s'Last));
+                else
+                  opt.mru(mru_idx).name := To_Unbounded_Wide_String(s);
+                end if;
             end case;
           end;
         exception
@@ -114,7 +125,8 @@ package body LEA_Common.User_options is
               R(Float'Wide_Image(opt.tree_portion));
             when mru1 .. mru9 =>
               mru_idx := Key'Pos(k) - Key'Pos(mru1) + 1;
-              R( To_Wide_String(opt.mru(mru_idx).name) );
+              R( To_Wide_String(opt.mru(mru_idx).name) & sep &
+                 Integer'Wide_Image(opt.mru(mru_idx).line) );
           end case;
         end;
       end loop;

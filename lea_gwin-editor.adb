@@ -223,6 +223,17 @@ package body LEA_GWin.Editor is
 
   end Apply_options;
 
+  function Get_current_line (Editor : LEA_Scintilla_Type) return Integer is
+  begin
+    return Editor.LineFromPosition (Editor.GetCurrentPos);
+  end;
+
+  procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line: Integer) is
+    p : Position := Editor.PositionFromLine (line);
+  begin
+    Editor.SetSel (p, p);
+  end;
+
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type) is
     --
     blank_line_code: constant:= -1;

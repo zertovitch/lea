@@ -337,7 +337,7 @@ package body LEA_GWin.MDI_Child is
     --  The eventual startup extra new window is now saved.
     --  So, in any case, we won't close it now on next window open.
     Window.Extra_first_doc:= False;
-    Update_Common_Menus(Window, File_Name);
+    Update_Common_Menus(Window, File_Name, Window.Editor.Get_current_line);
     Window.Editor.SetSavePoint;
     Window.Editor.modified:= False;
   exception
@@ -402,7 +402,7 @@ package body LEA_GWin.MDI_Child is
     Window.File_Name := New_File_Name;
     Window.Text(GU2G(File_Title));
     Window.Short_Name:= File_Title;
-    Window.Update_Common_Menus(GU2G(New_File_Name));
+    Window.Update_Common_Menus(GU2G(New_File_Name), Window.Editor.Get_current_line);
   end On_Save_As;
 
   procedure On_Save_All (Window : in out MDI_Child_Type) is
@@ -458,11 +458,14 @@ package body LEA_GWin.MDI_Child is
     end loop;
   end On_File_Drop;
 
-  -- This will update File menu of parent, itself, and all brothers and sisters
+  --  This will update File menu of parent, itself, and all brothers and sisters
   procedure Update_Common_Menus(Window : MDI_Child_Type;
-                                top_entry : GString:= "" ) is
+    top_entry_name : GString := "";
+    top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
+  )
+  is
   begin
-    Update_Common_Menus( Window.Parent.all, top_entry );
+    Update_Common_Menus( Window.Parent.all, top_entry_name, top_entry_line );
   end Update_Common_Menus;
 
   procedure On_Size (Window : in out MDI_Child_Type;
@@ -554,7 +557,7 @@ package body LEA_GWin.MDI_Child is
   begin
     Can_Close:= True;
     if Is_file_saved(Window) then
-      Update_Common_Menus(Window,GU2G(Window.File_Name));
+      Window.Update_Common_Menus(GU2G(Window.File_Name), Window.Editor.Get_current_line);
     else -- This happens only for documents that may stay in an unsaved state.
       loop
         case Message_Box
