@@ -52,6 +52,13 @@ package body LEA_GWin.Editor is
     Window.SetEOLMode (SC_EOL_CRLF);
     Window.SetUseTabs (False);
     Window.SetEdgeMode (EDGE_LINE);
+    --
+    --  Multi-line edit
+    Window.Set_Multiple_Selection;
+    Window.Set_Mouse_Selection_Rectangular;
+    Window.Set_Additional_Selection_Typing;
+    Window.Set_Virtual_Space_Options (SCVS_RECTANGULARSELECTION);
+    --
     --  Window.SetIndentationGuides (True);
 
     Window.SetLexer (SCLEX_ADA);
