@@ -29,6 +29,7 @@
 #define Close_search_box                        40008
 #define IDM_Undo                                40008
 #define Version_label                           40009
+#define Whole_word                              40009
 #define Backup_bak_button                       40010
 #define GNAT_URL                                40011
 #define IDM_Save_All                            40012

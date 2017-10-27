@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/27  18:28:54
+-- Transcription time: 2017/10/27  20:08:02
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -402,8 +402,6 @@ package body LEA_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  14, 114, 81, 11, x,y,w,h);
-    Create( Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
     Dlg_to_Scn(  11, 10, 50, 15, x,y,w,h);
     Create_Label( Window, "Find", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  63, 10, 160, 15, x,y,w,h);
@@ -484,6 +482,10 @@ package body LEA_Resource_GUI is
     Enabled(Window.Replace_all_button_permanent, False);
     Enabled(Window.Replace_all_button, False);
     Disable(Window.Replace_all_button_permanent);
+    Dlg_to_Scn(  11, 112, 81, 11, x,y,w,h);
+    Create( Window.Whole_word, Window, "Whole word", x,y,w,h, ID => Whole_word);
+    Dlg_to_Scn(  11, 129, 81, 11, x,y,w,h);
+    Create( Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
   -- ** Generated code ends here /\ /\ /\.
@@ -596,6 +598,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 318
+  -- Last line of resource script file: 319
 
 end LEA_Resource_GUI;

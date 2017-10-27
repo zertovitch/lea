@@ -206,7 +206,6 @@ EXSTYLE WS_EX_TRANSPARENT
 CAPTION "Search"
 FONT 8, "Ms Shell Dlg"
 {
-    AUTOCHECKBOX    "Match case", Match_case, 14, 114, 81, 11, 0, WS_EX_LEFT
     LTEXT           "Find", 0, 11, 10, 50, 15, SS_LEFT, WS_EX_LEFT
     COMBOBOX        Find_box, 63, 10, 160, 15, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
     LTEXT           "Replace with", 0, 11, 30, 50, 15, SS_LEFT, WS_EX_LEFT
@@ -217,6 +216,8 @@ FONT 8, "Ms Shell Dlg"
     PUSHBUTTON      "Find all", Find_all_button, 165, 53, 58, 18, WS_DISABLED, WS_EX_LEFT
     PUSHBUTTON      "Replace and find next", Replace_and_find_next_button, 20, 82, 110, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Replace all", Replace_all_button, 165, 82, 58, 18, WS_DISABLED, WS_EX_LEFT
+    AUTOCHECKBOX    "Whole word", Whole_word, 11, 112, 81, 11, 0, WS_EX_LEFT
+    AUTOCHECKBOX    "Match case", Match_case, 11, 129, 81, 11, 0, WS_EX_LEFT
 }
 
 

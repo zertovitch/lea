@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/27  18:28:54
+-- Transcription time: 2017/10/27  20:08:02
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -151,7 +151,6 @@ package LEA_Resource_GUI is
 
   type Search_box_Type is new Window_Type with record
 
-    Match_case: Check_Box_Type;
     -- Label: 0
     Find_box: Drop_Down_Combo_Box_Type;
     -- Label: 0
@@ -168,9 +167,11 @@ package LEA_Resource_GUI is
     Replace_and_find_next_button_permanent: Button_Type; -- doesn't close parent window after click
     Replace_all_button: Dialog_Button_Type;    -- closes parent window after click
     Replace_all_button_permanent: Button_Type; -- doesn't close parent window after click
+    Whole_word: Check_Box_Type;
+    Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  -- Dialog at resource line 219
+  -- Dialog at resource line 220
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -238,6 +239,7 @@ package LEA_Resource_GUI is
   Close_search_box            : constant:=  40008;
   IDM_Undo                    : constant:=  40008;
   Version_label               : constant:=  40009;
+  Whole_word                  : constant:=  40009;
   Backup_bak_button           : constant:=  40010;
   GNAT_URL                    : constant:=  40011;
   IDM_Save_All                : constant:=  40012;
@@ -294,6 +296,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 318
+  -- Last line of resource script file: 319
 
 end LEA_Resource_GUI;

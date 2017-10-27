@@ -95,6 +95,9 @@ package body LEA_GWin.Search_box is
     if SB.Match_case.State = Checked then
       flags := flags + SCFIND_MATCHCASE;
     end if;
+    if SB.Whole_word.State = Checked then
+      flags := flags + SCFIND_WHOLEWORD;
+    end if;
     return flags;
   end Compose_Scintilla_search_flags;
 
