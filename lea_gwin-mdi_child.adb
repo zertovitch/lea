@@ -1,22 +1,16 @@
 with LEA_Common;                        use LEA_Common;
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
-with LEA_GWin.Options;                  use LEA_GWin.Options;
 with LEA_GWin.Search_box;
 
-with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
-with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
-with GWindows.Constants;                use GWindows.Constants;
-with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Scintilla;                use GWindows.Scintilla;
-with GWindows.Taskbar;                  use GWindows.Taskbar;
 
 with Ada.Directories;
-with Ada.Environment_Variables;         use Ada.Environment_Variables;
+--  with Ada.Environment_Variables;         use Ada.Environment_Variables;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
@@ -156,8 +150,8 @@ package body LEA_GWin.MDI_Child is
         force    :        Boolean
   )
   is
-    mem_sel_path: constant GString_Unbounded:= Window.selected_path;
-    sel_node: Tree_Item_Node;
+    --  mem_sel_path: constant GString_Unbounded:= Window.selected_path;
+    --  sel_node: Tree_Item_Node;
   begin
     if Window.Parent.opt.view_mode = new_view and not force then
       return;
@@ -286,8 +280,8 @@ package body LEA_GWin.MDI_Child is
 
     with_backup: constant Boolean:= Window.Parent.opt.backup = bak;
 
-    ok : Boolean;
-    save_error, backup_error_1, backup_error_2, backup_error_3: exception;
+    --  save_error,
+    backup_error_1, backup_error_2, backup_error_3: exception;
 
     use Ada.Directories;
 
@@ -425,23 +419,6 @@ package body LEA_GWin.MDI_Child is
     GWindows.Base.Enumerate_Children (MDI_Client_Window (Window.Parent.all).all,
                                       Save_any_modified'Unrestricted_Access);
   end On_Save_All;
-
-  function Temp_LEA_name(Window: MDI_Child_Type) return String is
-  begin
-    loop
-      declare
-        num0: constant String:=
-          Float'Image(Ada.Numerics.Float_Random.Random(Window.temp_name_gen));
-        num: constant String:= num0(num0'First+1 .. num0'Last);
-        -- ^ Skip the @#*% leading space
-        test_name: constant UTF_8_String:= Value("TEMP") & "\LEA_Temp_" & num & ".lea";
-      begin
-        if not File_Exists(test_name) then
-          return test_name;
-        end if;
-      end;
-    end loop;
-  end Temp_LEA_name;
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names)
@@ -605,7 +582,14 @@ package body LEA_GWin.MDI_Child is
   end On_Close;
 
   procedure Show_Search_Box (MDI_Child : in out MDI_Child_Type) is
+    sel_a, sel_z: Scintilla.Position;
   begin
+    sel_a:= MDI_Child.Editor.GetSelectionStart;
+    sel_z:= MDI_Child.Editor.GetSelectionEnd;
+    if sel_z > sel_a then
+      --  Goodie: put the selected text into the "find" box.
+      MDI_Child.Parent.Search_box.Find_box.Text (MDI_Child.Editor.GetTextRange (sel_a, sel_z));
+    end if;
     MDI_Child.Parent.Search_box.Show;
     MDI_Child.Parent.Search_box.Find_box.Focus;
   end Show_Search_Box;

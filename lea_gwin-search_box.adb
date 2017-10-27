@@ -2,6 +2,9 @@ with LEA_Common;                        use LEA_Common;
 
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
+with GWindows.Scintilla;                use GWindows.Scintilla;
+with GWindows.Buttons;                  use GWindows.Buttons;
+
 package body LEA_GWin.Search_box is
 
   overriding
@@ -83,6 +86,16 @@ package body LEA_GWin.Search_box is
     SB.Replace_all_button_permanent.Show;
     --
     SB.Center;
+    SB.Keyboard_Support;
   end Create_as_search_box;
+
+  function Compose_Scintilla_search_flags (SB: in  LEA_search_box_type) return Integer is
+    flags : Integer := 0;
+  begin
+    if SB.Match_case.State = Checked then
+      flags := flags + SCFIND_MATCHCASE;
+    end if;
+    return flags;
+  end Compose_Scintilla_search_flags;
 
 end LEA_GWin.Search_box;

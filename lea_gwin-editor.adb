@@ -40,9 +40,10 @@ package body LEA_GWin.Editor is
     Line     : constant Integer := LineFromPosition (Control, CurPos);
     Prev_Ind : constant Integer := GetLineIndentation (Control, Line - 1);
   begin
-     if Value = GWindows.GCharacter'Val (13) and Line > 0 and Prev_Ind > 0 then
-       Control.AddText(Prev_Ind * " ");
-     end if;
+    --  This works on Windows (CR, LF) and Unix (LF); we ignore the old Macs (CR).
+    if Value = GWindows.GCharacter'Val (10) and Line > 0 and Prev_Ind > 0 then
+      Control.AddText(Prev_Ind * " ");
+    end if;
   end On_Character_Added;
 
   overriding
@@ -366,12 +367,15 @@ package body LEA_GWin.Editor is
     MDI_Main  : MDI_Main_Type renames MDI_Child.Parent.all;
     find_str    : constant GString:= MDI_Main.Search_box.Find_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
-    pos, old_sel_a, old_sel_z: GWindows.Scintilla.Position;
+    pos, sel_a, sel_z: GWindows.Scintilla.Position;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
       return;
     end if;
+    sel_a:= Editor.GetSelectionStart;
+    sel_z:= Editor.GetSelectionEnd;
+    Editor.SetSearchFlags(MDI_Main.Search_box.Compose_Scintilla_search_flags);
     case action is
       when find_next | find_previous =>
         for attempt in 1 .. 2 loop
@@ -387,21 +391,37 @@ package body LEA_GWin.Editor is
             Editor.SetSel (Editor.GetTargetStart, Editor.GetTargetEnd);
             exit;
           elsif attempt = 1 then  --  Not found: wrap around and try again.
-            old_sel_a:= Editor.GetSelectionStart;
-            old_sel_z:= Editor.GetSelectionEnd;
             if action = find_next then
               Editor.SetSel (0, 0);  --  Will search the entire document from the top on 2nd attempt.
             else
               Editor.SetSel (Editor.GetLength , Editor.GetLength);  --  Same, but from the bottom.
             end if;
           else  --  Not found *after* the wrap around: find_str is really nowhere!
-            Editor.SetSel (old_sel_a, old_sel_z);
+            Editor.SetSel (sel_a, sel_z);
             Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
           end if;
         end loop;
-      when find_all              => null;
-      when replace_and_find_next => null;
-      when replace_all           => null;
+      when replace_and_find_next =>
+        --  Selection must be identical to the text to be found.
+        --  But wait: we cannot just compare strings: the options (match case, ...) must
+        --  be taken into account as well. Solution: we do a search *within* the selection.
+        Editor.SetTargetStart (sel_a);
+        Editor.SetTargetEnd (sel_z);
+        pos := Editor.SearchInTarget(find_str);
+        if pos >= 0 then  --  Found
+          --  The replacement can be undone and redone in a single "Undo" / Redo":
+          Editor.BeginUndoAction;
+          --  Replace: Clear, then Insert.
+          Editor.Clear;
+          Editor.InsertText (sel_a, MDI_Main.Search_box.Replace_Box.Text);
+          Editor.EndUndoAction;
+        end if;
+        --  Find next - anyway.
+        Editor.Search (action => find_next);
+      when find_all =>
+        null;
+      when replace_all =>
+        null;
     end case;
   end Search;
 

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/20  23:38:02
+-- Transcription time: 2017/10/27  18:28:54
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -158,8 +158,8 @@ package LEA_Resource_GUI is
     Replace_Box: Drop_Down_Combo_Box_Type;
     Close_search_box: Dialog_Button_Type;    -- closes parent window after click
     Close_search_box_permanent: Button_Type; -- doesn't close parent window after click
-    Find_next_button: Dialog_Button_Type;    -- closes parent window after click
-    Find_next_button_permanent: Button_Type; -- doesn't close parent window after click
+    Find_next_button: Default_Dialog_Button_Type;    -- closes parent window after click
+    Find_next_button_permanent: Default_Button_Type; -- doesn't close parent window after click
     Find_previous_button: Dialog_Button_Type;    -- closes parent window after click
     Find_previous_button_permanent: Button_Type; -- doesn't close parent window after click
     Find_all_button: Dialog_Button_Type;    -- closes parent window after click
@@ -197,7 +197,7 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion: constant String:= "0.0";
+    FileVersion: constant String:= "0.5";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2017";
     ProductName: constant String:= "LEA";
     Translation: constant:= 1033;
