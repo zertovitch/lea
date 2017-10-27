@@ -71,4 +71,6 @@ package LEA_GWin.Editor is
   procedure Load_text (Window : in out LEA_Scintilla_Type);
   procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString);
 
+  procedure Set_syntax (Editor : in out LEA_Scintilla_Type; syntax: Syntax_type);
+
 end LEA_GWin.Editor;

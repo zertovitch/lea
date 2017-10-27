@@ -82,6 +82,7 @@ package body LEA_GWin.MDI_Child is
     bar.Enabled(IDM_Comment, True);
     bar.Enabled(IDM_Uncomment, True);
     bar.Enabled(IDM_Find, True);
+    bar.Enabled(IDM_Show_special_symbols, True);
     if not Window.is_closing then
       null;  --  bar.Enabled(IDM_ADD_FILES, True);
     end if;
@@ -397,6 +398,7 @@ package body LEA_GWin.MDI_Child is
     Window.Text(GU2G(File_Title));
     Window.Short_Name:= File_Title;
     Window.Update_Common_Menus(GU2G(New_File_Name), Window.Editor.Get_current_line);
+    Window.Editor.Set_syntax (Guess_syntax (GU2G (Window.File_Name)));
   end On_Save_As;
 
   procedure On_Save_All (Window : in out MDI_Child_Type) is
@@ -577,6 +579,7 @@ package body LEA_GWin.MDI_Child is
       Window.Parent.Tool_Bar.Enabled(IDM_Indent, False);
       Window.Parent.Tool_Bar.Enabled(IDM_Unindent, False);
       Window.Parent.Tool_Bar.Enabled(IDM_Find, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Show_special_symbols, False);
       Window.is_closing:= True;
     end if;
   end On_Close;

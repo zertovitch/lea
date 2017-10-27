@@ -139,6 +139,7 @@ package body LEA_GWin.MDI_Main is
       Update_Common_Menus(Window, GU2G(New_Window.File_Name), line);
       New_Window.Editor.Load_text;
       Finish_subwindow_opening(Window, New_Window.all);
+      New_Window.Editor.Set_syntax (Guess_syntax (GU2G (New_Window.File_Name)));
       New_Window.Editor.Focus;
       if line > 0 then
         --  Set cursor position to memorized line number
