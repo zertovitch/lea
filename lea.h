@@ -64,7 +64,6 @@
 #define IDM_WINDOW_TILE_HORIZONTAL              40041
 #define IDM_WINDOW_TILE_VERTICAL                40042
 #define IDM_WINDOW_CLOSE_ALL                    40043
-#define IDM_ADD_FILES                           40044
 #define IDM_UPDATE_ARCHIVE                      40045
 #define IDM_Quick_Help                          40047
 #define IDM_Web                                 40048

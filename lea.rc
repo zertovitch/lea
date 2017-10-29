@@ -241,7 +241,6 @@ Main_Menu ACCELERATORS
     "T",            IDM_TEST_ARCHIVE, VIRTKEY, CONTROL
     "F",            IDM_Find, VIRTKEY, CONTROL
     VK_F3,         IDM_Find_Next, VIRTKEY
-    VK_ADD,        IDM_ADD_FILES, VIRTKEY
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
     "R",            IDM__RECOMPRESS_ARCHIVE, VIRTKEY, CONTROL
     "D",            IDM_Duplicate, VIRTKEY, CONTROL

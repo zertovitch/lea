@@ -16,6 +16,16 @@ with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.MDI_Child is
 
+  package Status_bar_parts is
+    general_info      : constant := 130;
+    length_and_lines  : constant := 170 + general_info;
+    line_and_col      : constant := 130 + length_and_lines;
+    selection         : constant := 110 + line_and_col;
+    eol_indicator     : constant := 130 + selection;
+    ansi_unicode      : constant := 120 + eol_indicator;
+    ins_ovr           : constant :=  30 + ansi_unicode;
+  end;
+
   function Folder_Focus(Window : in MDI_Child_Type) return Boolean is
   begin
     return
@@ -229,13 +239,13 @@ package body LEA_GWin.MDI_Child is
 
     Window.Status_Bar.Create(Window, "No file");
     Window.Status_Bar.Parts(
-      (0 => 130,  --  General info ("Ada file", ...)
-       1 => 300,  --  Length & lines
-       2 => 430,  --  Line / Col
-       3 => 540,  --  Selection
-       4 => 670,  --  Unix / Windows / Mac EOLs
-       5 => 790,  --  ANSI / Unicode
-       6 => 820   --  Ins / Ovr
+      (  0 => Status_bar_parts.general_info,      --  General info ("Ada file", ...)
+         1 => Status_bar_parts.length_and_lines,  --  Length & lines
+         2 => Status_bar_parts.line_and_col,      --  Line / Col
+         3 => Status_bar_parts.selection,         --  Selection
+         4 => Status_bar_parts.eol_indicator,     --  Unix / Windows / Mac EOLs
+         5 => Status_bar_parts.ansi_unicode,      --  ANSI / Unicode
+         6 => Status_bar_parts.ins_ovr            --  Ins / Ovr
        )
     );
     Window.Status_Bar.Dock(At_Bottom);
