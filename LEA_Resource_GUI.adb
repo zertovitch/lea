@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/29  08:18:48
+-- Transcription time: 2017/10/29  08:24:52
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -70,11 +70,11 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0003, "&Duplicate line or selection" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Duplicate);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Quick build && run with HAC", IDM_TEST_ARCHIVE);
-    State(Menu.Popup_0004, Command, IDM_TEST_ARCHIVE, Disabled);
+    Append_Item(Menu.Popup_0004, "Build && run with &HAC", IDM_Build_run_HAC);
+    State(Menu.Popup_0004, Command, IDM_Build_run_HAC, Disabled);
     Append_Separator(Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Build && run with GNAT", IDM_TEST_ARCHIVE);
-    State(Menu.Popup_0004, Command, IDM_TEST_ARCHIVE, Disabled);
+    Append_Item(Menu.Popup_0004, "&Build && run with GNAT", IDM_Build_run_GNAT);
+    State(Menu.Popup_0004, Command, IDM_Build_run_GNAT, Disabled);
     Menu.Popup_0005:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "Show special symbols", IDM_Show_special_symbols);

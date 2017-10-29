@@ -145,6 +145,7 @@ package body LEA_GWin.Editor is
       type Color_topic is (
         foreground, background,
         keyword, number, comment, string, character,
+        error_foreground, error_background,
         caret,
         selection_foreground,
         selection_background
@@ -160,6 +161,8 @@ package body LEA_GWin.Editor is
              comment              => Dark_Green,
              string               => Dark_Gray,
              character            => Dark_Gray,
+             error_foreground     => Black,
+             error_background     => Pink,
              caret                => Black,
              selection_foreground => Black,
              selection_background => Light_Gray
@@ -172,6 +175,8 @@ package body LEA_GWin.Editor is
              comment              => 16#CF9F72#,
              string               => Yellow,
              character            => Yellow,
+             error_foreground     => White,
+             error_background     => Dark_Red,
              caret                => White,
              selection_foreground => White,
              selection_background => 16#D28022#
@@ -207,12 +212,12 @@ package body LEA_GWin.Editor is
 
       --  Cases where the text is obviously wrong
       --  (unfinished character or string, illegal identifier)
-      Editor.StyleSetFore (SCE_ADA_CHARACTEREOL, White);
-      Editor.StyleSetBack (SCE_ADA_CHARACTEREOL, Dark_Red);
-      Editor.StyleSetFore (SCE_ADA_STRINGEOL, White);
-      Editor.StyleSetBack (SCE_ADA_STRINGEOL, Dark_Red);
-      Editor.StyleSetFore (SCE_ADA_ILLEGAL, White);
-      Editor.StyleSetBack (SCE_ADA_ILLEGAL, Dark_Red);
+      Editor.StyleSetFore (SCE_ADA_CHARACTEREOL, theme_color(theme, error_foreground));
+      Editor.StyleSetBack (SCE_ADA_CHARACTEREOL, theme_color(theme, error_background));
+      Editor.StyleSetFore (SCE_ADA_STRINGEOL, theme_color(theme, error_foreground));
+      Editor.StyleSetBack (SCE_ADA_STRINGEOL, theme_color(theme, error_background));
+      Editor.StyleSetFore (SCE_ADA_ILLEGAL, theme_color(theme, error_foreground));
+      Editor.StyleSetBack (SCE_ADA_ILLEGAL, theme_color(theme, error_background));
 
       Editor.SetCaretFore (theme_color(theme, caret));
 

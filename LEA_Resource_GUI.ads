@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/29  08:18:48
+-- Transcription time: 2017/10/29  08:24:52
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -230,8 +230,10 @@ package LEA_Resource_GUI is
   IDM_New_File                : constant:=  40003;
   AZip_URL                    : constant:=  40004;
   Find_previous_button        : constant:=  40004;
+  IDM_Build_run_HAC           : constant:=  40004;
   Find_all_button             : constant:=  40005;
   IDM_Open_File               : constant:=  40005;
+  IDM_Build_run_GNAT          : constant:=  40006;
   Indentation_edit_box        : constant:=  40006;
   Replace_and_find_next_button: constant:=  40006;
   Color_theme_list_box        : constant:=  40007;

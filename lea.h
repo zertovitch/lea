@@ -20,8 +20,10 @@
 #define IDM_New_File                            40003
 #define AZip_URL                                40004
 #define Find_previous_button                    40004
+#define IDM_Build_run_HAC                       40004
 #define Find_all_button                         40005
 #define IDM_Open_File                           40005
+#define IDM_Build_run_GNAT                      40006
 #define Indentation_edit_box                    40006
 #define Replace_and_find_next_button            40006
 #define Color_theme_list_box                    40007
