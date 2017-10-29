@@ -417,7 +417,7 @@ package body LEA_GWin.Editor is
           Editor.BeginUndoAction;
           --  Replace: Clear, then Insert.
           Editor.Clear;
-          Editor.InsertText (sel_a, MDI_Main.Search_box.Replace_Box.Text);
+          Editor.InsertText (sel_a, MDI_Main.Search_box.Replace_box.Text);
           Editor.EndUndoAction;
         end if;
         --  Find next - anyway.

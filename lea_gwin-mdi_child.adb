@@ -1,6 +1,7 @@
 with LEA_Common;                        use LEA_Common;
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
+with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Search_box;
 
 with GWindows.Base;                     use GWindows.Base;
@@ -38,7 +39,7 @@ package body LEA_GWin.MDI_Child is
     --  Child window, not relative to MDI main!
     x := x - parent.Left - Bar.Left - frame_width;
     if x in length_and_lines .. line_and_col then
-      Message_Box ("Go to line", "TBD");
+      Do_go_to_line (parent);
     end if;
   end On_Click;
 
@@ -537,6 +538,8 @@ package body LEA_GWin.MDI_Child is
         Window.Show_Search_Box;
       when IDM_Find_Next =>
         Window.Editor.Search(find_next);
+      when IDM_Go_to_line =>
+        Do_go_to_line (Window);
       when IDM_Show_special_symbols =>
         Toggle_show_special(Window.Parent.opt);
         Window.Editor.Apply_options;
