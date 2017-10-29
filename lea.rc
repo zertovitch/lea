@@ -73,7 +73,9 @@ Menu_MDI_Child MENU
     }
     POPUP "&Tools"
     {
-        MENUITEM "&Compile with HAC\tCtrl+T", IDM_TEST_ARCHIVE
+        MENUITEM "&Quick build && run with HAC", IDM_TEST_ARCHIVE, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Build && run with GNAT", IDM_TEST_ARCHIVE, INACTIVE
     }
     POPUP "&View"
     {

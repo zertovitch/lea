@@ -5,6 +5,7 @@ with LEA_GWin.Search_box;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
+with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Scintilla;                use GWindows.Scintilla;
@@ -25,6 +26,21 @@ package body LEA_GWin.MDI_Child is
     ansi_unicode      : constant := 120 + eol_indicator;
     ins_ovr           : constant :=  30 + ansi_unicode;
   end;
+
+  overriding procedure On_Click (Bar : in out MDI_Child_Status_Bar_Type) is
+    x : Integer;
+    parent : MDI_Child_Type renames MDI_Child_Type (Bar.Parent.all);
+    use Status_bar_parts;
+    frame_width: constant := 8;  --  A hack, guessing the window frame's width
+  begin
+    x := Get_Cursor_Position.X;
+    --  NB: parent.Left is the absolute position of the MDI
+    --  Child window, not relative to MDI main!
+    x := x - parent.Left - Bar.Left - frame_width;
+    if x in length_and_lines .. line_and_col then
+      Message_Box ("Go to line", "TBD");
+    end if;
+  end On_Click;
 
   function Folder_Focus(Window : in MDI_Child_Type) return Boolean is
   begin
@@ -238,7 +254,7 @@ package body LEA_GWin.MDI_Child is
     Window.Editor.Dock(Fill);
 
     Window.Status_Bar.Create(Window, "No file");
-    Window.Status_Bar.Parts(
+    Window.Status_Bar.Parts (
       (  0 => Status_bar_parts.general_info,      --  General info ("Ada file", ...)
          1 => Status_bar_parts.length_and_lines,  --  Length & lines
          2 => Status_bar_parts.line_and_col,      --  Line / Col

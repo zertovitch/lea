@@ -26,6 +26,9 @@ package LEA_GWin.MDI_Child is
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
 
+  --  Clicks on some some parts of the status bar have effects
+  overriding procedure On_Click (Bar : in out MDI_Child_Status_Bar_Type);
+
   type LV_Payload is record
     index_before_sorting: Integer;
   end record;
@@ -63,11 +66,11 @@ package LEA_GWin.MDI_Child is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
       record
         File_Name        : GString_Unbounded;
+        --  Window title = Short_Name & {""|" *"}
         Short_Name       : GString_Unbounded;
-        -- ^ Window title = Short_Name & {""|" *"}
         Parent           : MDI_Main_Access; -- -> access to the containing window
+        --  new file closed if kept virgin when opening another one (like blank Excel sheet).
         Extra_first_doc  : Boolean:= False;
-        -- ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
         Menu             : Menu_MDI_Child_Type;
         Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Bar_and_List     : MDI_Child_Panel_Type;
