@@ -416,7 +416,7 @@ package body LEA_Resource_GUI is
     Dlg_to_Scn(  6, 57, 240, 28, x,y,w,h);
     Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
     Dlg_to_Scn(  61, 68, 108, 20, x,y,w,h);
-    Create( Window.Color_theme_list_box, Window, "", x,y,w,h, False, ID => Color_theme_list_box);
+    Create( Window.Color_theme_list_box, Window, x,y,w,h, False, ID => Color_theme_list_box);
     Dlg_to_Scn(  6, 26, 240, 28, x,y,w,h);
     Create( Window.Group_Backup, Window, "Backup", x,y,w,h);
     Dlg_to_Scn(  80, 36, 91, 11, x,y,w,h);

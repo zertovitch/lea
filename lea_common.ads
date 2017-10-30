@@ -7,10 +7,6 @@ with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
 package LEA_Common is
 
-  type View_Mode_Type is (Notepad, Studio);
-
-  type Color_Theme_Type is (Default, Dark_side);
-
   -------------
   -- Strings --
   -------------
@@ -31,7 +27,16 @@ package LEA_Common is
   function To_UTF_16(s: UTF_8_String) return UTF_16_String;
   function To_UTF_8(s: UTF_16_String) return UTF_8_String;
 
-  --  Some useful enumerations
+  --------------------------------
+  --  Some useful enumerations  --
+  --------------------------------
+
+  type View_Mode_Type is (Notepad, Studio);
+
+  type Color_Theme_Type is (Default, Dark_side);
+
+  function Nice_Image (ct: Color_Theme_Type) return UTF_16_String;
+  function Nice_Value (im: UTF_16_String) return Color_Theme_Type;
 
   type Search_action is (find_next, find_previous, replace_and_find_next, find_all, replace_all);
 

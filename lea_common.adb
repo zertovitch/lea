@@ -35,6 +35,24 @@ package body LEA_Common is
       return True;   --  The file exists and is already opened
   end File_Exists;
 
+  function Nice_Image (ct: Color_Theme_Type) return UTF_16_String is
+  begin
+    case ct is
+      when Default   => return "Default theme";
+      when Dark_side => return "Dark Side";
+    end case;
+  end Nice_Image;
+
+  function Nice_Value (im: UTF_16_String) return Color_Theme_Type is
+  begin
+    for ct in Color_Theme_Type loop
+      if im = Nice_Image (ct) then
+        return ct;
+      end if;
+    end loop;
+    return Default;
+  end Nice_Value;
+
   function Guess_syntax (file_name : UTF_16_String) return Syntax_type is
   begin
     if file_name'Length > 3 then

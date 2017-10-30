@@ -155,7 +155,7 @@ package LEA_Resource_GUI is
     -- Label: 0
     Right_margin_edit_box: Edit_Box_Type;
     Group_color_theme: Group_Box_Type;
-    Color_theme_list_box: Drop_Down_Combo_Box_Type;
+    Color_theme_list_box: Drop_Down_List_Box_Type;
     Group_Backup: Group_Box_Type;
     Backup_bak_button: Radio_Button_Type;
     Backup_none_button: Radio_Button_Type;
