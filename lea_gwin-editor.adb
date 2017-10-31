@@ -23,59 +23,59 @@ package body LEA_GWin.Editor is
   --  - GNAT project files
 
   overriding
-  procedure On_Change (Control : in out LEA_Scintilla_Type) is
-    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  procedure On_Change (Editor : in out LEA_Scintilla_Type) is
+    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
     parent.Update_display(toolbar_and_menu);
   end On_Change;
 
   overriding
   procedure On_Character_Added
-    (Control     : in out LEA_Scintilla_Type;
+    (Editor      : in out LEA_Scintilla_Type;
      Special_Key : in     GWindows.Windows.Special_Key_Type;
      Value       : in     GWindows.GCharacter)
   is
   pragma Unreferenced (Special_Key);
-    CurPos : constant Position := GetCurrentPos (Control);
-    Line     : constant Integer := LineFromPosition (Control, CurPos);
-    Prev_Ind : constant Integer := GetLineIndentation (Control, Line - 1);
+    CurPos : constant Position := GetCurrentPos (Editor);
+    Line     : constant Integer := LineFromPosition (Editor, CurPos);
+    Prev_Ind : constant Integer := GetLineIndentation (Editor, Line - 1);
   begin
     --  This works on Windows (CR, LF) and Unix (LF); we ignore the old Macs (CR).
     if Value = GWindows.GCharacter'Val (10) and Line > 0 and Prev_Ind > 0 then
-      Control.AddText(Prev_Ind * " ");
+      Editor.AddText(Prev_Ind * " ");
     end if;
   end On_Character_Added;
 
   overriding
-  procedure On_Create (Window : in out LEA_Scintilla_Type) is
+  procedure On_Create (Editor : in out LEA_Scintilla_Type) is
   begin
     --  Set up editor
-    Window.SetEOLMode (SC_EOL_CRLF);
-    Window.SetUseTabs (False);
-    Window.SetEdgeMode (EDGE_LINE);
+    Editor.SetEOLMode (SC_EOL_CRLF);
+    Editor.SetUseTabs (False);
+    Editor.SetEdgeMode (EDGE_LINE);
     --
     --  Multi-line edit
-    Window.Set_Multiple_Selection;
-    Window.Set_Mouse_Selection_Rectangular;
-    Window.Set_Additional_Selection_Typing;
-    Window.Set_Virtual_Space_Options (SCVS_RECTANGULARSELECTION);
+    Editor.Set_Multiple_Selection;
+    Editor.Set_Mouse_Selection_Rectangular;
+    Editor.Set_Additional_Selection_Typing;
+    Editor.Set_Virtual_Space_Options (SCVS_RECTANGULARSELECTION);
     --
-    --  Window.SetIndentationGuides (True);
+    --  Editor.SetIndentationGuides (True);
 
-    Window.Set_syntax (Ada_syntax);
+    Editor.Set_syntax (Ada_syntax);
 
-    Window.Apply_options;
+    Editor.Apply_options;
 
-    Window.SetMarginTypeN (1, SC_MARGIN_NUMBER);  --  Display line numbers
-    Window.SetMarginWidthN (1, 40);
-    Window.SetMarginWidthN (2, 10);
+    Editor.SetMarginTypeN (1, SC_MARGIN_NUMBER);  --  Display line numbers
+    Editor.SetMarginWidthN (1, 40);
+    Editor.SetMarginWidthN (2, 10);
 
-    Window.Focus;
+    Editor.Focus;
   end On_Create;
 
   overriding
   procedure On_Message
-    (Window       : in out LEA_Scintilla_Type;
+    (Editor       : in out LEA_Scintilla_Type;
      message      : in     Interfaces.C.unsigned;
      wParam       : in     GWindows.Types.Wparam;
      lParam       : in     GWindows.Types.Lparam;
@@ -85,7 +85,7 @@ package body LEA_GWin.Editor is
     WM_LBUTTONDOWN             : constant := 513;
     WM_RBUTTONDOWN             : constant := 516;
     status_refresh_needed: Boolean:= False;
-    parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
     case message is
       when WM_KEYDOWN | WM_LBUTTONDOWN | WM_RBUTTONDOWN =>
@@ -94,7 +94,7 @@ package body LEA_GWin.Editor is
         null;
     end case;
     --  Call parent method.
-    Scintilla_Type(Window).On_Message(message, wParam, lParam, Return_Value);
+    Scintilla_Type(Editor).On_Message(message, wParam, lParam, Return_Value);
     --
     if status_refresh_needed then
       parent.Update_display(status_bar);
@@ -102,36 +102,36 @@ package body LEA_GWin.Editor is
   end On_Message;
 
   overriding
-  procedure On_Position_Changed (Control : in out LEA_Scintilla_Type;
+  procedure On_Position_Changed (Editor : in out LEA_Scintilla_Type;
                                  Pos     : in     Position)
   is
   pragma Unreferenced (Pos);
-    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
     parent.Update_display(status_bar);
   end On_Position_Changed;
 
   overriding
-  procedure On_Save_Point_Reached (Control : in out LEA_Scintilla_Type) is
-    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  procedure On_Save_Point_Reached (Editor : in out LEA_Scintilla_Type) is
+    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
     --  We have had enough Undo's to make the document unmodified again.
-    Control.modified:= False;
+    Editor.modified:= False;
     parent.Update_display(toolbar_and_menu);
   end On_Save_Point_Reached;
 
   overriding
-  procedure On_Save_Point_Left (Control : in out LEA_Scintilla_Type) is
-    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  procedure On_Save_Point_Left (Editor : in out LEA_Scintilla_Type) is
+    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
     --  Either new changes, or Undo's from the last saved state.
-    Control.modified:= True;
+    Editor.modified:= True;
     parent.Update_display(toolbar_and_menu);
   end On_Save_Point_Left;
 
   overriding
-  procedure On_Update_UI (Control : in out LEA_Scintilla_Type) is
-    parent: MDI_Child_Type renames MDI_Child_Type(Control.mdi_parent.all);
+  procedure On_Update_UI (Editor : in out LEA_Scintilla_Type) is
+    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
     parent.Update_display(status_bar);
   end;
@@ -470,9 +470,9 @@ package body LEA_GWin.Editor is
     end if;
   end Duplicate;
 
-  procedure Load_text (Window : in out LEA_Scintilla_Type) is
+  procedure Load_text (Editor : in out LEA_Scintilla_Type) is
     f: File_Type;
-    parent: MDI_Child_Type renames MDI_Child_Type(Window.mdi_parent.all);
+    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
     Open(f, In_File, To_UTF_8(GU2G(parent.File_Name)), Form_For_IO_Open_and_Create);
     declare
@@ -481,41 +481,41 @@ package body LEA_GWin.Editor is
       p: Character:= ' ';
     begin
       String'Read(Stream(f), s);
-      Window.SetEOLMode (SC_EOL_CRLF);
+      Editor.SetEOLMode (SC_EOL_CRLF);
       for c of s loop
         if c = ASCII.LF then
           exit when p = ASCII.CR;           --  CR LF
-          Window.SetEOLMode (SC_EOL_LF);    --  non-CR LF
+          Editor.SetEOLMode (SC_EOL_LF);    --  non-CR LF
           exit;
         else
           if p = ASCII.CR then              --  CR non-LF
-            Window.SetEOLMode (SC_EOL_CR);
+            Editor.SetEOLMode (SC_EOL_CR);
             exit;
           end if;
         end if;
         p:= c;
       end loop;
-      Window.InsertText(0, S2G(s));  --  ASCII to Unicode (UTF-16) conversion
-      Window.EmptyUndoBuffer;
-      Window.SetSavePoint;
-      Window.modified:= False;
+      Editor.InsertText(0, S2G(s));  --  ASCII to Unicode (UTF-16) conversion
+      Editor.EmptyUndoBuffer;
+      Editor.SetSavePoint;
+      Editor.modified:= False;
     end;
     Close(f);
   end Load_text;
 
-  procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString) is
+  procedure Save_text (Editor : in out LEA_Scintilla_Type; under: GString) is
     f: File_Type;
   begin
     Create(f, Out_File, To_UTF_8(under), Form_For_IO_Open_and_Create);
-    if Window.GetLength > 0 then
+    if Editor.GetLength > 0 then
       declare
-        b: constant GString:= Window.GetTextRange(Min => 0, Max => Window.GetLength);
+        b: constant GString:= Editor.GetTextRange(Min => 0, Max => Editor.GetLength);
       begin
         String'Write(Stream(f), G2S(b));
       end;
     end if;
     Close(f);
-    --  We do *not* change Window.SetSavePoint and Window.modified until
+    --  We do *not* change Editor.SetSavePoint and Editor.modified until
     --  all operations around backups are successful. This is managed by
     --  the parent window's method, MDI_Child_Type.Save.
   end Save_text;

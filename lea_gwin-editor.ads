@@ -17,37 +17,37 @@ package LEA_GWin.Editor is
   end record;
 
   overriding
-  procedure On_Change (Control : in out LEA_Scintilla_Type);
+  procedure On_Change (Editor : in out LEA_Scintilla_Type);
 
   overriding
   procedure On_Character_Added
-    (Control     : in out LEA_Scintilla_Type;
+    (Editor      : in out LEA_Scintilla_Type;
      Special_Key : in     GWindows.Windows.Special_Key_Type;
      Value       : in     GWindows.GCharacter);
 
   overriding
-  procedure On_Create (Window : in out LEA_Scintilla_Type);
+  procedure On_Create (Editor : in out LEA_Scintilla_Type);
 
   overriding
   procedure On_Message
-    (Window       : in out LEA_Scintilla_Type;
+    (Editor       : in out LEA_Scintilla_Type;
      message      : in     Interfaces.C.unsigned;
      wParam       : in     GWindows.Types.Wparam;
      lParam       : in     GWindows.Types.Lparam;
      Return_Value : in out GWindows.Types.Lresult);
 
   overriding
-  procedure On_Position_Changed (Control : in out LEA_Scintilla_Type;
+  procedure On_Position_Changed (Editor : in out LEA_Scintilla_Type;
                                  Pos     : in     Position);
 
   overriding
-  procedure On_Save_Point_Reached (Control : in out LEA_Scintilla_Type);
+  procedure On_Save_Point_Reached (Editor : in out LEA_Scintilla_Type);
 
   overriding
-  procedure On_Save_Point_Left (Control : in out LEA_Scintilla_Type);
+  procedure On_Save_Point_Left (Editor : in out LEA_Scintilla_Type);
 
   overriding
-  procedure On_Update_UI (Control : in out LEA_Scintilla_Type);
+  procedure On_Update_UI (Editor : in out LEA_Scintilla_Type);
 
   ----------------------------------------------------------
   --  Methods introduced in the LEA_Scintilla_Type class  --
@@ -68,8 +68,8 @@ package LEA_GWin.Editor is
   procedure Duplicate (Editor : in out LEA_Scintilla_Type);
 
   --  I/O
-  procedure Load_text (Window : in out LEA_Scintilla_Type);
-  procedure Save_text (Window : in out LEA_Scintilla_Type; under: GString);
+  procedure Load_text (Editor : in out LEA_Scintilla_Type);
+  procedure Save_text (Editor : in out LEA_Scintilla_Type; under: GString);
 
   procedure Set_syntax (Editor : in out LEA_Scintilla_Type; syntax: Syntax_type);
 

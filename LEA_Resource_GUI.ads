@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/29  15:09:09
+-- Transcription time: 2017/10/31  09:18:09
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: >= 19-May-2016
+-- RC Grammar version: 31-Oct-2017
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;

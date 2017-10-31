@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/29  15:09:09
+-- Transcription time: 2017/10/31  09:18:09
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: >= 19-May-2016
+-- RC Grammar version: 31-Oct-2017
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -415,7 +415,7 @@ package body LEA_Resource_GUI is
     Create( Window.Right_margin_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Right_margin_edit_box);
     Dlg_to_Scn(  6, 57, 240, 28, x,y,w,h);
     Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
-    Dlg_to_Scn(  61, 68, 108, 20, x,y,w,h);
+    Dlg_to_Scn(  61, 58, 108, 34, x,y,w,h);
     Create( Window.Color_theme_list_box, Window, x,y,w,h, False, ID => Color_theme_list_box);
     Dlg_to_Scn(  6, 26, 240, 28, x,y,w,h);
     Create( Window.Group_Backup, Window, "Backup", x,y,w,h);
