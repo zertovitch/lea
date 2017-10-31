@@ -125,11 +125,31 @@ package body LEA_GWin.Editor is
   procedure On_Update_UI (Editor : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
     pos : constant Position := Editor.GetCurrentPos;
+    p1, p2 : Position := INVALID_POSITION;
+    function Is_parenthesis (s: GString) return Boolean is (s="(" or else s=")");
   begin
     --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
     if Editor.pos_last_update_UI /= pos then
       Editor.pos_last_update_UI := pos;
       parent.Update_display(status_bar);
+      --  Parentheses matching
+      if pos > 0 and then Is_parenthesis (Editor.GetTextRange (pos - 1, pos)) then
+        p1 := pos - 1;
+      elsif Is_parenthesis (Editor.GetTextRange (pos, pos + 1)) then
+        p1 := pos;
+      end if;
+      if p1 = INVALID_POSITION then
+        --  No parenthesis
+        Editor.BraceHighlight (INVALID_POSITION, INVALID_POSITION);
+      else
+        p2 := Editor.BraceMatch (p1);
+        if p2 = INVALID_POSITION then
+          --  Parenthesis unmatched
+          Editor.BraceBadLight (p1);
+        else
+          Editor.BraceHighlight (p1, p2);
+        end if;
+      end if;
     end if;
   end On_Update_UI;
 
@@ -187,11 +207,18 @@ package body LEA_GWin.Editor is
     Editor.SetTabWidth (mdi_root.opt.indentation);
     Editor.SetEdgeColumn (mdi_root.opt.right_margin);
 
+    --  Default style
     Editor.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
     Editor.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
     Editor.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
     Editor.StyleSetFont (STYLE_DEFAULT, App_default_font);
     Editor.StyleClearAll;
+
+    --  Parentheses coloring
+    Editor.StyleSetFore (STYLE_BRACELIGHT, Dark_Green );  --  For matched parentheses
+    Editor.StyleSetBack (STYLE_BRACELIGHT, theme_color(theme, selection_background));
+    Editor.StyleSetFore (STYLE_BRACEBAD, Dark_Red );      --  For unmatched parentheses
+    Editor.StyleSetBack (STYLE_BRACEBAD, theme_color(theme, selection_background));
 
     Editor.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
     Editor.SetSelFore (True, theme_color(theme, selection_foreground));
