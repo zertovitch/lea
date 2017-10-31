@@ -12,8 +12,9 @@ package LEA_GWin.Editor is
   type LEA_Scintilla_Type is new Scintilla_Type with record
     --  Direct access to the window owning the editor widget.
     --  This is needed to reach the options (color theme, etc.).
-    mdi_parent   : GWindows.Base.Pointer_To_Base_Window_Class;
-    modified     : Boolean:= False;  --  Is the document modified from load or last save ?
+    mdi_parent         : GWindows.Base.Pointer_To_Base_Window_Class;
+    modified           : Boolean:= False;  --  Is the document modified from load or last save ?
+    pos_last_update_UI : Position := INVALID_POSITION;
   end record;
 
   overriding
@@ -35,10 +36,6 @@ package LEA_GWin.Editor is
      wParam       : in     GWindows.Types.Wparam;
      lParam       : in     GWindows.Types.Lparam;
      Return_Value : in out GWindows.Types.Lresult);
-
-  overriding
-  procedure On_Position_Changed (Editor : in out LEA_Scintilla_Type;
-                                 Pos     : in     Position);
 
   overriding
   procedure On_Save_Point_Reached (Editor : in out LEA_Scintilla_Type);

@@ -102,16 +102,6 @@ package body LEA_GWin.Editor is
   end On_Message;
 
   overriding
-  procedure On_Position_Changed (Editor : in out LEA_Scintilla_Type;
-                                 Pos     : in     Position)
-  is
-  pragma Unreferenced (Pos);
-    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
-  begin
-    parent.Update_display(status_bar);
-  end On_Position_Changed;
-
-  overriding
   procedure On_Save_Point_Reached (Editor : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
@@ -124,7 +114,7 @@ package body LEA_GWin.Editor is
   procedure On_Save_Point_Left (Editor : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
-    --  Either new changes, or Undo's from the last saved state.
+    --  Either new changes after last saved state, or Undo's from last saved state.
     Editor.modified:= True;
     parent.Update_display(toolbar_and_menu);
   end On_Save_Point_Left;
@@ -132,9 +122,15 @@ package body LEA_GWin.Editor is
   overriding
   procedure On_Update_UI (Editor : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    pos : constant Position := Editor.GetCurrentPos;
   begin
-    parent.Update_display(status_bar);
-  end;
+    --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
+    --  Prevent flood of useless display updates on multiline edit or for parentheses matching
+    if Editor.pos_last_update_UI /= pos then
+      Editor.pos_last_update_UI := pos;
+      parent.Update_display(status_bar);
+    end if;
+  end On_Update_UI;
 
   procedure Apply_options (Editor : in out LEA_Scintilla_Type) is
       use GWindows.Colors;
