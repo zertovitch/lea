@@ -61,7 +61,9 @@ package LEA_GWin.Editor is
   --  Search & replace actions
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action);
 
-  --  Duplicate current line if no selection, or selection. Clipboard remains untouched
+  --  Duplicate current line if no selection, or selection. Shortcut: Ctrl-D.
+  --  Clipboard remains untouched - that the cool aspect in this feature.
+  --
   procedure Duplicate (Editor : in out LEA_Scintilla_Type);
 
   --  I/O

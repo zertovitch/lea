@@ -134,101 +134,101 @@ package body LEA_GWin.Editor is
   end On_Update_UI;
 
   procedure Apply_options (Editor : in out LEA_Scintilla_Type) is
-      use GWindows.Colors;
-      --
-      App_default_font      : constant GString := "Courier New";
-      App_default_font_size : constant := 10;
-      --
-      type Color_topic is (
-        foreground, background,
-        keyword, number, comment, string, character,
-        error_foreground, error_background,
-        caret,
-        selection_foreground,
-        selection_background
+    use GWindows.Colors;
+    --
+    App_default_font      : constant GString := "Courier New";
+    App_default_font_size : constant := 10;
+    --
+    type Color_topic is (
+      foreground, background,
+      keyword, number, comment, string, character,
+      error_foreground, error_background,
+      caret,
+      selection_foreground,
+      selection_background
+    );
+    --
+    theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
+      (
+        Default =>
+          (foreground           => Black,
+           background           => White,
+           keyword              => Blue,
+           number               => Dark_Orange,
+           comment              => Dark_Green,
+           string               => Dark_Gray,
+           character            => Dark_Gray,
+           error_foreground     => Black,
+           error_background     => Pink,
+           caret                => Black,
+           selection_foreground => Black,
+           selection_background => Light_Gray
+          ),
+        Dark_side   =>
+          (foreground           => Light_Gray,
+           background           => 16#242322#,
+           keyword              => Dark_Orange,
+           number               => Red,
+           comment              => 16#CF9F72#,
+           string               => Yellow,
+           character            => Yellow,
+           error_foreground     => White,
+           error_background     => Dark_Red,
+           caret                => White,
+           selection_foreground => White,
+           selection_background => 16#D28022#
+          )
       );
-      --
-      theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
-        (
-          Default =>
-            (foreground           => Black,
-             background           => White,
-             keyword              => Blue,
-             number               => Dark_Orange,
-             comment              => Dark_Green,
-             string               => Dark_Gray,
-             character            => Dark_Gray,
-             error_foreground     => Black,
-             error_background     => Pink,
-             caret                => Black,
-             selection_foreground => Black,
-             selection_background => Light_Gray
-            ),
-          Dark_side   =>
-            (foreground           => Light_Gray,
-             background           => 16#242322#,
-             keyword              => Dark_Orange,
-             number               => Red,
-             comment              => 16#CF9F72#,
-             string               => Yellow,
-             character            => Yellow,
-             error_foreground     => White,
-             error_background     => Dark_Red,
-             caret                => White,
-             selection_foreground => White,
-             selection_background => 16#D28022#
-            )
-        );
-      --
-      parent   : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
-      mdi_root : MDI_Main_Type renames parent.Parent.all;
-      theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
-   begin
-      Editor.SetTabWidth (mdi_root.opt.indentation);
-      Editor.SetEdgeColumn (mdi_root.opt.right_margin);
+    --
+    parent   : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    mdi_root : MDI_Main_Type renames parent.Parent.all;
+    theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
+  begin
+    Editor.SetTabWidth (mdi_root.opt.indentation);
+    Editor.SetEdgeColumn (mdi_root.opt.right_margin);
 
-      Editor.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
-      Editor.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
-      Editor.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
-      Editor.StyleSetFont (STYLE_DEFAULT, App_default_font);
-      Editor.StyleClearAll;
+    Editor.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
+    Editor.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
+    Editor.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
+    Editor.StyleSetFont (STYLE_DEFAULT, App_default_font);
+    Editor.StyleClearAll;
 
-      Editor.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
-      Editor.SetSelFore (True, theme_color(theme, selection_foreground));
-      Editor.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
-      Editor.SetSelBack (True, theme_color(theme, selection_background));
-      Editor.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
-      Editor.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
+    Editor.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
+    Editor.SetSelFore (True, theme_color(theme, selection_foreground));
+    Editor.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
+    Editor.SetSelBack (True, theme_color(theme, selection_background));
+    Editor.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
+    Editor.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
 
-      Editor.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
-      Editor.StyleSetFore (SCE_ADA_NUMBER,      theme_color(theme, number));
-      Editor.StyleSetFore (SCE_ADA_WORD,        theme_color(theme, keyword));
-      Editor.StyleSetFore (SCE_ADA_STRING,      theme_color(theme, string));
-      Editor.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(theme, character));
-      Editor.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
+    Editor.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
+    Editor.StyleSetFore (SCE_ADA_NUMBER,      theme_color(theme, number));
+    Editor.StyleSetFore (SCE_ADA_WORD,        theme_color(theme, keyword));
+    Editor.StyleSetFore (SCE_ADA_STRING,      theme_color(theme, string));
+    Editor.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(theme, character));
+    Editor.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
 
-      --  Cases where the text is obviously wrong
-      --  (unfinished character or string, illegal identifier)
-      Editor.StyleSetFore (SCE_ADA_CHARACTEREOL, theme_color(theme, error_foreground));
-      Editor.StyleSetBack (SCE_ADA_CHARACTEREOL, theme_color(theme, error_background));
-      Editor.StyleSetFore (SCE_ADA_STRINGEOL, theme_color(theme, error_foreground));
-      Editor.StyleSetBack (SCE_ADA_STRINGEOL, theme_color(theme, error_background));
-      Editor.StyleSetFore (SCE_ADA_ILLEGAL, theme_color(theme, error_foreground));
-      Editor.StyleSetBack (SCE_ADA_ILLEGAL, theme_color(theme, error_background));
+    --  Cases where the text is obviously wrong
+    --  (unfinished character or string, illegal identifier)
+    Editor.StyleSetFore (SCE_ADA_CHARACTEREOL, theme_color(theme, error_foreground));
+    Editor.StyleSetBack (SCE_ADA_CHARACTEREOL, theme_color(theme, error_background));
+    Editor.StyleSetFore (SCE_ADA_STRINGEOL, theme_color(theme, error_foreground));
+    Editor.StyleSetBack (SCE_ADA_STRINGEOL, theme_color(theme, error_background));
+    Editor.StyleSetFore (SCE_ADA_ILLEGAL, theme_color(theme, error_foreground));
+    Editor.StyleSetBack (SCE_ADA_ILLEGAL, theme_color(theme, error_background));
 
-      Editor.SetCaretFore (theme_color(theme, caret));
+    Editor.SetCaretFore (theme_color(theme, caret));
 
-      case mdi_root.opt.show_special is
-        when none =>
-          Editor.SetViewWS(SCWS_INVISIBLE);
-          Editor.SetViewEOL(False);
-        when spaces =>
-          Editor.SetViewWS(SCWS_VISIBLEALWAYS);
-          Editor.SetViewEOL(False);
-        when spaces_eols =>
-          Editor.SetViewWS(SCWS_VISIBLEALWAYS);
-          Editor.SetViewEOL(True);
-      end case;
+    case mdi_root.opt.show_special is
+      when none =>
+        Editor.SetViewWS(SCWS_INVISIBLE);
+        Editor.SetViewEOL(False);
+      when spaces =>
+        Editor.SetViewWS(SCWS_VISIBLEALWAYS);
+        Editor.SetViewEOL(False);
+      when spaces_eols =>
+        Editor.SetViewWS(SCWS_VISIBLEALWAYS);
+        Editor.SetViewEOL(True);
+    end case;
 
   end Apply_options;
 
