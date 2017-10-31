@@ -51,52 +51,52 @@ package LEA_GWin.MDI_Main is
 
   type MDI_Main_Access is access all MDI_Main_Type;
 
-  overriding procedure On_Create (Window : in out MDI_Main_Type);
+  overriding procedure On_Create (MDI_Main : in out MDI_Main_Type);
   --  Handles setting up icons, menus, etc.
 
-  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean);
+  procedure On_File_New (MDI_Main : in out MDI_Main_Type; extra_first_doc: Boolean);
   --  File|New event
 
-  procedure On_Move (Window : in out MDI_Main_Type;
-                     Left   : in     Integer;
-                     Top    : in     Integer);
+  procedure On_Move (MDI_Main : in out MDI_Main_Type;
+                     Left     : in     Integer;
+                     Top      : in     Integer);
 
-  overriding procedure On_Size (Window : in out MDI_Main_Type;
-                                Width  : in     Integer;
-                                Height : in     Integer);
+  overriding procedure On_Size (MDI_Main : in out MDI_Main_Type;
+                                Width    : in     Integer;
+                                Height   : in     Integer);
 
-  overriding procedure On_File_Drop (Window     : in out MDI_Main_Type;
+  overriding procedure On_File_Drop (MDI_Main   : in out MDI_Main_Type;
                                      File_Names : in     Array_Of_File_Names);
 
   overriding procedure On_Erase_Background
-     (Window : in out MDI_Main_Type;
-      Canvas : in out GWindows.Drawing.Canvas_Type;
-      Area   : in     GWindows.Types.Rectangle_Type) is null;
+     (MDI_Main : in out MDI_Main_Type;
+      Canvas   : in out GWindows.Drawing.Canvas_Type;
+      Area     : in     GWindows.Types.Rectangle_Type) is null;
   overriding procedure On_Paint
-     (Window : in out MDI_Main_Type;
-      Canvas : in out GWindows.Drawing.Canvas_Type;
-      Area   : in     GWindows.Types.Rectangle_Type) is null;
+     (MDI_Main : in out MDI_Main_Type;
+      Canvas   : in out GWindows.Drawing.Canvas_Type;
+      Area     : in     GWindows.Types.Rectangle_Type) is null;
 
   procedure Open_Child_Window_And_Load (
-    Window     : in out MDI_Main_Type;
+    MDI_Main   : in out MDI_Main_Type;
     File_Name  :        GWindows.GString_Unbounded
   );
 
   overriding procedure On_Menu_Select (
-        Window : in out MDI_Main_Type;
-        Item   : in     Integer        );
+        MDI_Main : in out MDI_Main_Type;
+        Item     : in     Integer        );
 
   overriding procedure On_Close (
-        Window    : in out MDI_Main_Type;
+        MDI_Main  : in out MDI_Main_Type;
         Can_Close :    out Boolean        );
 
   procedure Update_Common_Menus(
-    Window         : in out MDI_Main_Type;
+    MDI_Main       : in out MDI_Main_Type;
     top_entry_name : GString := "";
     top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
   );
 
-  procedure Update_Title(Window : in out MDI_Main_Type);
+  procedure Update_Title(MDI_Main : in out MDI_Main_Type);
 
   procedure Perform_Search (MDI_Main : MDI_Main_Type; action : LEA_Common.Search_action);
 
