@@ -60,6 +60,7 @@ Menu_MDI_Child MENU
         MENUITEM SEPARATOR
         MENUITEM "Find && Replace...\tCtrl+F", IDM_Find
         MENUITEM "Find next\tF3", IDM_Find_Next
+        MENUITEM "Find previous\tShift+F3", IDM_Find_Previous
         MENUITEM "&Go to line...\tCtrl+G", IDM_Go_to_line
         MENUITEM SEPARATOR
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
@@ -209,8 +210,8 @@ FONT 8, "Ms Shell Dlg"
     GROUPBOX        "Backup", Group_Backup, 6, 26, 240, 28, 0, WS_EX_LEFT
     AUTORADIOBUTTON "Simple (.bak)", Backup_bak_button, 80, 36, 91, 11, 0, WS_EX_LEFT
     AUTORADIOBUTTON "None", Backup_none_button, 15, 38, 43, 8, 0, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", IDCANCEL, 191, 103, 50, 14, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "OK", IDOK, 136, 103, 50, 14, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 191, 98, 50, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 136, 98, 50, 19, 0, WS_EX_LEFT
 }
 
 
@@ -257,6 +258,7 @@ Main_Menu ACCELERATORS
     "T",            IDM_TEST_ARCHIVE, VIRTKEY, CONTROL
     "F",            IDM_Find, VIRTKEY, CONTROL
     VK_F3,         IDM_Find_Next, VIRTKEY
+    VK_F3,         IDM_Find_Previous, VIRTKEY, SHIFT
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
     "R",            IDM__RECOMPRESS_ARCHIVE, VIRTKEY, CONTROL
     "D",            IDM_Duplicate, VIRTKEY, CONTROL

@@ -538,6 +538,8 @@ package body LEA_GWin.MDI_Child is
         MDI_Child.Show_Search_Box;
       when IDM_Find_Next =>
         MDI_Child.Editor.Search(find_next);
+      when IDM_Find_Previous =>
+        MDI_Child.Editor.Search(find_previous);
       when IDM_Go_to_line =>
         Do_go_to_line (MDI_Child);
       when IDM_Show_special_symbols =>

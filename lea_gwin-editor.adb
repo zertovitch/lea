@@ -134,9 +134,9 @@ package body LEA_GWin.Editor is
       parent.Update_display(status_bar);
       --  Parentheses matching
       if pos > 0 and then Is_parenthesis (Editor.GetTextRange (pos - 1, pos)) then
-        p1 := pos - 1;
+        p1 := pos - 1;  --  Found on the left of the cursor
       elsif Is_parenthesis (Editor.GetTextRange (pos, pos + 1)) then
-        p1 := pos;
+        p1 := pos;      --  Found at the cursor
       end if;
       if p1 = INVALID_POSITION then
         --  No parenthesis
@@ -165,38 +165,47 @@ package body LEA_GWin.Editor is
       error_foreground, error_background,
       caret,
       selection_foreground,
-      selection_background
+      selection_background,
+      matched_parenthesis,
+      unmatched_parenthesis,
+      parenthesis_background
     );
     --
     theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
       (
         Default =>
-          (foreground           => Black,
-           background           => White,
-           keyword              => Blue,
-           number               => Dark_Orange,
-           comment              => Dark_Green,
-           string               => Dark_Gray,
-           character            => Dark_Gray,
-           error_foreground     => Black,
-           error_background     => Pink,
-           caret                => Black,
-           selection_foreground => Black,
-           selection_background => Light_Gray
+          (foreground             => Black,
+           background             => White,
+           keyword                => Blue,
+           number                 => Dark_Orange,
+           comment                => Dark_Green,
+           string                 => Dark_Gray,
+           character              => Dark_Gray,
+           error_foreground       => Black,
+           error_background       => Pink,
+           caret                  => Black,
+           selection_foreground   => Black,
+           selection_background   => Light_Gray,
+           matched_parenthesis    => Dark_Green,
+           unmatched_parenthesis  => Dark_Red,
+           parenthesis_background => 16#D0D0D0#
           ),
         Dark_side   =>
-          (foreground           => Light_Gray,
-           background           => 16#242322#,
-           keyword              => Dark_Orange,
-           number               => Red,
-           comment              => 16#CF9F72#,
-           string               => Yellow,
-           character            => Yellow,
-           error_foreground     => White,
-           error_background     => Dark_Red,
-           caret                => White,
-           selection_foreground => White,
-           selection_background => 16#D28022#
+          (foreground             => Light_Gray,
+           background             => 16#242322#,
+           keyword                => Dark_Orange,
+           number                 => Red,
+           comment                => 16#CF9F72#,
+           string                 => Yellow,
+           character              => Yellow,
+           error_foreground       => White,
+           error_background       => Dark_Red,
+           caret                  => White,
+           selection_foreground   => White,
+           selection_background   => 16#D28022#,
+           matched_parenthesis    => Green,
+           unmatched_parenthesis  => Red,
+           parenthesis_background => 16#505050#
           )
       );
     --
@@ -215,10 +224,12 @@ package body LEA_GWin.Editor is
     Editor.StyleClearAll;
 
     --  Parentheses coloring
-    Editor.StyleSetFore (STYLE_BRACELIGHT, Dark_Green );  --  For matched parentheses
-    Editor.StyleSetBack (STYLE_BRACELIGHT, theme_color(theme, selection_background));
-    Editor.StyleSetFore (STYLE_BRACEBAD, Dark_Red );      --  For unmatched parentheses
-    Editor.StyleSetBack (STYLE_BRACEBAD, theme_color(theme, selection_background));
+    --    For matched parentheses:
+    Editor.StyleSetFore (STYLE_BRACELIGHT, theme_color(theme, matched_parenthesis));
+    Editor.StyleSetBack (STYLE_BRACELIGHT, theme_color(theme, parenthesis_background));
+    --    For unmatched parentheses:
+    Editor.StyleSetFore (STYLE_BRACEBAD, theme_color(theme, unmatched_parenthesis));
+    Editor.StyleSetBack (STYLE_BRACEBAD, theme_color(theme, parenthesis_background));
 
     Editor.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
     Editor.SetSelFore (True, theme_color(theme, selection_foreground));

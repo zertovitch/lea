@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/31  09:18:09
+-- Transcription time: 2017/10/31  22:29:34
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -58,6 +58,7 @@ package body LEA_Resource_GUI is
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Find && Replace..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F", IDM_Find);
     Append_Item(Menu.Popup_0003, "Find next" & To_GString_From_String((1=>ASCII.HT)) & "F3", IDM_Find_Next);
+    Append_Item(Menu.Popup_0003, "Find previous" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F3", IDM_Find_Previous);
     Append_Item(Menu.Popup_0003, "&Go to line..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+G", IDM_Go_to_line);
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &all" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
@@ -100,7 +101,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0008, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 111
+  -- Menu at line 112
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -144,7 +145,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 164
+  -- Dialog at resource line 165
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -253,7 +254,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 188
+  -- Dialog at resource line 189
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -349,7 +350,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  -- Dialog at resource line 201
+  -- Dialog at resource line 202
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -415,7 +416,7 @@ package body LEA_Resource_GUI is
     Create( Window.Right_margin_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Right_margin_edit_box);
     Dlg_to_Scn(  6, 57, 240, 28, x,y,w,h);
     Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
-    Dlg_to_Scn(  61, 58, 108, 34, x,y,w,h);
+    Dlg_to_Scn(  61, 68, 108, 20, x,y,w,h);
     Create( Window.Color_theme_list_box, Window, x,y,w,h, False, ID => Color_theme_list_box);
     Dlg_to_Scn(  6, 26, 240, 28, x,y,w,h);
     Create( Window.Group_Backup, Window, "Backup", x,y,w,h);
@@ -423,7 +424,7 @@ package body LEA_Resource_GUI is
     Create( Window.Backup_bak_button, Window, "Simple (.bak)", x,y,w,h, ID => Backup_bak_button);
     Dlg_to_Scn(  15, 38, 43, 8, x,y,w,h);
     Create( Window.Backup_none_button, Window, "None", x,y,w,h, ID => Backup_none_button);
-    Dlg_to_Scn(  191, 103, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  191, 98, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -434,7 +435,7 @@ package body LEA_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  136, 103, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  136, 98, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -447,7 +448,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  -- Dialog at resource line 223
+  -- Dialog at resource line 224
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -699,6 +700,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 335
+  -- Last line of resource script file: 337
 
 end LEA_Resource_GUI;
