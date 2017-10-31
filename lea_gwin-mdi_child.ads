@@ -26,7 +26,7 @@ package LEA_GWin.MDI_Child is
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
 
-  --  Clicks on some some parts of the status bar have effects
+  --  Clicks on some some parts of the status bar have effects (like "Go to line")
   overriding procedure On_Click (Bar : in out MDI_Child_Status_Bar_Type);
 
   type LV_Payload is record
@@ -41,26 +41,26 @@ package LEA_GWin.MDI_Child is
 
   type MDI_Child_Packing_Box_Type is new GWindows.Packing_Boxes.Packing_Box_Type with null record;
   overriding procedure On_Erase_Background
-     (Window : in out MDI_Child_Packing_Box_Type;
-      Canvas : in out GWindows.Drawing.Canvas_Type;
-      Area   : in     GWindows.Types.Rectangle_Type) is null;
+     (MDI_Child : in out MDI_Child_Packing_Box_Type;
+      Canvas    : in out GWindows.Drawing.Canvas_Type;
+      Area      : in     GWindows.Types.Rectangle_Type) is null;
   overriding procedure On_Paint
-     (Window : in out MDI_Child_Packing_Box_Type;
-      Canvas : in out GWindows.Drawing.Canvas_Type;
-      Area   : in     GWindows.Types.Rectangle_Type) is null;
+     (MDI_Child : in out MDI_Child_Packing_Box_Type;
+      Canvas    : in out GWindows.Drawing.Canvas_Type;
+      Area      : in     GWindows.Types.Rectangle_Type) is null;
 
   type MDI_Child_Panel_Type is new GWindows.Panels.Panel_Type with null record;
   overriding procedure On_Erase_Background
-     (Window : in out MDI_Child_Panel_Type;
-      Canvas : in out GWindows.Drawing.Canvas_Type;
-      Area   : in     GWindows.Types.Rectangle_Type) is null;
+     (MDI_Child : in out MDI_Child_Panel_Type;
+      Canvas    : in out GWindows.Drawing.Canvas_Type;
+      Area      : in     GWindows.Types.Rectangle_Type) is null;
   overriding procedure On_Paint
-     (Window : in out MDI_Child_Panel_Type;
-      Canvas : in out GWindows.Drawing.Canvas_Type;
-      Area   : in     GWindows.Types.Rectangle_Type) is null;
+     (MDI_Child : in out MDI_Child_Panel_Type;
+      Canvas    : in out GWindows.Drawing.Canvas_Type;
+      Area      : in     GWindows.Types.Rectangle_Type) is null;
 
   type MDI_Child_GSize_Bar_Type is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with null record;
-  overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type);
+  overriding procedure On_Bar_Moved (MDI_Child : in out MDI_Child_GSize_Bar_Type);
 
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
@@ -96,47 +96,47 @@ package LEA_GWin.MDI_Child is
         save_all_hint    : Boolean;  --  Used during Update_display only.
       end record;
 
-  overriding procedure On_Create (Window : in out MDI_Child_Type);
+  overriding procedure On_Create (MDI_Child : in out MDI_Child_Type);
 
-  procedure On_Save (Window : in out MDI_Child_Type);
+  procedure On_Save (MDI_Child : in out MDI_Child_Type);
   --  This would be abstract in a 'generic' Office framework.
 
-  function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
+  function Is_file_saved (MDI_Child : in MDI_Child_Type) return Boolean;
   --  This would be abstract in a 'generic' Office framework.
 
-  procedure On_Save_As (Window : in out MDI_Child_Type);
+  procedure On_Save_As (MDI_Child : in out MDI_Child_Type);
 
-  procedure On_Save_All (Window : in out MDI_Child_Type);
+  procedure On_Save_All (MDI_Child : in out MDI_Child_Type);
 
   overriding procedure On_File_Drop (
-    Window     : in out MDI_Child_Type;
+    MDI_Child  : in out MDI_Child_Type;
     File_Names : in     Array_Of_File_Names
   );
 
   overriding procedure On_Size (
-    Window : in out MDI_Child_Type;
+    MDI_Child : in out MDI_Child_Type;
     Width  : in     Integer;
     Height : in     Integer
   );
 
   overriding procedure On_Erase_Background
-     (Window : in out MDI_Child_Type;
-      Canvas : in out GWindows.Drawing.Canvas_Type;
-      Area   : in     GWindows.Types.Rectangle_Type) is null;
+     (MDI_Child : in out MDI_Child_Type;
+      Canvas    : in out GWindows.Drawing.Canvas_Type;
+      Area      : in     GWindows.Types.Rectangle_Type) is null;
   overriding procedure On_Paint
-     (Window : in out MDI_Child_Type;
-      Canvas : in out GWindows.Drawing.Canvas_Type;
-      Area   : in     GWindows.Types.Rectangle_Type) is null;
+     (MDI_Child : in out MDI_Child_Type;
+      Canvas    : in out GWindows.Drawing.Canvas_Type;
+      Area      : in     GWindows.Types.Rectangle_Type) is null;
 
   overriding procedure On_Menu_Select (
-    Window : in out MDI_Child_Type;
-    Item   : in     Integer
+    MDI_Child : in out MDI_Child_Type;
+    Item      : in     Integer
   );
 
-  overriding procedure On_Focus (Window : in out MDI_Child_Type);
+  overriding procedure On_Focus (MDI_Child : in out MDI_Child_Type);
 
   overriding procedure On_Close (
-    Window    : in out MDI_Child_Type;
+    MDI_Child    : in out MDI_Child_Type;
     Can_Close :    out Boolean
   );
 
@@ -147,12 +147,12 @@ package LEA_GWin.MDI_Child is
     );
 
   procedure Update_display (
-    Window : in out MDI_Child_Type;
-    need   :        Update_need
+    MDI_Child : in out MDI_Child_Type;
+    need      :        Update_need
   );
 
   --  This will update File menu of parent, itself, and all brothers and sisters
-  procedure Update_Common_Menus(Window : MDI_Child_Type;
+  procedure Update_Common_Menus(MDI_Child : MDI_Child_Type;
     top_entry_name : GString := "";
     top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
   );
