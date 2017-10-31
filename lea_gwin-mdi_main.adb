@@ -1,5 +1,6 @@
 with LEA_Common;                       use LEA_Common;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
+with LEA_GWin.Modal_dialogs;           use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Options;
 with LEA_GWin.Toolbars;
 
@@ -10,8 +11,6 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Registry;
-with GWindows.Static_Controls;          use GWindows.Static_Controls;
-with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
 
 with GWin_Util;
 
@@ -19,8 +18,6 @@ with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
-
-with GNAT.Compiler_Version;
 
 package body LEA_GWin.MDI_Main is
 
@@ -452,38 +449,6 @@ package body LEA_GWin.MDI_Main is
                                       My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
 
-  LEA_web_page: constant String:= "http://l-e-a.sf.net/";
-
-  procedure On_About(MDI_Main : in out MDI_Main_Type) is
-    box: About_box_Type;
-    url_lea, url_gnat, url_gnavi, url_resedit: URL_Type;
-    --
-    function GNAT_Version_string return String is
-      package CVer is new GNAT.Compiler_Version;
-      v: constant String:= CVer.Version;
-    begin
-      if v(v'First..v'First+2) = "GPL" then
-        return v;
-      else
-        return "GMGPL " & v & " (MinGW)";
-      end if;
-    end GNAT_Version_string;
-    --
-  begin
-    box.Create_Full_Dialog(MDI_Main);
-    box.Copyright_label.Text(S2G(Version_info.LegalCopyright));
-    box.Version_label.Text(S2G(Version_info.FileVersion));
-    Create_and_Swap(url_lea, box.AZip_URL, box, S2G(LEA_web_page));
-    Create_and_Swap(url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
-    Text(box.GNAT_Version, S2G("version " & GNAT_Version_string));
-    Create_and_Swap(url_gnavi, box.GNAVI_URL, box, "http://sf.net/projects/gnavi");
-    Create_and_Swap(url_resedit, box.ResEdit_URL, box, "http://resedit.net");
-    box.Center;
-    if Show_Dialog (box, MDI_Main) = IDOK then
-      null;
-    end if;
-  end On_About;
-
   --------------------
   -- On_Menu_Select --
   --------------------
@@ -512,7 +477,7 @@ package body LEA_GWin.MDI_Main is
       when IDM_General_options =>
         LEA_GWin.Options.On_General_Options(MDI_Main);
       when IDM_ABOUT =>
-        On_About (MDI_Main);
+        Do_about (MDI_Main);
       when others =>
         for i_mru in MDI_Main.IDM_MRU'Range loop
           if Item = MDI_Main.IDM_MRU(i_mru) then

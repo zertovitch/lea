@@ -7,6 +7,8 @@ with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
 package LEA_Common is
 
+  LEA_web_page: constant String:= "http://l-e-a.sf.net/";
+
   -------------
   -- Strings --
   -------------
