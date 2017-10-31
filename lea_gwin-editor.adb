@@ -24,9 +24,11 @@ package body LEA_GWin.Editor is
 
   overriding
   procedure On_Change (Editor : in out LEA_Scintilla_Type) is
-    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    --  parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
-    parent.Update_display(toolbar_and_menu);
+    --  NB: Status bar display and other changes (menus / icons) is done @ On_Update_UI
+    --      Here, it causes a flood of updates on multiline edit.
+    null;  --  parent.Update_display(toolbar_and_menu);
   end On_Change;
 
   overriding
@@ -125,7 +127,6 @@ package body LEA_GWin.Editor is
     pos : constant Position := Editor.GetCurrentPos;
   begin
     --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
-    --  Prevent flood of useless display updates on multiline edit or for parentheses matching
     if Editor.pos_last_update_UI /= pos then
       Editor.pos_last_update_UI := pos;
       parent.Update_display(status_bar);
