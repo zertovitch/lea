@@ -122,26 +122,38 @@ package body LEA_GWin.Editor is
     parent.Update_display(toolbar_and_menu);
   end On_Save_Point_Left;
 
+  word_highlighting_indicator_index: constant := 0;
+
   procedure Highlight_word (Editor : in out LEA_Scintilla_Type; word: GString) is
     line : constant Integer := Editor.Get_current_line;
-    around : constant := 100;
+    around : constant := 200;
     line_a : constant Integer := Integer'Max(line - around, 1);
     line_z : constant Integer := Integer'Min(line + around, Editor.LineFromPosition (Editor.GetLength));
     pos_a : Position := Editor.PositionFromLine (line_a);
     pos_z : constant Position := Editor.PositionFromLine (line_z);
     pos, found_a, found_z : Position;
+    sel_a, sel_z : Position;
   begin
-    Ada.Text_IO.new_line;
+    Editor.Indicator_Clear_Range (0, Editor.GetLength);
+    if word = "" then
+      return;
+    end if;
+    sel_a:= Editor.GetSelectionStart;
+    sel_z:= Editor.GetSelectionEnd;
+    Editor.IndicSetStyle (word_highlighting_indicator_index, INDIC_ROUNDBOX);
     while pos_a < pos_z loop
       Editor.SetTargetStart (pos_a);
       Editor.SetTargetEnd (pos_z);
       pos := Editor.SearchInTarget(word);
       exit when pos < 0;
       --  Mark the found word
-      Ada.Text_IO.put_line(pos'img);
       found_a := Editor.GetTargetStart;
       found_z := Editor.GetTargetEnd;
-      Editor.Indicator_Fill_Range (found_a, found_z - found_a);
+      if found_a >= sel_a and then found_z <= sel_z then
+        null;  --  no highlighting within selection
+      else
+        Editor.Indicator_Fill_Range (found_a, found_z - found_a);
+      end if;
       --  Restrict search area for next word
       pos_a := found_z;
     end loop;
@@ -156,40 +168,41 @@ package body LEA_GWin.Editor is
     function Is_parenthesis (s: GString) return Boolean is (s="(" or else s=")");
   begin
     --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
-    if Editor.pos_last_update_UI /= pos then  --  Any change ?
-      Editor.pos_last_update_UI := pos;
-      parent.Update_display(status_bar);
-      --  Highlight instances of selected word
-      sel_a:= Editor.GetSelectionStart;
-      sel_z:= Editor.GetSelectionEnd;
-      if sel_a /= Editor.sel_a_last_update_UI
-        or else sel_z /= Editor.sel_z_last_update_UI
-      then  --  Any change ?
-        Editor.sel_a_last_update_UI := sel_a;
-        Editor.sel_z_last_update_UI := sel_z;
-        if sel_z > sel_a + 3 then
-          Highlight_word (Editor, Editor.GetTextRange (sel_a, sel_z));
-        else
-          Editor.Indicator_Clear_Range (0, Editor.GetLength);
-        end if;
-      end if;
-      --  Parentheses matching
-      if pos > 0 and then Is_parenthesis (Editor.GetTextRange (pos - 1, pos)) then
-        p1 := pos - 1;  --  Found on the left of the cursor
-      elsif Is_parenthesis (Editor.GetTextRange (pos, pos + 1)) then
-        p1 := pos;      --  Found at the cursor
-      end if;
-      if p1 = INVALID_POSITION then
-        --  No parenthesis
-        Editor.BraceHighlight (INVALID_POSITION, INVALID_POSITION);
+    if Editor.pos_last_update_UI = pos then  --  Any change ?
+      return;
+    end if;
+    Editor.pos_last_update_UI := pos;
+    parent.Update_display(status_bar);
+    --  Highlight instances of selected word
+    sel_a:= Editor.GetSelectionStart;
+    sel_z:= Editor.GetSelectionEnd;
+    if sel_a /= Editor.sel_a_last_update_UI
+      or else sel_z /= Editor.sel_z_last_update_UI
+    then  --  Any change ?
+      Editor.sel_a_last_update_UI := sel_a;
+      Editor.sel_z_last_update_UI := sel_z;
+      if sel_z > sel_a + 1 then
+        Highlight_word (Editor, Trim (Editor.GetTextRange (sel_a, sel_z), Both));
       else
-        p2 := Editor.BraceMatch (p1);
-        if p2 = INVALID_POSITION then
-          --  Parenthesis unmatched
-          Editor.BraceBadLight (p1);
-        else
-          Editor.BraceHighlight (p1, p2);
-        end if;
+        Editor.Indicator_Clear_Range (0, Editor.GetLength);
+      end if;
+    end if;
+    --  Parentheses matching
+    if pos > 0 and then Is_parenthesis (Editor.GetTextRange (pos - 1, pos)) then
+      p1 := pos - 1;  --  Found on the left of the cursor
+    elsif Is_parenthesis (Editor.GetTextRange (pos, pos + 1)) then
+      p1 := pos;      --  Found at the cursor
+    end if;
+    if p1 = INVALID_POSITION then
+      --  No parenthesis
+      Editor.BraceHighlight (INVALID_POSITION, INVALID_POSITION);
+    else
+      p2 := Editor.BraceMatch (p1);
+      if p2 = INVALID_POSITION then
+        --  Parenthesis unmatched
+        Editor.BraceBadLight (p1);
+      else
+        Editor.BraceHighlight (p1, p2);
       end if;
     end if;
   end On_Update_UI;
@@ -209,7 +222,8 @@ package body LEA_GWin.Editor is
       selection_background,
       matched_parenthesis,
       unmatched_parenthesis,
-      parenthesis_background
+      parenthesis_background,
+      matched_word_highlight
     );
     --
     theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
@@ -229,7 +243,8 @@ package body LEA_GWin.Editor is
            selection_background   => Light_Gray,
            matched_parenthesis    => Dark_Green,
            unmatched_parenthesis  => Dark_Red,
-           parenthesis_background => 16#D0D0D0#
+           parenthesis_background => 16#D0D0D0#,
+           matched_word_highlight => Dark_Green
           ),
         Dark_side   =>
           (foreground             => Light_Gray,
@@ -246,7 +261,8 @@ package body LEA_GWin.Editor is
            selection_background   => 16#D28022#,
            matched_parenthesis    => Green,
            unmatched_parenthesis  => Red,
-           parenthesis_background => 16#505050#
+           parenthesis_background => 16#505050#,
+           matched_word_highlight => Green
           )
       );
     --
@@ -296,6 +312,10 @@ package body LEA_GWin.Editor is
     Editor.StyleSetBack (SCE_ADA_ILLEGAL, theme_color(theme, error_background));
 
     Editor.SetCaretFore (theme_color(theme, caret));
+    Editor.IndicSetFore (
+      word_highlighting_indicator_index,
+      theme_color(theme, matched_word_highlight)
+    );
 
     case mdi_root.opt.show_special is
       when none =>
