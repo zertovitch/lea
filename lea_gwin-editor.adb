@@ -126,13 +126,13 @@ package body LEA_GWin.Editor is
     line : constant Integer := Editor.Get_current_line;
     around : constant := 100;
     line_a : constant Integer := Integer'Max(line - around, 1);
-    line_z : constant Integer := line + around;
+    line_z : constant Integer := Integer'Min(line + around, Editor.LineFromPosition (Editor.GetLength));
     pos_a : Position := Editor.PositionFromLine (line_a);
     pos_z : constant Position := Editor.PositionFromLine (line_z);
     pos, found_a, found_z : Position;
   begin
     Ada.Text_IO.new_line;
-    loop
+    while pos_a < pos_z loop
       Editor.SetTargetStart (pos_a);
       Editor.SetTargetEnd (pos_z);
       pos := Editor.SearchInTarget(word);
@@ -156,16 +156,22 @@ package body LEA_GWin.Editor is
     function Is_parenthesis (s: GString) return Boolean is (s="(" or else s=")");
   begin
     --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
-    if Editor.pos_last_update_UI /= pos then
+    if Editor.pos_last_update_UI /= pos then  --  Any change ?
       Editor.pos_last_update_UI := pos;
       parent.Update_display(status_bar);
       --  Highlight instances of selected word
       sel_a:= Editor.GetSelectionStart;
       sel_z:= Editor.GetSelectionEnd;
-      if sel_z > sel_a + 3 then
-        Highlight_word (Editor, Editor.GetTextRange (sel_a, sel_z));
-      else
-        Editor.Indicator_Clear_Range (0, Editor.GetLength);
+      if sel_a /= Editor.sel_a_last_update_UI
+        or else sel_z /= Editor.sel_z_last_update_UI
+      then  --  Any change ?
+        Editor.sel_a_last_update_UI := sel_a;
+        Editor.sel_z_last_update_UI := sel_z;
+        if sel_z > sel_a + 3 then
+          Highlight_word (Editor, Editor.GetTextRange (sel_a, sel_z));
+        else
+          Editor.Indicator_Clear_Range (0, Editor.GetLength);
+        end if;
       end if;
       --  Parentheses matching
       if pos > 0 and then Is_parenthesis (Editor.GetTextRange (pos - 1, pos)) then
