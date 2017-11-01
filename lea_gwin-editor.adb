@@ -8,6 +8,7 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
+with Ada.Text_IO;
 
 package body LEA_GWin.Editor is
 
@@ -121,17 +122,51 @@ package body LEA_GWin.Editor is
     parent.Update_display(toolbar_and_menu);
   end On_Save_Point_Left;
 
+  procedure Highlight_word (Editor : in out LEA_Scintilla_Type; word: GString) is
+    line : constant Integer := Editor.Get_current_line;
+    around : constant := 100;
+    line_a : constant Integer := Integer'Max(line - around, 1);
+    line_z : constant Integer := line + around;
+    pos_a : Position := Editor.PositionFromLine (line_a);
+    pos_z : constant Position := Editor.PositionFromLine (line_z);
+    pos, found_a, found_z : Position;
+  begin
+    Ada.Text_IO.new_line;
+    loop
+      Editor.SetTargetStart (pos_a);
+      Editor.SetTargetEnd (pos_z);
+      pos := Editor.SearchInTarget(word);
+      exit when pos < 0;
+      --  Mark the found word
+      Ada.Text_IO.put_line(pos'img);
+      found_a := Editor.GetTargetStart;
+      found_z := Editor.GetTargetEnd;
+      Editor.Indicator_Fill_Range (found_a, found_z - found_a);
+      --  Restrict search area for next word
+      pos_a := found_z;
+    end loop;
+  end Highlight_word;
+
   overriding
   procedure On_Update_UI (Editor : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
     pos : constant Position := Editor.GetCurrentPos;
     p1, p2 : Position := INVALID_POSITION;
+    sel_a, sel_z : Position;
     function Is_parenthesis (s: GString) return Boolean is (s="(" or else s=")");
   begin
     --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
     if Editor.pos_last_update_UI /= pos then
       Editor.pos_last_update_UI := pos;
       parent.Update_display(status_bar);
+      --  Highlight instances of selected word
+      sel_a:= Editor.GetSelectionStart;
+      sel_z:= Editor.GetSelectionEnd;
+      if sel_z > sel_a + 3 then
+        Highlight_word (Editor, Editor.GetTextRange (sel_a, sel_z));
+      else
+        Editor.Indicator_Clear_Range (0, Editor.GetLength);
+      end if;
       --  Parentheses matching
       if pos > 0 and then Is_parenthesis (Editor.GetTextRange (pos - 1, pos)) then
         p1 := pos - 1;  --  Found on the left of the cursor
@@ -307,7 +342,7 @@ package body LEA_GWin.Editor is
     end Get_visible_indentation;
     --
     function Get_visible_indentation(line: Integer) return Integer is
-      pos, pos_next: Scintilla.Position;
+      pos, pos_next: Position;
     begin
       pos     := Editor.PositionFromLine(line);
       pos_next:= Editor.PositionFromLine(line+1);
@@ -317,7 +352,7 @@ package body LEA_GWin.Editor is
       return Get_visible_indentation(Editor.GetTextRange(pos, pos_next));  --  analyse whole line
     end Get_visible_indentation;
     --
-    pos, sel_a, sel_z: Scintilla.Position;
+    pos, sel_a, sel_z: Position;
     ind, ind_prev_line, ind_min, lin_a, lin_z: Integer;
   begin
     sel_a:= Editor.GetSelectionStart;
@@ -368,7 +403,7 @@ package body LEA_GWin.Editor is
   end Selection_comment;
 
   procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type) is
-    pos, sel_a, sel_z: Scintilla.Position;
+    pos, sel_a, sel_z: Position;
     lin_a, lin_z: Integer;
   begin
     sel_a:= Editor.GetSelectionStart;
@@ -401,7 +436,7 @@ package body LEA_GWin.Editor is
     MDI_Main  : MDI_Main_Type renames MDI_Child.Parent.all;
     find_str    : constant GString:= MDI_Main.Search_box.Find_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
-    pos, sel_a, sel_z: GWindows.Scintilla.Position;
+    pos, sel_a, sel_z: Position;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -474,7 +509,7 @@ package body LEA_GWin.Editor is
   end EOL;
 
   procedure Duplicate (Editor : in out LEA_Scintilla_Type) is
-    pos, sel_a, sel_z, line_start, next_line_start: Scintilla.Position;
+    pos, sel_a, sel_z, line_start, next_line_start: Position;
     lin : Integer;
   begin
     sel_a:= Editor.GetSelectionStart;
