@@ -64,7 +64,7 @@ package body LEA_GWin.Editor is
     --
     --  Editor.SetIndentationGuides (True);
 
-    Editor.Set_syntax (Ada_syntax);
+    Editor.Set_syntax (Undefined);
 
     Editor.Apply_options;
 
@@ -590,6 +590,8 @@ package body LEA_GWin.Editor is
           end if;
         else
           --  Version for multiple selections (TBD: try removing special case above).
+          --  NB: the parameters of Set_Selection are inverted compared to SetSel
+          --  (a Scintilla oddity).
           if caret_n (1) = sel_n_a (1) then
             Editor.Set_Selection (sel_n_a (1), sel_n_z (1));
           else
