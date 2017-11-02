@@ -559,23 +559,26 @@ package body LEA_GWin.Editor is
       selections := Editor.Get_Selections;
       declare
         sel_n_a, sel_n_z, caret_n : array (1..selections) of Position;
-        offset: Natural := 0;
+        length: Natural;
       begin
         for n in 1 .. selections loop
           sel_n_a (n) := Editor.Get_Selection_N_Start (n);
           sel_n_z (n) := Editor.Get_Selection_N_End (n);
-          --  ada.text_io.Put_Line(sel_n_a (n)'img & sel_n_z (n)'img);
           caret_n (n) := Editor.Get_Selection_N_Caret (n);
         end loop;
         Editor.BeginUndoAction;
         for n in 1 .. selections loop
-          --  Selection n will be in shifted by the previous insertions.
-          sel_n_a (n) := sel_n_a (n) + offset;
-          sel_n_z (n) := sel_n_z (n) + offset;
-          caret_n (n) := caret_n (n) + offset;
           --  Duplicate text at the end of the nth selection.
+          length := sel_n_z (n) - sel_n_a (n);
           Editor.InsertText (sel_n_z (n), Editor.GetTextRange (sel_n_a (n), sel_n_z (n)));
-          offset := offset + (sel_n_z (n) - sel_n_a (n));
+          for nn in 1 .. selections loop
+            --  All selections located after the current one will be shifted by the text insertion.
+            if sel_n_a (nn) > sel_n_z (n) then
+              sel_n_a (nn) := sel_n_a (nn) + length;
+              sel_n_z (nn) := sel_n_z (nn) + length;
+              caret_n (nn) := caret_n (nn) + length;
+            end if;
+          end loop;
         end loop;
         Editor.EndUndoAction;
         if selections = 1 then
@@ -588,15 +591,15 @@ package body LEA_GWin.Editor is
         else
           --  Version for multiple selections (TBD: try removing special case above).
           if caret_n (1) = sel_n_a (1) then
-            Editor.Set_Selection (sel_n_z (1), sel_n_a (1));
-          else
             Editor.Set_Selection (sel_n_a (1), sel_n_z (1));
+          else
+            Editor.Set_Selection (sel_n_z (1), sel_n_a (1));
           end if;
           for n in 2 .. selections loop
             if caret_n (n) = sel_n_a (n) then
-              Editor.Add_Selection (sel_n_z (n), sel_n_a (n));
-            else
               Editor.Add_Selection (sel_n_a (n), sel_n_z (n));
+            else
+              Editor.Add_Selection (sel_n_z (n), sel_n_a (n));
             end if;
           end loop;
         end if;
