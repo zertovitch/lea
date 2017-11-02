@@ -32,6 +32,11 @@ package LEA_GWin.Editor is
   procedure On_Create (Editor : in out LEA_Scintilla_Type);
 
   overriding
+  procedure On_Margin_Click (Editor  : in out LEA_Scintilla_Type;
+                             Pos     : in     Position;
+                             Margin  : in     Integer);
+
+overriding
   procedure On_Message
     (Editor       : in out LEA_Scintilla_Type;
      message      : in     Interfaces.C.unsigned;
@@ -62,6 +67,10 @@ package LEA_GWin.Editor is
 
   --  Search & replace actions
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action);
+
+  procedure Bookmark_next (Editor : in out LEA_Scintilla_Type);
+  procedure Bookmark_previous (Editor : in out LEA_Scintilla_Type);
+  procedure Bookmark_toggle (Editor : in out LEA_Scintilla_Type; line : Integer);
 
   --  Duplicate current line if no selection, or selection. Shortcut: Ctrl-D.
   --  Clipboard remains untouched - that the cool aspect in this feature.

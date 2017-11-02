@@ -58,11 +58,6 @@ Menu_MDI_Child MENU
         MENUITEM "&Undo\tCtrl+Z", IDM_Undo
         MENUITEM "&Redo\tCtrl+Y", IDM_Redo
         MENUITEM SEPARATOR
-        MENUITEM "Find && Replace...\tCtrl+F", IDM_Find
-        MENUITEM "Find next\tF3", IDM_Find_Next
-        MENUITEM "Find previous\tShift+F3", IDM_Find_Previous
-        MENUITEM "&Go to line...\tCtrl+G", IDM_Go_to_line
-        MENUITEM SEPARATOR
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
         MENUITEM SEPARATOR
         MENUITEM "&Indent\tTab", IDM_Indent
@@ -72,6 +67,18 @@ Menu_MDI_Child MENU
         MENUITEM "&Uncomment\tShift+F7", IDM_Uncomment
         MENUITEM SEPARATOR
         MENUITEM "&Duplicate line or selection\tCtrl+D", IDM_Duplicate
+    }
+    POPUP "&Navigate"
+    {
+        MENUITEM "Find && Replace...\tCtrl+F", IDM_Find
+        MENUITEM "Find next\tF3", IDM_Find_Next
+        MENUITEM "Find previous\tShift+F3", IDM_Find_Previous
+        MENUITEM SEPARATOR
+        MENUITEM "&Go to line...\tCtrl+G", IDM_Go_to_line
+        MENUITEM SEPARATOR
+        MENUITEM "Next bookmark\tF2", IDM_Next_bookmark
+        MENUITEM "Previous bookmark\tShift+F2", IDM_Previous_bookmark
+        MENUITEM "Toggle bookmark\tCtrl+F2", IDM_Toggle_bookmark
     }
     POPUP "&Tools"
     {
@@ -265,6 +272,9 @@ Main_Menu ACCELERATORS
     "Z",            IDM_Undo, VIRTKEY, CONTROL
     "Y",            IDM_Redo, VIRTKEY, CONTROL
     "G",            IDM_Go_to_line, VIRTKEY, CONTROL
+    VK_F2,         IDM_Next_bookmark, VIRTKEY
+    VK_F2,         IDM_Previous_bookmark, VIRTKEY, SHIFT
+    VK_F2,         IDM_Toggle_bookmark, VIRTKEY, CONTROL
 }
 
 

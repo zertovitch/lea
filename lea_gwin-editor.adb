@@ -48,8 +48,15 @@ package body LEA_GWin.Editor is
     end if;
   end On_Character_Added;
 
+  margin_leftmost         : constant := 0;
+  margin_for_line_numbers : constant := 1;
+  margin_for_bookmarks    : constant := 2;
+
+  marker_for_bookmarks : constant := 0;
+
   overriding
   procedure On_Create (Editor : in out LEA_Scintilla_Type) is
+    use GWindows.Colors;
   begin
     --  Set up editor
     Editor.SetEOLMode (SC_EOL_CRLF);
@@ -68,12 +75,31 @@ package body LEA_GWin.Editor is
 
     Editor.Apply_options;
 
-    Editor.SetMarginTypeN (1, SC_MARGIN_NUMBER);  --  Display line numbers
-    Editor.SetMarginWidthN (1, 40);
-    Editor.SetMarginWidthN (2, 10);
-
+    Editor.SetMarginWidthN (margin_for_line_numbers, 40);
+    Editor.SetMarginTypeN (margin_for_line_numbers, SC_MARGIN_NUMBER);
+    Editor.SetMarginWidthN (margin_for_bookmarks, 20);
+    Editor.SetMarginTypeN (margin_for_bookmarks, SC_MARGIN_SYMBOL);
+    Editor.SetMarginSensitiveN (margin_for_bookmarks, True);
+    Editor.SetMarginMaskN (margin_leftmost,         0);
+    Editor.SetMarginMaskN (margin_for_line_numbers, 0);
+    Editor.SetMarginMaskN (margin_for_bookmarks,    2 ** marker_for_bookmarks);
+    Editor.MarkerDefine (marker_for_bookmarks, SC_MARK_BOOKMARK);
+    Editor.MarkerSetFore (marker_for_bookmarks, Blue);
+    Editor.MarkerSetBack (marker_for_bookmarks, Light_Blue);
     Editor.Focus;
   end On_Create;
+
+  overriding
+  procedure On_Margin_Click (Editor  : in out LEA_Scintilla_Type;
+                             Pos     : in     Position;
+                             Margin  : in     Integer)
+  is
+    line : constant Integer := Editor.LineFromPosition (Pos);
+  begin
+    if Margin = margin_for_bookmarks then
+      Editor.Bookmark_toggle (line);
+    end if;
+  end On_Margin_Click;
 
   overriding
   procedure On_Message
@@ -180,7 +206,7 @@ package body LEA_GWin.Editor is
     then  --  Any change ?
       Editor.sel_a_last_update_UI := sel_a;
       Editor.sel_z_last_update_UI := sel_z;
-      if sel_z > sel_a + 1 then
+      if sel_z > sel_a then
         Highlight_word (Editor, Trim (Editor.GetTextRange (sel_a, sel_z), Both));
       else
         Editor.Indicator_Clear_Range (0, Editor.GetLength);
@@ -518,6 +544,38 @@ package body LEA_GWin.Editor is
         null;
     end case;
   end Search;
+
+  procedure Bookmark_next (Editor : in out LEA_Scintilla_Type) is
+    line : constant Integer :=
+      Editor.MarkerNext (Editor.Get_current_line + 1, 2 ** marker_for_bookmarks);
+  begin
+    if line >= 0 then
+      Editor.Set_current_line (line);
+    end if;
+  end Bookmark_next;
+
+  procedure Bookmark_previous (Editor : in out LEA_Scintilla_Type) is
+    line : constant Integer :=
+      Editor.MarkerPrevious (Editor.Get_current_line - 1, 2 ** marker_for_bookmarks);
+  begin
+    if line >= 0 then
+      Editor.Set_current_line (line);
+    end if;
+  end Bookmark_previous;
+
+  type U32 is mod 2**32;
+
+  procedure Bookmark_toggle (Editor : in out LEA_Scintilla_Type; line : Integer) is
+    flags: U32;
+    dummy : Integer;
+  begin
+    flags := U32 (Editor.MarkerGet (line));
+    if (flags and 2 ** marker_for_bookmarks) = 0 then
+      dummy := Editor.MarkerAdd (line, marker_for_bookmarks);
+    else
+      Editor.MarkerDelete (line, marker_for_bookmarks);
+    end if;
+  end Bookmark_toggle;
 
   function EOL (Editor : LEA_Scintilla_Type) return GString is
   begin

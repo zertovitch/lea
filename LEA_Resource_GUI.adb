@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/10/31  22:29:34
+-- Transcription time: 2017/11/02  22:06:27
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -56,11 +56,6 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0003, "&Undo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Z", IDM_Undo);
     Append_Item(Menu.Popup_0003, "&Redo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Y", IDM_Redo);
     Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Find && Replace..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F", IDM_Find);
-    Append_Item(Menu.Popup_0003, "Find next" & To_GString_From_String((1=>ASCII.HT)) & "F3", IDM_Find_Next);
-    Append_Item(Menu.Popup_0003, "Find previous" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F3", IDM_Find_Previous);
-    Append_Item(Menu.Popup_0003, "&Go to line..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+G", IDM_Go_to_line);
-    Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &all" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "&Indent" & To_GString_From_String((1=>ASCII.HT)) & "Tab", IDM_Indent);
@@ -71,37 +66,48 @@ package body LEA_Resource_GUI is
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "&Duplicate line or selection" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Duplicate);
     Menu.Popup_0004:= Create_Popup;
-    Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "Build && run with &HAC", IDM_Build_run_HAC);
-    State(Menu.Popup_0004, Command, IDM_Build_run_HAC, Disabled);
+    Append_Menu(Menu.Main, "&Navigate", Menu.Popup_0004);
+    Append_Item(Menu.Popup_0004, "Find && Replace..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F", IDM_Find);
+    Append_Item(Menu.Popup_0004, "Find next" & To_GString_From_String((1=>ASCII.HT)) & "F3", IDM_Find_Next);
+    Append_Item(Menu.Popup_0004, "Find previous" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F3", IDM_Find_Previous);
     Append_Separator(Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Build && run with GNAT", IDM_Build_run_GNAT);
-    State(Menu.Popup_0004, Command, IDM_Build_run_GNAT, Disabled);
+    Append_Item(Menu.Popup_0004, "&Go to line..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+G", IDM_Go_to_line);
+    Append_Separator(Menu.Popup_0004);
+    Append_Item(Menu.Popup_0004, "Next bookmark" & To_GString_From_String((1=>ASCII.HT)) & "F2", IDM_Next_bookmark);
+    Append_Item(Menu.Popup_0004, "Previous bookmark" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F2", IDM_Previous_bookmark);
+    Append_Item(Menu.Popup_0004, "Toggle bookmark" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F2", IDM_Toggle_bookmark);
     Menu.Popup_0005:= Create_Popup;
-    Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
-    Append_Item(Menu.Popup_0005, "Show special symbols", IDM_Show_special_symbols);
+    Append_Menu(Menu.Main, "&Tools", Menu.Popup_0005);
+    Append_Item(Menu.Popup_0005, "Build && run with &HAC", IDM_Build_run_HAC);
+    State(Menu.Popup_0005, Command, IDM_Build_run_HAC, Disabled);
     Append_Separator(Menu.Popup_0005);
-    Append_Item(Menu.Popup_0005, "&Notepad view", IDM_FLAT_VIEW);
-    Append_Item(Menu.Popup_0005, "&Studio view", IDM_TREE_VIEW);
-    State(Menu.Popup_0005, Command, IDM_TREE_VIEW, Disabled);
+    Append_Item(Menu.Popup_0005, "&Build && run with GNAT", IDM_Build_run_GNAT);
+    State(Menu.Popup_0005, Command, IDM_Build_run_GNAT, Disabled);
     Menu.Popup_0006:= Create_Popup;
-    Append_Menu(Menu.Main, "&Options", Menu.Popup_0006);
-    Append_Item(Menu.Popup_0006, "&General options", IDM_General_options);
+    Append_Menu(Menu.Main, "&View", Menu.Popup_0006);
+    Append_Item(Menu.Popup_0006, "Show special symbols", IDM_Show_special_symbols);
+    Append_Separator(Menu.Popup_0006);
+    Append_Item(Menu.Popup_0006, "&Notepad view", IDM_FLAT_VIEW);
+    Append_Item(Menu.Popup_0006, "&Studio view", IDM_TREE_VIEW);
+    State(Menu.Popup_0006, Command, IDM_TREE_VIEW, Disabled);
     Menu.Popup_0007:= Create_Popup;
-    Append_Menu(Menu.Main, "&Window", Menu.Popup_0007);
-    Append_Item(Menu.Popup_0007, "&Cascade", IDM_WINDOW_CASCADE);
-    Append_Item(Menu.Popup_0007, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
-    Append_Item(Menu.Popup_0007, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
-    Append_Item(Menu.Popup_0007, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    Append_Menu(Menu.Main, "&Options", Menu.Popup_0007);
+    Append_Item(Menu.Popup_0007, "&General options", IDM_General_options);
     Menu.Popup_0008:= Create_Popup;
-    Append_Menu(Menu.Main, "&Help", Menu.Popup_0008);
-    Append_Item(Menu.Popup_0008, "&Quick help", IDM_Quick_Help);
-    Append_Item(Menu.Popup_0008, "LEA &Web page (contact, support)", IDM_Web);
-    Append_Separator(Menu.Popup_0008);
-    Append_Item(Menu.Popup_0008, "&About LEA", IDM_ABOUT);
+    Append_Menu(Menu.Main, "&Window", Menu.Popup_0008);
+    Append_Item(Menu.Popup_0008, "&Cascade", IDM_WINDOW_CASCADE);
+    Append_Item(Menu.Popup_0008, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
+    Append_Item(Menu.Popup_0008, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
+    Append_Item(Menu.Popup_0008, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    Menu.Popup_0009:= Create_Popup;
+    Append_Menu(Menu.Main, "&Help", Menu.Popup_0009);
+    Append_Item(Menu.Popup_0009, "&Quick help", IDM_Quick_Help);
+    Append_Item(Menu.Popup_0009, "LEA &Web page (contact, support)", IDM_Web);
+    Append_Separator(Menu.Popup_0009);
+    Append_Item(Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 112
+  -- Menu at line 119
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -145,7 +151,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 165
+  -- Dialog at resource line 172
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -254,7 +260,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 189
+  -- Dialog at resource line 196
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -350,7 +356,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  -- Dialog at resource line 202
+  -- Dialog at resource line 209
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -448,7 +454,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  -- Dialog at resource line 224
+  -- Dialog at resource line 231
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -700,6 +706,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 337
+  -- Last line of resource script file: 347
 
 end LEA_Resource_GUI;

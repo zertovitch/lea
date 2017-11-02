@@ -542,6 +542,12 @@ package body LEA_GWin.MDI_Child is
         MDI_Child.Editor.Search(find_previous);
       when IDM_Go_to_line =>
         Do_go_to_line (MDI_Child);
+      when IDM_Toggle_bookmark =>
+        MDI_Child.Editor.Bookmark_toggle (MDI_Child.Editor.Get_current_line);
+      when IDM_Next_bookmark =>
+        MDI_Child.Editor.Bookmark_next;
+      when IDM_Previous_bookmark =>
+        MDI_Child.Editor.Bookmark_previous;
       when IDM_Show_special_symbols =>
         Toggle_show_special(MDI_Child.Parent.opt);
         MDI_Child.Editor.Apply_options;
