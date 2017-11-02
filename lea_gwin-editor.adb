@@ -8,7 +8,6 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
-with Ada.Text_IO;
 
 package body LEA_GWin.Editor is
 
@@ -537,6 +536,7 @@ package body LEA_GWin.Editor is
   procedure Duplicate (Editor : in out LEA_Scintilla_Type) is
     pos, sel_a, sel_z, line_start, next_line_start: Position;
     lin : Integer;
+    selections: Positive;
   begin
     sel_a:= Editor.GetSelectionStart;
     sel_z:= Editor.GetSelectionEnd;
@@ -555,14 +555,41 @@ package body LEA_GWin.Editor is
           Editor.InsertText(next_line_start, Editor.GetTextRange(line_start, next_line_start));
         end if;
       end if;
-    else  --  There is a selection: we duplicate it.
-      Editor.InsertText(sel_z, Editor.GetTextRange(sel_a, sel_z));
-      --  Restore selection *and* cursor as before
-      if pos = sel_a then
-        Editor.SetSel(sel_z, sel_a);  --  Cursor at begin of selection
-      else
-        Editor.SetSel(sel_a, sel_z);  --  Cursor at end of selection
-      end if;
+    else  --  There is a selection (or selections): we duplicate it (them).
+      selections := Editor.Get_Selections;
+      Editor.BeginUndoAction;
+      declare
+        sel_n_a, sel_n_z : array (1..selections) of Position;
+        offset: Natural := 0;
+      begin
+        for n in 1 .. selections loop
+          sel_n_a (n) := Editor.Get_Selection_N_Start (n);
+          sel_n_z (n) := Editor.Get_Selection_N_End (n);
+        end loop;
+        for n in 1 .. selections loop
+          --  Selection n will be in shifted by the previous insertions.
+          sel_n_a (n) := sel_n_a (n) + offset;
+          sel_n_z (n) := sel_n_z (n) + offset;
+          --  Duplicate text at the end of the nth selection.
+          Editor.InsertText (sel_n_z (n), Editor.GetTextRange (sel_n_a (n), sel_n_z (n)));
+          offset := offset + (sel_n_z (n) - sel_n_a (n));
+        end loop;
+        Editor.EndUndoAction;
+        if selections = 1 then
+          --  Restore selection *and* cursor as before
+          if pos = sel_a then
+            Editor.SetSel (sel_z, sel_a);  --  Cursor at begin of selection
+          else
+            Editor.SetSel (sel_a, sel_z);  --  Cursor at end of selection
+          end if;
+        else
+          --  Version for multiple selections
+          Editor.Set_Selection (sel_n_a (1), sel_n_z (1));
+          for n in 2 .. selections loop
+            Editor.Add_Selection (sel_n_a (n), sel_n_z (n));
+          end loop;
+        end if;
+      end;
     end if;
   end Duplicate;
 
