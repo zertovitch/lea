@@ -275,7 +275,7 @@ package body LEA_GWin.MDI_Child is
     LEA_Resource_GUI.Create_Full_Menu(MDI_Child.Menu);
     --  The list of MDI open children will appear below
     --  the menu indicated with Window_Menu (should be the one with Cascade/Tile/...).
-    MDI_Child.MDI_Menu(MDI_Child.Menu.Main, Window_Menu => 6);
+    MDI_Child.MDI_Menu(MDI_Child.Menu.Main, Window_Menu => 7);
 
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare

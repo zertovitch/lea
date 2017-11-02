@@ -17,14 +17,20 @@ package body LEA_GWin.Toolbars is
   begin
     for i in s'Range loop
       case s(i) is
-        when '&' | GCharacter'Val(0) =>
+        when GCharacter'Val(0) =>
           null;
+        when '&' =>
+          if i < s'Last and then s(i+1)= '&' then
+            u:= u & "&&&";  --  "&&" is translated as "&&&" in order to be displayed as a '&' !...
+          else
+            null;  --  Skip
+          end if;
         when GCharacter'Val(9) => -- Tab
           exit;
         when '\' =>
           exit when i < s'Last and then s(i+1)= 't';
         when others =>
-          u:= u & GString'(1=> s(i));
+          u:= u & s(i);
       end case;
     end loop;
     return To_GString_From_Unbounded(u);
@@ -63,7 +69,7 @@ package body LEA_GWin.Toolbars is
       use GWindows.Common_Controls;
       use type GString_Unbounded;
     begin
-      -- The tool tip is the menu text.
+      -- The tool tip's text is a copy of the menu's text.
       tb.Add_String(Filter(Text(Fake_Menu.Main, Command, Command_ID)));
       tb.Add_Button(Image_Index, Command_ID, string_count);
       string_count:= string_count + 1;

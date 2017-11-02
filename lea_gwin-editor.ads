@@ -36,7 +36,7 @@ package LEA_GWin.Editor is
                              Pos     : in     Position;
                              Margin  : in     Integer);
 
-overriding
+  overriding
   procedure On_Message
     (Editor       : in out LEA_Scintilla_Type;
      message      : in     Interfaces.C.unsigned;
