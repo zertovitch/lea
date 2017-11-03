@@ -592,6 +592,9 @@ package body LEA_GWin.Editor is
   end EOL;
 
   procedure Duplicate (Editor : in out LEA_Scintilla_Type) is
+    --  NB: the Duplicate feature is actually present in Scintilla
+    --  v.3.5.6 and was "accidentally" reprogrammed in full here.
+    --  At least, it gives the possibility to customize it...
     pos, sel_a, sel_z, line_start, next_line_start: Position;
     lin : Integer;
     selections: Positive;
