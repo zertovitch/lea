@@ -16,7 +16,7 @@
 project LEA is
 
    type Build_Mode_Type is
-      ("Debug", "Fast");
+      ("Debug", "Debug_MinGW", "Fast", "Fast_MinGW");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
    for Main use ("lea.adb");
    for Source_Dirs use (".") & external_as_list("GNAT_SOURCE_PATH", ";");
@@ -25,32 +25,38 @@ project LEA is
    case Build_Mode is
       when "Debug" =>
          for Object_Dir use "obj/debug";
-
       when "Fast" =>
          for Object_Dir use "obj/fast";
+      when "Debug_MinGW" =>
+         for Object_Dir use "obj/debug_ming";
+      when "Fast_MinGW" =>
+         for Object_Dir use "obj/fast_ming";
    end case;
 
    package Compiler is
 
       case Build_Mode is
 
-         when "Debug" =>
+         when "Debug" | "Debug_MinGW" =>
             for Default_Switches ("ada") use (
               "-gnatyaknpr",  --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
               "-gnatybfhiu",  --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
               "-gnatyx",      --  Style: check x:no extra parens
-              "-gnato", "-fno-inline", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatecdebug.pra");
+              "-gnato", "-fno-inline", "-fstack-check", "-g", "-gnatwa", "-gnatVa",
+							"-gnatecdebug.pra",
+              "-gnatec../../lea_elim.pra");
 
-         when "Fast" =>
-            for Default_Switches ("ada") use ("-O2", "-gnatn", "-gnatp", "-gnatwa", "-fno-strict-aliasing", "-funroll-loops", "-fpeel-loops", "-ftracer", "-funswitch-loops", "-fweb", "-frename-registers");
+         when "Fast" | "Fast_MinGW" =>
+            for Default_Switches ("ada") use ("-O2", "-gnatn", "-gnatp", "-gnatwa", "-fno-strict-aliasing", "-funroll-loops", "-fpeel-loops", "-ftracer", "-funswitch-loops", "-fweb", "-frename-registers",
+              "-gnatec../../lea_elim.pra");
       end case;
    end Compiler;
 
    package Linker is
       case Build_Mode is
-         when "Debug"  =>
+         when "Debug" | "Debug_MinGW" =>
             for Default_Switches ("ada") use ("-g",                                   "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
-         when "Fast" =>
+         when "Fast" | "Fast_MinGW" =>
             for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
        end case;
    end Linker;

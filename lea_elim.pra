@@ -1,0 +1,56 @@
+-------------------------------------------------------
+--  List of unused entities, originally using GNAT Elim
+-------------------------------------------------------
+
+--  This is for TDM-GCC 5.1.0 or MinGW / GCC 4.7.2 (linker error on GdiAlphaBlend)
+pragma Eliminate (GWindows.Drawing, Paint_Transparent_Bitmap);
+pragma Eliminate (GWindows.Drawing, AlphaBlend);
+
+--  Others
+
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, Attach);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetContainingTypeLib);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, Pointer);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetDllEntry);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetDocumentation);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetFuncDesc);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetImplTypeFlags);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetMops);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetNames);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetRefTypeInfo);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetRefTypeOfImplType);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetTypeAttr);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetTypeComp);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetVarDesc);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, To_Pointer_To_ITypeInfo);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, ReleaseFuncDesc);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, ReleaseTypeAttr);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, ReleaseVarDesc);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetName);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, Attach);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, GetDocumentation);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetDocumentation);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetTypeKind);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, GetTypeInfoType);
+pragma Eliminate (GNATCOM.ITypeInfo_Interface, GetFunctionName);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, LoadTypeLib);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, Open);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, FindName);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, Pointer);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, GetLibAttr);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, GetTypeComp);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, GetTypeInfo);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, GetTypeInfoCount);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, GetTypeInfoOfGuid);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, IsName);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, To_Pointer_To_ITypeLib);
+pragma Eliminate (GNATCOM.ITypeLib_Interface, ReleaseTLibAttr);
+
+pragma Eliminate (GNATCOM.VARIANT, Is_NULL);
+pragma Eliminate (GNATCOM.VARIANT, To_BSTR);
+pragma Eliminate (GNATCOM.VARIANT, To_C);
+pragma Eliminate (GNATCOM.VARIANT, To_C_Wide);
+pragma Eliminate (GNATCOM.VARIANT, To_Pointer_To_IDispatch);
+pragma Eliminate (GNATCOM.VARIANT, To_Pointer_To_SAFEARRAY);
+pragma Eliminate (GNATCOM.VARIANT, To_VARIANT_From_C);
+pragma Eliminate (GNATCOM.VARIANT, To_VARIANT_From_Wide_C);

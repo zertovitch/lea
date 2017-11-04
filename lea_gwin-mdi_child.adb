@@ -438,7 +438,7 @@ package body LEA_GWin.MDI_Child is
           one_child: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
         begin
           if not one_child.Is_file_saved then
-            one_child.Save(GU2G (one_child.File_Name));
+            Save(one_child, GU2G (one_child.File_Name));
           end if;
         end;
       end if;
