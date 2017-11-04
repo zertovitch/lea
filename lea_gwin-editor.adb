@@ -190,6 +190,7 @@ package body LEA_GWin.Editor is
     pos : constant Position := Editor.GetCurrentPos;
     p1, p2 : Position := INVALID_POSITION;
     sel_a, sel_z : Position;
+    lin_a, lin_z: Integer;
     function Is_parenthesis (s: GString) return Boolean is (s="(" or else s=")");
   begin
     --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
@@ -206,7 +207,9 @@ package body LEA_GWin.Editor is
     then  --  Any change ?
       Editor.sel_a_last_update_UI := sel_a;
       Editor.sel_z_last_update_UI := sel_z;
-      if sel_z > sel_a then
+      lin_a:= Editor.LineFromPosition (sel_a);
+      lin_z:= Editor.LineFromPosition (sel_z);
+      if sel_z > sel_a and then lin_a = lin_z then
         Highlight_word (Editor, Trim (Editor.GetTextRange (sel_a, sel_z), Both));
       else
         Editor.Indicator_Clear_Range (0, Editor.GetLength);
