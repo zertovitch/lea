@@ -1,12 +1,12 @@
--------------------------------------------------------
---  List of unused entities, originally using GNAT Elim
--------------------------------------------------------
+-------------------------------
+--  List of unused entities  --
+-------------------------------
 
 --  This is for TDM-GCC 5.1.0 or MinGW / GCC 4.7.2 (linker error on GdiAlphaBlend)
 pragma Eliminate (GWindows.Drawing, Paint_Transparent_Bitmap);
 pragma Eliminate (GWindows.Drawing, AlphaBlend);
 
---  Others, obtaind with: gnatelim -P lea -XBuild_Mode=Fast -main=lea.adb >elim.txt
+--  Others, obtained with: gnatelim -P lea -XBuild_Mode=Fast -main=lea.adb >elim.txt
 
 pragma Eliminate (GNATCOM.BSTR, SysFreeString, Source_Location => "gnatcom-bstr.adb:39");
 pragma Eliminate (GNATCOM.BSTR, SysStringLen, Source_Location => "gnatcom-bstr.adb:42");
