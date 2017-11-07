@@ -12,6 +12,10 @@
 --   [gnavi]\gnatcom\framework
 --   Project URL: http://sf.net/projects/gnavi/
 --   NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
+--
+-- * Zip-Ada:
+--   [zip-ada]\zip_lib
+--   Project URL: http://unzip-ada.sf.net
 
 project LEA is
 

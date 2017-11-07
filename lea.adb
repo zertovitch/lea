@@ -5,12 +5,15 @@ with GWindows.Application;        use GWindows.Application;
 with GWindows.Base;               use GWindows.Base;
 with GWindows.GStrings;           use GWindows.GStrings;
 with GWindows.Message_Boxes;      use GWindows.Message_Boxes;
-
-with LEA_GWin.MDI_Main;           use LEA_GWin.MDI_Main;
-
-with Ada.Exceptions;
-with GNAT.Traceback.Symbolic;
 with GWindows.Scintilla;
+
+with LEA_GWin.MDI_Main;           use LEA_GWin, LEA_GWin.MDI_Main;
+with LEA_GWin.Installer;          use LEA_GWin.Installer;
+
+with Ada.Command_Line;            use Ada.Command_Line;
+with Ada.Exceptions;
+
+with GNAT.Traceback.Symbolic;
 
 procedure LEA is
 
@@ -36,18 +39,35 @@ procedure LEA is
       );
   end Interactive_crash;
 
-begin
-  GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
-  Create_MDI_Top (Top, "LEA - starting");
-  Top.Update_Title;
-  Top.Focus;
-  if GWindows.Scintilla.SCI_Lexer_DLL_Successfully_Loaded then
+  procedure LEA_start is
+  begin
+    GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
+    Create_MDI_Top (Top, "LEA - starting");
+    Top.Update_Title;
+    Top.Focus;
     Message_Loop;
+  end LEA_start;
+
+begin
+  if GWindows.Scintilla.SCI_Lexer_DLL_Successfully_Loaded then
+    LEA_start;
   else
-    Message_Box
-      ("LEA",
-       "Installation error: file ""scilexer.dll"" is needed beside ""lea.exe""",
-        OK_Box
-      );
+    begin
+      Unpack_DLL;
+      GWindows.Scintilla.Try_Loading_Lexer_DLL;
+      if GWindows.Scintilla.SCI_Lexer_DLL_Successfully_Loaded then
+        LEA_start;
+      else
+        Message_Box
+          ("LEA",
+           "Installation error: file ""scilexer.dll"" is needed beside ""lea.exe""." & NL &
+           "Path = " & S2G (Command_Name),
+           OK_Box
+          );
+      end if;
+    exception
+      when others =>
+        null;
+    end;
   end if;
 end LEA;
