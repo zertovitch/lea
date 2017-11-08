@@ -524,24 +524,18 @@ package body LEA_GWin.MDI_Child is
       when IDM_Redo =>
         MDI_Child.Editor.Redo;
         MDI_Child.Update_display(toolbar_and_menu);  --  Eventually disable Redo if no more available
-      when IDM_Select_all =>
-        MDI_Child.Editor.SelectAll;
-      when IDM_Indent =>
-        MDI_Child.Editor.Tab;
-      when IDM_Unindent =>
-        MDI_Child.Editor.BackTab;
-      when IDM_Comment =>
-        MDI_Child.Editor.Selection_comment;
-      when IDM_Uncomment =>
-        MDI_Child.Editor.Selection_uncomment;
-      when IDM_Find =>
-        MDI_Child.Show_Search_Box;
-      when IDM_Find_Next =>
-        MDI_Child.Editor.Search(find_next);
-      when IDM_Find_Previous =>
-        MDI_Child.Editor.Search(find_previous);
-      when IDM_Go_to_line =>
-        Do_go_to_line (MDI_Child);
+      when IDM_Cut =>           MDI_Child.Editor.Cut;
+      when IDM_Copy =>          MDI_Child.Editor.Copy;
+      when IDM_Paste =>         MDI_Child.Editor.Paste;
+      when IDM_Select_all =>    MDI_Child.Editor.SelectAll;
+      when IDM_Indent =>        MDI_Child.Editor.Tab;
+      when IDM_Unindent =>      MDI_Child.Editor.BackTab;
+      when IDM_Comment =>       MDI_Child.Editor.Selection_comment;
+      when IDM_Uncomment =>     MDI_Child.Editor.Selection_uncomment;
+      when IDM_Find =>          MDI_Child.Show_Search_Box;
+      when IDM_Find_Next =>     MDI_Child.Editor.Search(find_next);
+      when IDM_Find_Previous => MDI_Child.Editor.Search(find_previous);
+      when IDM_Go_to_line =>    Do_go_to_line (MDI_Child);
       when IDM_Toggle_bookmark =>
         MDI_Child.Editor.Bookmark_toggle (MDI_Child.Editor.Get_current_line);
       when IDM_Next_bookmark =>

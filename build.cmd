@@ -14,6 +14,5 @@ copy /B lea.exe + sci.zip lea_debug%target%.exe
 del lea.exe
 mkdir obj\fast
 gprbuild -P lea -XBuild_Mode=Fast%target%
-copy /B lea.exe + sci.zip "lea (ver) %target%"".exe
-
-copy /B "lea (ver) %target%"".exe lea.exe
+copy /B lea.exe + sci.zip "lea (ver)%target%.exe"
+copy /B "lea (ver)%target%.exe" lea.exe

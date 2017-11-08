@@ -16,9 +16,12 @@
 #define IDM_Toggle_bookmark                     40004
 #define Match_case                              40004
 #define Copyright_label                         40005
+#define IDM_Copy                                40005
 #define Find_box                                40006
+#define IDM_Cut                                 40006
 #define IDM_Find_Next                           40007
 #define Group_Backup                            40008
+#define IDM_Paste                               40008
 #define IDM_Duplicate                           40009
 #define Find_next_button                        40010
 #define IDM_New_File                            40011

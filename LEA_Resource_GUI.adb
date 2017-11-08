@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/11/07  17:37:08
+-- Transcription time: 2017/11/08  01:11:19
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -56,15 +56,19 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0003, "&Undo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Z", IDM_Undo);
     Append_Item(Menu.Popup_0003, "&Redo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Y", IDM_Redo);
     Append_Separator(Menu.Popup_0003);
+    Append_Item(Menu.Popup_0003, "Cu&t to clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+X or Shift+Del", IDM_Cut);
+    Append_Item(Menu.Popup_0003, "&Copy to clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+C or Ctrl+Ins", IDM_Copy);
+    Append_Item(Menu.Popup_0003, "&Paste from clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+V or Shift+Ins", IDM_Paste);
+    Append_Separator(Menu.Popup_0003);
+    Append_Item(Menu.Popup_0003, "&Duplicate line or selection" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Duplicate);
+    Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &all" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "&Indent" & To_GString_From_String((1=>ASCII.HT)) & "Tab", IDM_Indent);
     Append_Item(Menu.Popup_0003, "&Unindent" & To_GString_From_String((1=>ASCII.HT)) & "Shift+Tab", IDM_Unindent);
     Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "&Comment" & To_GString_From_String((1=>ASCII.HT)) & "F7", IDM_Comment);
-    Append_Item(Menu.Popup_0003, "&Uncomment" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F7", IDM_Uncomment);
-    Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "&Duplicate line or selection" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Duplicate);
+    Append_Item(Menu.Popup_0003, "Co&mment" & To_GString_From_String((1=>ASCII.HT)) & "F7", IDM_Comment);
+    Append_Item(Menu.Popup_0003, "U&ncomment" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F7", IDM_Uncomment);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Navigate", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "Find && Replace..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F", IDM_Find);
@@ -107,7 +111,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 119
+  -- Menu at line 123
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -151,7 +155,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 172
+  -- Dialog at resource line 176
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -260,7 +264,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 196
+  -- Dialog at resource line 200
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -356,7 +360,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  -- Dialog at resource line 209
+  -- Dialog at resource line 213
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -454,7 +458,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  -- Dialog at resource line 231
+  -- Dialog at resource line 235
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -706,6 +710,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 347
+  -- Last line of resource script file: 351
 
 end LEA_Resource_GUI;

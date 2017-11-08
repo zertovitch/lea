@@ -58,15 +58,19 @@ Menu_MDI_Child MENU
         MENUITEM "&Undo\tCtrl+Z", IDM_Undo
         MENUITEM "&Redo\tCtrl+Y", IDM_Redo
         MENUITEM SEPARATOR
+        MENUITEM "Cu&t to clipboard\tCtrl+X or Shift+Del", IDM_Cut
+        MENUITEM "&Copy to clipboard\tCtrl+C or Ctrl+Ins", IDM_Copy
+        MENUITEM "&Paste from clipboard\tCtrl+V or Shift+Ins", IDM_Paste
+        MENUITEM SEPARATOR
+        MENUITEM "&Duplicate line or selection\tCtrl+D", IDM_Duplicate
+        MENUITEM SEPARATOR
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
         MENUITEM SEPARATOR
         MENUITEM "&Indent\tTab", IDM_Indent
         MENUITEM "&Unindent\tShift+Tab", IDM_Unindent
         MENUITEM SEPARATOR
-        MENUITEM "&Comment\tF7", IDM_Comment
-        MENUITEM "&Uncomment\tShift+F7", IDM_Uncomment
-        MENUITEM SEPARATOR
-        MENUITEM "&Duplicate line or selection\tCtrl+D", IDM_Duplicate
+        MENUITEM "Co&mment\tF7", IDM_Comment
+        MENUITEM "U&ncomment\tShift+F7", IDM_Uncomment
     }
     POPUP "&Navigate"
     {
