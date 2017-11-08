@@ -374,10 +374,11 @@ package body LEA_GWin.MDI_Child is
   end Save;
 
   procedure On_Save (MDI_Child : in out MDI_Child_Type) is
-    File_Name : constant GWindows.GString := To_GString_From_Unbounded (MDI_Child.File_Name);
+    File_Name : constant GWindows.GString := GU2G (MDI_Child.File_Name);
   begin
     if File_Name = "" then
-      On_Save_As (MDI_Child);
+      MDI_Child.Focus;
+      MDI_Child.On_Save_As;
     else
       Save (MDI_Child, File_Name);
     end if;
@@ -438,7 +439,7 @@ package body LEA_GWin.MDI_Child is
           one_child: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
         begin
           if not one_child.Is_file_saved then
-            Save(one_child, GU2G (one_child.File_Name));
+            one_child.On_Save;
           end if;
         end;
       end if;
