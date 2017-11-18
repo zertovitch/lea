@@ -110,7 +110,7 @@ Menu_MDI_Child MENU
     }
     POPUP "&Help"
     {
-        MENUITEM "&Quick help", IDM_Quick_Help
+        MENUITEM "&Quick help", IDM_Quick_Help, INACTIVE
         MENUITEM "LEA &Web page (contact, support)", IDM_Web
         MENUITEM SEPARATOR
         MENUITEM "&About LEA", IDM__ABOUT
@@ -157,7 +157,7 @@ Menu_MDI_Main MENU
     }
     POPUP "&Help"
     {
-        MENUITEM "&Quick help", IDM_Quick_Help
+        MENUITEM "&Quick help", IDM_Quick_Help, INACTIVE
         MENUITEM "LEA &Web page (contact, support)", IDM_Web
         MENUITEM SEPARATOR
         MENUITEM "&About LEA", IDM__ABOUT
