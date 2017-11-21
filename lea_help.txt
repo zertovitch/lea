@@ -1,0 +1,46 @@
+==============
+LEA quick help
+==============
+
+This quick help consists in few random notes about LEA
+functionalities that are not self-explanatory from the menus.
+
+
+Display
+=======
+
+  Highlighting of occurrences of selected strings
+  ===============================================
+  You will notice that when you select a portion of text, occurrences
+  of that text will be highlighted as well. There are a few rules about
+  this algorithm:
+    - when a whole word is marked, only identical whole words are
+        highlighted; this is for showing identical identifiers only
+    - the feature is disabled automatically on selections spanning over
+        multiple lines
+    - the highlighting is performed only in a region of a few hundreds
+        of lines around the selection, in order to avoid time
+        overconsumption issues on very large texts
+
+
+Editing
+=======
+
+  Multi-line editing & rectangular selection
+  ==========================================
+
+  LEA provides a very convenient feature that is not linked to a
+  specific menu command or button: the multi-line editing.
+  If you press the Alt key, then select any piece of text
+  with the mouse, you'll notice the following:
+    - the cursor spans vertically on all lines concerned by the selection
+    - a rectangle of text is selected instead of the full
+      text between the position when the button was pushed down
+      and the current mouse pointer position
+    - any typing occurs on all concerned lines.
+    
+  This is extremely useful for adjusting indentation within lines,
+  or typing contents on a range of lines. It could be for instance
+  use for transforming an enumeration in a case statement, by typing
+  "when " and "=>" on all different cases; or add ":= " in a record
+  for adding initializations.
