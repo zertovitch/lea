@@ -67,23 +67,29 @@ package body LEA_GWin.MDI_Main is
     Enumerate_Children(MDI_Client_Window (MDI_Main).all, Redraw_Child'Access);
   end Redraw_all;
 
-  procedure Close_extra_first_child(Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
-  is
+  procedure Close_extra_first_child (MDI_Main: in out MDI_Main_Type) is
+    --
+    procedure Close_extra_first_document (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
+    is
+    begin
+      if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
+        declare
+          w: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
+        begin
+          if w.Extra_first_doc and Is_file_saved (w) then
+            --  This situation happens only if the blank startup editor is at its initial state;
+            --  the text is either untouched, or with all modifications undone.
+            Any_Window.Close;
+          end if;
+        end;
+      end if;
+    end Close_extra_first_document;
+    --
   begin
-    if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
-      declare
-        w: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
-      begin
-        if w.Extra_first_doc and Is_file_saved(w) then
-          Any_Window.Close;
-        end if;
-      end;
-    end if;
-  end Close_extra_first_child;
-
-  procedure Close_extra_first_child(MDI_Main: in out MDI_Main_Type) is
-  begin
-    Enumerate_Children(MDI_Client_Window (MDI_Main).all,Close_extra_first_child'Access);
+    Enumerate_Children (
+      MDI_Client_Window (MDI_Main).all,
+      Close_extra_first_document'Unrestricted_Access
+    );
   end Close_extra_first_child;
 
   procedure Finish_subwindow_opening(
@@ -116,7 +122,7 @@ package body LEA_GWin.MDI_Main is
       New_Window : constant MDI_Child_Access := new MDI_Child_Type;
     begin
       -- We do here like Excel or Word: close the unused blank window
-      Close_extra_first_child(MDI_Main);
+      Close_extra_first_child (MDI_Main);
       --
       MDI_Main.User_maximize_restore:= False;
       New_Window.File_Name:= File_Name;
@@ -343,7 +349,7 @@ package body LEA_GWin.MDI_Main is
   -- On_File_New --
   -----------------
 
-  Current_MDI_Window : Natural := 0;
+  New_MDI_window_counter : Natural := 0;
 
   procedure On_File_New (
     MDI_Main        : in out MDI_Main_Type;
@@ -354,10 +360,10 @@ package body LEA_GWin.MDI_Main is
 
     function Suffix return GWindows.GString is
     begin
-      if Current_MDI_Window = 0 then
+      if New_MDI_window_counter = 0 then
         return "";
       else
-        return Integer'Wide_Image(Current_MDI_Window + 1);
+        return Integer'Wide_Image(New_MDI_window_counter + 1);
       end if;
     end Suffix;
 
@@ -377,7 +383,7 @@ package body LEA_GWin.MDI_Main is
     --  objects => True
     -- );
 
-    Current_MDI_Window := Current_MDI_Window + 1;
+    New_MDI_window_counter := New_MDI_window_counter + 1;
 
     --  This is just to set the MRUs in the new window's menu:
     Update_Common_Menus(MDI_Main);

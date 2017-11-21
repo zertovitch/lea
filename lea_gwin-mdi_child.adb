@@ -460,14 +460,14 @@ package body LEA_GWin.MDI_Child is
                                       Save_any_modified'Unrestricted_Access);
   end On_Save_All;
 
-  procedure On_File_Drop (MDI_Child     : in out MDI_Child_Type;
+  procedure On_File_Drop (MDI_Child  : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names)
   is
     parent    : MDI_Main_Access;
   begin
     MDI_Child.Focus;
-    --  We save the parent access since this MDI_Child may be closed when
-    --  i > File_Names'First if MDI_Child is a temporary MS-Office-like
+    --  We save the parent access since this MDI_Child may be already closed
+    --  when i > File_Names'First if MDI_Child is was temporary MS-Office-like
     --  blank window - See procedure Close_extra_first_child.
     parent:= MDI_Child.Parent;
     for i in File_Names'Range loop
@@ -584,8 +584,8 @@ package body LEA_GWin.MDI_Child is
         case Message_Box
                (MDI_Child,
                 "Close file", -- sheet, picture, ...
-                "Do you want to save the changes you made to " &
-                GU2G(MDI_Child.Short_Name) & "' ?",
+                "Do you want to save the changes you made to """ &
+                GU2G(MDI_Child.Short_Name) & """ ?",
                 Yes_No_Cancel_Box,
                 Question_Icon)
         is
