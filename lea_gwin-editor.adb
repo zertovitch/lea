@@ -149,7 +149,12 @@ package body LEA_GWin.Editor is
 
   word_highlighting_indicator_index: constant := 0;
 
-  procedure Highlight_word (Editor : in out LEA_Scintilla_Type; word: GString) is
+  procedure Highlight_word
+    (Editor   : in out LEA_Scintilla_Type;
+     word     :        GString;
+     is_whole :        Boolean
+    )
+  is
     line : constant Integer := Editor.Get_current_line;
     around : constant := 200;
     line_a : constant Integer := Integer'Max(line - around, 1);
@@ -158,6 +163,7 @@ package body LEA_GWin.Editor is
     pos_z : constant Position := Editor.PositionFromLine (line_z);
     pos, found_a, found_z : Position;
     sel_a, sel_z : Position;
+    flags : Integer := SCFIND_MATCHCASE;
   begin
     Editor.Indicator_Clear_Range (0, Editor.GetLength);
     if word = "" then
@@ -166,6 +172,10 @@ package body LEA_GWin.Editor is
     sel_a:= Editor.GetSelectionStart;
     sel_z:= Editor.GetSelectionEnd;
     Editor.IndicSetStyle (word_highlighting_indicator_index, INDIC_ROUNDBOX);
+    if is_whole then
+      flags := flags + SCFIND_WHOLEWORD;
+    end if;
+    Editor.SetSearchFlags(flags);
     while pos_a < pos_z loop
       Editor.SetTargetStart (pos_a);
       Editor.SetTargetEnd (pos_z);
@@ -175,7 +185,7 @@ package body LEA_GWin.Editor is
       found_a := Editor.GetTargetStart;
       found_z := Editor.GetTargetEnd;
       if found_a >= sel_a and then found_z <= sel_z then
-        null;  --  no highlighting within selection
+        null;  --  We don't want highlighting within selection.
       else
         Editor.Indicator_Fill_Range (found_a, found_z - found_a);
       end if;
@@ -192,6 +202,14 @@ package body LEA_GWin.Editor is
     sel_a, sel_z : Position;
     lin_a, lin_z: Integer;
     function Is_parenthesis (s: GString) return Boolean is (s="(" or else s=")");
+    is_whole : Boolean;
+    function Get_character (pos : Integer) return GCharacter is
+      s : constant GString := Editor.GetTextRange (pos, pos + 1);
+    begin
+      return s (s'First);
+    end;
+    function Is_ident_char (c: GCharacter) return Boolean is
+      (c in 'a'..'z' or c in 'A'..'Z' or c in '0'..'9' or c = '_');
   begin
     --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
     if Editor.pos_last_update_UI = pos then  --  Any change ?
@@ -209,8 +227,13 @@ package body LEA_GWin.Editor is
       Editor.sel_z_last_update_UI := sel_z;
       lin_a:= Editor.LineFromPosition (sel_a);
       lin_z:= Editor.LineFromPosition (sel_z);
-      if sel_z > sel_a and then lin_a = lin_z then
-        Highlight_word (Editor, Trim (Editor.GetTextRange (sel_a, sel_z), Both));
+      if sel_z > sel_a and then lin_a = lin_z then  --  We consider only a selection on one line
+        --  If selection is a whole word, we highlight only whole words:
+        is_whole :=
+          (sel_a = 0 or else not Is_ident_char (Get_character (sel_a - 1)))
+          and then
+          (sel_z = Editor.GetLength or else not Is_ident_char (Get_character (sel_z)));
+        Highlight_word (Editor, Trim (Editor.GetTextRange (sel_a, sel_z), Both), is_whole);
       else
         Editor.Indicator_Clear_Range (0, Editor.GetLength);
       end if;
