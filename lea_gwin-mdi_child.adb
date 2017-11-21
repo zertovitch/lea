@@ -99,11 +99,16 @@ package body LEA_GWin.MDI_Child is
 
   procedure Update_tool_bar(MDI_Child : in out MDI_Child_Type) is
     bar: MDI_Toolbar_Type renames MDI_Child.Parent.Tool_Bar;
+    is_any_selection: constant Boolean :=
+      MDI_Child.Editor.GetSelectionStart < MDI_Child.Editor.GetSelectionEnd;
   begin
     bar.Enabled(IDM_Undo, MDI_Child.Editor.CanUndo);
     bar.Enabled(IDM_Redo, MDI_Child.Editor.CanRedo);
     bar.Enabled(IDM_Save_File, MDI_Child.Editor.modified);
     bar.Enabled(IDM_Save_All, MDI_Child.save_all_hint);
+    bar.Enabled(IDM_Cut, is_any_selection);
+    bar.Enabled(IDM_Copy, is_any_selection);
+    bar.Enabled(IDM_Paste, MDI_Child.Editor.CanPaste);
     bar.Enabled(IDM_Indent, True);
     bar.Enabled(IDM_Unindent, True);
     bar.Enabled(IDM_Comment, True);
@@ -117,12 +122,17 @@ package body LEA_GWin.MDI_Child is
 
   procedure Update_menus(MDI_Child : in out MDI_Child_Type) is
     bool_to_state: constant array(Boolean) of State_Type := (Disabled, Enabled);
+    is_any_selection: constant Boolean :=
+      MDI_Child.Editor.GetSelectionStart < MDI_Child.Editor.GetSelectionEnd;
   begin
+    State(MDI_Child.Menu.Main, Command, IDM_Cut, bool_to_state(is_any_selection));
+    State(MDI_Child.Menu.Main, Command, IDM_Copy, bool_to_state(is_any_selection));
+    State(MDI_Child.Menu.Main, Command, IDM_Paste, bool_to_state(MDI_Child.Editor.CanPaste));
     State(MDI_Child.Menu.Main, Command, IDM_Undo, bool_to_state(MDI_Child.Editor.CanUndo));
     State(MDI_Child.Menu.Main, Command, IDM_Redo, bool_to_state(MDI_Child.Editor.CanRedo));
     State(MDI_Child.Menu.Main, Command, IDM_Save_File, bool_to_state(MDI_Child.Editor.modified));
     State(MDI_Child.Menu.Main, Command, IDM_Save_All, bool_to_state(MDI_Child.save_all_hint));
-  end;
+  end Update_menus;
 
   procedure Update_display(
     MDI_Child : in out MDI_Child_Type;
@@ -606,6 +616,9 @@ package body LEA_GWin.MDI_Child is
       MDI_Child.Parent.Tool_Bar.Enabled(IDM_Save_All, False);
       MDI_Child.Parent.Tool_Bar.Enabled(IDM_Undo, False);
       MDI_Child.Parent.Tool_Bar.Enabled(IDM_Redo, False);
+      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Cut, False);
+      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Copy, False);
+      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Paste, False);
       MDI_Child.Parent.Tool_Bar.Enabled(IDM_Comment, False);
       MDI_Child.Parent.Tool_Bar.Enabled(IDM_Uncomment, False);
       MDI_Child.Parent.Tool_Bar.Enabled(IDM_Indent, False);

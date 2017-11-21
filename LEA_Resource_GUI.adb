@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2017/11/08  01:11:19
+-- Transcription time: 2017/11/21  12:33:34
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -106,6 +106,7 @@ package body LEA_Resource_GUI is
     Menu.Popup_0009:= Create_Popup;
     Append_Menu(Menu.Main, "&Help", Menu.Popup_0009);
     Append_Item(Menu.Popup_0009, "&Quick help", IDM_Quick_Help);
+    State(Menu.Popup_0009, Command, IDM_Quick_Help, Disabled);
     Append_Item(Menu.Popup_0009, "LEA &Web page (contact, support)", IDM_Web);
     Append_Separator(Menu.Popup_0009);
     Append_Item(Menu.Popup_0009, "&About LEA", IDM_ABOUT);
@@ -150,6 +151,7 @@ package body LEA_Resource_GUI is
     Menu.Popup_0005:= Create_Popup;
     Append_Menu(Menu.Main, "&Help", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&Quick help", IDM_Quick_Help);
+    State(Menu.Popup_0005, Command, IDM_Quick_Help, Disabled);
     Append_Item(Menu.Popup_0005, "LEA &Web page (contact, support)", IDM_Web);
     Append_Separator(Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&About LEA", IDM_ABOUT);
