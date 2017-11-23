@@ -402,8 +402,6 @@ pragma Eliminate (GWindows.Common_Controls, Selected_Item_Count, Source_Location
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2244");
 pragma Eliminate (GWindows.Common_Controls, Is_Selected, Source_Location => "gwindows-common_controls.ads:747");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2264");
-pragma Eliminate (GWindows.Common_Controls, Clear, Source_Location => "gwindows-common_controls.ads:819");
-pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2282");
 pragma Eliminate (GWindows.Common_Controls, Item_At_Position, Source_Location => "gwindows-common_controls.ads:757");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2314");
 pragma Eliminate (GWindows.Common_Controls, Selected, Source_Location => "gwindows-common_controls.ads:751");
@@ -413,8 +411,6 @@ pragma Eliminate (GWindows.Common_Controls, SendMessageA, Source_Location => "gw
 pragma Eliminate (GWindows.Common_Controls, SendMessageW, Source_Location => "gwindows-common_controls.adb:2459");
 pragma Eliminate (GWindows.Common_Controls, Column_Width, Source_Location => "gwindows-common_controls.ads:814");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2492");
-pragma Eliminate (GWindows.Common_Controls, Delete_Item, Source_Location => "gwindows-common_controls.ads:796");
-pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2513");
 pragma Eliminate (GWindows.Common_Controls, On_Item_Changed_Handler, Source_Location => "gwindows-common_controls.ads:832");
 pragma Eliminate (GWindows.Common_Controls, Set_Image_List, Source_Location => "gwindows-common_controls.ads:849");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2601");

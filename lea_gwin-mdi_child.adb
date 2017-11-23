@@ -1,4 +1,3 @@
-with LEA_Common;                        use LEA_Common;
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;

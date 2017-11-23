@@ -3,6 +3,8 @@ with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
+with LEA_Common;                        use LEA_Common;
+
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Drawing;
@@ -74,6 +76,7 @@ package LEA_GWin.MDI_Child is
         Menu             : Menu_MDI_Child_Type;
         Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Bar_and_List     : MDI_Child_Panel_Type;
+        Document_kind    : Document_kind_type := editable_text;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
         Splitter         : MDI_Child_GSize_Bar_Type;
         Splitter_dashes  : GWindows.Static_Controls.Label_Type;
