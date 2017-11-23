@@ -1,4 +1,4 @@
-with GWindows.Message_Boxes;      use GWindows.Message_Boxes;
+with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with UnZip;                             use UnZip;
 

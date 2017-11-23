@@ -48,6 +48,8 @@ package LEA_Common is
 
   function Guess_syntax (file_name : UTF_16_String) return Syntax_type;
 
+  function File_type_image (syn: Syntax_type) return UTF_16_String;
+
   type Document_kind_type is (
     editable_text,
     help_main       --  There is only at most one of this.

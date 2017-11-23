@@ -77,6 +77,8 @@ package LEA_GWin.MDI_Main is
       Canvas   : in out GWindows.Drawing.Canvas_Type;
       Area     : in     GWindows.Types.Rectangle_Type) is null;
 
+  procedure Redraw_all (MDI_Main: in out MDI_Main_Type);
+
   procedure Open_Child_Window_And_Load (
     MDI_Main   : in out MDI_Main_Type;
     File_Name  :        GWindows.GString_Unbounded

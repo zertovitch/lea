@@ -63,4 +63,12 @@ package body LEA_Common is
     return Undefined;
   end Guess_syntax;
 
+  function File_type_image (syn: Syntax_type) return UTF_16_String is
+  begin
+    case syn is
+      when Undefined  => return "Text file";
+      when Ada_syntax => return "Ada file";
+    end case;
+  end File_type_image;
+
 end LEA_Common;

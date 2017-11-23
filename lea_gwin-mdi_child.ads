@@ -77,6 +77,7 @@ package LEA_GWin.MDI_Child is
         Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Bar_and_List     : MDI_Child_Panel_Type;
         Document_kind    : Document_kind_type := editable_text;
+        Syntax_kind      : Syntax_type        := Undefined;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
         Splitter         : MDI_Child_GSize_Bar_Type;
         Splitter_dashes  : GWindows.Static_Controls.Label_Type;
@@ -100,6 +101,8 @@ package LEA_GWin.MDI_Child is
       end record;
 
   overriding procedure On_Create (MDI_Child : in out MDI_Child_Type);
+
+  procedure Finish_subwindow_opening (MDI_Child : in out MDI_Child_Type);
 
   procedure On_Save (MDI_Child : in out MDI_Child_Type);
   --  This would be abstract in a 'generic' Office framework.

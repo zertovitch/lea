@@ -59,7 +59,12 @@ package body LEA_GWin.MDI_Child is
       MDI_Child.Status_Bar.Text("Folder selected", 0);
       return;
     else
-      MDI_Child.Status_Bar.Text("Text file", 0);
+      case MDI_Child.Document_kind is
+        when editable_text =>
+          MDI_Child.Status_Bar.Text (File_type_image (MDI_Child.Syntax_kind), 0);
+        when help_main =>
+          MDI_Child.Status_Bar.Text ("Help", 0);
+      end case;
     end if;
     MDI_Child.Status_Bar.Text(
       "Length:" & Integer'Wide_Image(MDI_Child.Editor.GetLength) &
@@ -307,6 +312,17 @@ package body LEA_GWin.MDI_Child is
     Ada.Numerics.Float_Random.Reset(MDI_Child.temp_name_gen);
   end On_Create;
 
+  procedure Finish_subwindow_opening (MDI_Child : in out MDI_Child_Type) is
+    MDI_Main : MDI_Main_Type renames MDI_Child.Parent.all;
+  begin
+    MDI_Main.User_maximize_restore:= True;
+    if MDI_Main.opt.MDI_childen_maximized then
+      MDI_Child.Zoom;
+      MDI_Main.Redraw_all;
+    end if;
+    -- Show things in the main status bar - effective only after Thaw!
+  end Finish_subwindow_opening;
+
   procedure Save (MDI_Child    : in out MDI_Child_Type;
                   File_Name : in     GWindows.GString)
   is
@@ -439,7 +455,8 @@ package body LEA_GWin.MDI_Child is
     MDI_Child.Text(GU2G(File_Title));
     MDI_Child.Short_Name:= File_Title;
     MDI_Child.Update_Common_Menus(GU2G(New_File_Name), MDI_Child.Editor.Get_current_line);
-    MDI_Child.Editor.Set_syntax (Guess_syntax (GU2G (MDI_Child.File_Name)));
+    MDI_Child.Syntax_kind := Guess_syntax (GU2G (MDI_Child.File_Name));
+    MDI_Child.Editor.Set_syntax (MDI_Child.Syntax_kind);
   end On_Save_As;
 
   procedure On_Save_All (MDI_Child : in out MDI_Child_Type) is
@@ -500,7 +517,7 @@ package body LEA_GWin.MDI_Child is
     use GWindows.Types;
   begin
     if MDI_Child.Parent.User_maximize_restore then
-      MDI_Child.Parent.opt.MDI_childen_maximized:= Zoom(MDI_Child);
+      MDI_Child.Parent.opt.MDI_childen_maximized:= Zoom (MDI_Child);
     end if;
     MDI_Child.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
     case MDI_Child.Parent.opt.view_mode is

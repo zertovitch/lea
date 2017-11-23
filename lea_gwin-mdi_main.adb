@@ -62,7 +62,7 @@ package body LEA_GWin.MDI_Main is
     end if;
   end Redraw_Child;
 
-  procedure Redraw_all(MDI_Main: in out MDI_Main_Type) is
+  procedure Redraw_all (MDI_Main: in out MDI_Main_Type) is
   begin
     MDI_Main.Redraw;
     -- Redraw(MDI_Main.Tool_bar);
@@ -93,19 +93,6 @@ package body LEA_GWin.MDI_Main is
       Close_extra_first_document'Unrestricted_Access
     );
   end Close_extra_first_child;
-
-  procedure Finish_subwindow_opening(
-    MDI_Main  : in out MDI_Main_Type;
-    MDI_Child : in out MDI_Child_Type )
-  is
-  begin
-    MDI_Main.User_maximize_restore:= True;
-    if MDI_Main.opt.MDI_childen_maximized then
-      MDI_Child.Zoom;
-      Redraw_all (MDI_Main);
-    end if;
-    -- Show things in the main status bar - effective only after Thaw!
-  end Finish_subwindow_opening;
 
   procedure Open_Child_Window_And_Load (
     MDI_Main     : in out MDI_Main_Type;
@@ -143,8 +130,9 @@ package body LEA_GWin.MDI_Main is
       end loop;
       Update_Common_Menus (MDI_Main, GU2G(New_Window.File_Name), line);
       New_Window.Editor.Load_text;
-      MDI_Main.Finish_subwindow_opening (New_Window.all);
-      New_Window.Editor.Set_syntax (Guess_syntax (GU2G (New_Window.File_Name)));
+      New_Window.Finish_subwindow_opening;
+      New_Window.Syntax_kind := Guess_syntax (GU2G (New_Window.File_Name));
+      New_Window.Editor.Set_syntax (New_Window.Syntax_kind);
       New_Window.Editor.Focus;
       if line > 0 then
         --  Set cursor position to memorized line number
@@ -389,8 +377,8 @@ package body LEA_GWin.MDI_Main is
 
     --  This is just to set the MRUs in the new window's menu:
     MDI_Main.Update_Common_Menus;
-
-    MDI_Main.Finish_subwindow_opening (New_Window.all);
+    --
+    New_Window.Finish_subwindow_opening;
     New_Window.Editor.Focus;
   end On_File_New;
 
@@ -486,6 +474,8 @@ package body LEA_GWin.MDI_Main is
         LEA_GWin.Options.On_General_Options(MDI_Main);
       when IDM_ABOUT =>
         Do_about (MDI_Main);
+      when IDM_Quick_Help =>
+        LEA_GWin.Help.Show_help (MDI_Main);
       when others =>
         for i_mru in MDI_Main.IDM_MRU'Range loop
           if Item = MDI_Main.IDM_MRU(i_mru) then
