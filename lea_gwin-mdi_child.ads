@@ -1,9 +1,9 @@
+with LEA_Common;                        use LEA_Common;
+
 with LEA_GWin.Editor;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
-
-with LEA_Common;                        use LEA_Common;
 
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Common_Controls.Ex_List_View;

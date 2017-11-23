@@ -1,4 +1,6 @@
 with LEA_Common;                       use LEA_Common;
+
+with LEA_GWin.Help;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
 with LEA_GWin.Modal_dialogs;           use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Options;
