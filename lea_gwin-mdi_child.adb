@@ -369,9 +369,10 @@ package body LEA_GWin.MDI_Child is
     --  The eventual startup extra new window is now saved.
     --  So, in any case, we won't close it now on next window open.
     MDI_Child.Extra_first_doc:= False;
-    Update_Common_Menus(MDI_Child, File_Name, MDI_Child.Editor.Get_current_line);
+    MDI_Child.Update_Common_Menus (File_Name, MDI_Child.Editor.Get_current_line);
     MDI_Child.Editor.SetSavePoint;
     MDI_Child.Editor.modified:= False;
+    MDI_Child.Editor.SetReadOnly (False);
   exception
     when backup_error_1 =>
       Message_Box (MDI_Child, "Save", "Cannot delete old backup" & NL & "-> " & backup_name, OK_Box, Exclamation_Icon);
@@ -386,8 +387,11 @@ package body LEA_GWin.MDI_Child is
   procedure On_Save (MDI_Child : in out MDI_Child_Type) is
     File_Name : constant GWindows.GString := GU2G (MDI_Child.File_Name);
   begin
-    if File_Name = "" then
+    if File_Name = "" or else MDI_Child.Editor.GetReadOnly then
       MDI_Child.Focus;
+      if MDI_Child.Editor.GetReadOnly then
+        Message_Box (MDI_Child, "Save", "This document is read-only" & NL & "You need to save it under another name");
+      end if;
       MDI_Child.On_Save_As;
     else
       Save (MDI_Child, File_Name);
@@ -431,7 +435,7 @@ package body LEA_GWin.MDI_Child is
       end if;
     end if;
 
-    Save(MDI_Child, GU2G(New_File_Name));
+    Save (MDI_Child, GU2G(New_File_Name));
     MDI_Child.File_Name := New_File_Name;
     MDI_Child.Text(GU2G(File_Title));
     MDI_Child.Short_Name:= File_Title;
