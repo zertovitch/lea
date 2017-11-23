@@ -39,6 +39,7 @@ package body LEA_GWin.Help is
       end if;
     end Check_help_doc;
     --
+    New_Window : MDI_Child_Access;
   begin
     GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Main).all,
                                       Check_help_doc'Unrestricted_Access);
@@ -48,7 +49,18 @@ package body LEA_GWin.Help is
     Zip.Load (zi, lea_exe);
     UnZip.Streams.Extract (mem_stream_unpacked, zi, "lea_help.txt");
     Get (mem_stream_unpacked, unpacked);
-    --  !! here : convert to editor content
-  end;
+    New_Window := new MDI_Child_Type;
+    New_Window.Short_Name:= G2GU("Help");
+    Create_MDI_Child (New_Window.all,
+      MDI_Main,
+      GU2G (New_Window.Short_Name),
+      Is_Dynamic => True
+    );
+    MDI_Active_Window (MDI_Main, New_Window.all);
+    New_Window.Editor.SetReadOnly (True);
+    New_Window.Editor.Load_text (contents => To_String (unpacked));
+    --  !!  MDI_Main.Finish_subwindow_opening (New_Window.all);
+    New_Window.Editor.Focus;
+  end Show_help;
 
 end LEA_GWin.Help;

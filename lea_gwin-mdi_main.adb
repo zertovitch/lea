@@ -95,14 +95,14 @@ package body LEA_GWin.MDI_Main is
   end Close_extra_first_child;
 
   procedure Finish_subwindow_opening(
-    m : in out MDI_Main_Type;
-    c : in out MDI_Child_Type )
+    MDI_Main  : in out MDI_Main_Type;
+    MDI_Child : in out MDI_Child_Type )
   is
   begin
-    m.User_maximize_restore:= True;
-    if m.opt.MDI_childen_maximized then
-      Zoom(c);
-      Redraw_all(m);
+    MDI_Main.User_maximize_restore:= True;
+    if MDI_Main.opt.MDI_childen_maximized then
+      MDI_Child.Zoom;
+      Redraw_all (MDI_Main);
     end if;
     -- Show things in the main status bar - effective only after Thaw!
   end Finish_subwindow_opening;
@@ -130,7 +130,7 @@ package body LEA_GWin.MDI_Main is
       New_Window.File_Name:= File_Name;
       Create_MDI_Child (New_Window.all,
         MDI_Main,
-        GU2G(File_Title),
+        GU2G (File_Title),
         Is_Dynamic => True
       );
       New_Window.Short_Name:= File_Title;
@@ -141,9 +141,9 @@ package body LEA_GWin.MDI_Main is
           exit;
         end if;
       end loop;
-      Update_Common_Menus(MDI_Main, GU2G(New_Window.File_Name), line);
+      Update_Common_Menus (MDI_Main, GU2G(New_Window.File_Name), line);
       New_Window.Editor.Load_text;
-      Finish_subwindow_opening(MDI_Main, New_Window.all);
+      MDI_Main.Finish_subwindow_opening (New_Window.all);
       New_Window.Editor.Set_syntax (Guess_syntax (GU2G (New_Window.File_Name)));
       New_Window.Editor.Focus;
       if line > 0 then
@@ -388,9 +388,9 @@ package body LEA_GWin.MDI_Main is
     New_MDI_window_counter := New_MDI_window_counter + 1;
 
     --  This is just to set the MRUs in the new window's menu:
-    Update_Common_Menus(MDI_Main);
+    MDI_Main.Update_Common_Menus;
 
-    Finish_subwindow_opening(MDI_Main, New_Window.all);
+    MDI_Main.Finish_subwindow_opening (New_Window.all);
     New_Window.Editor.Focus;
   end On_File_New;
 

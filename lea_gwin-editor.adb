@@ -696,35 +696,40 @@ package body LEA_GWin.Editor is
     end if;
   end Duplicate;
 
+  procedure Load_text (Editor : in out LEA_Scintilla_Type; contents: String) is
+    p: Character:= ' ';
+  begin
+    Editor.SetEOLMode (SC_EOL_CRLF);
+    for c of contents loop
+      if c = ASCII.LF then
+        exit when p = ASCII.CR;           --  CR LF
+        Editor.SetEOLMode (SC_EOL_LF);    --  non-CR LF
+        exit;
+      else
+        if p = ASCII.CR then              --  CR non-LF
+          Editor.SetEOLMode (SC_EOL_CR);
+          exit;
+        end if;
+      end if;
+      p:= c;
+    end loop;
+    Editor.InsertText(0, S2G(contents));  --  ASCII to Unicode (UTF-16) conversion
+    Editor.EmptyUndoBuffer;
+    Editor.SetSavePoint;
+    Editor.modified:= False;
+  end Load_text;
+
   procedure Load_text (Editor : in out LEA_Scintilla_Type) is
     f: File_Type;
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
-    Open(f, In_File, To_UTF_8(GU2G(parent.File_Name)), Form_For_IO_Open_and_Create);
+    Open (f, In_File, To_UTF_8(GU2G(parent.File_Name)), Form_For_IO_Open_and_Create);
     declare
-      l: constant Ada.Streams.Stream_IO.Count:= Size(f);
-      s: String(1..Integer(l));
-      p: Character:= ' ';
+      l: constant Ada.Streams.Stream_IO.Count:= Size (f);
+      s: String (1 .. Integer (l));
     begin
       String'Read(Stream(f), s);
-      Editor.SetEOLMode (SC_EOL_CRLF);
-      for c of s loop
-        if c = ASCII.LF then
-          exit when p = ASCII.CR;           --  CR LF
-          Editor.SetEOLMode (SC_EOL_LF);    --  non-CR LF
-          exit;
-        else
-          if p = ASCII.CR then              --  CR non-LF
-            Editor.SetEOLMode (SC_EOL_CR);
-            exit;
-          end if;
-        end if;
-        p:= c;
-      end loop;
-      Editor.InsertText(0, S2G(s));  --  ASCII to Unicode (UTF-16) conversion
-      Editor.EmptyUndoBuffer;
-      Editor.SetSavePoint;
-      Editor.modified:= False;
+      Editor.Load_text (contents => s);
     end;
     Close(f);
   end Load_text;
