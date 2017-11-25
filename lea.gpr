@@ -1,21 +1,21 @@
--- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
--- for the LEA ( http://l-e-a.sf.net/ )
--- Build me with "gnatmake -P lea", or open me with GPS
---
--- *** External libraries ***
---   You need to make the following projects' source files visible to this project
---   through the ad-hoc GNAT_SOURCE_PATH environment variable:
---
--- * GWindows and contributions:
---   [gnavi]\gwindows\framework
---   [gnavi]\gwindows\contrib
---   [gnavi]\gnatcom\framework
---   Project URL: http://sf.net/projects/gnavi/
---   NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
---
--- * Zip-Ada:
---   [zip-ada]\zip_lib
---   Project URL: http://unzip-ada.sf.net
+--  This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
+--  for the LEA ( http://l-e-a.sf.net/ )
+--  Build me with "gprbuild -p -P lea", or open me with GPS
+--  
+--  *** External libraries ***
+--    You need to make the following projects' source files visible to this project
+--    through the ad-hoc GNAT_SOURCE_PATH environment variable:
+--  
+--  * GWindows and contributions:
+--    [gnavi]\gwindows\framework
+--    [gnavi]\gwindows\contrib
+--    [gnavi]\gnatcom\framework
+--    Project URL: http://sf.net/projects/gnavi/
+--    NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
+--  
+--  * Zip-Ada:
+--    [zip-ada]\zip_lib
+--    Project URL: http://unzip-ada.sf.net
 
 project LEA is
 
@@ -47,12 +47,12 @@ project LEA is
               "-gnatybfhiu",  --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
               "-gnatyx",      --  Style: check x:no extra parens
               "-gnato", "-fno-inline", "-fstack-check", "-g", "-gnatwa", "-gnatVa",
-							"-gnatecdebug.pra",
-              "-gnatec../../lea_elim.pra");
+							"-gnatec=" & project'Project_Dir & "debug.pra",
+              "-gnatec=" & project'Project_Dir & "lea_elim.pra");
 
          when "Fast" | "Fast_MinGW" =>
             for Default_Switches ("ada") use ("-O2", "-gnatn", "-gnatp", "-gnatwa", "-fno-strict-aliasing", "-funroll-loops", "-fpeel-loops", "-ftracer", "-funswitch-loops", "-fweb", "-frename-registers",
-              "-gnatec../../lea_elim.pra");
+              "-gnatec=" & project'Project_Dir & "lea_elim.pra");
       end case;
    end Compiler;
 
@@ -66,7 +66,7 @@ project LEA is
    end Linker;
 
    package Builder is
-      for Default_Switches ("ada") use ("-j2");
+      for Default_Switches ("ada") use ("-j0");  --   "If -j0 is used, then the maximum number of simultaneous compilation jobs is the number of core processors on the platform."
    end Builder;
 
    package Ide is

@@ -7,11 +7,6 @@ rem This is specific your installation of TDM-GCC / MinGW.
 
 call ming_set
 
-rem make Ming object directories if not yet existing
-md obj\fast_ming
-md obj\debug_ming
-copy obj\debug\debug.pra       obj\debug_ming
-
 cd gwindows
 
 call build "-march=i686"
