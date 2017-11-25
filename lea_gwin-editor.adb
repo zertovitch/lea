@@ -294,7 +294,7 @@ package body LEA_GWin.Editor is
            selection_background   => Light_Gray,
            matched_parenthesis    => Dark_Green,
            unmatched_parenthesis  => Dark_Red,
-           parenthesis_background => 16#D0D0D0#,
+           parenthesis_background => 16#F5E7CB#,
            matched_word_highlight => Dark_Green
           ),
         Dark_side   =>

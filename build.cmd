@@ -8,11 +8,10 @@ if (%1)==() set target=
 if not exist _lea_data.zip zipada -eps _lea_data.zip SciLexer.dll lea_help.txt
 
 del lea.exe
-gprbuild -P lea -XBuild_Mode=Debug%target%
+gprbuild -p -P lea -XBuild_Mode=Debug%target%
 copy /B lea.exe + _lea_data.zip lea_debug%target%.exe
 
 del lea.exe
-mkdir obj\fast
-gprbuild -P lea -XBuild_Mode=Fast%target%
+gprbuild -p -P lea -XBuild_Mode=Fast%target%
 copy /B lea.exe + _lea_data.zip "lea (ver)%target%.exe"
 copy /B "lea (ver)%target%.exe" lea.exe
