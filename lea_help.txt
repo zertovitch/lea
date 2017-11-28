@@ -26,8 +26,8 @@ Display
 Editing
 =======
 
-  Multi-line editing & rectangular selection
-  ==========================================
+  Multi-line editing & rectangular selection using the Alt Key
+  ============================================================
 
   LEA provides a very convenient feature that is not linked to a
   specific menu command or button: the multi-line editing.
@@ -40,7 +40,9 @@ Editing
     - any typing occurs on all concerned lines.
     
   This is extremely useful for adjusting indentation within lines,
-  or typing contents on a range of lines. It could be for instance
-  use for transforming an enumeration in a case statement, by typing
-  "when " and "=>" on all different cases; or add ":= " in a record
-  for adding initializations.
+  removing contents within a rectangle, or typing contents on a range
+  of lines. It can for instance be used for transforming an enumeration
+  into a case statement, by typing "when " and "=>" on all different cases;
+  or add ":= " in a record for adding initializations, or many situations
+  where a "Find & Replace" operation, with some guess-work, trial & error and
+  manual adjustments would be used instead.
