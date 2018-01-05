@@ -3,12 +3,15 @@ with LEA_GWin.Search_box;
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows.Common_Controls;
+with GWindows.GControls.GSize_Bars;
+with GWindows.Panels;
 with GWindows.Image_Lists;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 with GWindows.Drawing;
 with GWindows.Taskbar;                  use GWindows.Taskbar;
 with GWindows.Types;
+with GWindows.List_Boxes;
 
 package LEA_GWin.MDI_Main is
 
@@ -20,6 +23,21 @@ package LEA_GWin.MDI_Main is
   -- Handle click on toolbar
 
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
+
+  type Project_Panel_Type is new GWindows.Panels.Panel_Type with record
+    Project_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
+    Splitter     : GWindows.GControls.GSize_Bars.GSize_Bar_Type;
+  end record;
+
+  type Message_Panel_Type is new GWindows.Panels.Panel_Type with record
+    Message_List : GWindows.List_Boxes.List_Box_Type;
+    Splitter     : GWindows.GControls.GSize_Bars.GSize_Bar_Type;
+  end record;
+
+  type Subprogram_Panel_Type is new GWindows.Panels.Panel_Type with record
+    Subprogram_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
+    Splitter        : GWindows.GControls.GSize_Bars.GSize_Bar_Type;
+  end record;
 
   type MDI_Main_Type is
     new GWindows.Windows.MDI.MDI_Main_Window_Type with
@@ -33,6 +51,11 @@ package LEA_GWin.MDI_Main is
         Tool_Bar               : MDI_Toolbar_Type;
         Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
+        --
+        Project_Panel          : Project_Panel_Type;
+        Message_Panel          : Message_Panel_Type;
+        Subprogram_Panel       : Subprogram_Panel_Type;
+        --
         Menu                   : Menu_MDI_Main_Type;
         -- record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean:= True;

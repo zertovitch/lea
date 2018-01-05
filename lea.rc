@@ -340,7 +340,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
             VALUE "FileVersion", "0.61"
-            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2017"
+            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2018"
             VALUE "ProductName", "LEA"
         }
     }

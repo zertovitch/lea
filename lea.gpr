@@ -4,7 +4,7 @@
 --  
 --  *** External libraries ***
 --    You need to make the following projects' source files visible to this project
---    through the ad-hoc GNAT_SOURCE_PATH environment variable:
+--    through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
 --  
 --  * GWindows and contributions:
 --    [gnavi]\gwindows\framework
