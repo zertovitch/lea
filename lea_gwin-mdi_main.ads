@@ -2,16 +2,18 @@ with LEA_Common.User_options;
 with LEA_GWin.Search_box;
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
+with GWindows.Base;
 with GWindows.Common_Controls;
-with GWindows.GControls.GSize_Bars;
-with GWindows.Panels;
-with GWindows.Image_Lists;
-with GWindows.Windows.MDI;
-with GWindows.Windows;                  use GWindows.Windows;
 with GWindows.Drawing;
+with GWindows.GControls.GSize_Bars;
+with GWindows.Image_Lists;
+with GWindows.List_Boxes;
+with GWindows.Panels;
+with GWindows.Static_Controls;
 with GWindows.Taskbar;                  use GWindows.Taskbar;
 with GWindows.Types;
-with GWindows.List_Boxes;
+with GWindows.Windows.MDI;
+with GWindows.Windows;                  use GWindows.Windows;
 
 package LEA_GWin.MDI_Main is
 
@@ -24,19 +26,35 @@ package LEA_GWin.MDI_Main is
 
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
 
+  type Splitter_with_dashes is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with record
+    Dashes : GWindows.Static_Controls.Label_Type;
+  end record;
+
+  overriding procedure Create
+     (Window     : in out Splitter_with_dashes;
+      Parent     : in out GWindows.Base.Base_Window_Type'Class;
+      Location   : in     GWindows.Base.Dock_Type;
+      Text       : in     GString                              := "";
+      Left       : in     Integer                              := 0;
+      Top        : in     Integer                              := 0;
+      Width      : in     Integer                              := 3;
+      Height     : in     Integer                              := 3;
+      Show       : in     Boolean                              := True;
+      Is_Dynamic : in     Boolean                              := False);
+
   type Project_Panel_Type is new GWindows.Panels.Panel_Type with record
-    Project_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter     : GWindows.GControls.GSize_Bars.GSize_Bar_Type;
+    Project_Tree    : GWindows.Common_Controls.Tree_View_Control_Type;
+    Splitter        : Splitter_with_dashes;
   end record;
 
   type Message_Panel_Type is new GWindows.Panels.Panel_Type with record
-    Message_List : GWindows.List_Boxes.List_Box_Type;
-    Splitter     : GWindows.GControls.GSize_Bars.GSize_Bar_Type;
+    Message_List    : GWindows.List_Boxes.List_Box_Type;
+    Splitter        : Splitter_with_dashes;
   end record;
 
   type Subprogram_Panel_Type is new GWindows.Panels.Panel_Type with record
     Subprogram_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter        : GWindows.GControls.GSize_Bars.GSize_Bar_Type;
+    Splitter        : Splitter_with_dashes;
   end record;
 
   type MDI_Main_Type is

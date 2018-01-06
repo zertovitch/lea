@@ -18,6 +18,7 @@ with GWin_Util;
 
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
+with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
 
@@ -159,6 +160,31 @@ package body LEA_GWin.MDI_Main is
     On_Menu_Select (Parent.all, Item);
   end On_Button_Select;
 
+  overriding procedure Create
+     (Window     : in out Splitter_with_dashes;
+      Parent     : in out GWindows.Base.Base_Window_Type'Class;
+      Location   : in     GWindows.Base.Dock_Type;
+      Text       : in     GString                              := "";
+      Left       : in     Integer                              := 0;
+      Top        : in     Integer                              := 0;
+      Width      : in     Integer                              := 3;
+      Height     : in     Integer                              := 3;
+      Show       : in     Boolean                              := True;
+      Is_Dynamic : in     Boolean                              := False) is
+  begin
+    --  Call parent method:
+    GWindows.GControls.GSize_Bars.GSize_Bar_Type (Window).Create (
+      Parent, Location, Text, Left, Top, Width, Height, Show, Is_Dynamic);
+    --  Add our goodies to make the splitter visible:
+    Window.Dashes.Create (
+      Window,
+      Alignment => GWindows.Static_Controls.Center,
+      Text => 1000 * ". "  --  A cheap grip design for the split bar...
+    );
+    Window.Dashes.Dock (Fill);
+    Window.Dashes.Enabled (False);  --  Just give a grey look...
+  end Create;
+
   function Shorten_file_name( s: GString ) return GString is
     max: constant:= 33;
     beg: constant:= 6;
@@ -239,7 +265,7 @@ package body LEA_GWin.MDI_Main is
     Small_Icon (MDI_Main, "LEA_Icon_Small");
     Large_Icon (MDI_Main, "AAA_Main_Icon");
 
-    -- ** Menus and accelerators:
+    --  ** Menus and accelerators:
 
     LEA_Resource_GUI.Create_Full_Menu(MDI_Main.Menu);
     MDI_Menu (MDI_Main, MDI_Main.Menu.Main, Window_Menu => 2);
@@ -250,14 +276,23 @@ package body LEA_GWin.MDI_Main is
        IDM_MRU_9
       );
 
-    -- ** Main tool bar (add / remove / ...) at top left of the main window:
-
+    --  ** Main tool bar (New / Open / Save / ...) at top left of the main window:
     LEA_GWin.Toolbars.Init_Main_toolbar(MDI_Main.Tool_Bar, MDI_Main.Toolbar_Images, MDI_Main);
 
-    -- ** Other resources
+    --  ** Sizeable panels. For a sketch, see the "Layout" sheet in lea_work.xls.
+    --
+    --    1) Left panel, with project or file tree:
+    --
+    MDI_Main.Project_Panel.Create (MDI_Main, 1,1,20,20);
+    MDI_Main.Project_Panel.Dock(At_Left);
+    MDI_Main.Project_Panel.Splitter.Create (MDI_Main.Project_Panel, At_Right);
+    MDI_Main.Project_Panel.Project_Tree.Create(MDI_Main.Project_Panel, 1,1,20,20, Lines_At_Root => False);
+    MDI_Main.Project_Panel.Project_Tree.Dock(Fill);
+
+    --  ** Other resources
     MDI_Main.Folders_Images.Create (Num_resource(Folders_BMP), 16);
 
-    -- ** Resize according to options:
+    --  ** Resize according to options:
 
     if Valid_Left_Top(MDI_Main.opt.win_left, MDI_Main.opt.win_top) then
       Left(MDI_Main, MDI_Main.opt.win_left);
