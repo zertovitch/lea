@@ -1,7 +1,6 @@
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
-with LEA_GWin.Search_box;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
@@ -12,7 +11,7 @@ with GWindows.Scintilla;                use GWindows.Scintilla;
 
 with Ada.Directories;
 --  with Ada.Environment_Variables;         use Ada.Environment_Variables;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
+--  with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.MDI_Child is
@@ -45,7 +44,7 @@ package body LEA_GWin.MDI_Child is
   function Folder_Focus(MDI_Child : in MDI_Child_Type) return Boolean is
   begin
     return
-      MDI_Child.Parent.opt.view_mode = Studio; --  !!  and then
+      MDI_Child.MDI_Parent.opt.view_mode = Studio; --  !!  and then
       --  !! MDI_Child.Focus = MDI_Child.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
@@ -102,7 +101,7 @@ package body LEA_GWin.MDI_Child is
   end Update_status_bar;
 
   procedure Update_tool_bar(MDI_Child : in out MDI_Child_Type) is
-    bar: MDI_Toolbar_Type renames MDI_Child.Parent.Tool_Bar;
+    bar: MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
     is_any_selection: constant Boolean :=
       MDI_Child.Editor.GetSelectionStart < MDI_Child.Editor.GetSelectionEnd;
   begin
@@ -156,7 +155,7 @@ package body LEA_GWin.MDI_Child is
     end Check_any_modified;
 
   begin
-    GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Child.Parent.all).all,
+    GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Child.MDI_Parent.all).all,
                                       Check_any_modified'Unrestricted_Access);
     MDI_Child.save_all_hint := any_modified;
     if MDI_Child.Editor.modified then
@@ -180,12 +179,6 @@ package body LEA_GWin.MDI_Child is
   --    end case;
   --  end Memorize_splitter;
 
-  overriding procedure On_Bar_Moved (MDI_Child : in out MDI_Child_GSize_Bar_Type) is
-  begin
-    --  !!  Memorize_splitter(MDI_Child_Type(MDI_Child.Parent.Parent.Parent.all));
-    GWindows.GControls.GSize_Bars.GSize_Bar_Type(MDI_Child).On_Bar_Moved;
-  end On_Bar_Moved;
-
   procedure Change_View (
         MDI_Child : in out MDI_Child_Type;
         new_view  :        View_Mode_Type;
@@ -195,10 +188,10 @@ package body LEA_GWin.MDI_Child is
     --  mem_sel_path: constant GString_Unbounded:= MDI_Child.selected_path;
     --  sel_node: Tree_Item_Node;
   begin
-    if MDI_Child.Parent.opt.view_mode = new_view and not force then
+    if MDI_Child.MDI_Parent.opt.view_mode = new_view and not force then
       return;
     end if;
-    MDI_Child.Parent.opt.view_mode:= new_view;
+    MDI_Child.MDI_Parent.opt.view_mode:= new_view;
     case new_view is
       when Notepad =>
         if not force then
@@ -237,7 +230,7 @@ package body LEA_GWin.MDI_Child is
     MDI_Child.Small_Icon("LEA_Doc_Icon_Name");
 
     --  Filial feelings:
-    MDI_Child.Parent:= MDI_Main_Access(Controlling_Parent(MDI_Child));
+    MDI_Child.MDI_Parent:= MDI_Main_Access(Controlling_Parent(MDI_Child));
     --  No per-child-window option in this app
     --
     --  --  We copy options to child level:
@@ -249,10 +242,11 @@ package body LEA_GWin.MDI_Child is
     --    Right panel, with subprogram tree:
     --
     MDI_Child.Subprogram_Panel.Create (MDI_Child, 1,1,20,20);
-    MDI_Child.Subprogram_Panel.Dock(At_Right);
+    MDI_Child.Subprogram_Panel.Dock (At_Right);
     MDI_Child.Subprogram_Panel.Splitter.Create (MDI_Child.Subprogram_Panel, At_Left);
-    MDI_Child.Subprogram_Panel.Subprogram_Tree.Create(MDI_Child.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
-    MDI_Child.Subprogram_Panel.Subprogram_Tree.Dock(Fill);
+    MDI_Child.Subprogram_Panel.Splitter.MDI_Main := MDI_Child.MDI_Parent;
+    MDI_Child.Subprogram_Panel.Subprogram_Tree.Create (MDI_Child.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
+    MDI_Child.Subprogram_Panel.Subprogram_Tree.Dock (Fill);
 
     MDI_Child.Editor.mdi_parent:= MDI_Child'Unrestricted_Access;
     MDI_Child.Editor.Create(MDI_Child, 50,1,20,20);
@@ -272,7 +266,7 @@ package body LEA_GWin.MDI_Child is
     MDI_Child.Status_Bar.Dock(At_Bottom);
 
     MDI_Child.Dock_Children;
-    if MDI_Child.Parent.opt.view_mode = Studio then
+    if MDI_Child.MDI_Parent.opt.view_mode = Studio then
       Change_View(MDI_Child, Studio, force => True);
     end if;
 
@@ -284,7 +278,7 @@ package body LEA_GWin.MDI_Child is
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
       memo_unmaximized_children: constant Boolean:=
-        not MDI_Child.Parent.opt.MDI_childen_maximized;
+        not MDI_Child.MDI_Parent.opt.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
         MDI_Child.Parent.Freeze;
@@ -294,7 +288,7 @@ package body LEA_GWin.MDI_Child is
       if memo_unmaximized_children then
         MDI_Child.Parent.Thaw; -- Before Zoom, otherwise uncomplete draw.
         MDI_Child.Zoom(False);
-        MDI_Child.Parent.Tool_Bar.Redraw;
+        MDI_Child.MDI_Parent.Tool_Bar.Redraw;
       end if;
     end;
     MDI_Child.Update_display(first_display);
@@ -303,7 +297,7 @@ package body LEA_GWin.MDI_Child is
   end On_Create;
 
   procedure Finish_subwindow_opening (MDI_Child : in out MDI_Child_Type) is
-    MDI_Main : MDI_Main_Type renames MDI_Child.Parent.all;
+    MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
   begin
     MDI_Main.User_maximize_restore:= True;
     if MDI_Main.opt.MDI_childen_maximized then
@@ -321,7 +315,7 @@ package body LEA_GWin.MDI_Child is
     temp_ext: constant GString:= ".$$$";
     backup_name: constant GString:= File_Name & ".bak";
 
-    with_backup: constant Boolean:= MDI_Child.Parent.opt.backup = bak;
+    with_backup: constant Boolean:= MDI_Child.MDI_Parent.opt.backup = bak;
 
     --  save_error,
     backup_error_1, backup_error_2, backup_error_3: exception;
@@ -473,13 +467,13 @@ package body LEA_GWin.MDI_Child is
   procedure On_File_Drop (MDI_Child  : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names)
   is
-    parent    : MDI_Main_Access;
+    parent : MDI_Main_Access;
   begin
     MDI_Child.Focus;
     --  We save the parent access since this MDI_Child may be already closed
     --  when i > File_Names'First if MDI_Child is was temporary MS-Office-like
     --  blank window - See procedure Close_extra_first_child.
-    parent:= MDI_Child.Parent;
+    parent:= MDI_Child.MDI_Parent;
     for i in File_Names'Range loop
       Open_Child_Window_And_Load(parent.all, File_Names(i));
     end loop;
@@ -492,7 +486,7 @@ package body LEA_GWin.MDI_Child is
   )
   is
   begin
-    Update_Common_Menus( MDI_Child.Parent.all, top_entry_name, top_entry_line );
+    Update_Common_Menus( MDI_Child.MDI_Parent.all, top_entry_name, top_entry_line );
   end Update_Common_Menus;
 
   procedure On_Size (MDI_Child : in out MDI_Child_Type;
@@ -503,14 +497,14 @@ package body LEA_GWin.MDI_Child is
     w: constant Natural:= MDI_Child.Client_Area_Width;
     h: constant Natural:= Integer'Max(2, MDI_Child.Client_Area_Height - MDI_Child.Status_Bar.Height);
     splitter_w: constant:= 4; -- between tree and list
-    tree_w: constant Integer:= Integer(MDI_Child.Parent.opt.tree_portion * Float(w)) - splitter_w / 2;
+    tree_w: constant Integer:= Integer(MDI_Child.MDI_Parent.opt.tree_portion * Float(w)) - splitter_w / 2;
     use GWindows.Types;
   begin
-    if MDI_Child.Parent.User_maximize_restore then
-      MDI_Child.Parent.opt.MDI_childen_maximized:= Zoom (MDI_Child);
+    if MDI_Child.MDI_Parent.User_maximize_restore then
+      MDI_Child.MDI_Parent.opt.MDI_childen_maximized:= Zoom (MDI_Child);
     end if;
     --  MDI_Child.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
-    case MDI_Child.Parent.opt.view_mode is
+    case MDI_Child.MDI_Parent.opt.view_mode is
       when Notepad =>
         null;  --  !! Project_Panel !!
         --  MDI_Child.Folder_Tree.Location(Rectangle_Type'(0, 0, 1, h));
@@ -566,7 +560,7 @@ package body LEA_GWin.MDI_Child is
       when IDM_Previous_bookmark =>
         MDI_Child.Editor.Bookmark_previous;
       when IDM_Show_special_symbols =>
-        Toggle_show_special(MDI_Child.Parent.opt);
+        Toggle_show_special(MDI_Child.MDI_Parent.opt);
         MDI_Child.Editor.Apply_options;
       when IDM_Duplicate =>
         MDI_Child.Editor.Duplicate;
@@ -604,7 +598,7 @@ package body LEA_GWin.MDI_Child is
           when Yes    => On_Save(MDI_Child);
                          exit when Is_file_saved(MDI_Child);
           when No     => exit;
-          when Cancel => MDI_Child.Parent.Success_in_enumerated_close:= False;
+          when Cancel => MDI_Child.MDI_Parent.Success_in_enumerated_close:= False;
                          Can_Close:= False;
                          exit;
           when others => null;
@@ -624,19 +618,19 @@ package body LEA_GWin.MDI_Child is
       --
       --  For the case there is no more child window, disable toolbar items.
       --  This action is reversed as soon as another child window is focused.
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Save_File, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Save_All, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Undo, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Redo, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Cut, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Copy, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Paste, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Comment, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Uncomment, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Indent, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Unindent, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Find, False);
-      MDI_Child.Parent.Tool_Bar.Enabled(IDM_Show_special_symbols, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Save_File, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Save_All, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Undo, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Redo, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Cut, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Copy, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Paste, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Comment, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Uncomment, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Indent, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Unindent, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Find, False);
+      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Show_special_symbols, False);
       MDI_Child.is_closing:= True;
     end if;
   end On_Close;
@@ -648,10 +642,10 @@ package body LEA_GWin.MDI_Child is
     sel_z:= MDI_Child.Editor.GetSelectionEnd;
     if sel_z > sel_a then
       --  Goodie: put the selected text into the "find" box.
-      MDI_Child.Parent.Search_box.Find_box.Text (MDI_Child.Editor.GetTextRange (sel_a, sel_z));
+      MDI_Child.MDI_Parent.Search_box.Find_box.Text (MDI_Child.Editor.GetTextRange (sel_a, sel_z));
     end if;
-    MDI_Child.Parent.Search_box.Show;
-    MDI_Child.Parent.Search_box.Find_box.Focus;
+    MDI_Child.MDI_Parent.Search_box.Show;
+    MDI_Child.MDI_Parent.Search_box.Find_box.Focus;
   end Show_Search_Box;
 
 end LEA_GWin.MDI_Child;

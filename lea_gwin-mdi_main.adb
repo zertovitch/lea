@@ -157,6 +157,13 @@ package body LEA_GWin.MDI_Main is
     On_Menu_Select (Parent.all, Item);
   end On_Button_Select;
 
+  overriding procedure On_Bar_Moved (Splitter : in out LEA_splitter) is
+  begin
+    Splitter.MDI_Main.Memorize_Splitters;
+    --  Call parent method:
+    GWin_Util.Splitter_with_dashes (Splitter).On_Bar_Moved;
+  end On_Bar_Moved;
+
   function Shorten_file_name( s: GString ) return GString is
     max: constant:= 33;
     beg: constant:= 6;
@@ -256,18 +263,20 @@ package body LEA_GWin.MDI_Main is
     --    1) Left panel, with project or file tree:
     --
     MDI_Main.Project_Panel.Create (MDI_Main, 1,1,20,20);
-    MDI_Main.Project_Panel.Dock(At_Left);
+    MDI_Main.Project_Panel.Dock (At_Left);
     MDI_Main.Project_Panel.Splitter.Create (MDI_Main.Project_Panel, At_Right);
-    MDI_Main.Project_Panel.Project_Tree.Create(MDI_Main.Project_Panel, 1,1,20,20, Lines_At_Root => False);
-    MDI_Main.Project_Panel.Project_Tree.Dock(Fill);
+    MDI_Main.Project_Panel.Splitter.MDI_Main := MDI_Main'Unrestricted_Access;
+    MDI_Main.Project_Panel.Project_Tree.Create (MDI_Main.Project_Panel, 1,1,20,20, Lines_At_Root => False);
+    MDI_Main.Project_Panel.Project_Tree.Dock (Fill);
     --
     --    2) Bottom panel, with messages:
     --
     MDI_Main.Message_Panel.Create (MDI_Main, 1,1,20,80);
-    MDI_Main.Message_Panel.Dock(At_Bottom);
-    MDI_Main.Message_Panel.Splitter.Create (MDI_Main.Project_Panel, At_Top);
-    MDI_Main.Message_Panel.Message_List.Create(MDI_Main.Message_Panel, 1,1,20,20);
-    MDI_Main.Message_Panel.Message_List.Dock(Fill);
+    MDI_Main.Message_Panel.Dock (At_Bottom);
+    MDI_Main.Message_Panel.Splitter.Create (MDI_Main.Message_Panel, At_Top, Height => 5);
+    MDI_Main.Message_Panel.Splitter.MDI_Main := MDI_Main'Unrestricted_Access;
+    MDI_Main.Message_Panel.Message_List.Create (MDI_Main.Message_Panel, 1,1,20,20);
+    MDI_Main.Message_Panel.Message_List.Dock (Fill);
 
     --  ** Other resources
     MDI_Main.Folders_Images.Create (Num_resource(Folders_BMP), 16);
@@ -603,7 +612,7 @@ package body LEA_GWin.MDI_Main is
       declare
         cw: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
       begin
-        Update_MRU_Menu(cw.Parent.all, cw.Menu.Popup_0001);
+        Update_MRU_Menu(cw.MDI_Parent.all, cw.Menu.Popup_0001);
         -- Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
       end;
     end if;
@@ -652,5 +661,10 @@ package body LEA_GWin.MDI_Main is
       Search_on_focused_editor'Unrestricted_Access
     );
   end Perform_Search;
+
+  procedure Memorize_Splitters (MDI_Main : in out MDI_Main_Type) is
+  begin
+    null; -- !!
+  end Memorize_Splitters;
 
 end LEA_GWin.MDI_Main;

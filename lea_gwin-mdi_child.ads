@@ -8,14 +8,11 @@ with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Drawing;
-with GWindows.GControls.GSize_Bars;
 with GWindows.Packing_Boxes;
 with GWindows.Panels;
 with GWindows.Types;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
-
-with GWin_Util;
 
 with Ada.Numerics.Float_Random;
 
@@ -62,12 +59,9 @@ package LEA_GWin.MDI_Child is
       Canvas    : in out GWindows.Drawing.Canvas_Type;
       Area      : in     GWindows.Types.Rectangle_Type) is null;
 
-  type MDI_Child_GSize_Bar_Type is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with null record;
-  overriding procedure On_Bar_Moved (MDI_Child : in out MDI_Child_GSize_Bar_Type);
-
   type Subprogram_Panel_Type is new GWindows.Panels.Panel_Type with record
     Subprogram_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter        : GWin_Util.Splitter_with_dashes;
+    Splitter        : LEA_splitter;
   end record;
 
   type MDI_Child_Type is
@@ -76,7 +70,7 @@ package LEA_GWin.MDI_Child is
         File_Name        : GString_Unbounded;
         --  Window title = Short_Name & {""|" *"}
         Short_Name       : GString_Unbounded;
-        Parent           : MDI_Main_Access; -- -> access to the containing window
+        MDI_Parent       : MDI_Main_Access; -- -> access to the containing window
         --  new file closed if kept virgin when opening another one (like blank Excel sheet).
         Extra_first_doc  : Boolean:= False;
         Menu             : Menu_MDI_Child_Type;

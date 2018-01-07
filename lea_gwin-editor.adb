@@ -318,7 +318,7 @@ package body LEA_GWin.Editor is
       );
     --
     parent   : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
-    mdi_root : MDI_Main_Type renames parent.Parent.all;
+    mdi_root : MDI_Main_Type renames parent.MDI_Parent.all;
     theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
   begin
     Editor.SetTabWidth (mdi_root.opt.indentation);
@@ -510,7 +510,7 @@ package body LEA_GWin.Editor is
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action)
   is
     MDI_Child : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
-    MDI_Main  : MDI_Main_Type renames MDI_Child.Parent.all;
+    MDI_Main  : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
     find_str    : constant GString:= MDI_Main.Search_box.Find_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
     pos, sel_a, sel_z: Position;

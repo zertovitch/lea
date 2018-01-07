@@ -25,14 +25,24 @@ package LEA_GWin.MDI_Main is
 
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
 
+  type MDI_Main_Type;
+
+  type MDI_Main_Access is access all MDI_Main_Type;
+
+  type LEA_splitter is new GWin_Util.Splitter_with_dashes with record
+    MDI_Main: MDI_Main_Access;
+  end record;
+
+  overriding procedure On_Bar_Moved (Splitter : in out LEA_splitter);
+
   type Project_Panel_Type is new GWindows.Panels.Panel_Type with record
     Project_Tree    : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter        : GWin_Util.Splitter_with_dashes;
+    Splitter        : LEA_splitter;
   end record;
 
   type Message_Panel_Type is new GWindows.Panels.Panel_Type with record
     Message_List    : GWindows.List_Boxes.List_Box_Type;
-    Splitter        : GWin_Util.Splitter_with_dashes;
+    Splitter        : LEA_splitter;
   end record;
 
   type MDI_Main_Type is
@@ -66,8 +76,6 @@ package LEA_GWin.MDI_Main is
         --
         is_closing             : Boolean:= False;  --  True only during and after On_Close
       end record;
-
-  type MDI_Main_Access is access all MDI_Main_Type;
 
   overriding procedure On_Create (MDI_Main : in out MDI_Main_Type);
   --  Handles setting up icons, menus, etc.
@@ -116,8 +124,12 @@ package LEA_GWin.MDI_Main is
     top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
   );
 
-  procedure Update_Title(MDI_Main : in out MDI_Main_Type);
+  procedure Update_Title (MDI_Main : in out MDI_Main_Type);
 
   procedure Perform_Search (MDI_Main : MDI_Main_Type; action : LEA_Common.Search_action);
+
+  --  One or more splitter position may have changed, either directly or via a window
+  --  resize. Time is to record the proportions.
+  procedure Memorize_Splitters (MDI_Main : in out MDI_Main_Type);
 
 end LEA_GWin.MDI_Main;

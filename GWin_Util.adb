@@ -496,7 +496,8 @@ package body GWin_Util is
     Window.Dashes.Create (
       Window,
       Alignment => GWindows.Static_Controls.Center,
-      Text => 1000 * ". "  --  A cheap grip design for the split bar...
+      --  A cheap grip design for the split bar...
+      Text =>  (if Location in At_Top | At_Bottom then 30 * "| " else 1000 * ". ")
     );
     Window.Dashes.Dock (Fill);
     Window.Dashes.Enabled (False);  --  Just give a grey look...
