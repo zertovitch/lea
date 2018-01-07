@@ -35,11 +35,6 @@ package LEA_GWin.MDI_Main is
     Splitter        : GWin_Util.Splitter_with_dashes;
   end record;
 
-  type Subprogram_Panel_Type is new GWindows.Panels.Panel_Type with record
-    Subprogram_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter        : GWin_Util.Splitter_with_dashes;
-  end record;
-
   type MDI_Main_Type is
     new GWindows.Windows.MDI.MDI_Main_Window_Type with
       record
@@ -55,7 +50,6 @@ package LEA_GWin.MDI_Main is
         --
         Project_Panel          : Project_Panel_Type;
         Message_Panel          : Message_Panel_Type;
-        Subprogram_Panel       : Subprogram_Panel_Type;
         --
         Menu                   : Menu_MDI_Main_Type;
         -- record_dimensions      : Boolean:= False; -- in On_Move, On_Size

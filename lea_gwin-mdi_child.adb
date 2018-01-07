@@ -45,8 +45,8 @@ package body LEA_GWin.MDI_Child is
   function Folder_Focus(MDI_Child : in MDI_Child_Type) return Boolean is
   begin
     return
-      MDI_Child.Parent.opt.view_mode = Studio and then
-      MDI_Child.Focus = MDI_Child.Folder_Tree'Unrestricted_Access;
+      MDI_Child.Parent.opt.view_mode = Studio; --  !!  and then
+      --  !! MDI_Child.Focus = MDI_Child.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
   procedure Update_status_bar(MDI_Child : in out MDI_Child_Type) is
@@ -169,20 +169,20 @@ package body LEA_GWin.MDI_Child is
     Update_menus(MDI_Child);
   end Update_display;
 
-  procedure Memorize_splitter(MDI_Child: in out MDI_Child_Type) is
-  begin
-    case MDI_Child.Parent.opt.view_mode is
-      when Notepad =>
-        null; -- do nothing: the splitter is invisible and not used
-      when Studio =>
-        MDI_Child.Parent.opt.tree_portion:=
-          Float(MDI_Child.Folder_Tree.Width) / Float(MDI_Child.Client_Area_Width);
-    end case;
-  end Memorize_splitter;
+  --  procedure Memorize_splitter(MDI_Child: in out MDI_Child_Type) is
+  --  begin
+  --    case MDI_Child.Parent.opt.view_mode is
+  --      when Notepad =>
+  --        null; -- do nothing: the splitter is invisible and not used
+  --      when Studio =>
+  --        MDI_Child.Parent.opt.tree_portion:=
+  --          Float(MDI_Child.Folder_Tree.Width) / Float(MDI_Child.Client_Area_Width);
+  --    end case;
+  --  end Memorize_splitter;
 
   overriding procedure On_Bar_Moved (MDI_Child : in out MDI_Child_GSize_Bar_Type) is
   begin
-    Memorize_splitter(MDI_Child_Type(MDI_Child.Parent.Parent.Parent.all));
+    --  !!  Memorize_splitter(MDI_Child_Type(MDI_Child.Parent.Parent.Parent.all));
     GWindows.GControls.GSize_Bars.GSize_Bar_Type(MDI_Child).On_Bar_Moved;
   end On_Bar_Moved;
 
@@ -202,14 +202,16 @@ package body LEA_GWin.MDI_Child is
     case new_view is
       when Notepad =>
         if not force then
-          Memorize_splitter(MDI_Child);
+          null;
+          --  !!  Memorize_splitter(MDI_Child);
           -- Remember tree portion for user persistence or for next time we toggle back to tree view.
         end if;
-        MDI_Child.Splitter.Hide;
-        MDI_Child.Folder_Tree.Hide;
+        --  MDI_Child.Splitter.Hide;
+        --  MDI_Child.Folder_Tree.Hide;
       when Studio =>
-        MDI_Child.Splitter.Show;
-        MDI_Child.Folder_Tree.Show;
+        null; -- !! Project_Panel
+        --  MDI_Child.Splitter.Show;
+        --  MDI_Child.Folder_Tree.Show;
     end case;
     MDI_Child.On_Size(MDI_Child.Width, MDI_Child.Height);
     Update_display(MDI_Child, status_bar);
@@ -241,31 +243,19 @@ package body LEA_GWin.MDI_Child is
     --  --  We copy options to child level:
     --  MDI_Child.opt:= MDI_Child.Parent.opt;
 
-    MDI_Child.Tree_Bar_and_List.Create(MDI_Child, Direction => Horizontal);
-    MDI_Child.Tree_Bar_and_List.Dock(At_Top);
-
-    MDI_Child.Folder_Tree.Create(
-      MDI_Child.Tree_Bar_and_List,
-      1,1,20,20,
-      Lines_At_Root => False
-    );
-    MDI_Child.Folder_Tree.Dock(Fill);
-
-    -- Panel with split bar and list
-    MDI_Child.Bar_and_List.Create(MDI_Child.Tree_Bar_and_List, 1,1,20,20);
-    MDI_Child.Bar_and_List.Dock(At_Right);
-
-    MDI_Child.Splitter.Create(MDI_Child.Bar_and_List, Fill);
-    MDI_Child.Splitter.Dock(At_Left);
-    MDI_Child.Splitter_dashes.Create(MDI_Child.Splitter,
-      Alignment => GWindows.Static_Controls.Center,
-      Text => 1000 * ". " -- A cheap grip design for the split bar...
-    );
-    MDI_Child.Splitter_dashes.Dock(Fill);
-    MDI_Child.Splitter_dashes.Enabled(False); -- Just give a grey look...
+    --  MDI_Child.Tree_Bar_and_List.Create(MDI_Child, Direction => Horizontal);
+    --  MDI_Child.Tree_Bar_and_List.Dock(At_Top);
+    --
+    --    Right panel, with subprogram tree:
+    --
+    MDI_Child.Subprogram_Panel.Create (MDI_Child, 1,1,20,20);
+    MDI_Child.Subprogram_Panel.Dock(At_Right);
+    MDI_Child.Subprogram_Panel.Splitter.Create (MDI_Child.Subprogram_Panel, At_Left);
+    MDI_Child.Subprogram_Panel.Subprogram_Tree.Create(MDI_Child.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
+    MDI_Child.Subprogram_Panel.Subprogram_Tree.Dock(Fill);
 
     MDI_Child.Editor.mdi_parent:= MDI_Child'Unrestricted_Access;
-    MDI_Child.Editor.Create(MDI_Child.Bar_and_List, 50,1,20,20);
+    MDI_Child.Editor.Create(MDI_Child, 50,1,20,20);
     MDI_Child.Editor.Dock(Fill);
 
     MDI_Child.Status_Bar.Create(MDI_Child, "No file");
@@ -519,18 +509,20 @@ package body LEA_GWin.MDI_Child is
     if MDI_Child.Parent.User_maximize_restore then
       MDI_Child.Parent.opt.MDI_childen_maximized:= Zoom (MDI_Child);
     end if;
-    MDI_Child.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
+    --  MDI_Child.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
     case MDI_Child.Parent.opt.view_mode is
       when Notepad =>
-        MDI_Child.Folder_Tree.Location(Rectangle_Type'(0, 0, 1, h));
-        MDI_Child.Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
-        MDI_Child.Splitter.Location(Rectangle_Type'(0, 0, 1, h));
+        null;  --  !! Project_Panel !!
+        --  MDI_Child.Folder_Tree.Location(Rectangle_Type'(0, 0, 1, h));
+        --  MDI_Child.Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
+        --  MDI_Child.Splitter.Location(Rectangle_Type'(0, 0, 1, h));
         -- !! Editor location MDI_Child.Directory_List.Location(Rectangle_Type'(0, 0, w, h));
       when Studio =>
-        MDI_Child.Folder_Tree.Location(Rectangle_Type'(0, 0, tree_w, h));
-        MDI_Child.Bar_and_List.Location(Rectangle_Type'(tree_w, 0, w, h));
+        null;  --  !! Project_Panel !!
+        --  MDI_Child.Folder_Tree.Location(Rectangle_Type'(0, 0, tree_w, h));
+        --  MDI_Child.Bar_and_List.Location(Rectangle_Type'(tree_w, 0, w, h));
         -- Splitter bar and directory list are inside the Bar_and_List panel
-        MDI_Child.Splitter.Location(Rectangle_Type'(0, 0, splitter_w, h));
+        --  MDI_Child.Splitter.Location(Rectangle_Type'(0, 0, splitter_w, h));
         -- !! Editor location .Location(Rectangle_Type'(splitter_w, 0, MDI_Child.Bar_and_List.Width, h));
     end case;
     Dock_Children (MDI_Child);
@@ -627,7 +619,7 @@ package body LEA_GWin.MDI_Child is
       --  -- this will memorize choice of last closed window.
       --  MDI_Child.Parent.opt.view_mode:= MDI_Child.opt.view_mode;
       --
-      Memorize_splitter(MDI_Child);
+      --  !!  Memorize_splitter(MDI_Child);
       --  MDI_Child.Parent.opt.tree_portion:= MDI_Child.opt.tree_portion;
       --
       --  For the case there is no more child window, disable toolbar items.

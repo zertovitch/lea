@@ -11,10 +11,11 @@ with GWindows.Drawing;
 with GWindows.GControls.GSize_Bars;
 with GWindows.Packing_Boxes;
 with GWindows.Panels;
-with GWindows.Static_Controls;
 with GWindows.Types;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
+
+with GWin_Util;
 
 with Ada.Numerics.Float_Random;
 
@@ -64,6 +65,11 @@ package LEA_GWin.MDI_Child is
   type MDI_Child_GSize_Bar_Type is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with null record;
   overriding procedure On_Bar_Moved (MDI_Child : in out MDI_Child_GSize_Bar_Type);
 
+  type Subprogram_Panel_Type is new GWindows.Panels.Panel_Type with record
+    Subprogram_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
+    Splitter        : GWin_Util.Splitter_with_dashes;
+  end record;
+
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
       record
@@ -74,14 +80,11 @@ package LEA_GWin.MDI_Child is
         --  new file closed if kept virgin when opening another one (like blank Excel sheet).
         Extra_first_doc  : Boolean:= False;
         Menu             : Menu_MDI_Child_Type;
-        Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
-        Bar_and_List     : MDI_Child_Panel_Type;
+        --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Document_kind    : Document_kind_type := editable_text;
         Syntax_kind      : Syntax_type        := Undefined;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
-        Splitter         : MDI_Child_GSize_Bar_Type;
-        Splitter_dashes  : GWindows.Static_Controls.Label_Type;
-        Folder_Tree      : aliased MDI_Child_Tree_View_Control_Type;
+        Subprogram_Panel : Subprogram_Panel_Type;
         selected_path    : GString_Unbounded:= Null_GString_Unbounded;
         --  opt              : Option_Pack_Type;  --  No per-child-window option in this app
         Status_Bar       : MDI_Child_Status_Bar_Type;

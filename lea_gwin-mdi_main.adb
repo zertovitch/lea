@@ -260,6 +260,14 @@ package body LEA_GWin.MDI_Main is
     MDI_Main.Project_Panel.Splitter.Create (MDI_Main.Project_Panel, At_Right);
     MDI_Main.Project_Panel.Project_Tree.Create(MDI_Main.Project_Panel, 1,1,20,20, Lines_At_Root => False);
     MDI_Main.Project_Panel.Project_Tree.Dock(Fill);
+    --
+    --    2) Bottom panel, with messages:
+    --
+    MDI_Main.Message_Panel.Create (MDI_Main, 1,1,20,80);
+    MDI_Main.Message_Panel.Dock(At_Bottom);
+    MDI_Main.Message_Panel.Splitter.Create (MDI_Main.Project_Panel, At_Top);
+    MDI_Main.Message_Panel.Message_List.Create(MDI_Main.Message_Panel, 1,1,20,20);
+    MDI_Main.Message_Panel.Message_List.Dock(Fill);
 
     --  ** Other resources
     MDI_Main.Folders_Images.Create (Num_resource(Folders_BMP), 16);
