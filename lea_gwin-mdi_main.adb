@@ -610,10 +610,10 @@ package body LEA_GWin.MDI_Main is
   begin
     if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
       declare
-        cw: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
+        cw: MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
       begin
         Update_MRU_Menu(cw.MDI_Parent.all, cw.Menu.Popup_0001);
-        -- Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
+        -- Update_Toolbar_Menu(cw.View_menu, cw.MDI_Parent.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
@@ -664,7 +664,14 @@ package body LEA_GWin.MDI_Main is
 
   procedure Memorize_Splitters (MDI_Main : in out MDI_Main_Type) is
   begin
-    null; -- !!
+    case MDI_Main.opt.view_mode is
+      when Notepad =>
+        null; -- do nothing: the splitter is invisible and not used
+      when Studio =>
+        null;   --  !!!
+        --  MDI_Main.opt.tree_portion:=
+        --          Float(MDI_Child.Folder_Tree.Width) / Float(MDI_Child.Client_Area_Width);
+    end case;
   end Memorize_Splitters;
 
 end LEA_GWin.MDI_Main;

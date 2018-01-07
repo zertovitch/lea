@@ -168,17 +168,6 @@ package body LEA_GWin.MDI_Child is
     Update_menus(MDI_Child);
   end Update_display;
 
-  --  procedure Memorize_splitter(MDI_Child: in out MDI_Child_Type) is
-  --  begin
-  --    case MDI_Child.Parent.opt.view_mode is
-  --      when Notepad =>
-  --        null; -- do nothing: the splitter is invisible and not used
-  --      when Studio =>
-  --        MDI_Child.Parent.opt.tree_portion:=
-  --          Float(MDI_Child.Folder_Tree.Width) / Float(MDI_Child.Client_Area_Width);
-  --    end case;
-  --  end Memorize_splitter;
-
   procedure Change_View (
         MDI_Child : in out MDI_Child_Type;
         new_view  :        View_Mode_Type;
@@ -234,7 +223,7 @@ package body LEA_GWin.MDI_Child is
     --  No per-child-window option in this app
     --
     --  --  We copy options to child level:
-    --  MDI_Child.opt:= MDI_Child.Parent.opt;
+    --  MDI_Child.opt:= MDI_Child.MDI_Parent.opt;
 
     --  MDI_Child.Tree_Bar_and_List.Create(MDI_Child, Direction => Horizontal);
     --  MDI_Child.Tree_Bar_and_List.Dock(At_Top);
@@ -281,13 +270,13 @@ package body LEA_GWin.MDI_Child is
         not MDI_Child.MDI_Parent.opt.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
-        MDI_Child.Parent.Freeze;
+        MDI_Child.MDI_Parent.Freeze;
         MDI_Child.Zoom;
       end if;
       On_Size(MDI_Child,Width(MDI_Child),Height(MDI_Child));
       if memo_unmaximized_children then
-        MDI_Child.Parent.Thaw; -- Before Zoom, otherwise uncomplete draw.
-        MDI_Child.Zoom(False);
+        MDI_Child.MDI_Parent.Thaw;  --  Before Zoom, otherwise drawinf is uncomplete.
+        MDI_Child.Zoom (False);
         MDI_Child.MDI_Parent.Tool_Bar.Redraw;
       end if;
     end;
@@ -460,7 +449,7 @@ package body LEA_GWin.MDI_Child is
     end Save_any_modified;
     --
   begin
-    GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Child.Parent.all).all,
+    GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Child.MDI_Parent.all).all,
                                       Save_any_modified'Unrestricted_Access);
   end On_Save_All;
 
@@ -611,10 +600,10 @@ package body LEA_GWin.MDI_Child is
       --  No per-child-window option in this app
       --  -- Pass view mode and the tree width portion to parent,
       --  -- this will memorize choice of last closed window.
-      --  MDI_Child.Parent.opt.view_mode:= MDI_Child.opt.view_mode;
+      --  MDI_Child.MDI_Parent.opt.view_mode:= MDI_Child.opt.view_mode;
       --
       --  !!  Memorize_splitter(MDI_Child);
-      --  MDI_Child.Parent.opt.tree_portion:= MDI_Child.opt.tree_portion;
+      --  MDI_Child.MDI_Parent.opt.tree_portion:= MDI_Child.opt.tree_portion;
       --
       --  For the case there is no more child window, disable toolbar items.
       --  This action is reversed as soon as another child window is focused.
