@@ -1,14 +1,14 @@
-with Ada.Integer_Text_IO;               use Ada.Integer_Text_IO;
-with Ada.Exceptions;                    use Ada.Exceptions;
-
-with Interfaces.C;                      use Interfaces.C;
-
 with GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Constants;
 with GWindows.Drawing_Objects;
-
 with GWindows.Types;
+
+with Ada.Integer_Text_IO;               use Ada.Integer_Text_IO;
+with Ada.Exceptions;                    use Ada.Exceptions;
+with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
+
+with Interfaces.C;                      use Interfaces.C;
 
 with GNAT.OS_Lib;
 
@@ -476,6 +476,31 @@ package body GWin_Util is
   --       GetWindowLong (Handle (Base_Window_Type (Dialog))) or
   --       WS_EX_DLGMODALFRAME );
   --  end Fix_Dialog;
+
+  overriding procedure Create
+     (Window     : in out Splitter_with_dashes;
+      Parent     : in out GWindows.Base.Base_Window_Type'Class;
+      Location   : in     GWindows.Base.Dock_Type;
+      Text       : in     GString                              := "";
+      Left       : in     Integer                              := 0;
+      Top        : in     Integer                              := 0;
+      Width      : in     Integer                              := 3;
+      Height     : in     Integer                              := 3;
+      Show       : in     Boolean                              := True;
+      Is_Dynamic : in     Boolean                              := False) is
+  begin
+    --  Call parent method:
+    GWindows.GControls.GSize_Bars.GSize_Bar_Type (Window).Create (
+      Parent, Location, Text, Left, Top, Width, Height, Show, Is_Dynamic);
+    --  Add our goodies to make the splitter visible:
+    Window.Dashes.Create (
+      Window,
+      Alignment => GWindows.Static_Controls.Center,
+      Text => 1000 * ". "  --  A cheap grip design for the split bar...
+    );
+    Window.Dashes.Dock (Fill);
+    Window.Dashes.Enabled (False);  --  Just give a grey look...
+  end Create;
 
 begin
   Common_Fonts.Create_Common_Fonts;

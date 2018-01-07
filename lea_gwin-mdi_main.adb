@@ -14,11 +14,8 @@ with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Registry;
 
-with GWin_Util;
-
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
 
@@ -159,31 +156,6 @@ package body LEA_GWin.MDI_Main is
   begin
     On_Menu_Select (Parent.all, Item);
   end On_Button_Select;
-
-  overriding procedure Create
-     (Window     : in out Splitter_with_dashes;
-      Parent     : in out GWindows.Base.Base_Window_Type'Class;
-      Location   : in     GWindows.Base.Dock_Type;
-      Text       : in     GString                              := "";
-      Left       : in     Integer                              := 0;
-      Top        : in     Integer                              := 0;
-      Width      : in     Integer                              := 3;
-      Height     : in     Integer                              := 3;
-      Show       : in     Boolean                              := True;
-      Is_Dynamic : in     Boolean                              := False) is
-  begin
-    --  Call parent method:
-    GWindows.GControls.GSize_Bars.GSize_Bar_Type (Window).Create (
-      Parent, Location, Text, Left, Top, Width, Height, Show, Is_Dynamic);
-    --  Add our goodies to make the splitter visible:
-    Window.Dashes.Create (
-      Window,
-      Alignment => GWindows.Static_Controls.Center,
-      Text => 1000 * ". "  --  A cheap grip design for the split bar...
-    );
-    Window.Dashes.Dock (Fill);
-    Window.Dashes.Enabled (False);  --  Just give a grey look...
-  end Create;
 
   function Shorten_file_name( s: GString ) return GString is
     max: constant:= 33;

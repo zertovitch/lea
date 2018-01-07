@@ -1,16 +1,14 @@
--- Mix of various functionalities, some of them would be good as part of GWindows
+--  Mix of various functionalities. Some of them would be good as part of GWindows.
 
 with GWindows.Base;
 with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
+with GWindows.GControls.GSize_Bars;
 with GWindows.GStrings;                 use GWindows.GStrings;
---with GWindows.Static_Controls;          use GWindows.Static_Controls;
+with GWindows.Static_Controls;
 with GWindows.Windows;
 
 use GWindows;
-
--- 15-Dec-2008: Create_URL moved to new GWindows.Static_Controls.Web
---  2-Feb-2007
 
 package GWin_Util is
 
@@ -48,26 +46,6 @@ package GWin_Util is
 
   procedure Exec_Command(the_command: String);
 
-  --------------------------
-  -- Web-oriented widgets --
-  --------------------------
-  -- ** Moved to new GWindows.Static_Controls.Web
-
-  --  procedure Create_URL
-  --    (Parent     : in out GWindows.Base.Base_Window_Type'Class;
-  --     Text       : in     GString;
-  --     URL        : in     GString;
-  --     Left       : in     Integer;
-  --     Top        : in     Integer;
-  --     Width      : in     Integer;
-  --     Height     : in     Integer;
-  --     Alignment  : in     Alignment_Type                       :=
-  --       GWindows.Static_Controls.Left;
-  --     ID         : in     Integer                              := 0;
-  --     Show       : in     Boolean                              := True);
-
-  --
-
   type Windows_family is (Win32s, Win9x, NT);
   procedure Get_Windows_version(
     major, minor: out Integer;
@@ -90,9 +68,9 @@ package GWin_Util is
 
   function Find_short_path_name( long: String ) return String;
 
-  ----------------------------
-  -- Tabs - Property sheets --
-  ----------------------------
+  ------------------------------
+  --  Tabs - Property sheets  --
+  ------------------------------
 
   -- 6-Jan-2007 : Solution to buttons in tabs creating an infinte loop
   --              in Windows' GUI system. This should be corrected
@@ -125,5 +103,25 @@ package GWin_Util is
   --  ----------------------
 
   --  procedure Fix_Dialog(Dialog: in GWindows.Windows.Window_Type);
+
+  ------------------------------------------
+  --  Split bar including a visible grip  --
+  ------------------------------------------
+
+  type Splitter_with_dashes is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with record
+    Dashes : GWindows.Static_Controls.Label_Type;
+  end record;
+
+  overriding procedure Create
+     (Window     : in out Splitter_with_dashes;
+      Parent     : in out GWindows.Base.Base_Window_Type'Class;
+      Location   : in     GWindows.Base.Dock_Type;
+      Text       : in     GString                              := "";
+      Left       : in     Integer                              := 0;
+      Top        : in     Integer                              := 0;
+      Width      : in     Integer                              := 3;
+      Height     : in     Integer                              := 3;
+      Show       : in     Boolean                              := True;
+      Is_Dynamic : in     Boolean                              := False);
 
 end GWin_Util;
