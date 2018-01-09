@@ -13,6 +13,7 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Registry;
+with GWindows.Types;                    use GWindows.Types;
 
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
@@ -346,7 +347,25 @@ package body LEA_GWin.MDI_Main is
   procedure On_Size (MDI_Main : in out MDI_Main_Type;
                      Width    : in     Integer;
                      Height   : in     Integer) is
+    w: constant Natural:= MDI_Main.Client_Area_Width;
+    h: constant Natural:= Integer'Max(2, MDI_Main.Client_Area_Height - MDI_Main.Tool_Bar.Height);
+    splitter_dist: constant:= 4;
+    tree_w: constant Integer:= Integer (MDI_Main.opt.project_tree_portion * Float(w)) - splitter_dist / 2;
+    list_h: constant Integer:= Integer (MDI_Main.opt.message_list_portion * Float(h)) - splitter_dist / 2;
   begin
+    --  Resize project tree and message list panels using the recorded proportions
+    --  This operation is reciprocal to Memorize_Splitters.
+    --
+    --  Adapt project tree size:
+    case MDI_Main.opt.view_mode is
+      when Notepad =>
+        --  Do nothing about project tree splitter: the panel is invisible and not used
+        null;
+      when Studio =>
+        MDI_Main.Project_Panel.Location (Rectangle_Type'(0, 0, tree_w, h));
+    end case;
+    MDI_Main.Message_Panel.Location (Rectangle_Type'(0, h - list_h, w, list_h));
+    --  Call Dock_Children for the finishing touch...
     Dock_Children(MDI_Main);
     if MDI_Main.record_dimensions and
        not (Zoom(MDI_Main) or Minimized(MDI_Main))
@@ -666,12 +685,15 @@ package body LEA_GWin.MDI_Main is
   begin
     case MDI_Main.opt.view_mode is
       when Notepad =>
-        null; -- do nothing: the splitter is invisible and not used
+        --  Do nothing about project tree splitter: the panel is invisible and not used
+        null;
       when Studio =>
-        null;   --  !!!
-        --  MDI_Main.opt.tree_portion:=
-        --          Float(MDI_Child.Folder_Tree.Width) / Float(MDI_Child.Client_Area_Width);
+        MDI_Main.opt.project_tree_portion :=
+          Float (MDI_Main.Project_Panel.Width) / Float (MDI_Main.Client_Area_Width);
     end case;
+    MDI_Main.opt.message_list_portion :=
+      Float (MDI_Main.Message_Panel.Height) / Float (MDI_Main.Client_Area_Height - MDI_Main.Tool_Bar.Height);
+    --  The splitter for subprogram tree is memorized at child level.
   end Memorize_Splitters;
 
 end LEA_GWin.MDI_Main;

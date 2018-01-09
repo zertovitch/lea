@@ -25,7 +25,14 @@ package LEA_Common.User_options is
     right_margin : Integer                    := 100;  --  also called "vertical edge"
     show_special : Show_special_symbol_mode   := none;
     -- Horizontal portion of the window for the tree, when view_mode = Studio
-    tree_portion : Float:= 0.25;
+    tree_portion : Float:= 0.25;  --  !! will disappear
+    --  Horizontal window portion of MDI *main*, active when view_mode = Studio
+    project_tree_portion    : Float:= 0.25;
+    --  Vertical window portion of MDI *main*
+    message_list_portion    : Float:= 0.20;
+    --  Horizontal window portion of MDI *child*, active when subprogram tree is shown
+    subprogram_tree_portion : Float:= 0.25;
+    --
     win_left,
     win_top,
     win_width,

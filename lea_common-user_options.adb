@@ -19,7 +19,10 @@ package body LEA_Common.User_options is
         show_special,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
-        tree_portion,
+        tree_portion,  --  !! to be removed
+        project_tree_portion,
+        message_list_portion,
+        subprogram_tree_portion,
         mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9
       );
 
@@ -64,6 +67,12 @@ package body LEA_Common.User_options is
                 opt.MDI_childen_maximized:= Boolean'Wide_Value(s);
               when tree_portion =>
                 opt.tree_portion:= Float'Wide_Value(s);
+              when project_tree_portion =>
+                opt.project_tree_portion:= Float'Wide_Value(s);
+              when message_list_portion =>
+                opt.message_list_portion:= Float'Wide_Value(s);
+              when subprogram_tree_portion =>
+                opt.subprogram_tree_portion:= Float'Wide_Value(s);
               when mru1 .. mru9 =>
                 mru_idx := Key'Pos(k) - Key'Pos(mru1) + 1;
                 sep_pos_1:= Index(s, sep);
@@ -123,6 +132,12 @@ package body LEA_Common.User_options is
               R(Boolean'Wide_Image(opt.MDI_childen_maximized));
             when tree_portion =>
               R(Float'Wide_Image(opt.tree_portion));
+            when project_tree_portion =>
+              R(Float'Wide_Image(opt.tree_portion));
+            when message_list_portion =>
+              R(Float'Wide_Image(opt.message_list_portion));
+            when subprogram_tree_portion =>
+              R(Float'Wide_Image(opt.subprogram_tree_portion));
             when mru1 .. mru9 =>
               mru_idx := Key'Pos(k) - Key'Pos(mru1) + 1;
               R( To_Wide_String(opt.mru(mru_idx).name) & sep &
