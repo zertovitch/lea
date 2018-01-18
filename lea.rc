@@ -144,6 +144,11 @@ Menu_MDI_Main MENU
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
+    POPUP "&View"
+    {
+        MENUITEM "&Notepad view", IDM__FLAT_VIEW
+        MENUITEM "&Studio view", IDM__TREE_VIEW, INACTIVE
+    }
     POPUP "&Options"
     {
         MENUITEM "&General options", IDM_General_options

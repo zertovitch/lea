@@ -168,47 +168,6 @@ package body LEA_GWin.MDI_Child is
     Update_menus(MDI_Child);
   end Update_display;
 
-  procedure Change_View (
-        MDI_Child : in out MDI_Child_Type;
-        new_view  :        View_Mode_Type;
-        force     :        Boolean
-  )
-  is
-    --  mem_sel_path: constant GString_Unbounded:= MDI_Child.selected_path;
-    --  sel_node: Tree_Item_Node;
-  begin
-    if MDI_Child.MDI_Parent.opt.view_mode = new_view and not force then
-      return;
-    end if;
-    MDI_Child.MDI_Parent.opt.view_mode:= new_view;
-    case new_view is
-      when Notepad =>
-        if not force then
-          null;
-          --  !!  Memorize_splitter(MDI_Child);
-          -- Remember tree portion for user persistence or for next time we toggle back to tree view.
-        end if;
-        --  MDI_Child.Splitter.Hide;
-        --  MDI_Child.Folder_Tree.Hide;
-      when Studio =>
-        null; -- !! Project_Panel
-        --  MDI_Child.Splitter.Show;
-        --  MDI_Child.Folder_Tree.Show;
-    end case;
-    MDI_Child.On_Size(MDI_Child.Width, MDI_Child.Height);
-    Update_display(MDI_Child, status_bar);
-    case new_view is
-      when Notepad =>
-        null;
-      when Studio =>
-        null;
-          --  (tree) MDI_Child.Folder_Tree.Select_Item(sel_node);
-          --  (tree) Update_display(MDI_Child, node_selected); -- !! update done twice, once for remapping folders
-          --  (tree) MDI_Child.Folder_Tree.Expand(sel_node);
-          --  (tree) MDI_Child.Folder_Tree.Focus;
-    end case;
-  end Change_View;
-
   ---------------
   -- On_Create --
   ---------------
@@ -253,11 +212,7 @@ package body LEA_GWin.MDI_Child is
        )
     );
     MDI_Child.Status_Bar.Dock(At_Bottom);
-
     MDI_Child.Dock_Children;
-    if MDI_Child.MDI_Parent.opt.view_mode = Studio then
-      Change_View(MDI_Child, Studio, force => True);
-    end if;
 
     LEA_Resource_GUI.Create_Full_Menu(MDI_Child.Menu);
     --  The list of MDI open children will appear below
@@ -483,37 +438,16 @@ package body LEA_GWin.MDI_Child is
                      Height : in     Integer) is
     pragma Warnings (Off, Width);   -- only client area is considered
     pragma Warnings (Off, Height);  -- only client area is considered
-    w: constant Natural:= MDI_Child.Client_Area_Width;
-    h: constant Natural:= Integer'Max(2, MDI_Child.Client_Area_Height - MDI_Child.Status_Bar.Height);
-    splitter_w: constant:= 4; -- between tree and list
-    tree_w: constant Integer:= Integer(MDI_Child.MDI_Parent.opt.tree_portion * Float(w)) - splitter_w / 2;
-    use GWindows.Types;
   begin
     if MDI_Child.MDI_Parent.User_maximize_restore then
       MDI_Child.MDI_Parent.opt.MDI_childen_maximized:= Zoom (MDI_Child);
     end if;
-    --  MDI_Child.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
-    case MDI_Child.MDI_Parent.opt.view_mode is
-      when Notepad =>
-        null;  --  !! Project_Panel !!
-        --  MDI_Child.Folder_Tree.Location(Rectangle_Type'(0, 0, 1, h));
-        --  MDI_Child.Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
-        --  MDI_Child.Splitter.Location(Rectangle_Type'(0, 0, 1, h));
-        -- !! Editor location MDI_Child.Directory_List.Location(Rectangle_Type'(0, 0, w, h));
-      when Studio =>
-        null;  --  !! Project_Panel !!
-        --  MDI_Child.Folder_Tree.Location(Rectangle_Type'(0, 0, tree_w, h));
-        --  MDI_Child.Bar_and_List.Location(Rectangle_Type'(tree_w, 0, w, h));
-        -- Splitter bar and directory list are inside the Bar_and_List panel
-        --  MDI_Child.Splitter.Location(Rectangle_Type'(0, 0, splitter_w, h));
-        -- !! Editor location .Location(Rectangle_Type'(splitter_w, 0, MDI_Child.Bar_and_List.Width, h));
-    end case;
     Dock_Children (MDI_Child);
   end On_Size;
 
   procedure On_Menu_Select (
         MDI_Child : in out MDI_Child_Type;
-        Item   : in     Integer        ) is
+        Item      : in     Integer        ) is
   begin
     case Item is
       when IDM_Save_File =>
@@ -553,11 +487,8 @@ package body LEA_GWin.MDI_Child is
         MDI_Child.Editor.Apply_options;
       when IDM_Duplicate =>
         MDI_Child.Editor.Duplicate;
-      when IDM_FLAT_VIEW =>
-        Change_View(MDI_Child, Notepad, force => False);
-      when IDM_TREE_VIEW =>
-        Change_View(MDI_Child, Studio, force => False);
       when others =>
+        --  Call parent method
         On_Menu_Select (Window_Type (MDI_Child), Item);
     end case;
   end On_Menu_Select;

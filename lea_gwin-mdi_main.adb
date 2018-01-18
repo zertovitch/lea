@@ -219,6 +219,50 @@ package body LEA_GWin.MDI_Main is
   package Windows_persistence is new
     LEA_Common.User_options.Persistence(Read_key, Write_key);
 
+  --  Switch between Notepad and Studio views
+  --
+  procedure Change_View (
+        MDI_Main  : in out MDI_Main_Type;
+        new_view  :        View_Mode_Type;
+        force     :        Boolean
+  )
+  is
+    --  mem_sel_path: constant GString_Unbounded:= MDI_Child.selected_path;
+    --  sel_node: Tree_Item_Node;
+  begin
+    if MDI_Main.opt.view_mode = new_view and not force then
+      return;
+    end if;
+    MDI_Main.opt.view_mode:= new_view;
+    case new_view is
+      when Notepad =>
+        if not force then
+          null;
+          --  !!  Memorize_splitter(MDI_Child);
+          -- Remember tree portion for user persistence or for next time we toggle back to tree view.
+        end if;
+        --  MDI_Child.Splitter.Hide;
+        --  MDI_Child.Folder_Tree.Hide;
+      when Studio =>
+        null; -- !! Project_Panel
+        --  MDI_Child.Splitter.Show;
+        --  MDI_Child.Folder_Tree.Show;
+    end case;
+    --  Force call to On_Size
+    MDI_Main.On_Size (MDI_Main.Width, MDI_Main.Height);
+    --Update_display(MDI_Child, status_bar);
+    case new_view is
+      when Notepad =>
+        null;
+      when Studio =>
+        null;
+          --  (tree) MDI_Child.Folder_Tree.Select_Item(sel_node);
+          --  (tree) Update_display(MDI_Child, node_selected); -- !! update done twice, once for remapping folders
+          --  (tree) MDI_Child.Folder_Tree.Expand(sel_node);
+          --  (tree) MDI_Child.Folder_Tree.Focus;
+    end case;
+  end Change_View;
+
   ---------------
   -- On_Create --
   ---------------
@@ -248,7 +292,7 @@ package body LEA_GWin.MDI_Main is
     --  ** Menus and accelerators:
 
     LEA_Resource_GUI.Create_Full_Menu(MDI_Main.Menu);
-    MDI_Menu (MDI_Main, MDI_Main.Menu.Main, Window_Menu => 2);
+    MDI_Menu (MDI_Main, MDI_Main.Menu.Main, Window_Menu => 3);
     Accelerator_Table (MDI_Main, "Main_Menu");
     MDI_Main.IDM_MRU:=
       (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
@@ -293,6 +337,8 @@ package body LEA_GWin.MDI_Main is
       Integer'Max(200, MDI_Main.opt.win_height)
     );
     Zoom(MDI_Main,MDI_Main.opt.MDI_main_maximized);
+
+    Change_View (MDI_Main, MDI_Main.opt.view_mode, force => True);
 
     MDI_Main.Dock_Children;
     MDI_Main.Show;
@@ -520,16 +566,22 @@ package body LEA_GWin.MDI_Main is
         Do_about (MDI_Main);
       when IDM_Quick_Help =>
         LEA_GWin.Help.Show_help (MDI_Main);
+      when IDM_FLAT_VIEW =>
+        Change_View (MDI_Main, Notepad, force => False);
+      when IDM_TREE_VIEW =>
+        Change_View (MDI_Main, Studio, force => False);
       when others =>
+        --  We have perhaps a MRU (most rectly used) file entry.
         for i_mru in MDI_Main.IDM_MRU'Range loop
-          if Item = MDI_Main.IDM_MRU(i_mru) then
+          if Item = MDI_Main.IDM_MRU (i_mru) then
             Open_Child_Window_And_Load(
               MDI_Main,
-              MDI_Main.opt.mru( i_mru ).name
+              MDI_Main.opt.mru ( i_mru ).name
             );
             exit;
           end if;
         end loop;
+        --  Call parent method
         On_Menu_Select (Window_Type (MDI_Main), Item);
     end case;
   end On_Menu_Select;
