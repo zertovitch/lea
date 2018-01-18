@@ -348,7 +348,8 @@ package body LEA_GWin.MDI_Main is
                      Width    : in     Integer;
                      Height   : in     Integer) is
     w: constant Natural:= MDI_Main.Client_Area_Width;
-    h: constant Natural:= Integer'Max(2, MDI_Main.Client_Area_Height - MDI_Main.Tool_Bar.Height);
+    tbh: constant Natural:= MDI_Main.Tool_Bar.Height;
+    h: constant Natural:= Integer'Max(2, MDI_Main.Client_Area_Height - tbh);
     splitter_dist: constant:= 4;
     tree_w: constant Integer:= Integer (MDI_Main.opt.project_tree_portion * Float(w)) - splitter_dist / 2;
     list_h: constant Integer:= Integer (MDI_Main.opt.message_list_portion * Float(h)) - splitter_dist / 2;
@@ -364,7 +365,7 @@ package body LEA_GWin.MDI_Main is
       when Studio =>
         MDI_Main.Project_Panel.Location (Rectangle_Type'(0, 0, tree_w, h));
     end case;
-    MDI_Main.Message_Panel.Location (Rectangle_Type'(0, h - list_h, w, list_h));
+    MDI_Main.Message_Panel.Location (Rectangle_Type'(0, h + tbh - list_h, w, h + tbh));
     --  Call Dock_Children for the finishing touch...
     Dock_Children(MDI_Main);
     if MDI_Main.record_dimensions and
