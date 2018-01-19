@@ -93,7 +93,7 @@ package body LEA_Resource_GUI is
     Append_Separator(Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "&Notepad view", IDM_FLAT_VIEW);
     Append_Item(Menu.Popup_0006, "&Studio view", IDM_TREE_VIEW);
-    State(Menu.Popup_0006, Command, IDM_TREE_VIEW, Disabled);
+    -- (just provis. enabled for testing) State(Menu.Popup_0006, Command, IDM_TREE_VIEW, Disabled);
     Menu.Popup_0007:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0007);
     Append_Item(Menu.Popup_0007, "&General options", IDM_General_options);
@@ -142,7 +142,7 @@ package body LEA_Resource_GUI is
     Append_Menu(Menu.Main, "&View", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "&Notepad view", IDM_FLAT_VIEW);
     Append_Item(Menu.Popup_0003, "&Studio view", IDM_TREE_VIEW);
-    State(Menu.Popup_0003, Command, IDM_TREE_VIEW, Disabled);
+    -- (just provis. enabled for testing) State(Menu.Popup_0003, Command, IDM_TREE_VIEW, Disabled);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&General options", IDM_General_options);

@@ -227,30 +227,29 @@ package body LEA_GWin.MDI_Main is
         force     :        Boolean
   )
   is
+  old_view : constant View_Mode_Type := MDI_Main.opt.view_mode;
     --  mem_sel_path: constant GString_Unbounded:= MDI_Child.selected_path;
     --  sel_node: Tree_Item_Node;
   begin
-    if MDI_Main.opt.view_mode = new_view and not force then
+    if old_view = new_view and not force then
       return;
     end if;
     MDI_Main.opt.view_mode:= new_view;
     case new_view is
       when Notepad =>
-        if not force then
-          null;
-          --  !!  Memorize_splitter(MDI_Child);
-          -- Remember tree portion for user persistence or for next time we toggle back to tree view.
+        if old_view /= Notepad then
+          --  Remember tree portion before hiding for user
+          --  persistence and for next time we toggle back to Studio view.
+          MDI_Main.Memorize_Splitters;
         end if;
-        --  MDI_Child.Splitter.Hide;
-        --  MDI_Child.Folder_Tree.Hide;
+        MDI_Main.Project_Panel.Width (0);
+        MDI_Main.Project_Panel.Hide;
       when Studio =>
-        null; -- !! Project_Panel
-        --  MDI_Child.Splitter.Show;
-        --  MDI_Child.Folder_Tree.Show;
+        MDI_Main.Project_Panel.Show;
     end case;
-    --  Force call to On_Size
+    --  Call to On_Size for having splitters adjusted
     MDI_Main.On_Size (MDI_Main.Width, MDI_Main.Height);
-    --Update_display(MDI_Child, status_bar);
+    -- (needed??) Update_display(MDI_Child, status_bar);
     case new_view is
       when Notepad =>
         null;
@@ -396,9 +395,8 @@ package body LEA_GWin.MDI_Main is
     w: constant Natural:= MDI_Main.Client_Area_Width;
     tbh: constant Natural:= MDI_Main.Tool_Bar.Height;
     h: constant Natural:= Integer'Max(2, MDI_Main.Client_Area_Height - tbh);
-    splitter_dist: constant:= 4;
-    tree_w: constant Integer:= Integer (MDI_Main.opt.project_tree_portion * Float(w)) - splitter_dist / 2;
-    list_h: constant Integer:= Integer (MDI_Main.opt.message_list_portion * Float(h)) - splitter_dist / 2;
+    tree_w: constant Integer:= Integer (MDI_Main.opt.project_tree_portion * Float(w));
+    list_h: constant Integer:= Integer (MDI_Main.opt.message_list_portion * Float(h));
   begin
     --  Resize project tree and message list panels using the recorded proportions
     --  This operation is reciprocal to Memorize_Splitters.
@@ -413,10 +411,8 @@ package body LEA_GWin.MDI_Main is
     end case;
     MDI_Main.Message_Panel.Location (Rectangle_Type'(0, h + tbh - list_h, w, h + tbh));
     --  Call Dock_Children for the finishing touch...
-    Dock_Children(MDI_Main);
-    if MDI_Main.record_dimensions and
-       not (Zoom(MDI_Main) or Minimized(MDI_Main))
-    then
+    MDI_Main.Dock_Children;
+    if MDI_Main.record_dimensions and not (MDI_Main.Zoom or Minimized (MDI_Main)) then
       -- ^ Avoids recording dimensions before restoring them
       --   from previous session.
       MDI_Main.opt.win_width := Width;
@@ -664,7 +660,7 @@ package body LEA_GWin.MDI_Main is
 
   end Add_MRU;
 
-  procedure Update_MRU_Menu(MDI_Main: in out MDI_Main_Type; m: in Menu_Type) is
+  procedure Update_MRU_Menu (MDI_Main: in out MDI_Main_Type; m: in Menu_Type) is
   begin
     for i in reverse MDI_Main.opt.mru'Range loop
       Text(
@@ -708,14 +704,14 @@ package body LEA_GWin.MDI_Main is
     );
   end Update_Common_Menus;
 
-  procedure Update_Title(MDI_Main : in out MDI_Main_Type) is
+  procedure Update_Title (MDI_Main : in out MDI_Main_Type) is
   begin
     if MDI_Main.Project_File_Name = "" then
       MDI_Main.Text("LEA - [Projectless]");
     else
       MDI_Main.Text("LEA - [" & GU2G(MDI_Main.Project_Short_Name) & ']');
     end if;
-  end;
+  end Update_Title;
 
   procedure Perform_Search (MDI_Main : MDI_Main_Type; action : LEA_Common.Search_action) is
     procedure Search_on_focused_editor (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class) is
@@ -734,7 +730,10 @@ package body LEA_GWin.MDI_Main is
     );
   end Perform_Search;
 
+  --  The operation reciprocal to Memorize_Splitters is done in On_Size.
+  --
   procedure Memorize_Splitters (MDI_Main : in out MDI_Main_Type) is
+    p : Float;
   begin
     case MDI_Main.opt.view_mode is
       when Notepad =>
@@ -742,11 +741,18 @@ package body LEA_GWin.MDI_Main is
         null;
       when Studio =>
         MDI_Main.opt.project_tree_portion :=
-          Float (MDI_Main.Project_Panel.Width) / Float (MDI_Main.Client_Area_Width);
+          Float (MDI_Main.Project_Panel.Width) /
+          Float (MDI_Main.Client_Area_Width);
     end case;
-    MDI_Main.opt.message_list_portion :=
-      Float (MDI_Main.Message_Panel.Height) / Float (MDI_Main.Client_Area_Height - MDI_Main.Tool_Bar.Height);
-    --  The splitter for subprogram tree is memorized at child level.
+    p :=
+      Float (MDI_Main.Message_Panel.Height) /
+      Float (MDI_Main.Client_Area_Height - MDI_Main.Tool_Bar.Height);
+    p := Float'Max (0.1, p);  --  Avoid complete disappearance
+    p := Float'Min (0.9, p);  --  Avoid eating up whole window
+    MDI_Main.opt.message_list_portion := p;
+    --
+    --  NB: the splitter for subprogram tree is part of child window and
+    --  memorized at child level.
   end Memorize_Splitters;
 
 end LEA_GWin.MDI_Main;
