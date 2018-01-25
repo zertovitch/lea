@@ -4,6 +4,7 @@ with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows.Common_Controls;
 with GWindows.Drawing;
+with GWindows.Drawing_Objects;
 with GWindows.Image_Lists;
 with GWindows.List_Boxes;
 with GWindows.Panels;
@@ -42,6 +43,7 @@ package LEA_GWin.MDI_Main is
 
   type Message_Panel_Type is new GWindows.Panels.Panel_Type with record
     Message_List    : GWindows.List_Boxes.List_Box_Type;
+    Message_Font    : GWindows.Drawing_Objects.Font_Type;
     Splitter        : LEA_splitter;
   end record;
 

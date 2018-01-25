@@ -6,6 +6,7 @@ with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 with GWindows.Colors;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
+with Ada.Integer_Wide_Text_IO;
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 
@@ -261,9 +262,6 @@ package body LEA_GWin.Editor is
   procedure Apply_options (Editor : in out LEA_Scintilla_Type) is
     use GWindows.Colors;
     --
-    App_default_font      : constant GString := "Courier New";
-    App_default_font_size : constant := 10;
-    --
     type Color_topic is (
       foreground, background,
       keyword, number, comment, string, character,
@@ -515,6 +513,17 @@ package body LEA_GWin.Editor is
     repl_str  : constant GString:= MDI_Main.Search_box.Replace_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
     pos, sel_a, sel_z: Position;
+    line : Integer;
+    line_text : GString := Integer'Wide_Image(Editor.GetLineCount);  --  Get the max. digits
+    function Col_text (col : Integer) return GString is
+      default : GString := " 123";
+    begin
+      Ada.Integer_Wide_Text_IO.Put (default, col);  --  Left-padded image
+      return default;
+    exception
+      when others =>  --  too large (huge column number)
+        return Integer'Wide_Image (col);
+    end Col_text;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -574,7 +583,12 @@ package body LEA_GWin.Editor is
         loop
           pos := Editor.SearchInTarget (find_str);
           exit when pos < 0;
-          MDI_Main.Message_Panel.Message_List.Add (Position'Wide_Image(pos));  --  !! we will show better...
+          line := Editor.LineFromPosition (pos);
+          Ada.Integer_Wide_Text_IO.Put (line_text, line);  --  Left-padded image
+          MDI_Main.Message_Panel.Message_List.Add (
+            "  Line:" & line_text & " Col:" & Col_text (Editor.GetColumn (pos)) &
+            "  " & Editor.GetLine (line)
+          );
           --  Reduce the search target:
           Editor.SetTargetStart (Editor.GetTargetEnd);
           Editor.SetTargetEnd (Editor.GetLength);

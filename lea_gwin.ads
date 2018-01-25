@@ -21,4 +21,7 @@ package LEA_GWin is
     ((G2GU ("GNAT project files (*.gpr)"),        G2GU ("*.gpr" )),
      (G2GU ("ObjectAda project files (*.prj)"),   G2GU ("*.prj" )));
 
+  App_default_font      : constant GString := "Courier New";
+  App_default_font_size : constant := 10;
+
 end LEA_GWin;

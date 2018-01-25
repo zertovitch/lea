@@ -319,8 +319,9 @@ package body LEA_GWin.MDI_Main is
     MDI_Main.Message_Panel.Dock (At_Bottom);
     MDI_Main.Message_Panel.Splitter.Create (MDI_Main.Message_Panel, At_Top, Height => 5);
     MDI_Main.Message_Panel.Splitter.MDI_Main := MDI_Main'Unrestricted_Access;
-    MDI_Main.Message_Panel.Message_List.Create (MDI_Main.Message_Panel, 1,1,20,20);
-    Use_GUI_Font (MDI_Main.Message_Panel.Message_List);
+    MDI_Main.Message_Panel.Message_Font.Create_Font (App_default_font, 15);
+    MDI_Main.Message_Panel.Message_List.Create (MDI_Main.Message_Panel, 1,1,20,20, False);
+    MDI_Main.Message_Panel.Message_List.Set_Font (MDI_Main.Message_Panel.Message_Font);
     MDI_Main.Message_Panel.Message_List.Dock (Fill);
 
     --  ** Other resources
