@@ -509,9 +509,10 @@ package body LEA_GWin.Editor is
 
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action)
   is
-    MDI_Child : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
-    MDI_Main  : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
-    find_str    : constant GString:= MDI_Main.Search_box.Find_box.Text;
+    MDI_Child : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
+    find_str  : constant GString:= MDI_Main.Search_box.Find_box.Text;
+    repl_str  : constant GString:= MDI_Main.Search_box.Replace_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
     pos, sel_a, sel_z: Position;
   begin
@@ -543,7 +544,7 @@ package body LEA_GWin.Editor is
               Editor.SetSel (Editor.GetLength , Editor.GetLength);  --  Same, but from the bottom.
             end if;
           else  --  Not found *after* the wrap around: find_str is really nowhere!
-            Editor.SetSel (sel_a, sel_z);
+            Editor.SetSel (sel_a, sel_z);  --  Restore initial selection
             Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
           end if;
         end loop;
@@ -553,19 +554,31 @@ package body LEA_GWin.Editor is
         --  be taken into account as well. Solution: we do a search *within* the selection.
         Editor.SetTargetStart (sel_a);
         Editor.SetTargetEnd (sel_z);
-        pos := Editor.SearchInTarget(find_str);
+        pos := Editor.SearchInTarget (find_str);
         if pos >= 0 then  --  Found
           --  The replacement can be undone and redone in a single "Undo" / Redo":
           Editor.BeginUndoAction;
           --  Replace: Clear, then Insert.
           Editor.Clear;
-          Editor.InsertText (sel_a, MDI_Main.Search_box.Replace_box.Text);
+          Editor.InsertText (sel_a, repl_str);
           Editor.EndUndoAction;
         end if;
         --  Find next - anyway.
         Editor.Search (action => find_next);
       when find_all =>
-        null;
+        MDI_Main.Message_Panel.Message_List.Clear;
+        MDI_Main.Message_Panel.Message_List.Add ("Search for: " & find_str);
+        --  Prepare a forward search in the entire document:
+        Editor.SetTargetStart (0);
+        Editor.SetTargetEnd (Editor.GetLength);
+        loop
+          pos := Editor.SearchInTarget (find_str);
+          exit when pos < 0;
+          MDI_Main.Message_Panel.Message_List.Add (Position'Wide_Image(pos));  --  !! we will show better...
+          --  Reduce the search target:
+          Editor.SetTargetStart (Editor.GetTargetEnd);
+          Editor.SetTargetEnd (Editor.GetLength);
+        end loop;
       when replace_all =>
         null;
     end case;

@@ -246,7 +246,7 @@ FONT 8, "Ms Shell Dlg"
     PUSHBUTTON      "Close", Close_search_box, 149, 143, 74, 17, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "Find next (F3)", Find_next_button, 11, 53, 58, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Find previous", Find_previous_button, 82, 53, 58, 18, 0, WS_EX_LEFT
-    PUSHBUTTON      "Find all", Find_all_button, 165, 53, 58, 18, WS_DISABLED, WS_EX_LEFT
+    PUSHBUTTON      "Find all", Find_all_button, 165, 53, 58, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Replace and find next", Replace_and_find_next_button, 20, 82, 110, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Replace all", Replace_all_button, 165, 82, 58, 18, WS_DISABLED, WS_EX_LEFT
     AUTOCHECKBOX    "Whole word", Whole_word, 11, 112, 81, 11, 0, WS_EX_LEFT
@@ -344,7 +344,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.61"
+            VALUE "FileVersion", "0.62"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2018"
             VALUE "ProductName", "LEA"
         }

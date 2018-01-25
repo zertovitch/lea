@@ -189,12 +189,16 @@ package body LEA_GWin.MDI_Child is
     --
     --    Right panel, with subprogram tree:
     --
-    MDI_Child.Subprogram_Panel.Create (MDI_Child, 1,1,20,20);
-    MDI_Child.Subprogram_Panel.Dock (At_Right);
-    MDI_Child.Subprogram_Panel.Splitter.Create (MDI_Child.Subprogram_Panel, At_Left);
-    MDI_Child.Subprogram_Panel.Splitter.MDI_Main := MDI_Child.MDI_Parent;
-    MDI_Child.Subprogram_Panel.Subprogram_Tree.Create (MDI_Child.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
-    MDI_Child.Subprogram_Panel.Subprogram_Tree.Dock (Fill);
+
+    --
+    --  *** This will be activated with the Subprogram Tree feature ***
+    --
+    --  MDI_Child.Subprogram_Panel.Create (MDI_Child, 1,1,20,20);
+    --  MDI_Child.Subprogram_Panel.Dock (At_Right);
+    --  MDI_Child.Subprogram_Panel.Splitter.Create (MDI_Child.Subprogram_Panel, At_Left);
+    --  MDI_Child.Subprogram_Panel.Splitter.MDI_Main := MDI_Child.MDI_Parent;
+    --  MDI_Child.Subprogram_Panel.Subprogram_Tree.Create (MDI_Child.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
+    --  MDI_Child.Subprogram_Panel.Subprogram_Tree.Dock (Fill);
 
     MDI_Child.Editor.mdi_parent:= MDI_Child'Unrestricted_Access;
     MDI_Child.Editor.Create(MDI_Child, 50,1,20,20);
