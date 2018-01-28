@@ -1,12 +1,11 @@
 with LEA_Common.User_options;
+with LEA_GWin.Messages;
 with LEA_GWin.Search_box;
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows.Common_Controls;
 with GWindows.Drawing;
-with GWindows.Drawing_Objects;
 with GWindows.Image_Lists;
-with GWindows.List_Boxes;
 with GWindows.Panels;
 with GWindows.Taskbar;                  use GWindows.Taskbar;
 with GWindows.Types;
@@ -37,14 +36,13 @@ package LEA_GWin.MDI_Main is
   overriding procedure On_Bar_Moved (Splitter : in out LEA_splitter);
 
   type Project_Panel_Type is new GWindows.Panels.Panel_Type with record
-    Project_Tree    : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter        : LEA_splitter;
+    Project_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
+    Splitter     : LEA_splitter;
   end record;
 
   type Message_Panel_Type is new GWindows.Panels.Panel_Type with record
-    Message_List    : GWindows.List_Boxes.List_Box_Type;
-    Message_Font    : GWindows.Drawing_Objects.Font_Type;
-    Splitter        : LEA_splitter;
+    Message_List : LEA_GWin.Messages.Message_List_Type;
+    Splitter     : LEA_splitter;
   end record;
 
   type MDI_Main_Type is
@@ -109,7 +107,8 @@ package LEA_GWin.MDI_Main is
 
   procedure Open_Child_Window_And_Load (
     MDI_Main   : in out MDI_Main_Type;
-    File_Name  :        GWindows.GString_Unbounded
+    File_Name  :        GWindows.GString_Unbounded;
+    Line, Col  :        Natural := 0
   );
 
   overriding procedure On_Menu_Select (

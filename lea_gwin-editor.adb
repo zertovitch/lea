@@ -2,11 +2,11 @@
 
 with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
+with LEA_GWin.Messages;                 use LEA_GWin.Messages;
 
 with GWindows.Colors;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
-with Ada.Integer_Wide_Text_IO;
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 
@@ -513,17 +513,7 @@ package body LEA_GWin.Editor is
     repl_str  : constant GString:= MDI_Main.Search_box.Replace_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
     pos, sel_a, sel_z: Position;
-    line : Integer;
-    line_text : GString := Integer'Wide_Image(Editor.GetLineCount);  --  Get the max. digits
-    function Col_text (col : Integer) return GString is
-      default : GString := " 123";
-    begin
-      Ada.Integer_Wide_Text_IO.Put (default, col);  --  Left-padded image
-      return default;
-    exception
-      when others =>  --  too large (huge column number)
-        return Integer'Wide_Image (col);
-    end Col_text;
+    line, col, count : Integer;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -576,23 +566,32 @@ package body LEA_GWin.Editor is
         Editor.Search (action => find_next);
       when find_all =>
         MDI_Main.Message_Panel.Message_List.Clear;
-        MDI_Main.Message_Panel.Message_List.Add ("Search for: " & find_str);
+        MDI_Main.Message_Panel.Message_List.Set_Column ("Line", 0, 40);
+        MDI_Main.Message_Panel.Message_List.Set_Column ("Col",  1, 35);
+        MDI_Main.Message_Panel.Message_List.Set_Column ("Search for: " & find_str, 2, 1000);
         --  Prepare a forward search in the entire document:
         Editor.SetTargetStart (0);
         Editor.SetTargetEnd (Editor.GetLength);
+        count := 0;
         loop
           pos := Editor.SearchInTarget (find_str);
           exit when pos < 0;
           line := Editor.LineFromPosition (pos);
-          Ada.Integer_Wide_Text_IO.Put (line_text, line);  --  Left-padded image
-          MDI_Main.Message_Panel.Message_List.Add (
-            "  Line:" & line_text & " Col:" & Col_text (Editor.GetColumn (pos)) &
-            "  " & Editor.GetLine (line)
+          col  := Editor.GetColumn (pos);
+          MDI_Main.Message_Panel.Message_List.Insert_Item (Trim (Integer'Wide_Image (line + 1), Left), count);
+          MDI_Main.Message_Panel.Message_List.Item_Data(
+            count,
+            new Dope_information'(file => MDI_Child.File_Name, line => line, col => col)
           );
+          MDI_Main.Message_Panel.Message_List.Set_Sub_Item (Trim (Integer'Wide_Image (col + 1), Left), count, 1);
+          MDI_Main.Message_Panel.Message_List.Set_Sub_Item (Editor.GetLine (line), count, 2);
+          count := count + 1;
           --  Reduce the search target:
           Editor.SetTargetStart (Editor.GetTargetEnd);
           Editor.SetTargetEnd (Editor.GetLength);
         end loop;
+        MDI_Main.Message_Panel.Message_List.Set_Column ("Search for: " & find_str & " (" &
+          Trim (Integer'Wide_Image (count), Left) & " items)", 2, 1000);
       when replace_all =>
         null;
     end case;

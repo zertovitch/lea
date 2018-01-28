@@ -2,6 +2,7 @@ with LEA_Common;                       use LEA_Common;
 
 with LEA_GWin.Help;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
+with LEA_GWin.Messages;                use LEA_GWin.Messages;
 with LEA_GWin.Modal_dialogs;           use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Options;
 with LEA_GWin.Toolbars;
@@ -13,6 +14,7 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Registry;
+with GWindows.Scintilla;
 with GWindows.Types;                    use GWindows.Types;
 
 with Ada.Command_Line;
@@ -27,6 +29,7 @@ package body LEA_GWin.MDI_Main is
   procedure Focus_an_already_opened_window(
     MDI_Main  : MDI_Main_Type;
     File_Name : GString_Unbounded;
+    Line, Col : Natural            := 0;
     is_open   : out Boolean )
   is
     procedure Identify (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -35,10 +38,18 @@ package body LEA_GWin.MDI_Main is
       if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
         declare
           pw: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
+          new_pos : GWindows.Scintilla.Position;
         begin
           if pw.File_Name = File_Name then
             is_open:= True;
             pw.Focus;  --  Focus on document already open in our app.
+            if Line > 0 then
+              pw.Editor.Set_current_line (Line);
+            end if;
+            if Col > 0 then
+              new_pos := pw.Editor.GetCurrentPos + Col;
+              pw.Editor.SetSel (new_pos, new_pos);
+            end if;
           end if;
         end;
       end if;
@@ -94,15 +105,17 @@ package body LEA_GWin.MDI_Main is
   end Close_extra_first_child;
 
   procedure Open_Child_Window_And_Load (
-    MDI_Main     : in out MDI_Main_Type;
+    MDI_Main   : in out MDI_Main_Type;
     File_Name,
-    File_Title :        GWindows.GString_Unbounded
+    File_Title :        GWindows.GString_Unbounded;
+    Line, Col  :        Natural := 0
   )
   is
     is_open: Boolean;
-    line : Natural := 0;
+    mru_line : Natural := 0;
+    new_pos : GWindows.Scintilla.Position;
   begin
-    Focus_an_already_opened_window( MDI_Main, File_Name, is_open );
+    Focus_an_already_opened_window( MDI_Main, File_Name, Line, Col, is_open );
     if is_open then
       return;        -- nothing to do, document already in a window
     end if;
@@ -123,19 +136,26 @@ package body LEA_GWin.MDI_Main is
       MDI_Active_Window (MDI_Main, New_Window.all);
       for m of MDI_Main.opt.mru loop
         if m.name = New_Window.File_Name then
-          line := m.line;
+          mru_line := m.line;
           exit;
         end if;
       end loop;
-      Update_Common_Menus (MDI_Main, GU2G(New_Window.File_Name), line);
+      Update_Common_Menus (MDI_Main, GU2G(New_Window.File_Name), mru_line);
       New_Window.Editor.Load_text;
       New_Window.Finish_subwindow_opening;
       New_Window.Syntax_kind := Guess_syntax (GU2G (New_Window.File_Name));
       New_Window.Editor.Set_syntax (New_Window.Syntax_kind);
       New_Window.Editor.Focus;
-      if line > 0 then
+      if mru_line > 0 then
         --  Set cursor position to memorized line number
-        New_Window.Editor.Set_current_line (line);
+        New_Window.Editor.Set_current_line (mru_line);
+      end if;
+      if Line > 0 then
+        New_Window.Editor.Set_current_line (Line);
+      end if;
+      if Col > 0 then
+        new_pos := New_Window.Editor.GetCurrentPos + Col;
+        New_Window.Editor.SetSel (new_pos, new_pos);
       end if;
     end;
   exception
@@ -180,13 +200,16 @@ package body LEA_GWin.MDI_Main is
   end Shorten_file_name;
 
   procedure Open_Child_Window_And_Load (
-        MDI_Main   : in out MDI_Main_Type;
-        File_Name  :        GWindows.GString_Unbounded ) is
+    MDI_Main   : in out MDI_Main_Type;
+    File_Name  :        GWindows.GString_Unbounded;
+    Line, Col  :        Natural := 0 )
+  is
   begin
     Open_Child_Window_And_Load(
       MDI_Main,
       File_Name,
-      G2GU(Shorten_file_name(GU2G(File_Name)))
+      G2GU(Shorten_file_name(GU2G(File_Name))),
+      Line, Col
     );
   end Open_Child_Window_And_Load;
 
@@ -267,7 +290,7 @@ package body LEA_GWin.MDI_Main is
   ---------------
 
   procedure On_Create ( MDI_Main : in out MDI_Main_Type ) is
-    use Ada.Command_Line;
+    use GWindows.Common_Controls, Ada.Command_Line;
     --
     -- Replace LEA default values by system-dependent ones (here those of GWindows)
     --
@@ -319,9 +342,14 @@ package body LEA_GWin.MDI_Main is
     MDI_Main.Message_Panel.Dock (At_Bottom);
     MDI_Main.Message_Panel.Splitter.Create (MDI_Main.Message_Panel, At_Top, Height => 5);
     MDI_Main.Message_Panel.Splitter.MDI_Main := MDI_Main'Unrestricted_Access;
-    MDI_Main.Message_Panel.Message_Font.Create_Font (App_default_font, 15);
-    MDI_Main.Message_Panel.Message_List.Create (MDI_Main.Message_Panel, 1,1,20,20, False);
-    MDI_Main.Message_Panel.Message_List.Set_Font (MDI_Main.Message_Panel.Message_Font);
+    MDI_Main.Message_Panel.Message_List.Font.Create_Font (App_default_font, 15);
+    MDI_Main.Message_Panel.Message_List.Create (MDI_Main.Message_Panel, 1,1,20,20, View => Report_View);
+    MDI_Main.Message_Panel.Message_List.mdi_main_parent := MDI_Main'Unrestricted_Access;
+    MDI_Main.Message_Panel.Message_List.Set_Extended_Style(LEA_LV_Ex.Full_Row_Select);
+    MDI_Main.Message_Panel.Message_List.Set_Font (MDI_Main.Message_Panel.Message_List.Font);
+    MDI_Main.Message_Panel.Message_List.Insert_Column ("", 0, 40);
+    MDI_Main.Message_Panel.Message_List.Insert_Column ("", 1, 35);
+    MDI_Main.Message_Panel.Message_List.Insert_Column ("", 2, 1000);
     MDI_Main.Message_Panel.Message_List.Dock (Fill);
 
     --  ** Other resources

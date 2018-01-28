@@ -6,7 +6,6 @@ with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
-with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Drawing;
 with GWindows.Packing_Boxes;
 with GWindows.Panels;
@@ -28,12 +27,6 @@ package LEA_GWin.MDI_Child is
 
   --  Clicks on some some parts of the status bar have effects (like "Go to line")
   overriding procedure On_Click (Bar : in out MDI_Child_Status_Bar_Type);
-
-  type LV_Payload is record
-    index_before_sorting: Integer;
-  end record;
-
-  package LEA_LV_Ex is new GWindows.Common_Controls.Ex_List_View(LV_Payload);
 
   type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
   --  overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
@@ -88,8 +81,6 @@ package LEA_GWin.MDI_Child is
         temp_name_gen    : Ada.Numerics.Float_Random.Generator;
         any_path_in_zip  : Boolean;
         extract_dir      : GString_Unbounded;
-        last_sort_col    : Integer:= -1; -- -1 if none
-        last_sort_direc  : LEA_LV_Ex.Sort_Direction_Type;
         refreshing_list  : Boolean:= False;
         is_closing       : Boolean:= False;  --  True only during and after On_Close
         last_op_comment_1: GString_Unbounded;
