@@ -514,6 +514,9 @@ package body LEA_GWin.Editor is
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
     pos, sel_a, sel_z: Position;
     line, col, count : Integer;
+    ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
+    line_msg_col_width : constant := 40;
+    col_msg_col_width  : constant := 35;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -565,10 +568,13 @@ package body LEA_GWin.Editor is
         --  Find next - anyway.
         Editor.Search (action => find_next);
       when find_all =>
-        MDI_Main.Message_Panel.Message_List.Clear;
-        MDI_Main.Message_Panel.Message_List.Set_Column ("Line", 0, 40);
-        MDI_Main.Message_Panel.Message_List.Set_Column ("Col",  1, 35);
-        MDI_Main.Message_Panel.Message_List.Set_Column ("Search for: " & find_str, 2, 1000);
+        ml.Clear;
+        ml.Set_Column ("Line", 0, line_msg_col_width);
+        ml.Set_Column ("Col",  1, col_msg_col_width);
+        ml.Set_Column (
+          "Searching for: [" & find_str & ']', 2,
+          large_message_width - line_msg_col_width - col_msg_col_width
+        );
         --  Prepare a forward search in the entire document:
         Editor.SetTargetStart (0);
         Editor.SetTargetEnd (Editor.GetLength);
@@ -578,23 +584,54 @@ package body LEA_GWin.Editor is
           exit when pos < 0;
           line := Editor.LineFromPosition (pos);
           col  := Editor.GetColumn (pos);
-          MDI_Main.Message_Panel.Message_List.Insert_Item (Trim (Integer'Wide_Image (line + 1), Left), count);
-          MDI_Main.Message_Panel.Message_List.Item_Data(
+          ml.Insert_Item (Trim (Integer'Wide_Image (line + 1), Left), count);
+          ml.Item_Data(
             count,
             new Dope_information'(file => MDI_Child.File_Name, line => line, col => col)
           );
-          MDI_Main.Message_Panel.Message_List.Set_Sub_Item (Trim (Integer'Wide_Image (col + 1), Left), count, 1);
-          MDI_Main.Message_Panel.Message_List.Set_Sub_Item (Editor.GetLine (line), count, 2);
+          ml.Set_Sub_Item (Trim (Integer'Wide_Image (col + 1), Left), count, 1);
+          ml.Set_Sub_Item (Editor.GetLine (line), count, 2);
           count := count + 1;
           --  Reduce the search target:
           Editor.SetTargetStart (Editor.GetTargetEnd);
           Editor.SetTargetEnd (Editor.GetLength);
         end loop;
-        MDI_Main.Message_Panel.Message_List.Set_Column ("Search for: " & find_str & " (" &
-          Trim (Integer'Wide_Image (count), Left) & " items)", 2, 1000);
+        ml.Set_Column ("Search for: [" & find_str & "] (" &
+          Trim (Integer'Wide_Image (count), Left) & " items)", 2,
+          large_message_width - line_msg_col_width - col_msg_col_width);
       when replace_all =>
-        null;
-    end case;
+        ml.Clear;
+        ml.Set_Column (
+          "Replacing all: [" & find_str & "] by: [" & repl_str & ']', 0,
+          large_message_width
+        );
+        ml.Set_Column ("", 1, 0);
+        ml.Set_Column ("", 2, 0);
+        --  Prepare a forward search in the entire document:
+        Editor.SetTargetStart (0);
+        Editor.SetTargetEnd (Editor.GetLength);
+        --  The replacement can be undone and redone in a single "Undo" / Redo":
+        Editor.BeginUndoAction;
+        count := 0;
+        loop
+          pos := Editor.SearchInTarget (find_str);
+          exit when pos < 0;
+          count := count + 1;
+          --  Replace: Clear, then Insert.
+          Editor.SetSel (Editor.GetTargetStart, Editor.GetTargetEnd);
+          Editor.Clear;
+          Editor.InsertText (pos, repl_str);
+          --  Reduce the search target:
+          Editor.SetTargetStart (pos + repl_str'Length);
+          Editor.SetTargetEnd (Editor.GetLength);
+        end loop;
+        Editor.EndUndoAction;
+        ml.Set_Column (
+          "Replaced all: [" & find_str & "] by: [" & repl_str & "] (" &
+          Trim (Integer'Wide_Image (count), Left) & " items)", 0,
+          large_message_width
+        );
+   end case;
   end Search;
 
   procedure Bookmark_next (Editor : in out LEA_Scintilla_Type) is

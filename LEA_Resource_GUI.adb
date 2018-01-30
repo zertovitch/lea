@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/01/25  16:41:28
+-- Transcription time: 2018/01/30  11:58:19
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -593,9 +593,6 @@ package body LEA_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Replace_all_button);
     end if;
-    Enabled(Window.Replace_all_button_permanent, False);
-    Enabled(Window.Replace_all_button, False);
-    Disable(Window.Replace_all_button_permanent);
     Dlg_to_Scn(  11, 112, 81, 11, x,y,w,h);
     Create( Window.Whole_word, Window, "Whole word", x,y,w,h, ID => Whole_word);
     Dlg_to_Scn(  11, 129, 81, 11, x,y,w,h);
