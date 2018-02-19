@@ -572,7 +572,7 @@ package body LEA_GWin.Editor is
         ml.Set_Column ("Line", 0, line_msg_col_width);
         ml.Set_Column ("Col",  1, col_msg_col_width);
         ml.Set_Column (
-          "Searching for: [" & find_str & ']', 2,
+          "Searching for [" & find_str & ']', 2,
           large_message_width - line_msg_col_width - col_msg_col_width
         );
         --  Prepare a forward search in the entire document:
@@ -596,13 +596,13 @@ package body LEA_GWin.Editor is
           Editor.SetTargetStart (Editor.GetTargetEnd);
           Editor.SetTargetEnd (Editor.GetLength);
         end loop;
-        ml.Set_Column ("Search for: [" & find_str & "] (" &
+        ml.Set_Column ("Search for [" & find_str & "] (" &
           Trim (Integer'Wide_Image (count), Left) & " items)", 2,
           large_message_width - line_msg_col_width - col_msg_col_width);
       when replace_all =>
         ml.Clear;
         ml.Set_Column (
-          "Replacing all: [" & find_str & "] by: [" & repl_str & ']', 0,
+          "Replacing all [" & find_str & "] by [" & repl_str & ']', 0,
           large_message_width
         );
         ml.Set_Column ("", 1, 0);
@@ -627,11 +627,21 @@ package body LEA_GWin.Editor is
         end loop;
         Editor.EndUndoAction;
         ml.Set_Column (
-          "Replaced all: [" & find_str & "] by: [" & repl_str & "] (" &
+          "Replaced all [" & find_str & "] by [" & repl_str & "] (" &
           Trim (Integer'Wide_Image (count), Left) & " items)", 0,
           large_message_width
         );
-   end case;
+        Message_Box (
+          Editor,
+          "Replace all",
+          "Replaced all (" &
+          Trim (Integer'Wide_Image (count), Left) &
+          ") occurrences of" & NL & NL &
+          "     [" & find_str & "]" & NL &
+          "        by" & NL &
+          "     [" & repl_str & "]." & NL & NL &
+          "Operation can be undone in one ""Undo"".");
+    end case;
   end Search;
 
   procedure Bookmark_next (Editor : in out LEA_Scintilla_Type) is
