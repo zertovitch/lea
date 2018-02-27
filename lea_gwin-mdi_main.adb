@@ -362,8 +362,8 @@ package body LEA_GWin.MDI_Main is
       Top( MDI_Main, MDI_Main.opt.win_top);
     end if;
     Size(MDI_Main,
-      Integer'Max(400, MDI_Main.opt.win_width),
-      Integer'Max(200, MDI_Main.opt.win_height)
+      Integer'Max(640, MDI_Main.opt.win_width),
+      Integer'Max(400, MDI_Main.opt.win_height)
     );
     Zoom(MDI_Main,MDI_Main.opt.MDI_main_maximized);
 

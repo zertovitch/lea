@@ -38,7 +38,7 @@ package LEA_Common.User_options is
     win_width,
     win_height            : Integer := use_default;
     MDI_childen_maximized : Boolean := True;
-    MDI_main_maximized    : Boolean := False;
+    MDI_main_maximized    : Boolean := True;
     mru                   : MRU_List;
   end record;
 
