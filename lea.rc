@@ -84,12 +84,13 @@ Menu_MDI_Child MENU
         MENUITEM "Previous bookmark\tShift+F2", IDM_Previous_bookmark
         MENUITEM "Toggle bookmark\tCtrl+F2", IDM_Toggle_bookmark
     }
-    POPUP "&Tools"
+    POPUP "&Actions"
     {
         MENUITEM "Check &syntax && semantics", IDM_Check_syntax
-        MENUITEM "&Compile this file", IDM_Compile_single
-        MENUITEM "&Build application", IDM_Build
-        MENUITEM "Build and &run", IDM_Build_and_run
+        MENUITEM "&Compile this file\tAlt-F9 or Shift-F4", IDM_Compile_single
+        MENUITEM "&Build application\tF9 or F4", IDM_Build
+        MENUITEM "Build and &run\tCtrl-F9", IDM_Build_and_run
+        MENUITEM "&Run", IDM_Run
     }
     POPUP "&View"
     {
@@ -148,12 +149,13 @@ Menu_MDI_Main MENU
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
-    POPUP "&Tools"
+    POPUP "&Actions"
     {
         MENUITEM "Check &syntax && semantics", IDM_Check_syntax, INACTIVE
         MENUITEM "&Compile this file", IDM_Compile_single, INACTIVE
-        MENUITEM "&Build application", IDM_Build, INACTIVE
-        MENUITEM "Build and &run", IDM_Build_and_run, INACTIVE
+        MENUITEM "&Build application\tF9 or F4", IDM_Build, INACTIVE
+        MENUITEM "Build and &run\tCtrl-F9", IDM_Build_and_run, INACTIVE
+        MENUITEM "&Run", IDM_Run
     }
     POPUP "&View"
     {
@@ -298,6 +300,11 @@ Main_Menu ACCELERATORS
     VK_F2,         IDM_Next_bookmark, VIRTKEY
     VK_F2,         IDM_Previous_bookmark, VIRTKEY, SHIFT
     VK_F2,         IDM_Toggle_bookmark, VIRTKEY, CONTROL
+    VK_F4,         IDM_Compile_single, VIRTKEY, SHIFT
+    VK_F9,         IDM_Compile_single, VIRTKEY, ALT
+    VK_F4,         IDM_Build, VIRTKEY
+    VK_F9,         IDM_Build, VIRTKEY
+    VK_F9,         IDM_Build_and_run, VIRTKEY, CONTROL
     VK_F1,         IDM_Quick_Help, VIRTKEY
 }
 

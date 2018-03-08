@@ -1,4 +1,5 @@
 with LEA_Common.User_options;
+with LEA_GWin.Editor;
 with LEA_GWin.Messages;
 with LEA_GWin.Search_box;
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
@@ -75,6 +76,8 @@ package LEA_GWin.MDI_Main is
         Search_box             : LEA_GWin.Search_box.LEA_search_box_type;
         --
         is_closing             : Boolean:= False;  --  True only during and after On_Close
+        --  Direct input stream from an editor window:
+        current_editor_stream  : aliased LEA_GWin.Editor.Editor_Stream_Type;
       end record;
 
   overriding procedure On_Create (MDI_Main : in out MDI_Main_Type);

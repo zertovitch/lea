@@ -89,3 +89,4 @@
 #define IDM_Uncomment                           40069
 #define IDM_Show_special_symbols                40070
 #define IDM_Find_Previous                       40071
+#define IDM_Run                                 40072

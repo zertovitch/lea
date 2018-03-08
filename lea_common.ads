@@ -46,6 +46,8 @@ package LEA_Common is
 
   type Syntax_type is (Undefined, Ada_syntax);
 
+  type Toolset_mode is (HAC_mode, GNAT_mode);
+
   function Guess_syntax (file_name : UTF_16_String) return Syntax_type;
 
   function File_type_image (syn: Syntax_type) return UTF_16_String;

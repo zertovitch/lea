@@ -2,6 +2,8 @@ with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
 
+with HAC.Data, HAC.Compiler, HAC.PCode.Interpreter;
+
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Cursors;                  use GWindows.Cursors;
@@ -449,6 +451,61 @@ package body LEA_GWin.MDI_Child is
     Dock_Children (MDI_Child);
   end On_Size;
 
+  procedure Check_syntax (MDI_Child : in out MDI_Child_Type) is
+  begin
+    case MDI_Child.MDI_Parent.opt.toolset is
+      when HAC_mode =>
+        --  Compilation should be quick enough to avoid the "check syntax" special case
+        MDI_Child.Compile_single;
+      when GNAT_mode =>
+        null;
+    end case;
+  end Check_syntax;
+
+  procedure Compile_single (MDI_Child : in out MDI_Child_Type) is
+  begin
+    case MDI_Child.MDI_Parent.opt.toolset is
+      when HAC_mode =>
+        --  We connect the main editor input stream to this window's editor.
+        MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
+        HAC.Data.LineCount := 0;
+        HAC.Data.c_Set_Stream (MDI_Child.MDI_Parent.current_editor_stream'Access);
+        null;  --  [!!works but only with a terminal window!!] HAC.Compiler.Compile;
+      when GNAT_mode =>
+        null;
+    end case;
+  end Compile_single;
+
+  procedure Build (MDI_Child : in out MDI_Child_Type) is
+  begin
+    --  !!  Obviously should occur (most of the time) at MDI_Main level
+    case MDI_Child.MDI_Parent.opt.toolset is
+      when HAC_mode =>
+        --  !!  At least in project/studio mode, we will build main, from editors or files
+        MDI_Child.Compile_single;
+      when GNAT_mode =>
+        null;
+    end case;
+  end Build;
+
+  procedure Build_and_run (MDI_Child : in out MDI_Child_Type) is
+  begin
+    --  !!  A la Turbo Pascal: check if changed
+    MDI_Child.Build;
+    MDI_Child.Run;
+  end Build_and_run;
+
+  procedure Run (MDI_Child : in out MDI_Child_Type) is
+  begin
+    case MDI_Child.MDI_Parent.opt.toolset is
+      when HAC_mode =>
+        --  !!  Check if anything compiled ?
+        null;  --  [!!works but only with a terminal window!!] HAC.PCode.Interpreter.Interpret;
+      when GNAT_mode =>
+        null;
+    end case;
+  end Run;
+
   procedure On_Menu_Select (
         MDI_Child : in out MDI_Child_Type;
         Item      : in     Integer        ) is
@@ -486,6 +543,13 @@ package body LEA_GWin.MDI_Child is
         MDI_Child.Editor.Bookmark_next;
       when IDM_Previous_bookmark =>
         MDI_Child.Editor.Bookmark_previous;
+      --  Compile / Build actions
+      when IDM_Check_syntax   =>  MDI_Child.Check_syntax;
+      when IDM_Compile_single =>  MDI_Child.Compile_single;
+      when IDM_Build          =>  MDI_Child.Build;
+      when IDM_Build_and_run  =>  MDI_Child.Build_and_run;
+      when IDM_Run            =>  MDI_Child.Run;
+      --
       when IDM_Show_special_symbols =>
         Toggle_show_special(MDI_Child.MDI_Parent.opt);
         MDI_Child.Editor.Apply_options;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/03/08  12:04:02
+-- Transcription time: 2018/03/08  16:01:39
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -81,11 +81,12 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0004, "Previous bookmark" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F2", IDM_Previous_bookmark);
     Append_Item(Menu.Popup_0004, "Toggle bookmark" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F2", IDM_Toggle_bookmark);
     Menu.Popup_0005:= Create_Popup;
-    Append_Menu(Menu.Main, "&Tools", Menu.Popup_0005);
+    Append_Menu(Menu.Main, "&Actions", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "Check &syntax && semantics", IDM_Check_syntax);
-    Append_Item(Menu.Popup_0005, "&Compile this file", IDM_Compile_single);
-    Append_Item(Menu.Popup_0005, "&Build application", IDM_Build);
-    Append_Item(Menu.Popup_0005, "Build and &run", IDM_Build_and_run);
+    Append_Item(Menu.Popup_0005, "&Compile this file" & To_GString_From_String((1=>ASCII.HT)) & "Alt-F9 or Shift-F4", IDM_Compile_single);
+    Append_Item(Menu.Popup_0005, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F9 or F4", IDM_Build);
+    Append_Item(Menu.Popup_0005, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl-F9", IDM_Build_and_run);
+    Append_Item(Menu.Popup_0005, "&Run", IDM_Run);
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "Show special symbols", IDM_Show_special_symbols);
@@ -113,7 +114,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 127
+  -- Menu at line 128
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -141,15 +142,16 @@ package body LEA_Resource_GUI is
     Append_Separator(Menu.Popup_0001);
     Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
-    Append_Menu(Menu.Main, "&Tools", Menu.Popup_0003);
+    Append_Menu(Menu.Main, "&Actions", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Check &syntax && semantics", IDM_Check_syntax);
     State(Menu.Popup_0003, Command, IDM_Check_syntax, Disabled);
     Append_Item(Menu.Popup_0003, "&Compile this file", IDM_Compile_single);
     State(Menu.Popup_0003, Command, IDM_Compile_single, Disabled);
-    Append_Item(Menu.Popup_0003, "&Build application", IDM_Build);
+    Append_Item(Menu.Popup_0003, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F9 or F4", IDM_Build);
     State(Menu.Popup_0003, Command, IDM_Build, Disabled);
-    Append_Item(Menu.Popup_0003, "Build and &run", IDM_Build_and_run);
+    Append_Item(Menu.Popup_0003, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl-F9", IDM_Build_and_run);
     State(Menu.Popup_0003, Command, IDM_Build_and_run, Disabled);
+    Append_Item(Menu.Popup_0003, "&Run", IDM_Run);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Notepad view", IDM_Notepad_view);
@@ -175,7 +177,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0007, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 195
+  -- Dialog at resource line 197
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -284,7 +286,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 219
+  -- Dialog at resource line 221
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -380,7 +382,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  -- Dialog at resource line 232
+  -- Dialog at resource line 234
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -478,7 +480,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  -- Dialog at resource line 254
+  -- Dialog at resource line 256
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -724,6 +726,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 371
+  -- Last line of resource script file: 378
 
 end LEA_Resource_GUI;
