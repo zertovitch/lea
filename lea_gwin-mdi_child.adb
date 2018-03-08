@@ -1,6 +1,7 @@
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
+with LEA_GWin.Messages.IO_Pipe;
 
 with HAC.Data, HAC.Compiler, HAC.PCode.Interpreter;
 
@@ -468,7 +469,7 @@ package body LEA_GWin.MDI_Child is
       when HAC_mode =>
         --  We connect the main editor input stream to this window's editor.
         MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
-        HAC.Data.LineCount := 0;
+        HAC.Data.Line_Count := 0;
         HAC.Data.c_Set_Stream (MDI_Child.MDI_Parent.current_editor_stream'Access);
         null;  --  [!!works but only with a terminal window!!] HAC.Compiler.Compile;
       when GNAT_mode =>
@@ -500,6 +501,7 @@ package body LEA_GWin.MDI_Child is
     case MDI_Child.MDI_Parent.opt.toolset is
       when HAC_mode =>
         --  !!  Check if anything compiled ?
+        HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
         null;  --  [!!works but only with a terminal window!!] HAC.PCode.Interpreter.Interpret;
       when GNAT_mode =>
         null;

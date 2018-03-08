@@ -1,5 +1,5 @@
 --  This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
---  for the LEA ( http://l-e-a.sf.net/ , mirror: https://github.com/svn2github/lea )
+--  for the LEA project ( http://l-e-a.sf.net/ , mirror: https://github.com/svn2github/lea )
 --  Build me with "gprbuild -p -P lea", or open me with GPS
 --  
 --  *** External libraries ***
