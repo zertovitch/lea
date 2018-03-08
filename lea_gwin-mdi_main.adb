@@ -314,7 +314,7 @@ package body LEA_GWin.MDI_Main is
     --  ** Menus and accelerators:
 
     LEA_Resource_GUI.Create_Full_Menu(MDI_Main.Menu);
-    MDI_Menu (MDI_Main, MDI_Main.Menu.Main, Window_Menu => 3);
+    MDI_Menu (MDI_Main, MDI_Main.Menu.Main, Window_Menu => 5);
     Accelerator_Table (MDI_Main, "Main_Menu");
     MDI_Main.IDM_MRU:=
       (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
@@ -592,9 +592,9 @@ package body LEA_GWin.MDI_Main is
         Do_about (MDI_Main);
       when IDM_Quick_Help =>
         LEA_GWin.Help.Show_help (MDI_Main);
-      when IDM_FLAT_VIEW =>
+      when IDM_Notepad_view =>
         Change_View (MDI_Main, Notepad, force => False);
-      when IDM_TREE_VIEW =>
+      when IDM_Studio_view =>
         Change_View (MDI_Main, Studio, force => False);
       when others =>
         --  We have perhaps a MRU (most rectly used) file entry.

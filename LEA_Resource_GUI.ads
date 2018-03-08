@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/01/30  11:58:19
+-- Transcription time: 2018/03/08  12:04:02
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -42,7 +42,7 @@ package LEA_Resource_GUI is
     Popup_0009: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 117
+  -- Menu at line 121
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -50,13 +50,14 @@ package LEA_Resource_GUI is
     Main: Menu_Type; -- Root of the whole menu tree
     Popup_0001: Menu_Type;  -- level 1; title: "&File"
     Popup_0002: Menu_Type;  -- level 2; title: "&Recent"
-    Popup_0003: Menu_Type;  -- level 1; title: "&View"
-    Popup_0004: Menu_Type;  -- level 1; title: "&Options"
-    Popup_0005: Menu_Type;  -- level 1; title: "&Window"
-    Popup_0006: Menu_Type;  -- level 1; title: "&Help"
+    Popup_0003: Menu_Type;  -- level 1; title: "&Tools"
+    Popup_0004: Menu_Type;  -- level 1; title: "&View"
+    Popup_0005: Menu_Type;  -- level 1; title: "&Options"
+    Popup_0006: Menu_Type;  -- level 1; title: "&Window"
+    Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 169
+  -- Menu at line 183
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -79,7 +80,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 196
+  -- Dialog at resource line 210
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -119,7 +120,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  -- Dialog at resource line 209
+  -- Dialog at resource line 223
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -167,7 +168,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  -- Dialog at resource line 230
+  -- Dialog at resource line 244
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -213,7 +214,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  -- Dialog at resource line 253
+  -- Dialog at resource line 267
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -276,16 +277,23 @@ package LEA_Resource_GUI is
   IDM_Paste                   : constant:=  40008;
   IDM_Duplicate               : constant:=  40009;
   Find_next_button            : constant:=  40010;
+  IDM_Check_syntax            : constant:=  40010;
   IDM_New_File                : constant:=  40011;
   AZip_URL                    : constant:=  40012;
+  IDM_Build_and_run           : constant:=  40012;
   Find_previous_button        : constant:=  40013;
-  IDM_Build_run_HAC           : constant:=  40014;
+  IDM_Build                   : constant:=  40013;
+  IDM_Compile_single          : constant:=  40014;
   Find_all_button             : constant:=  40015;
+  IDM_ABOUT                   : constant:=  40015;
   IDM_Open_File               : constant:=  40016;
-  IDM_Build_run_GNAT          : constant:=  40017;
+  IDM_HAC_Mode                : constant:=  40017;
+  IDM_GNAT_Mode               : constant:=  40018;
   Indentation_edit_box        : constant:=  40018;
+  IDM_Studio_view             : constant:=  40019;
   Replace_and_find_next_button: constant:=  40019;
   Color_theme_list_box        : constant:=  40020;
+  IDM_Notepad_view            : constant:=  40020;
   Replace_all_button          : constant:=  40021;
   Close_search_box            : constant:=  40022;
   IDM_Undo                    : constant:=  40023;
@@ -302,7 +310,6 @@ package LEA_Resource_GUI is
   GNAVI_URL                   : constant:=  40034;
   Group_color_theme           : constant:=  40035;
   IDM_Redo                    : constant:=  40036;
-  IDM_ABOUT                   : constant:=  40037;
   IDM_TEST_ARCHIVE            : constant:=  40038;
   ResEdit_URL                 : constant:=  40039;
   IDM_Save_As                 : constant:=  40040;
@@ -312,8 +319,6 @@ package LEA_Resource_GUI is
   IDM_EXTRACT                 : constant:=  40044;
   IDM_General_options         : constant:=  40045;
   IDM_Find                    : constant:=  40046;
-  IDM_FLAT_VIEW               : constant:=  40047;
-  IDM_TREE_VIEW               : constant:=  40048;
   IDM_MRU_2                   : constant:=  40049;
   IDM_MRU_3                   : constant:=  40050;
   IDM_MRU_4                   : constant:=  40051;
@@ -348,6 +353,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 357
+  -- Last line of resource script file: 371
 
 end LEA_Resource_GUI;

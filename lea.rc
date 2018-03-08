@@ -86,16 +86,20 @@ Menu_MDI_Child MENU
     }
     POPUP "&Tools"
     {
-        MENUITEM "Build && run with &HAC", IDM_Build_run_HAC, INACTIVE
-        MENUITEM SEPARATOR
-        MENUITEM "&Build && run with GNAT", IDM_Build_run_GNAT, INACTIVE
+        MENUITEM "Check &syntax && semantics", IDM_Check_syntax
+        MENUITEM "&Compile this file", IDM_Compile_single
+        MENUITEM "&Build application", IDM_Build
+        MENUITEM "Build and &run", IDM_Build_and_run
     }
     POPUP "&View"
     {
         MENUITEM "Show special symbols", IDM_Show_special_symbols
         MENUITEM SEPARATOR
-        MENUITEM "&Notepad view", IDM__FLAT_VIEW
-        MENUITEM "&Studio view", IDM__TREE_VIEW, INACTIVE
+        MENUITEM "&Notepad view", IDM_Notepad_view
+        MENUITEM "&Studio view", IDM_Studio_view, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "&HAC pseudo-Ada mode", IDM_HAC_Mode
+        MENUITEM "&GNAT Ada mode", IDM_GNAT_Mode
     }
     POPUP "&Options"
     {
@@ -113,7 +117,7 @@ Menu_MDI_Child MENU
         MENUITEM "&Quick help\tF1", IDM_Quick_Help
         MENUITEM "LEA &Web page (contact, support)", IDM_Web
         MENUITEM SEPARATOR
-        MENUITEM "&About LEA", IDM__ABOUT
+        MENUITEM "&About LEA", IDM_ABOUT
     }
 }
 
@@ -144,10 +148,20 @@ Menu_MDI_Main MENU
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
+    POPUP "&Tools"
+    {
+        MENUITEM "Check &syntax && semantics", IDM_Check_syntax, INACTIVE
+        MENUITEM "&Compile this file", IDM_Compile_single, INACTIVE
+        MENUITEM "&Build application", IDM_Build, INACTIVE
+        MENUITEM "Build and &run", IDM_Build_and_run, INACTIVE
+    }
     POPUP "&View"
     {
-        MENUITEM "&Notepad view", IDM__FLAT_VIEW
-        MENUITEM "&Studio view", IDM__TREE_VIEW, INACTIVE
+        MENUITEM "&Notepad view", IDM_Notepad_view
+        MENUITEM "&Studio view", IDM_Studio_view, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "&HAC pseudo-Ada mode", IDM_HAC_Mode
+        MENUITEM "&GNAT Ada mode", IDM_GNAT_Mode
     }
     POPUP "&Options"
     {
@@ -165,7 +179,7 @@ Menu_MDI_Main MENU
         MENUITEM "&Quick help\tF1", IDM_Quick_Help
         MENUITEM "LEA &Web page (contact, support)", IDM_Web
         MENUITEM SEPARATOR
-        MENUITEM "&About LEA", IDM__ABOUT
+        MENUITEM "&About LEA", IDM_ABOUT
     }
 }
 
