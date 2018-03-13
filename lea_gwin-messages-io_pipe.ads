@@ -1,5 +1,5 @@
 --  This is an ad-hoc pipe for using a (hum... the global) message list
---  as a terminal.  It is forseen for the HAC compiler and p-code interpreter.
+--  as a terminal.  It is foreseen for the HAC p-code interpreter.
 
 with Ada.Text_IO,
      Ada.Integer_Text_IO,

@@ -3,7 +3,7 @@ with LEA_Common.User_options;           use LEA_Common.User_options;
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Messages.IO_Pipe;
 
-with HAC.Data, HAC.Compiler, HAC.PCode.Interpreter;
+with HAC.Data, HAC.Compiler, HAC.PCode.Interpreter, HAC.UErrors;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
@@ -14,8 +14,10 @@ with GWindows.Scintilla;                use GWindows.Scintilla;
 
 with Ada.Directories;
 --  with Ada.Environment_Variables;         use Ada.Environment_Variables;
---  with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
+with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
+with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+with LEA_GWin.Messages;
 
 package body LEA_GWin.MDI_Child is
 
@@ -464,14 +466,56 @@ package body LEA_GWin.MDI_Child is
   end Check_syntax;
 
   procedure Compile_single (MDI_Child : in out MDI_Child_Type) is
+    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
+    ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
+    count: Natural := 0;
+    displayed_compilation_file_name: Unbounded_String;
+    procedure Feedback (
+       message   : String;
+       file_name : String;
+       line      : Positive;
+       column_a  : Positive;
+       column_z  : Positive;
+       kind      : HAC.UErrors.Message_kind
+     )
+    is
+    begin
+      if displayed_compilation_file_name /= file_name then
+        --  New compilation unit, show its name.
+        ml.Insert_Item ("----", count);
+        ml.Set_Sub_Item (S2G (file_name), count, 1);
+        count := count + 1;
+        displayed_compilation_file_name := To_Unbounded_String (file_name);
+      end if;
+      ml.Insert_Item (Trim (Integer'Wide_Image (line + 1), Left), count);
+      ml.Item_Data(
+        count,
+        new LEA_GWin.Messages.Dope_information'(
+          file => G2GU (S2G (file_name)),
+          line => line,
+          col => column_a
+        )
+      );
+      ml.Set_Sub_Item (S2G (message), count, 1);
+      count := count + 1;
+    end;
   begin
     case MDI_Child.MDI_Parent.opt.toolset is
       when HAC_mode =>
         --  We connect the main editor input stream to this window's editor.
         MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
         HAC.Data.Line_Count := 0;
-        HAC.Data.c_Set_Stream (MDI_Child.MDI_Parent.current_editor_stream'Access);
-        null;  --  [!!works but only with a terminal window!!] HAC.Compiler.Compile;
+        HAC.Data.c_Set_Stream (
+          MDI_Child.MDI_Parent.current_editor_stream'Access,
+          G2S (GU2G (MDI_Child.File_Name))
+        );
+        ml.Clear;
+        ml.Set_Column ("Line",     0, 40);
+        ml.Set_Column ("Message",  1, 800);
+        HAC.Data.current_error_pipe := Feedback'Unrestricted_Access;
+        HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
+        HAC.Compiler.Compile;
+        HAC.Data.current_error_pipe := null;
       when GNAT_mode =>
         null;
     end case;
