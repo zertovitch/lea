@@ -5,6 +5,7 @@ package body LEA_GWin.Messages is
   overriding procedure On_Click (Control : in out Message_List_Type) is
   begin
     Control.On_Double_Click;
+    --  Focus back on the message list (so the keyboard is also focused there)
     Control.Focus;
   end On_Click;
 
@@ -18,7 +19,7 @@ package body LEA_GWin.Messages is
         pl := Control.Item_Data (i);
         if pl /= null then
           mm := MDI_Main_Access (Control.mdi_main_parent);
-          mm.Open_Child_Window_And_Load (pl.file, pl.line, pl.col);
+          mm.Open_Child_Window_And_Load (pl.file, pl.line, pl.col_a, pl.col_z);
           --  At this point focus is on the editor window.
           exit;
         end if;

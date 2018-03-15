@@ -491,9 +491,10 @@ package body LEA_GWin.MDI_Child is
       ml.Item_Data(
         count,
         new LEA_GWin.Messages.Dope_information'(
-          file => G2GU (S2G (file_name)),
-          line => line,
-          col => column_a
+          file  => G2GU (S2G (file_name)),
+          line  => line - 1,  --  Scintilla's lines are 0-based
+          col_a => column_a,
+          col_z => column_z
         )
       );
       ml.Set_Sub_Item (S2G (message), count, 1);
@@ -516,6 +517,11 @@ package body LEA_GWin.MDI_Child is
         HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
         HAC.Compiler.Compile;
         HAC.Data.current_error_pipe := null;
+        if count > 0 then
+          --  Jump on first error
+          ml.Selected (1, True);
+          ml.On_Click;
+        end if;
       when GNAT_mode =>
         null;
     end case;

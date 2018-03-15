@@ -157,6 +157,7 @@ package body LEA_GWin.Editor is
     )
   is
     line : constant Integer := Editor.Get_current_line;
+    --  Performance: we scope the highlighting to 'around' lines around current one.
     around : constant := 200;
     line_a : constant Integer := Integer'Max(line - around, 1);
     line_z : constant Integer := Integer'Min(line + around, Editor.LineFromPosition (Editor.GetLength));
@@ -587,7 +588,12 @@ package body LEA_GWin.Editor is
           ml.Insert_Item (Trim (Integer'Wide_Image (line + 1), Left), count);
           ml.Item_Data(
             count,
-            new Dope_information'(file => MDI_Child.File_Name, line => line, col => col)
+            new Dope_information'(
+              file  => MDI_Child.File_Name,
+              line  => line,
+              col_a => col,
+              col_z => col + find_str'Length
+            )
           );
           ml.Set_Sub_Item (Trim (Integer'Wide_Image (col + 1), Left), count, 1);
           ml.Set_Sub_Item (Editor.GetLine (line), count, 2);

@@ -27,9 +27,10 @@ package body LEA_GWin.MDI_Main is
   use type GString_Unbounded;
 
   procedure Focus_an_already_opened_window(
-    MDI_Main  : MDI_Main_Type;
-    File_Name : GString_Unbounded;
-    Line, Col : Natural            := 0;
+    MDI_Main     : MDI_Main_Type;
+    File_Name    : GString_Unbounded;
+    Line,
+    Col_a, Col_z : Natural            := 0;
     is_open   : out Boolean )
   is
     procedure Identify (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -38,7 +39,7 @@ package body LEA_GWin.MDI_Main is
       if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
         declare
           pw: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
-          new_pos : GWindows.Scintilla.Position;
+          new_pos_a, new_pos_z : GWindows.Scintilla.Position;
         begin
           if pw.File_Name = File_Name then
             is_open:= True;
@@ -46,9 +47,10 @@ package body LEA_GWin.MDI_Main is
             if Line > 0 then
               pw.Editor.Set_current_line (Line);
             end if;
-            if Col > 0 then
-              new_pos := pw.Editor.GetCurrentPos + Col;
-              pw.Editor.SetSel (new_pos, new_pos);
+            if Col_a > 0 then
+              new_pos_a := pw.Editor.GetCurrentPos + Col_a;
+              new_pos_z := pw.Editor.GetCurrentPos + Col_z;
+              pw.Editor.SetSel (new_pos_a, new_pos_z);
             end if;
           end if;
         end;
@@ -105,17 +107,18 @@ package body LEA_GWin.MDI_Main is
   end Close_extra_first_child;
 
   procedure Open_Child_Window_And_Load (
-    MDI_Main   : in out MDI_Main_Type;
+    MDI_Main     : in out MDI_Main_Type;
     File_Name,
-    File_Title :        GWindows.GString_Unbounded;
-    Line, Col  :        Natural := 0
+    File_Title   :        GWindows.GString_Unbounded;
+    Line,
+    Col_a, Col_z :        Natural := 0
   )
   is
     is_open: Boolean;
     mru_line : Natural := 0;
-    new_pos : GWindows.Scintilla.Position;
+    new_pos_a, new_pos_z : GWindows.Scintilla.Position;
   begin
-    Focus_an_already_opened_window( MDI_Main, File_Name, Line, Col, is_open );
+    Focus_an_already_opened_window( MDI_Main, File_Name, Line, Col_a, Col_z, is_open );
     if is_open then
       return;        -- nothing to do, document already in a window
     end if;
@@ -153,9 +156,10 @@ package body LEA_GWin.MDI_Main is
       if Line > 0 then
         New_Window.Editor.Set_current_line (Line);
       end if;
-      if Col > 0 then
-        new_pos := New_Window.Editor.GetCurrentPos + Col;
-        New_Window.Editor.SetSel (new_pos, new_pos);
+      if Col_a > 0 then
+        new_pos_a := New_Window.Editor.GetCurrentPos + Col_a;
+        new_pos_z := New_Window.Editor.GetCurrentPos + Col_z;
+        New_Window.Editor.SetSel (new_pos_a, new_pos_z);
       end if;
     end;
   exception
@@ -200,16 +204,18 @@ package body LEA_GWin.MDI_Main is
   end Shorten_file_name;
 
   procedure Open_Child_Window_And_Load (
-    MDI_Main   : in out MDI_Main_Type;
-    File_Name  :        GWindows.GString_Unbounded;
-    Line, Col  :        Natural := 0 )
+    MDI_Main     : in out MDI_Main_Type;
+    File_Name    :        GWindows.GString_Unbounded;
+    Line,
+    Col_a, Col_z :        Natural := 0
+  )
   is
   begin
     Open_Child_Window_And_Load(
       MDI_Main,
       File_Name,
       G2GU(Shorten_file_name(GU2G(File_Name))),
-      Line, Col
+      Line, Col_a, Col_z
     );
   end Open_Child_Window_And_Load;
 

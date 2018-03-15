@@ -8,7 +8,8 @@ package LEA_GWin.Messages is
   type Dope_information is record
     file   : GString_Unbounded;
     line,
-    col    : Natural           := 0;
+    col_a,
+    col_z  : Natural           := 0;
   end record;
 
   null_dope : constant Dope_information := (others => <>);

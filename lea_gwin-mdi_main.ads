@@ -109,9 +109,10 @@ package LEA_GWin.MDI_Main is
   procedure Redraw_all (MDI_Main: in out MDI_Main_Type);
 
   procedure Open_Child_Window_And_Load (
-    MDI_Main   : in out MDI_Main_Type;
-    File_Name  :        GWindows.GString_Unbounded;
-    Line, Col  :        Natural := 0
+    MDI_Main     : in out MDI_Main_Type;
+    File_Name    :        GWindows.GString_Unbounded;
+    Line,
+    Col_a, Col_z :        Natural := 0
   );
 
   overriding procedure On_Menu_Select (

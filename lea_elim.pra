@@ -382,8 +382,6 @@ pragma Eliminate (GWindows.Common_Controls, Selected_Item_Count, Source_Location
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2244");
 pragma Eliminate (GWindows.Common_Controls, Item_At_Position, Source_Location => "gwindows-common_controls.ads:757");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2314");
-pragma Eliminate (GWindows.Common_Controls, Selected, Source_Location => "gwindows-common_controls.ads:751");
-pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2403");
 pragma Eliminate (GWindows.Common_Controls, Set_Column_Width, Source_Location => "gwindows-common_controls.ads:809");
 pragma Eliminate (GWindows.Common_Controls, SendMessageA, Source_Location => "gwindows-common_controls.adb:2451");
 pragma Eliminate (GWindows.Common_Controls, SendMessageW, Source_Location => "gwindows-common_controls.adb:2459");
