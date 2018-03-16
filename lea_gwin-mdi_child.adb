@@ -17,7 +17,6 @@ with Ada.Directories;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with LEA_GWin.Messages;
 
 package body LEA_GWin.MDI_Child is
 
@@ -547,12 +546,31 @@ package body LEA_GWin.MDI_Child is
   end Build_and_run;
 
   procedure Run (MDI_Child : in out MDI_Child_Type) is
+    procedure Windowed_interpret is new
+      HAC.PCode.Interpreter.Interpret(
+        LEA_GWin.Messages.IO_Pipe.End_Of_File_Console,
+        LEA_GWin.Messages.IO_Pipe.End_Of_Line_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Console,
+        LEA_GWin.Messages.IO_Pipe.Skip_Line_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.New_Line_Console);
+    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
+    ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
   begin
     case MDI_Child.MDI_Parent.opt.toolset is
       when HAC_mode =>
         --  !!  Check if anything compiled ?
         HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
-        null;  --  [!!works but only with a terminal window!!] HAC.PCode.Interpreter.Interpret;
+        ml.Clear;
+        ml.Set_Column ("Console", 0, 800);
+        LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (MDI_Child.MDI_Parent.Message_Panel.Message_List);
+        Windowed_interpret;
       when GNAT_mode =>
         null;
     end case;

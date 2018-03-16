@@ -9,6 +9,9 @@ with HAC.PCode.Interpreter;
 
 package LEA_GWin.Messages.IO_Pipe is
 
+  procedure Set_current_IO_pipe (ML: in out Message_List_Type);
+
+
     function End_Of_File_Console return Boolean;
     function End_Of_Line_Console return Boolean;
     procedure Get_Console (i: out Integer; Width : Ada.Text_IO.Field := 0);
