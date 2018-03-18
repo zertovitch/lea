@@ -516,7 +516,10 @@ package body LEA_GWin.MDI_Child is
         HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
         HAC.Compiler.Compile;
         HAC.Data.current_error_pipe := null;
-        if count > 0 then
+        if count = 0 then
+          ml.Insert_Item ("----", count);
+          ml.Set_Sub_Item ("No error, no warning", count, 1);
+        else
           --  Jump on first error
           ml.Selected (1, True);
           ml.On_Click;
