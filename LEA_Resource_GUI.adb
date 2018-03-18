@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/03/08  16:01:39
+-- Transcription time: 2018/03/18  07:32:38
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -83,9 +83,9 @@ package body LEA_Resource_GUI is
     Menu.Popup_0005:= Create_Popup;
     Append_Menu(Menu.Main, "&Actions", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "Check &syntax && semantics", IDM_Check_syntax);
-    Append_Item(Menu.Popup_0005, "&Compile this file" & To_GString_From_String((1=>ASCII.HT)) & "Alt-F9 or Shift-F4", IDM_Compile_single);
-    Append_Item(Menu.Popup_0005, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F9 or F4", IDM_Build);
-    Append_Item(Menu.Popup_0005, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl-F9", IDM_Build_and_run);
+    Append_Item(Menu.Popup_0005, "&Compile this file" & To_GString_From_String((1=>ASCII.HT)) & "Shift-F4", IDM_Compile_single);
+    Append_Item(Menu.Popup_0005, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F4", IDM_Build);
+    Append_Item(Menu.Popup_0005, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "F9", IDM_Build_and_run);
     Append_Item(Menu.Popup_0005, "&Run", IDM_Run);
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0006);
@@ -145,11 +145,11 @@ package body LEA_Resource_GUI is
     Append_Menu(Menu.Main, "&Actions", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Check &syntax && semantics", IDM_Check_syntax);
     State(Menu.Popup_0003, Command, IDM_Check_syntax, Disabled);
-    Append_Item(Menu.Popup_0003, "&Compile this file", IDM_Compile_single);
+    Append_Item(Menu.Popup_0003, "&Compile this file" & To_GString_From_String((1=>ASCII.HT)) & "Shift-F4", IDM_Compile_single);
     State(Menu.Popup_0003, Command, IDM_Compile_single, Disabled);
-    Append_Item(Menu.Popup_0003, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F9 or F4", IDM_Build);
+    Append_Item(Menu.Popup_0003, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F4", IDM_Build);
     State(Menu.Popup_0003, Command, IDM_Build, Disabled);
-    Append_Item(Menu.Popup_0003, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl-F9", IDM_Build_and_run);
+    Append_Item(Menu.Popup_0003, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "F9", IDM_Build_and_run);
     State(Menu.Popup_0003, Command, IDM_Build_and_run, Disabled);
     Append_Item(Menu.Popup_0003, "&Run", IDM_Run);
     Menu.Popup_0004:= Create_Popup;
@@ -726,6 +726,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 378
+  -- Last line of resource script file: 376
 
 end LEA_Resource_GUI;
