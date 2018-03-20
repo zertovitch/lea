@@ -486,7 +486,7 @@ package body LEA_GWin.MDI_Child is
         count := count + 1;
         displayed_compilation_file_name := To_Unbounded_String (file_name);
       end if;
-      ml.Insert_Item (Trim (Integer'Wide_Image (line + 1), Left), count);
+      ml.Insert_Item (Trim (Integer'Wide_Image (line), Left), count);
       ml.Item_Data(
         count,
         new LEA_GWin.Messages.Dope_information'(

@@ -14,7 +14,9 @@ package body LEA_Common.User_options is
   package body Persistence is
 
     type Key is
-      ( view_mode, color_theme,
+      ( view_mode,      --  Notepad, Studio
+        toolset_mode,   --  HAC, GNAT, ...
+        color_theme,
         backup, indent, edge,
         show_special,
         win_left, win_top, win_width, win_height,
@@ -30,7 +32,7 @@ package body LEA_Common.User_options is
 
     sep: constant UTF_16_String:= ">";
 
-    procedure Load(opt: out Option_Pack_Type) is
+    procedure Load (opt: out Option_Pack_Type) is
       mru_idx: Positive;
       sep_pos_1: Natural;
     begin
@@ -43,6 +45,8 @@ package body LEA_Common.User_options is
             case k is
               when view_mode =>
                 opt.view_mode:= View_Mode_Type'Wide_Value(s);
+              when toolset_mode =>
+                opt.toolset:= Toolset_mode_type'Wide_Value(s);
               when color_theme =>
                 opt.color_theme:= Color_Theme_Type'Wide_Value(s);
               when backup =>
@@ -94,7 +98,7 @@ package body LEA_Common.User_options is
       end loop;
     end Load;
 
-    procedure Save(opt: in Option_Pack_Type) is
+    procedure Save (opt: in Option_Pack_Type) is
       mru_idx: Positive;
     begin
       for k in Key loop
@@ -108,6 +112,8 @@ package body LEA_Common.User_options is
           case k is
             when view_mode =>
               R(View_Mode_Type'Wide_Image(opt.view_mode));
+            when toolset_mode =>
+              R(Toolset_mode_type'Wide_Image(opt.toolset));
             when color_theme =>
               R(Color_Theme_Type'Wide_Image(opt.color_theme));
             when backup =>

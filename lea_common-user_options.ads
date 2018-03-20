@@ -24,7 +24,7 @@ package LEA_Common.User_options is
     indentation  : Integer                    := 2;
     right_margin : Integer                    := 100;  --  also called "vertical edge"
     show_special : Show_special_symbol_mode   := none;
-    toolset      : Toolset_mode               := HAC_mode;
+    toolset      : Toolset_mode_type          := HAC_mode;
     -- Horizontal portion of the window for the tree, when view_mode = Studio
     tree_portion : Float:= 0.25;  --  !! will disappear
     --  Horizontal window portion of MDI *main*, active when view_mode = Studio
@@ -56,8 +56,8 @@ package LEA_Common.User_options is
     with function Read_key(topic: Wide_String) return Wide_String;
     with procedure Write_key(topic: Wide_String; value: Wide_String);
   package Persistence is
-    procedure Load(opt: out Option_Pack_Type);
-    procedure Save(opt: in  Option_Pack_Type);
+    procedure Load (opt: out Option_Pack_Type);
+    procedure Save (opt: in  Option_Pack_Type);
   end;
 
 end LEA_Common.User_options;

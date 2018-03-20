@@ -256,7 +256,7 @@ package body LEA_GWin.MDI_Main is
         force     :        Boolean
   )
   is
-  old_view : constant View_Mode_Type := MDI_Main.opt.view_mode;
+    old_view : constant View_Mode_Type := MDI_Main.opt.view_mode;
     --  mem_sel_path: constant GString_Unbounded:= MDI_Child.selected_path;
     --  sel_node: Tree_Item_Node;
   begin
@@ -291,6 +291,18 @@ package body LEA_GWin.MDI_Main is
     end case;
   end Change_View;
 
+  --  Switch between HAC and real Ada toolsets
+  --
+  procedure Change_Mode (
+    MDI_Main  : in out MDI_Main_Type;
+    new_mode  :        Toolset_mode_type
+  )
+  is
+  begin
+    MDI_Main.opt.toolset:= new_mode;
+    MDI_Main.Update_Common_Menus;
+  end Change_Mode;
+
   ---------------
   -- On_Create --
   ---------------
@@ -308,7 +320,8 @@ package body LEA_GWin.MDI_Main is
     end Replace_default;
     --
   begin
-    Windows_persistence.Load(MDI_Main.opt);
+    Windows_persistence.Load (MDI_Main.opt);  -- Load options from the registry
+    --
     Replace_default(MDI_Main.opt.win_left);
     Replace_default(MDI_Main.opt.win_width);
     Replace_default(MDI_Main.opt.win_top);
@@ -318,7 +331,7 @@ package body LEA_GWin.MDI_Main is
     Large_Icon (MDI_Main, "AAA_Main_Icon");
 
     --  ** Menus and accelerators:
-
+    --
     LEA_Resource_GUI.Create_Full_Menu(MDI_Main.Menu);
     MDI_Menu (MDI_Main, MDI_Main.Menu.Main, Window_Menu => 5);
     Accelerator_Table (MDI_Main, "Main_Menu");
@@ -602,6 +615,10 @@ package body LEA_GWin.MDI_Main is
         Change_View (MDI_Main, Notepad, force => False);
       when IDM_Studio_view =>
         Change_View (MDI_Main, Studio, force => False);
+      when IDM_HAC_Mode =>
+        Change_Mode (MDI_Main, HAC_mode);
+      when IDM_GNAT_Mode =>
+        Change_Mode (MDI_Main, GNAT_mode);
       when others =>
         --  We have perhaps a MRU (most rectly used) file entry.
         for i_mru in MDI_Main.IDM_MRU'Range loop
@@ -709,6 +726,28 @@ package body LEA_GWin.MDI_Main is
     end loop;
   end Update_MRU_Menu;
 
+  --  Menus of MDI main *and* all children need to have their "View" menu up-to-date.
+  --
+  procedure Update_View_Menu (m: Menu_Type; o: LEA_Common.User_options.Option_Pack_Type) is
+  begin
+    case o.view_mode is
+      when Notepad =>
+        Check (m, Command, IDM_Notepad_view, True);
+        Check (m, Command, IDM_Studio_view, False);
+      when Studio =>
+        Check (m, Command, IDM_Notepad_view, False);
+        Check (m, Command, IDM_Studio_view, True);
+    end case;
+    case o.toolset is
+      when HAC_mode =>
+        Check (m, Command, IDM_HAC_Mode, True);
+        Check (m, Command, IDM_GNAT_Mode, False);
+      when GNAT_mode =>
+        Check (m, Command, IDM_HAC_Mode, False);
+        Check (m, Command, IDM_GNAT_Mode, True);
+    end case;
+  end Update_View_Menu;
+
   procedure Update_Common_Menus_Child (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
   is
   begin
@@ -717,6 +756,7 @@ package body LEA_GWin.MDI_Main is
         cw: MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
       begin
         Update_MRU_Menu(cw.MDI_Parent.all, cw.Menu.Popup_0001);
+        Update_View_Menu(cw.Menu.Main, cw.MDI_Parent.opt);
         -- Update_Toolbar_Menu(cw.View_menu, cw.MDI_Parent.Floating_toolbars);
       end;
     end if;
@@ -733,6 +773,7 @@ package body LEA_GWin.MDI_Main is
       Add_MRU (MDI_Main, top_entry_name, top_entry_line);
     end if;
     Update_MRU_Menu(MDI_Main, MDI_Main.Menu.Popup_0001);
+    Update_View_Menu(MDI_Main.Menu.Main, MDI_Main.opt);
     -- Update_Toolbar_Menu(MDI_Main.View_menu, MDI_Main.Floating_toolbars);
     GWindows.Base.Enumerate_Children(
       MDI_Client_Window (MDI_Main).all,

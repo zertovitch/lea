@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/03/18  07:32:38
+-- Transcription time: 2018/03/20  17:45:03
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -97,6 +97,7 @@ package body LEA_Resource_GUI is
     Append_Separator(Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "&HAC pseudo-Ada mode", IDM_HAC_Mode);
     Append_Item(Menu.Popup_0006, "&GNAT Ada mode", IDM_GNAT_Mode);
+    State(Menu.Popup_0006, Command, IDM_GNAT_Mode, Disabled);
     Menu.Popup_0007:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0007);
     Append_Item(Menu.Popup_0007, "&General options", IDM_General_options);
@@ -160,6 +161,7 @@ package body LEA_Resource_GUI is
     Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&HAC pseudo-Ada mode", IDM_HAC_Mode);
     Append_Item(Menu.Popup_0004, "&GNAT Ada mode", IDM_GNAT_Mode);
+    State(Menu.Popup_0004, Command, IDM_GNAT_Mode, Disabled);
     Menu.Popup_0005:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&General options", IDM_General_options);
