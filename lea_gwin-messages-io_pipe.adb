@@ -118,10 +118,10 @@ package body LEA_GWin.Messages.IO_Pipe is
       Aft  : Integer := Ada.Float_Text_IO.Default_Aft;
       Exp  : Integer := Ada.Float_Text_IO.Default_Exp)
    is
+     s : String (1..1+Fore+1+Aft+2+Exp);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Put_Console unimplemented");
-      raise Program_Error with "Unimplemented procedure Put_Console";
+     Ada.Float_Text_IO.Put (s, f, Aft, Exp);
+     Append_to_IO_pipe(s);
    end Put_Console;
 
    -----------------
