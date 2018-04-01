@@ -4,6 +4,7 @@ with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 with GWindows.Scintilla;                use GWindows.Scintilla;
 with GWindows.Buttons;                  use GWindows.Buttons;
+with GWindows.Combo_Boxes;              use GWindows.Combo_Boxes;
 
 package body LEA_GWin.Search_box is
 
@@ -15,6 +16,28 @@ package body LEA_GWin.Search_box is
     Can_Close:= False;
     SB.Hide;
   end On_Close;
+
+  procedure Update_drop_downs (SB: in out LEA_search_box_type) is
+
+    procedure Update_drop_down (DD: in out Drop_Down_Combo_Box_Type) is
+      max : constant := 10;
+      dd_text: constant GString := DD.Text;
+    begin
+      --  If the text is empty or already in the list, do nothing.
+      if dd_text'Length = 0 or else DD.Find_Exact (dd_text) > 0 then
+        return;
+      end if;
+      --  We limit the list to a convenient maximum amount.
+      if DD.Count >= max then
+        DD.Delete (max);
+      end if;
+      DD.Add (1, dd_text);
+    end Update_drop_down;
+
+  begin
+    Update_drop_down (SB.Find_box);
+    Update_drop_down (SB.Replace_box);
+  end Update_drop_downs;
 
   procedure Any_Search_Button_Clicked (
     Window : GWindows.Base.Base_Window_Type'Class;
@@ -29,7 +52,8 @@ package body LEA_GWin.Search_box is
         MDI_Top : MDI_Main_Type renames MDI_Main_Type(SB.The_real_MDI_parent.all);
       begin
         --  Ooof.. pointers are behind, we are back into the strong-typed value-type OO world.
-        MDI_Top.Perform_Search(action);
+        Update_drop_downs (SB);
+        MDI_Top.Perform_Search (action);
       end;
     end if;
   end Any_Search_Button_Clicked;

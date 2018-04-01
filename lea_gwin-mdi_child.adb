@@ -2,6 +2,7 @@ with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Messages.IO_Pipe;
+with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
 
 with HAC.Data, HAC.Compiler, HAC.PCode.Interpreter, HAC.UErrors;
 
@@ -122,9 +123,9 @@ package body LEA_GWin.MDI_Child is
     bar.Enabled(IDM_Uncomment, True);
     bar.Enabled(IDM_Find, True);
     bar.Enabled(IDM_Show_special_symbols, True);
-    if not MDI_Child.is_closing then
-      null;  --  bar.Enabled(IDM_ADD_FILES, True);
-    end if;
+    --  if not MDI_Child.is_closing then
+    --    null;  --  bar.Enabled(IDM_ADD_FILES, True);
+    --  end if;
   end Update_tool_bar;
 
   procedure Update_menus(MDI_Child : in out MDI_Child_Type) is
@@ -478,6 +479,7 @@ package body LEA_GWin.MDI_Child is
        kind      : HAC.UErrors.Message_kind
      )
     is
+    pragma Unreferenced (kind);
     begin
       if displayed_compilation_file_name /= file_name then
         --  New compilation unit, show its name.
@@ -607,8 +609,14 @@ package body LEA_GWin.MDI_Child is
       when IDM_Comment =>       MDI_Child.Editor.Selection_comment;
       when IDM_Uncomment =>     MDI_Child.Editor.Selection_uncomment;
       when IDM_Find =>          MDI_Child.Show_Search_Box;
-      when IDM_Find_Next =>     MDI_Child.Editor.Search(find_next);
-      when IDM_Find_Previous => MDI_Child.Editor.Search(find_previous);
+      when IDM_Find_Next =>
+        --  If F3 is pressed or "Find next" menu entry is selected
+        --  while search box is focused, we need to update the drop-down list(s).
+        Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
+        MDI_Child.Editor.Search (find_next);
+      when IDM_Find_Previous =>
+        Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
+        MDI_Child.Editor.Search(find_previous);
       when IDM_Go_to_line =>    Do_go_to_line (MDI_Child);
       when IDM_Toggle_bookmark =>
         MDI_Child.Editor.Bookmark_toggle (MDI_Child.Editor.Get_current_line);

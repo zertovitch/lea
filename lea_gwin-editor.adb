@@ -523,6 +523,7 @@ package body LEA_GWin.Editor is
       MDI_Child.Show_Search_Box;
       return;
     end if;
+    --  Remember selection
     sel_a:= Editor.GetSelectionStart;
     sel_z:= Editor.GetSelectionEnd;
     Editor.SetSearchFlags(MDI_Main.Search_box.Compose_Scintilla_search_flags);
@@ -547,7 +548,8 @@ package body LEA_GWin.Editor is
               Editor.SetSel (Editor.GetLength , Editor.GetLength);  --  Same, but from the bottom.
             end if;
           else  --  Not found *after* the wrap around: find_str is really nowhere!
-            Editor.SetSel (sel_a, sel_z);  --  Restore initial selection
+            --  Restore initial selection
+            Editor.SetSel (sel_a, sel_z);
             Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
           end if;
         end loop;
