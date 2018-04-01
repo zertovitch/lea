@@ -840,12 +840,17 @@ package body LEA_GWin.Editor is
   procedure Set_syntax (Editor : in out LEA_Scintilla_Type; syntax: Syntax_type) is
   begin
     case syntax is
-      when Ada_syntax =>
-        Editor.SetLexer (SCLEX_ADA);
-        Editor.SetKeyWords (0, Ada_keywords);
       when Undefined =>
         Editor.SetLexer (SCLEX_NULL);
         Editor.SetKeyWords (0, "");
+      when Ada_syntax =>
+        Editor.SetLexer (SCLEX_ADA);
+        Editor.SetKeyWords (0, Ada_keywords);
+      when GPR_syntax =>
+        Editor.SetLexer (SCLEX_ADA);
+        Editor.SetKeyWords (0, GPR_keywords);
+        --  !! Issue: keyword'Attribute (e.g. project'Project_Dir)
+        --     is not recognized by SCLEX_ADA.
     end case;
   end Set_syntax;
 

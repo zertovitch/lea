@@ -539,7 +539,7 @@ package body LEA_GWin.MDI_Main is
   begin
     Open_Files (
       MDI_Main, "Open file(s)",
-      File_Names, Ada_files_filters, ".ad*", File_Title,
+      File_Names, Text_files_filters, ".ad*", File_Title,
       Success
     );
     if Success then

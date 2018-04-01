@@ -367,7 +367,7 @@ package body LEA_GWin.MDI_Child is
   begin
     New_File_Name := MDI_Child.File_Name;
     Save_File (
-      MDI_Child, "Save file as...", New_File_Name, Ada_files_filters,
+      MDI_Child, "Save file as...", New_File_Name, Text_files_filters,
       ".ada", File_Title,
       Success
     );

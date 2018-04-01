@@ -5,6 +5,8 @@ package body LEA_Common.Syntax is
     if file_name'Length > 3 then
       if file_name(file_name'Last-3 .. file_name'Last-1) = ".ad" then
         return Ada_syntax;
+      elsif file_name(file_name'Last-3 .. file_name'Last) = ".gpr" then
+        return GPR_syntax;
       end if;
     end if;
     return Undefined;
@@ -15,6 +17,7 @@ package body LEA_Common.Syntax is
     case syn is
       when Undefined  => return "Text file";
       when Ada_syntax => return "Ada file";
+      when GPR_syntax => return "GNAT project file";
     end case;
   end File_type_image;
 

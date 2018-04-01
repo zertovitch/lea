@@ -1,6 +1,6 @@
 package LEA_Common.Syntax is
 
-  type Syntax_type is (Undefined, Ada_syntax);
+  type Syntax_type is (Undefined, Ada_syntax, GPR_syntax);
 
   Ada_keywords : constant UTF_16_String :=
     "abort abs abstract accept access aliased all and array at begin body case " &
@@ -10,8 +10,9 @@ package LEA_Common.Syntax is
     "record rem renames requeue return reverse select separate some subtype synchronized tagged " &
     "task terminate then type until use when while with xor";
 
-  --  Other keyword sets in mind:
-  --  - GNAT project files
+  --  GNAT project files
+  GPR_keywords : constant UTF_16_String :=
+    "abstract case end external for is package project type use when";
 
   function Guess_syntax (file_name : UTF_16_String) return Syntax_type;
 
