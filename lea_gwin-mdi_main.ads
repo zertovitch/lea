@@ -78,6 +78,7 @@ package LEA_GWin.MDI_Main is
         is_closing             : Boolean:= False;  --  True only during and after On_Close
         --  Direct input stream from an editor window:
         current_editor_stream  : aliased LEA_GWin.Editor.Editor_Stream_Type;
+        build_successful       : Boolean;
       end record;
 
   overriding procedure On_Create (MDI_Main : in out MDI_Main_Type);

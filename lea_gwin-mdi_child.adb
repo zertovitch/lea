@@ -518,6 +518,7 @@ package body LEA_GWin.MDI_Child is
         HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
         HAC.Compiler.Compile;
         HAC.Data.current_error_pipe := null;
+        MDI_Main.build_successful := HAC.Data.Err_Count = 0;
         if count = 0 then
           ml.Insert_Item ("----", count);
           ml.Set_Sub_Item ("No error, no warning", count, 1);
@@ -547,7 +548,9 @@ package body LEA_GWin.MDI_Child is
   begin
     --  !!  A la Turbo Pascal: check if changed
     MDI_Child.Build;
-    MDI_Child.Run;
+    if MDI_Child.MDI_Parent.build_successful then
+      MDI_Child.Run;
+    end if;
   end Build_and_run;
 
   procedure Run (MDI_Child : in out MDI_Child_Type) is
