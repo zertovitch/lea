@@ -112,8 +112,8 @@ package LEA_GWin.MDI_Main is
   procedure Open_Child_Window_And_Load (
     MDI_Main     : in out MDI_Main_Type;
     File_Name    :        GWindows.GString_Unbounded;
-    Line,
-    Col_a, Col_z :        Natural := 0
+    Line         :        Integer := -1;
+    Col_a, Col_z :        Integer := -1
   );
 
   overriding procedure On_Menu_Select (
@@ -127,7 +127,7 @@ package LEA_GWin.MDI_Main is
   procedure Update_Common_Menus(
     MDI_Main       : in out MDI_Main_Type;
     top_entry_name : GString := "";
-    top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
+    top_entry_line : Integer := -1    --  When unknown, -1; otherwise: last visited line
   );
 
   procedure Update_Title (MDI_Main : in out MDI_Main_Type);

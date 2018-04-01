@@ -28,11 +28,11 @@ package body LEA_GWin.MDI_Main is
   use type GString_Unbounded;
 
   procedure Focus_an_already_opened_window(
-    MDI_Main     : MDI_Main_Type;
-    File_Name    : GString_Unbounded;
-    Line,
-    Col_a, Col_z : Natural            := 0;
-    is_open   : out Boolean )
+    MDI_Main     :     MDI_Main_Type;
+    File_Name    :     GString_Unbounded;
+    Line         :     Integer            := -1;
+    Col_a, Col_z :     Integer            := -1;
+    is_open      : out Boolean )
   is
     procedure Identify (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
@@ -45,10 +45,11 @@ package body LEA_GWin.MDI_Main is
           if pw.File_Name = File_Name then
             is_open:= True;
             pw.Focus;  --  Focus on document already open in our app.
-            if Line > 0 then
+            --  Scintilla lines are 0-based
+            if Line > -1 then
               pw.Editor.Set_current_line (Line);
             end if;
-            if Col_a > 0 then
+            if Col_a > -1 then
               new_pos_a := pw.Editor.GetCurrentPos + Col_a;
               new_pos_z := pw.Editor.GetCurrentPos + Col_z;
               pw.Editor.SetSel (new_pos_a, new_pos_z);
@@ -111,15 +112,15 @@ package body LEA_GWin.MDI_Main is
     MDI_Main     : in out MDI_Main_Type;
     File_Name,
     File_Title   :        GWindows.GString_Unbounded;
-    Line,
-    Col_a, Col_z :        Natural := 0
+    Line         :        Integer := -1;
+    Col_a, Col_z :        Integer := -1
   )
   is
     is_open: Boolean;
-    mru_line : Natural := 0;
+    mru_line : Integer := -1;
     new_pos_a, new_pos_z : GWindows.Scintilla.Position;
   begin
-    Focus_an_already_opened_window( MDI_Main, File_Name, Line, Col_a, Col_z, is_open );
+    Focus_an_already_opened_window ( MDI_Main, File_Name, Line, Col_a, Col_z, is_open );
     if is_open then
       return;        -- nothing to do, document already in a window
     end if;
@@ -150,14 +151,14 @@ package body LEA_GWin.MDI_Main is
       New_Window.Syntax_kind := Guess_syntax (GU2G (New_Window.File_Name));
       New_Window.Editor.Set_syntax (New_Window.Syntax_kind);
       New_Window.Editor.Focus;
-      if mru_line > 0 then
+      --  Scintilla lines are 0-based
+      if mru_line > -1 then
         --  Set cursor position to memorized line number
         New_Window.Editor.Set_current_line (mru_line);
-      end if;
-      if Line > 0 then
+      elsif Line > -1 then
         New_Window.Editor.Set_current_line (Line);
       end if;
-      if Col_a > 0 then
+      if Col_a > -1 then
         new_pos_a := New_Window.Editor.GetCurrentPos + Col_a;
         new_pos_z := New_Window.Editor.GetCurrentPos + Col_z;
         New_Window.Editor.SetSel (new_pos_a, new_pos_z);
@@ -207,8 +208,8 @@ package body LEA_GWin.MDI_Main is
   procedure Open_Child_Window_And_Load (
     MDI_Main     : in out MDI_Main_Type;
     File_Name    :        GWindows.GString_Unbounded;
-    Line,
-    Col_a, Col_z :        Natural := 0
+    Line         :        Integer := -1;
+    Col_a, Col_z :        Integer := -1
   )
   is
   begin
@@ -706,7 +707,7 @@ package body LEA_GWin.MDI_Main is
       MDI_Main.opt.mru(i+1):= MDI_Main.opt.mru(i);
     end loop;
 
-    if line > 0 then
+    if line > -1 then
       mem_line := line;
     end if;
     --  At least now, name will exist in the list
@@ -766,7 +767,7 @@ package body LEA_GWin.MDI_Main is
   procedure Update_Common_Menus(
     MDI_Main       : in out MDI_Main_Type;
     top_entry_name : GString := "";
-    top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
+    top_entry_line : Integer := -1    --  When unknown, -1; otherwise: last visited line
   )
   is
   begin

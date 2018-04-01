@@ -13,6 +13,7 @@ with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Scintilla;                use GWindows.Scintilla;
 
+with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;
 --  with Ada.Environment_Variables;         use Ada.Environment_Variables;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
@@ -470,21 +471,25 @@ package body LEA_GWin.MDI_Child is
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     count: Natural := 0;
     displayed_compilation_file_name: Unbounded_String;
-    procedure Feedback (
+    blurb: constant GString := "[HAC to p-code] ";
+    --
+    procedure LEA_HAC_Feedback (
        message   : String;
        file_name : String;
        line      : Positive;
-       column_a  : Positive;
+       column_a  : Natural;
        column_z  : Positive;
        kind      : HAC.UErrors.Message_kind
      )
     is
     pragma Unreferenced (kind);
+      msg_up: String := message;
     begin
+      msg_up(msg_up'First) := To_Upper (msg_up(msg_up'First));
       if displayed_compilation_file_name /= file_name then
         --  New compilation unit, show its name.
         ml.Insert_Item ("----", count);
-        ml.Set_Sub_Item (S2G (file_name), count, 1);
+        ml.Set_Sub_Item (blurb & S2G (file_name), count, 1);
         count := count + 1;
         displayed_compilation_file_name := To_Unbounded_String (file_name);
       end if;
@@ -498,7 +503,7 @@ package body LEA_GWin.MDI_Child is
           col_z => column_z
         )
       );
-      ml.Set_Sub_Item (S2G (message), count, 1);
+      ml.Set_Sub_Item (S2G (msg_up), count, 1);  --   & column_a'Img & column_z'Img
       count := count + 1;
     end;
   begin
@@ -514,14 +519,16 @@ package body LEA_GWin.MDI_Child is
         ml.Clear;
         ml.Set_Column ("Line",     0, 40);
         ml.Set_Column ("Message",  1, 800);
-        HAC.Data.current_error_pipe := Feedback'Unrestricted_Access;
+        HAC.Data.current_error_pipe := LEA_HAC_Feedback'Unrestricted_Access;
         HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
         HAC.Compiler.Compile;
         HAC.Data.current_error_pipe := null;
         MDI_Main.build_successful := HAC.Data.Err_Count = 0;
         if count = 0 then
-          ml.Insert_Item ("----", count);
-          ml.Set_Sub_Item ("No error, no warning", count, 1);
+          ml.Insert_Item ("----", 0);
+          ml.Set_Sub_Item (blurb & GU2G (MDI_Child.File_Name), 0, 1);
+          ml.Insert_Item ("", 1);
+          ml.Set_Sub_Item ("No error, no warning", 1, 1);
         else
           --  Jump on first error
           ml.Selected (1, True);
