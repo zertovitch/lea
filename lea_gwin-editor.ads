@@ -1,4 +1,5 @@
 with LEA_Common;                        use LEA_Common;
+with LEA_Common.Syntax;                 use LEA_Common.Syntax;
 
 with GWindows.Base;
 with GWindows.Scintilla;                use GWindows.Scintilla;

@@ -12,17 +12,6 @@ with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 
 package body LEA_GWin.Editor is
 
-  Ada_keywords : constant GWindows.GString :=
-    "abort abs abstract accept access aliased all and array at begin body case " &
-    "constant declare delay delta digits do else elsif end entry exception " &
-    "exit for function generic goto if in interface is limited loop mod new not null of " &
-    "or others out overriding package pragma private procedure protected raise range " &
-    "record rem renames requeue return reverse select separate some subtype synchronized tagged " &
-    "task terminate then type until use when while with xor";
-
-  --  Other keyword sets in mind:
-  --  - GNAT project files
-
   overriding
   procedure On_Change (Editor : in out LEA_Scintilla_Type) is
     --  parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);

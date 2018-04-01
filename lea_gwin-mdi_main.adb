@@ -1,4 +1,5 @@
 with LEA_Common;                       use LEA_Common;
+with LEA_Common.Syntax;                use LEA_Common.Syntax;
 
 with LEA_GWin.Help;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
