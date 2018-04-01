@@ -8,11 +8,42 @@ with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows.Base;                     use GWindows.Base;
 
+with Interfaces.C;
+with GWindows.Types;
+with GWindows.Combo_Boxes; use GWindows.Combo_Boxes;
+
 package LEA_GWin.Search_box is
 
-  type LEA_search_box_type is new Search_box_Type with record
-    The_real_MDI_parent: Pointer_To_Base_Window_Class;
+  type LEA_search_box_type;
+  type LEA_search_box_access_type is access all LEA_search_box_type;
+
+  type Find_Replace_box_type is
+    new Drop_Down_Combo_Box_Type with
+  record
+    parent_SB: LEA_search_box_access_type;
   end record;
+
+  overriding
+  procedure On_Message
+     (FRB          : in out Find_Replace_box_type;
+      message      : in     Interfaces.C.unsigned;
+      wParam       : in     GWindows.Types.Wparam;
+      lParam       : in     GWindows.Types.Lparam;
+      Return_Value : in out GWindows.Types.Lresult);
+
+  type LEA_search_box_type is new Search_box_Type with record
+    The_real_MDI_parent : Pointer_To_Base_Window_Class;
+    Find_box,
+    Replace_box         : Find_Replace_box_type;
+  end record;
+
+  overriding
+  procedure On_Message
+     (SB           : in out LEA_search_box_type;
+      message      : in     Interfaces.C.unsigned;
+      wParam       : in     GWindows.Types.Wparam;
+      lParam       : in     GWindows.Types.Lparam;
+      Return_Value : in out GWindows.Types.Lresult);
 
   overriding
   procedure On_Close (SB        : in out LEA_search_box_type;

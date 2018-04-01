@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/03/20  17:45:03
+-- Transcription time: 2018/04/01  18:08:07
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -541,11 +541,11 @@ package body LEA_Resource_GUI is
     Dlg_to_Scn(  11, 10, 50, 15, x,y,w,h);
     Create_Label( Window, "Find", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  63, 10, 160, 15, x,y,w,h);
-    Create( Window.Find_box, Window, "", x,y,w,h, False, ID => Find_box);
+    Create( Window.Model_find_box, Window, "", x,y,w,h, False, ID => Model_find_box);
     Dlg_to_Scn(  11, 30, 50, 15, x,y,w,h);
     Create_Label( Window, "Replace with", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  63, 30, 160, 15, x,y,w,h);
-    Create( Window.Replace_box, Window, "", x,y,w,h, False, ID => Replace_box);
+    Create( Window.Model_replace_box, Window, "", x,y,w,h, False, ID => Model_replace_box);
     Dlg_to_Scn(  149, 143, 74, 17, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -561,8 +561,8 @@ package body LEA_Resource_GUI is
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Find_next_button, Window, "Find next (F3)", x,y,w,h, ID => Find_next_button);
-    Create( Window.Find_next_button_permanent, Window, "Find next (F3)", x,y,w,h, ID => Find_next_button);
+    Create( Window.Find_next_button, Window, "Find next", x,y,w,h, ID => Find_next_button);
+    Create( Window.Find_next_button_permanent, Window, "Find next", x,y,w,h, ID => Find_next_button);
     if for_dialog then -- hide the non-closing button
       Hide(Window.Find_next_button_permanent);
     else -- hide the closing button

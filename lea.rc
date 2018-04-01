@@ -256,11 +256,11 @@ CAPTION "Search"
 FONT 8, "Ms Shell Dlg"
 {
     LTEXT           "Find", 0, 11, 10, 50, 15, SS_LEFT, WS_EX_LEFT
-    COMBOBOX        Find_box, 63, 10, 160, 15, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
+    COMBOBOX        Model_find_box, 63, 10, 160, 15, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
     LTEXT           "Replace with", 0, 11, 30, 50, 15, SS_LEFT, WS_EX_LEFT
-    COMBOBOX        Replace_box, 63, 30, 160, 15, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
+    COMBOBOX        Model_replace_box, 63, 30, 160, 15, CBS_DROPDOWN | CBS_HASSTRINGS, WS_EX_LEFT
     PUSHBUTTON      "Close", Close_search_box, 149, 143, 74, 17, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Find next (F3)", Find_next_button, 11, 53, 58, 18, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Find next", Find_next_button, 11, 53, 58, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Find previous", Find_previous_button, 82, 53, 58, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Find all", Find_all_button, 165, 53, 58, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Replace and find next", Replace_and_find_next_button, 20, 82, 110, 18, 0, WS_EX_LEFT

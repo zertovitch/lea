@@ -540,6 +540,9 @@ package body LEA_GWin.Editor is
             --  Restore initial selection
             Editor.SetSel (sel_a, sel_z);
             Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
+            if MDI_Main.Search_box.Visible then
+              MDI_Main.Search_box.Focus;
+            end if;
           end if;
         end loop;
       when replace_and_find_next =>
@@ -638,6 +641,9 @@ package body LEA_GWin.Editor is
           "        by" & NL &
           "     [" & repl_str & "]." & NL & NL &
           "Operation can be undone in one ""Undo"".");
+        if MDI_Main.Search_box.Visible then
+          MDI_Main.Search_box.Focus;
+        end if;
     end case;
   end Search;
 

@@ -9,7 +9,9 @@
 #define Folders_BMP                             124
 #define Backup_none_button                      40000
 #define IDM_Next_bookmark                       40000
+#define Model_find_box                          40000
 #define IDM_Go_to_line                          40001
+#define Model_replace_box                       40001
 #define IDM_Open_Project                        40002
 #define IDM_Previous_bookmark                   40003
 #define Line_value_box                          40003
@@ -17,7 +19,6 @@
 #define Match_case                              40004
 #define Copyright_label                         40005
 #define IDM_Copy                                40005
-#define Find_box                                40006
 #define IDM_Cut                                 40006
 #define IDM_Find_Next                           40007
 #define Group_Backup                            40008
@@ -47,7 +48,6 @@
 #define Version_label                           40024
 #define Whole_word                              40025
 #define Backup_bak_button                       40026
-#define Replace_box                             40027
 #define GNAT_URL                                40028
 #define IDM_Save_All                            40029
 #define IDM_Unselect_all                        40030

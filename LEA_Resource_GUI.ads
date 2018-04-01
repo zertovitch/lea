@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/03/20  17:45:03
+-- Transcription time: 2018/04/01  18:08:07
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -195,9 +195,9 @@ package LEA_Resource_GUI is
   type Search_box_Type is new Window_Type with record
 
     -- Label: 0
-    Find_box: Drop_Down_Combo_Box_Type;
+    Model_find_box: Drop_Down_Combo_Box_Type;
     -- Label: 0
-    Replace_box: Drop_Down_Combo_Box_Type;
+    Model_replace_box: Drop_Down_Combo_Box_Type;
     Close_search_box: Dialog_Button_Type;    -- closes parent window after click
     Close_search_box_permanent: Button_Type; -- doesn't close parent window after click
     Find_next_button: Default_Dialog_Button_Type;    -- closes parent window after click
@@ -262,7 +262,9 @@ package LEA_Resource_GUI is
   Folders_BMP                 : constant:=    124;
   Backup_none_button          : constant:=  40000;
   IDM_Next_bookmark           : constant:=  40000;
+  Model_find_box              : constant:=  40000;
   IDM_Go_to_line              : constant:=  40001;
+  Model_replace_box           : constant:=  40001;
   IDM_Open_Project            : constant:=  40002;
   IDM_Previous_bookmark       : constant:=  40003;
   Line_value_box              : constant:=  40003;
@@ -270,7 +272,6 @@ package LEA_Resource_GUI is
   Match_case                  : constant:=  40004;
   Copyright_label             : constant:=  40005;
   IDM_Copy                    : constant:=  40005;
-  Find_box                    : constant:=  40006;
   IDM_Cut                     : constant:=  40006;
   IDM_Find_Next               : constant:=  40007;
   Group_Backup                : constant:=  40008;
@@ -300,7 +301,6 @@ package LEA_Resource_GUI is
   Version_label               : constant:=  40024;
   Whole_word                  : constant:=  40025;
   Backup_bak_button           : constant:=  40026;
-  Replace_box                 : constant:=  40027;
   GNAT_URL                    : constant:=  40028;
   IDM_Save_All                : constant:=  40029;
   IDM_Unselect_all            : constant:=  40030;

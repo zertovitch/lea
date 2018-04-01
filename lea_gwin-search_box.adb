@@ -2,24 +2,15 @@ with LEA_Common;                        use LEA_Common;
 
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
-with GWindows.Scintilla;                use GWindows.Scintilla;
 with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Combo_Boxes;              use GWindows.Combo_Boxes;
+with GWindows.Key_States;               use GWindows.Key_States;
+with GWindows.Scintilla;                use GWindows.Scintilla;
 
 package body LEA_GWin.Search_box is
 
-  overriding
-  procedure On_Close (SB        : in out LEA_search_box_type;
-                      Can_Close :    out Boolean)
-  is
-  begin
-    Can_Close:= False;
-    SB.Hide;
-  end On_Close;
-
   procedure Update_drop_downs (SB: in out LEA_search_box_type) is
 
-    procedure Update_drop_down (DD: in out Drop_Down_Combo_Box_Type) is
+    procedure Update_drop_down (DD: in out Find_Replace_box_type) is
       max : constant := 10;
       dd_text: constant GString := DD.Text;
     begin
@@ -83,6 +74,56 @@ package body LEA_GWin.Search_box is
     Any_Search_Button_Clicked (Window, replace_all);
   end Replace_All_Button_Clicked;
 
+  procedure On_Message
+     (FRB          : in out Find_Replace_box_type;
+      message      : in     Interfaces.C.unsigned;
+      wParam       : in     GWindows.Types.Wparam;
+      lParam       : in     GWindows.Types.Lparam;
+      Return_Value : in out GWindows.Types.Lresult)
+  is
+    CB_GETDROPPEDSTATE : constant := 343;
+    use Interfaces.C;
+  begin
+    if message = CB_GETDROPPEDSTATE then
+      if Is_Key_Down (VK_ESCAPE) then
+        FRB.parent_SB.Hide;
+        --  GWindows loses focus on the app here !!
+        --  FRB.parent_SB.The_real_MDI_parent.Focus.Focus;  --  doesn't work
+        return;
+      elsif Is_Key_Down (VK_RETURN) then
+        Update_drop_downs (FRB.parent_SB.all);
+        MDI_Main_Type (FRB.parent_SB.The_real_MDI_parent.all).Perform_Search (find_next);
+        return;
+      end if;
+    end if;
+    Drop_Down_Combo_Box_Type (FRB).On_Message (message, wParam, lParam, Return_Value);
+  end On_Message;
+
+  procedure On_Message
+     (SB           : in out LEA_search_box_type;
+      message      : in     Interfaces.C.unsigned;
+      wParam       : in     GWindows.Types.Wparam;
+      lParam       : in     GWindows.Types.Lparam;
+      Return_Value : in out GWindows.Types.Lresult)
+  is
+  begin
+    if Is_Key_Down(VK_ESCAPE) then
+      SB.Hide;
+      --  GWindows loses focus on the app here !!
+      --  SB.The_real_MDI_parent.Focus.Focus;  --  doesn't work
+      return;
+    end if;
+    Search_box_Type (SB).On_Message (message, wParam, lParam, Return_Value);
+  end On_Message;
+
+  procedure On_Close (SB        : in out LEA_search_box_type;
+                      Can_Close :    out Boolean)
+  is
+  begin
+    Can_Close:= False;
+    SB.Hide;
+  end On_Close;
+
   procedure Create_as_search_box(
     SB     : in out LEA_search_box_type;
     Parent : in out GWindows.Base.Base_Window_Type'Class
@@ -91,7 +132,18 @@ package body LEA_GWin.Search_box is
   begin
     SB.The_real_MDI_parent := Parent'Unrestricted_Access;
     SB.Create_Full_Dialog (Parent);
-    SB.Small_Icon ("Binoculars_Icon_Small");
+    SB.Find_box.Create (SB, "",
+       SB.Model_find_box.Left, SB.Model_find_box.Top,
+       SB.Model_find_box.Width, SB.Model_find_box.Height,
+       False, ID => Model_find_box);
+    SB.Model_find_box.Hide;
+    SB.Find_box.parent_SB := SB'Unrestricted_Access;
+    SB.Replace_box.Create (SB, "",
+       SB.Model_replace_box.Left, SB.Model_replace_box.Top,
+       SB.Model_replace_box.Width, SB.Model_replace_box.Height,
+       False, ID => Model_replace_box);
+    SB.Model_replace_box.Hide;
+    SB.Replace_box.parent_SB := SB'Unrestricted_Access;
     --  Hide the versions of the buttons that close the dialog
     SB.Find_next_button.Hide;
     SB.Find_next_button_permanent.Show;
