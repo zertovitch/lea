@@ -83,18 +83,22 @@ package body LEA_GWin.Search_box is
   is
     CB_GETDROPPEDSTATE : constant := 343;
     use Interfaces.C;
+    do_find_next: Boolean := False;
   begin
     if message = CB_GETDROPPEDSTATE then
       if Is_Key_Down (VK_ESCAPE) then
+        --  FRB.parent_SB.Hide works, but LEA window's focus is lost!
         MDI_Main_Type(FRB.parent_SB.The_real_MDI_parent.all).close_this_search_box := True;
       elsif Is_Key_Down (VK_RETURN) then
-        Update_drop_downs (FRB.parent_SB.all);
-        MDI_Main_Type (FRB.parent_SB.The_real_MDI_parent.all).Perform_Search (find_next);
-        Return_Value := 0;
-        return;
+        do_find_next := True;
       end if;
     end if;
     Drop_Down_Combo_Box_Type (FRB).On_Message (message, wParam, lParam, Return_Value);
+    if do_find_next then
+      Update_drop_downs (FRB.parent_SB.all);
+      MDI_Main_Type (FRB.parent_SB.The_real_MDI_parent.all).Perform_Search (find_next);
+    end if;
+
   end On_Message;
 
   procedure On_Message
@@ -106,6 +110,7 @@ package body LEA_GWin.Search_box is
   is
   begin
     if Is_Key_Down(VK_ESCAPE) then
+      --  SB.Hide works, but LEA window's focus is lost!
       MDI_Main_Type(SB.The_real_MDI_parent.all).close_this_search_box := True;
     end if;
     Search_box_Type (SB).On_Message (message, wParam, lParam, Return_Value);

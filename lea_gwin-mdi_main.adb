@@ -654,9 +654,7 @@ package body LEA_GWin.MDI_Main is
       if MDI_Main.close_this_search_box then
         MDI_Main.close_this_search_box := False;
         if MDI_Main.Search_box.Visible then
-          delay 0.05;
           MDI_Main.Focus;
-          delay 0.05;
           MDI_Main.Search_box.Hide;
         end if;
       end if;
