@@ -86,13 +86,11 @@ package body LEA_GWin.Search_box is
   begin
     if message = CB_GETDROPPEDSTATE then
       if Is_Key_Down (VK_ESCAPE) then
-        FRB.parent_SB.Hide;
-        --  GWindows loses focus on the app here !!
-        --  FRB.parent_SB.The_real_MDI_parent.Focus.Focus;  --  doesn't work
-        return;
+        MDI_Main_Type(FRB.parent_SB.The_real_MDI_parent.all).close_this_search_box := True;
       elsif Is_Key_Down (VK_RETURN) then
         Update_drop_downs (FRB.parent_SB.all);
         MDI_Main_Type (FRB.parent_SB.The_real_MDI_parent.all).Perform_Search (find_next);
+        Return_Value := 0;
         return;
       end if;
     end if;
@@ -108,10 +106,7 @@ package body LEA_GWin.Search_box is
   is
   begin
     if Is_Key_Down(VK_ESCAPE) then
-      SB.Hide;
-      --  GWindows loses focus on the app here !!
-      --  SB.The_real_MDI_parent.Focus.Focus;  --  doesn't work
-      return;
+      MDI_Main_Type(SB.The_real_MDI_parent.all).close_this_search_box := True;
     end if;
     Search_box_Type (SB).On_Message (message, wParam, lParam, Return_Value);
   end On_Message;

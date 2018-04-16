@@ -15,6 +15,8 @@ with GWindows.Windows;                  use GWindows.Windows;
 
 with GWin_Util;
 
+with Interfaces.C;
+
 package LEA_GWin.MDI_Main is
 
   type MDI_Toolbar_Type is
@@ -79,6 +81,8 @@ package LEA_GWin.MDI_Main is
         --  Direct input stream from an editor window:
         current_editor_stream  : aliased LEA_GWin.Editor.Editor_Stream_Type;
         build_successful       : Boolean;
+        close_this_search_box  : Boolean := False;
+        pragma Volatile (close_this_search_box);
       end record;
 
   overriding procedure On_Create (MDI_Main : in out MDI_Main_Type);
@@ -119,6 +123,13 @@ package LEA_GWin.MDI_Main is
   overriding procedure On_Menu_Select (
         MDI_Main : in out MDI_Main_Type;
         Item     : in     Integer        );
+
+  overriding
+  procedure On_Message (MDI_Main : in out MDI_Main_Type;
+                        message      : in     Interfaces.C.unsigned;
+                        wParam       : in     GWindows.Types.Wparam;
+                        lParam       : in     GWindows.Types.Lparam;
+                        Return_Value : in out GWindows.Types.Lresult);
 
   overriding procedure On_Close (
         MDI_Main  : in out MDI_Main_Type;

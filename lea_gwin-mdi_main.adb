@@ -22,6 +22,7 @@ with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+with Windows_Timers;
 
 package body LEA_GWin.MDI_Main is
 
@@ -305,6 +306,8 @@ package body LEA_GWin.MDI_Main is
     MDI_Main.Update_Common_Menus;
   end Change_Mode;
 
+  timer_id: constant:= 1;
+
   ---------------
   -- On_Create --
   ---------------
@@ -416,6 +419,7 @@ package body LEA_GWin.MDI_Main is
         MDI_Main.Task_bar_gadget_ok := False;
     end;
     MDI_Main.Search_box.Create_as_search_box(MDI_Main);
+    Windows_Timers.Set_Timer(MDI_Main, timer_id, 100);
   end On_Create;
 
   function Minimized(MDI_Main: GWindows.Base.Base_Window_Type'Class)
@@ -637,6 +641,35 @@ package body LEA_GWin.MDI_Main is
     end case;
   end On_Menu_Select;
 
+  procedure On_Message (MDI_Main : in out MDI_Main_Type;
+                        message      : in     Interfaces.C.unsigned;
+                        wParam       : in     GWindows.Types.Wparam;
+                        lParam       : in     GWindows.Types.Lparam;
+                        Return_Value : in out GWindows.Types.Lresult)
+  is
+    use Interfaces.C;
+
+  begin
+    if message = Windows_Timers.WM_TIMER then
+      if MDI_Main.close_this_search_box then
+        MDI_Main.close_this_search_box := False;
+        if MDI_Main.Search_box.Visible then
+          delay 0.05;
+          MDI_Main.Focus;
+          delay 0.05;
+          MDI_Main.Search_box.Hide;
+        end if;
+      end if;
+    end if;
+    --  Call parent method
+    GWindows.Windows.MDI.MDI_Main_Window_Type (MDI_Main).On_Message (
+      message,
+      wParam,
+      lParam,
+      Return_Value
+    );
+  end On_Message;
+
   -------------
 
   procedure On_Close (
@@ -664,6 +697,7 @@ package body LEA_GWin.MDI_Main is
       -- !! on certain Windows platforms - 29-Jun-2012
       GWindows.Base.On_Exception_Handler (Handler => null);
       --
+      Windows_Timers.Kill_Timer(MDI_Main, timer_id);
       MDI_Main.is_closing := True;
     end if;
   end On_Close;
