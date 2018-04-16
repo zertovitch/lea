@@ -208,7 +208,8 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "GNAT -  free Ada compiler", GNAT_URL, 23, 119, 100, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "GNAT_Version", GNAT_Version, 132, 119, 147, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "GNAVI / GWindows", GNAVI_URL, 23, 134, 118, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "ResEdit", ResEdit_URL, 23, 149, 170, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "HAC Ada Compiler", HAC_URL, 23, 149, 170, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "ResEdit", ResEdit_URL, 23, 164, 170, 8, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "Close", IDOK, 87, 186, 115, 18, 0, WS_EX_LEFT
 }
 

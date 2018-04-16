@@ -8,6 +8,7 @@
 #define Toolbar_BMP                             123
 #define Folders_BMP                             124
 #define Backup_none_button                      40000
+#define HAC_URL                                 40000
 #define IDM_Next_bookmark                       40000
 #define Model_find_box                          40000
 #define IDM_Go_to_line                          40001

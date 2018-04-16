@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/04/01  18:08:07
+-- Transcription time: 2018/04/16  18:52:45
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -274,6 +274,8 @@ package body LEA_Resource_GUI is
     Dlg_to_Scn(  23, 134, 118, 8, x,y,w,h);
     Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
     Dlg_to_Scn(  23, 149, 170, 8, x,y,w,h);
+    Create( Window.HAC_URL, Window, "HAC Ada Compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => HAC_URL);
+    Dlg_to_Scn(  23, 164, 170, 8, x,y,w,h);
     Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ResEdit_URL);
     Dlg_to_Scn(  87, 186, 115, 18, x,y,w,h);
     -- Both versions of the button are created.
@@ -288,7 +290,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 221
+  -- Dialog at resource line 222
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -384,7 +386,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  -- Dialog at resource line 234
+  -- Dialog at resource line 235
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -482,7 +484,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  -- Dialog at resource line 256
+  -- Dialog at resource line 257
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -728,6 +730,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 376
+  -- Last line of resource script file: 377
 
 end LEA_Resource_GUI;

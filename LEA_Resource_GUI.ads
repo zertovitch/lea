@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/04/01  18:08:07
+-- Transcription time: 2018/04/16  18:52:45
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -75,12 +75,13 @@ package LEA_Resource_GUI is
     GNAT_URL: Label_Type;
     GNAT_Version: Label_Type;
     GNAVI_URL: Label_Type;
+    HAC_URL: Label_Type;
     ResEdit_URL: Label_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 212
+  -- Dialog at resource line 213
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -120,7 +121,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  -- Dialog at resource line 225
+  -- Dialog at resource line 226
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -168,7 +169,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  -- Dialog at resource line 246
+  -- Dialog at resource line 247
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -214,7 +215,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  -- Dialog at resource line 269
+  -- Dialog at resource line 270
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -261,6 +262,7 @@ package LEA_Resource_GUI is
   Toolbar_BMP                 : constant:=    123;
   Folders_BMP                 : constant:=    124;
   Backup_none_button          : constant:=  40000;
+  HAC_URL                     : constant:=  40000;
   IDM_Next_bookmark           : constant:=  40000;
   Model_find_box              : constant:=  40000;
   IDM_Go_to_line              : constant:=  40001;
@@ -354,6 +356,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 376
+  -- Last line of resource script file: 377
 
 end LEA_Resource_GUI;

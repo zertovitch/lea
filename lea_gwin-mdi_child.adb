@@ -476,9 +476,9 @@ package body LEA_GWin.MDI_Child is
     procedure LEA_HAC_Feedback (
        message   : String;
        file_name : String;
-       line      : Positive;
+       line      : Natural;
        column_a  : Natural;
-       column_z  : Positive;
+       column_z  : Natural;
        kind      : HAC.UErrors.Message_kind
      )
     is
