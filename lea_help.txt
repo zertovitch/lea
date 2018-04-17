@@ -46,3 +46,38 @@ Editing
   or add ":= " in a record for adding initializations, or many situations
   where a "Find & Replace" operation, with some guess-work, trial & error and
   manual adjustments would be used instead.
+
+Running small programs with HAC (HAC Ada Compiler)
+==================================================
+
+LEA embeds a limited and experimental Ada compiler (HAC) that
+allows you to run and test small algorithms in a quick
+build - run - change cycle.
+No need to wait for lengthy compile, bind, link times: with HAC,
+all of this is done in a few milliseconds.
+
+Press F4 for build only; 
+Press F9 for build and run - that's it!
+
+A peculiarity of HAC is to require the following header:
+
+    with HAC_Pack;  use HAC_Pack;
+
+which allows immediate visibility of text I/O subprograms and of
+some mathematical functions. For compatibility, a real Ada implementation
+of HAC_Pack can be found in the trunk/sma_exm/special/ directory, @
+
+    https://sourceforge.net/projects/hacadacompiler/ (see Download or Code)
+or
+    https://github.com/svn2github/hac
+    
+Curently only a few examples in the sma_exm directory are working (basically
+those without tasking): 
+   hello.adb
+   test.adb
+   test1.adb
+   shell_sort.adb
+   merge_sort.adb
+
+The available Ada language subset is so far the "Pascal subset", so you already
+have custom types, nested subprograms, recursion to play with.

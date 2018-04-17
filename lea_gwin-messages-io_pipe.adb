@@ -1,8 +1,13 @@
+with GWindows.Application;
+
+with Ada.Calendar;
+
 package body LEA_GWin.Messages.IO_Pipe is
 
   type ML_access is access all Message_List_Type;
 
   current_IO_pipe: ML_access := null;
+  tick: Ada.Calendar.Time;  --  For display refresh
 
   procedure Set_current_IO_pipe (ML: in out Message_List_Type) is
   begin
@@ -17,15 +22,22 @@ package body LEA_GWin.Messages.IO_Pipe is
 
   procedure Append_to_IO_pipe (new_text : String) is
     last_line: Integer := current_IO_pipe.Item_Count -1;
+    use Ada.Calendar;
+    now: constant Time:= Clock;
   begin
     if last_line < 0 then
       current_IO_pipe.Insert_Item ("", Index => 0);  --  First line
+      tick := Clock;
       last_line := 0;
     end if;
     current_IO_pipe.Set_Item(
       Text => current_IO_pipe.Text (Item => last_line, SubItem => 0) & S2G (new_text),
       Index => last_line
     );
+    if now - tick >= 0.04 then
+      GWindows.Application.Message_Check;  --  Refresh display
+      tick:= now;
+    end if;
   end Append_to_IO_pipe;
 
    -------------------------
