@@ -16,6 +16,7 @@ with GWindows.Scintilla;                use GWindows.Scintilla;
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;
 --  with Ada.Environment_Variables;         use Ada.Environment_Variables;
+with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
@@ -506,22 +507,34 @@ package body LEA_GWin.MDI_Child is
       ml.Set_Sub_Item (S2G (msg_up), count, 1);  --   & column_a'Img & column_z'Img
       count := count + 1;
     end;
+    use_editor_stream: constant Boolean := True;
+    use Ada.Streams.Stream_IO;
+    f: File_Type;
+    file_name : constant String := G2S (GU2G (MDI_Child.File_Name));
   begin
     case MDI_Child.MDI_Parent.opt.toolset is
       when HAC_mode =>
-        --  We connect the main editor input stream to this window's editor.
-        MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
-        HAC.Data.Line_Count := 0;
-        HAC.Data.c_Set_Stream (
-          MDI_Child.MDI_Parent.current_editor_stream'Access,
-          G2S (GU2G (MDI_Child.File_Name))
-        );
+        if use_editor_stream then
+          --  We connect the main editor input stream to this window's editor.
+          MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
+          HAC.Data.c_Set_Stream (
+            MDI_Child.MDI_Parent.current_editor_stream'Access,
+            file_name);
+        else
+          --  In case the file is not open in an editor, we use Stream_IO.
+          Open (f, In_File, file_name);
+          HAC.Data.c_Set_Stream (HAC.Data.Stream_Access (Stream (f)), file_name);
+        end if;
         ml.Clear;
         ml.Set_Column ("Line",     0, 40);
         ml.Set_Column ("Message",  1, 800);
+        HAC.Data.Line_Count := 0;
         HAC.Data.current_error_pipe := LEA_HAC_Feedback'Unrestricted_Access;
         HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
         HAC.Compiler.Compile;
+        if not use_editor_stream then
+          Close (f);
+        end if;
         HAC.Data.current_error_pipe := null;
         MDI_Main.build_successful := HAC.Data.Err_Count = 0;
         if count = 0 then
