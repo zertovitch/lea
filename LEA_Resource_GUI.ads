@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/04/19  22:07:54
+-- Transcription time: 2018/08/08  09:40:56
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -42,7 +42,7 @@ package LEA_Resource_GUI is
     Popup_0009: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 122
+  -- Menu at line 123
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -50,14 +50,15 @@ package LEA_Resource_GUI is
     Main: Menu_Type; -- Root of the whole menu tree
     Popup_0001: Menu_Type;  -- level 1; title: "&File"
     Popup_0002: Menu_Type;  -- level 2; title: "&Recent"
-    Popup_0003: Menu_Type;  -- level 1; title: "&Actions"
-    Popup_0004: Menu_Type;  -- level 1; title: "&View"
-    Popup_0005: Menu_Type;  -- level 1; title: "&Options"
-    Popup_0006: Menu_Type;  -- level 1; title: "&Window"
-    Popup_0007: Menu_Type;  -- level 1; title: "&Help"
+    Popup_0003: Menu_Type;  -- level 1; title: "&Edit"
+    Popup_0004: Menu_Type;  -- level 1; title: "&Actions"
+    Popup_0005: Menu_Type;  -- level 1; title: "&View"
+    Popup_0006: Menu_Type;  -- level 1; title: "&Options"
+    Popup_0007: Menu_Type;  -- level 1; title: "&Window"
+    Popup_0008: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 185
+  -- Menu at line 190
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -81,7 +82,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 213
+  -- Dialog at resource line 218
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -121,7 +122,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  -- Dialog at resource line 226
+  -- Dialog at resource line 231
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -169,7 +170,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  -- Dialog at resource line 247
+  -- Dialog at resource line 252
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -215,7 +216,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  -- Dialog at resource line 270
+  -- Dialog at resource line 275
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -249,7 +250,7 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion: constant String:= "0.65";
+    FileVersion: constant String:= "0.66";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2018";
     ProductName: constant String:= "LEA";
     Translation: constant:= 1033;
@@ -304,6 +305,7 @@ package LEA_Resource_GUI is
   Replace_and_find_next_button: constant:=  40019;
   Color_theme_list_box        : constant:=  40020;
   IDM_Notepad_view            : constant:=  40020;
+  IDM_Copy_Messages           : constant:=  40021;
   Replace_all_button          : constant:=  40021;
   Close_search_box            : constant:=  40022;
   IDM_Undo                    : constant:=  40023;
@@ -363,6 +365,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 377
+  -- Last line of resource script file: 382
 
 end LEA_Resource_GUI;

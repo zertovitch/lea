@@ -43,6 +43,7 @@
 #define Replace_and_find_next_button            40019
 #define Color_theme_list_box                    40020
 #define IDM_Notepad_view                        40020
+#define IDM_Copy_Messages                       40021
 #define Replace_all_button                      40021
 #define Close_search_box                        40022
 #define IDM_Undo                                40023

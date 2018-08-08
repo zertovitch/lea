@@ -60,6 +60,7 @@ Menu_MDI_Child MENU
         MENUITEM SEPARATOR
         MENUITEM "Cu&t to clipboard\tCtrl+X or Shift+Del", IDM_Cut
         MENUITEM "&Copy to clipboard\tCtrl+C or Ctrl+Ins", IDM_Copy
+        MENUITEM "Copy message &list to clipboard", IDM_Copy_Messages
         MENUITEM "&Paste from clipboard\tCtrl+V or Shift+Ins", IDM_Paste
         MENUITEM SEPARATOR
         MENUITEM "&Duplicate line or selection\tCtrl+D", IDM_Duplicate
@@ -148,6 +149,10 @@ Menu_MDI_Main MENU
         MENUITEM "Open &Project", IDM_Open_Project, INACTIVE
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
+    }
+    POPUP "&Edit"
+    {
+        MENUITEM "Copy message &list to clipboard", IDM_Copy_Messages
     }
     POPUP "&Actions"
     {
@@ -350,8 +355,8 @@ LEA_Icon           ICON           "ico_bmp/lea.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     0,6,5,0
-    PRODUCTVERSION  0,6,5,0
+    FILEVERSION     0,6,6,0
+    PRODUCTVERSION  0,6,6,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -364,7 +369,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.65"
+            VALUE "FileVersion", "0.66"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2018"
             VALUE "ProductName", "LEA"
         }
