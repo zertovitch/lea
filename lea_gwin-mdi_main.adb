@@ -603,6 +603,8 @@ package body LEA_GWin.MDI_Main is
         GWin_Util.Start(LEA_web_page);
       when IDM_QUIT  =>
         Close (MDI_Main);
+      when IDM_Copy_Messages =>
+        MDI_Main.Message_Panel.Message_List.Copy_Messages;
       when IDM_WINDOW_CASCADE   =>
         MDI_Cascade (MDI_Main);
       when IDM_WINDOW_TILE_HORIZONTAL =>

@@ -27,4 +27,9 @@ package body LEA_GWin.Messages is
     end loop;
   end On_Double_Click;
 
+  procedure Copy_Messages (Control : in out Message_List_Type) is
+  begin
+    null;  --  !!  needs getting column count and headers...
+  end Copy_Messages;
+
 end LEA_GWin.Messages;
