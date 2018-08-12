@@ -1,5 +1,10 @@
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
+with GWindows.Clipboard;                use GWindows.Clipboard;
+with GWindows.Windows;                  use GWindows.Windows;
+
+with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+
 package body LEA_GWin.Messages is
 
   overriding procedure On_Click (Control : in out Message_List_Type) is
@@ -28,8 +33,37 @@ package body LEA_GWin.Messages is
   end On_Double_Click;
 
   procedure Copy_Messages (Control : in out Message_List_Type) is
+    cols : Natural := 0;
+    res  : GString_Unbounded;
+    --  We separate columns with Tabs - useful when pasting into a spreadsheet.
+    HTab : constant GCharacter := GCharacter'Val (9);
   begin
-    null;  --  !!  needs getting column count and headers...
+    loop
+      declare
+        cn : constant GString := Control.Column_Text (cols);
+      begin
+        exit when cn = "";
+        if cols > 0 then
+          res := res & HTab;
+        end if;
+        res := res & cn;
+      end;
+      cols := cols + 1;
+    end loop;
+    res := res & NL;
+    for i in 0 .. Control.Item_Count - 1 loop
+      for c in 0 .. cols - 1 loop
+        if c > 0 then
+          res := res & HTab;
+        end if;
+        res := res & Control.Text (i, c);
+      end loop;
+      res := res & NL;
+    end loop;
+    --
+    --  Now, send the whole stuff to the clipboard.
+    --
+    Clipboard_Text (Window_Access (Control.mdi_main_parent).all, res);
   end Copy_Messages;
 
 end LEA_GWin.Messages;

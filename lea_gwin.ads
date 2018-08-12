@@ -9,7 +9,7 @@ package LEA_GWin is
   function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
   function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
 
-  NL: constant GString:= S2G((1=> ASCII.LF));
+  NL: constant GString:= S2G((ASCII.CR, ASCII.LF));
 
   Text_files_filters: GWindows.Common_Dialogs.Filter_Array:=
     ((G2GU ("Ada files (*.ads, *.adb)"),          G2GU ("*.ads;*.adb" )),
