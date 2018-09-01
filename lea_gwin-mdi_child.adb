@@ -180,7 +180,6 @@ package body LEA_GWin.MDI_Child is
   ---------------
 
   procedure On_Create (MDI_Child : in out MDI_Child_Type) is
-    use GWindows.Packing_Boxes;
   begin
     MDI_Child.Small_Icon("LEA_Doc_Icon_Name");
 
