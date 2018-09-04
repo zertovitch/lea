@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/08/08  09:40:56
+-- Transcription time: 2018/09/04  14:19:14
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 31-Oct-2017
+-- RC Grammar version: 30-Aug-2018
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -21,7 +21,7 @@ package body LEA_Resource_GUI is
 
   -- ** Generated code begins here \/ \/ \/.
 
-  -- Menu at line 29
+  --  Menu at line 29
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type)
   is
@@ -116,7 +116,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 129
+  --  Menu at line 129
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -183,10 +183,10 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0008, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 202
+  --  Dialog at resource line 202
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out About_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -199,7 +199,7 @@ package body LEA_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out About_box_Type;
@@ -236,8 +236,8 @@ package body LEA_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- About_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out About_box_Type;
@@ -294,10 +294,10 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 227
+  --  Dialog at resource line 227
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Go_to_line_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -310,7 +310,7 @@ package body LEA_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Go_to_line_box_Type;
@@ -347,8 +347,8 @@ package body LEA_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Go_to_line_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Go_to_line_box_Type;
@@ -390,9 +390,9 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  -- Dialog at resource line 240
+  --  Dialog at resource line 240
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Option_box_Type;
@@ -429,8 +429,8 @@ package body LEA_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Option_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Option_box_Type;
@@ -488,23 +488,9 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  -- Dialog at resource line 262
+  --  Dialog at resource line 262
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
-  --
-  procedure On_Pre_Create (Window    : in out Search_box_Type;
-                           dwStyle   : in out Interfaces.C.unsigned;
-                           dwExStyle : in out Interfaces.C.unsigned)
-  is
-    pragma Warnings (Off, Window);
-    pragma Warnings (Off, dwExStyle);
-    WS_SYSMENU: constant:= 16#0008_0000#;
-  begin
-    dwStyle:= dwStyle and not WS_SYSMENU;
-  end On_Pre_Create;
-
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Search_box_Type;
@@ -541,8 +527,8 @@ package body LEA_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Search_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Search_box_Type;

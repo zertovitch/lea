@@ -132,19 +132,25 @@ package body LEA_GWin.Search_box is
   begin
     SB.The_real_MDI_parent := Parent'Unrestricted_Access;
     SB.Create_Full_Dialog (Parent);
+    --  The dialog is now created. We customize it a bit...
+    SB.Small_Icon ("Binoculars_Icon_Small");
+    --  Create text box for searching a text.
     SB.Find_box.Create (SB, "",
        SB.Model_find_box.Left, SB.Model_find_box.Top,
        SB.Model_find_box.Width, SB.Model_find_box.Height,
        False, ID => Model_find_box);
+    --  Find_box is identical to Model_find_box, but with new methods.
     SB.Model_find_box.Hide;
     SB.Find_box.parent_SB := SB'Unrestricted_Access;
+    --  Create text box for replacing a text with another one.
     SB.Replace_box.Create (SB, "",
        SB.Model_replace_box.Left, SB.Model_replace_box.Top,
        SB.Model_replace_box.Width, SB.Model_replace_box.Height,
        False, ID => Model_replace_box);
+    --  Replace_box is identical to Model_replace_box, but with new methods.
     SB.Model_replace_box.Hide;
     SB.Replace_box.parent_SB := SB'Unrestricted_Access;
-    --  Hide the versions of the buttons that close the dialog
+    --  Hide the versions of the buttons that would close the dialog.
     SB.Find_next_button.Hide;
     SB.Find_next_button_permanent.Show;
     SB.Find_next_button_permanent.On_Click_Handler(Find_Next_Button_Clicked'Unrestricted_Access);
