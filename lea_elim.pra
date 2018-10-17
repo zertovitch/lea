@@ -1754,7 +1754,6 @@ pragma Eliminate (Zip_Streams, Get_Name, Source_Location => "zip_streams.ads:112
 pragma Eliminate (Zip_Streams, Set_Time, Source_Location => "zip_streams.ads:125");
 pragma Eliminate (Zip_Streams, Get_Time, Source_Location => "zip_streams.ads:135");
 pragma Eliminate (Zip_Streams, Set_Time, Source_Location => "zip_streams.ads:131");
-pragma Eliminate (Zip_Streams, Convert, Source_Location => "zip_streams.ads:187");
 pragma Eliminate (Zip_Streams, Get_Time, Source_Location => "zip_streams.ads:141");
 pragma Eliminate (Zip_Streams, Set_Unicode_Name_Flag, Source_Location => "zip_streams.ads:114");
 pragma Eliminate (Zip_Streams, Is_Unicode_Name, Source_Location => "zip_streams.ads:116");
