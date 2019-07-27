@@ -152,12 +152,12 @@ package body LEA_GWin.MDI_Main is
       New_Window.Syntax_kind := Guess_syntax (GU2G (New_Window.File_Name));
       New_Window.Editor.Set_syntax (New_Window.Syntax_kind);
       New_Window.Editor.Focus;
-      --  Scintilla lines are 0-based
-      if mru_line > -1 then
+      --  NB: Scintilla lines are 0-based
+      if Line > -1 then
+        New_Window.Editor.Set_current_line (Line);
+      elsif mru_line > -1 then
         --  Set cursor position to memorized line number
         New_Window.Editor.Set_current_line (mru_line);
-      elsif Line > -1 then
-        New_Window.Editor.Set_current_line (Line);
       end if;
       if Col_a > -1 then
         new_pos_a := New_Window.Editor.GetCurrentPos + Col_a;
@@ -324,6 +324,7 @@ package body LEA_GWin.MDI_Main is
       end if;
     end Replace_default;
     --
+    start_line : Integer := -1;
   begin
     Windows_persistence.Load (MDI_Main.opt);  -- Load options from the registry
     --
@@ -401,11 +402,29 @@ package body LEA_GWin.MDI_Main is
       -- ^ The MS Office-like first, empty document
     end if;
     -- !! This works on 1st instance only:
-    for I in 1..Argument_Count loop
-      Open_Child_Window_And_Load(
-        MDI_Main,
-        G2GU(To_UTF_16(Argument(I)))
-      );
+    for i in 1 .. Argument_Count loop
+      declare
+        a : constant String := Argument (i);
+      begin
+        if a (a'First) = '+' then  --  Emacs +linenum
+          start_line := 0;
+          for j in a'First + 1 .. a'Last loop
+            if a(j) in '0' .. '9' then
+              start_line := start_line * 10 + (Character'Pos(a(j)) - Character'Pos('0'));
+            else
+              start_line := -1;  -- Invalid number
+              exit;
+            end if;
+          end loop;
+        else
+          Open_Child_Window_And_Load(
+            MDI_Main,
+            G2GU(To_UTF_16(a)),
+            start_line - 1  --  NB: Scintilla lines are 0-based
+          );
+          start_line := -1;
+        end if;
+      end;
     end loop;
     --  Dropping files on the MDI background will trigger opening a document:
     MDI_Main.Accept_File_Drag_And_Drop;
