@@ -4,6 +4,8 @@ with LEA_Common;                        use LEA_Common;
 
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
+with HAC, Zip;
+
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Constants;                use GWindows.Constants;
@@ -46,7 +48,7 @@ package body LEA_GWin.Modal_dialogs is
 
   procedure Do_about (MDI_Main : in out MDI_Main_Type) is
     box: About_box_Type;
-    url_lea, url_gnat, url_gnavi, url_hac, url_resedit: URL_Type;
+    url_lea, url_gnat, url_gnavi, url_hac, url_resedit, url_zipada: URL_Type;
     --
     function GNAT_Version_string return String is
       package CVer is new GNAT.Compiler_Version;
@@ -68,6 +70,9 @@ package body LEA_GWin.Modal_dialogs is
     box.GNAT_Version.Text (S2G("version " & GNAT_Version_string));
     Create_and_Swap (url_gnavi,   box.GNAVI_URL,   box, "http://sf.net/projects/gnavi");
     Create_and_Swap (url_hac,     box.HAC_URL,     box, "http://sf.net/projects/hacadacompiler");
+    box.HAC_Version.Text (S2G ("version " & HAC.version & ", ref. " & HAC.reference));
+    Create_and_Swap (url_zipada,  box.ZipAda_URL,  box, S2G (Zip.web));
+    box.ZipAda_Version.Text (S2G ("version " & Zip.version & ", ref. " & Zip.reference));
     Create_and_Swap (url_resedit, box.ResEdit_URL, box, "http://resedit.net");
     box.Center;
     if Show_Dialog (box, MDI_Main) = IDOK then

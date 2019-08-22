@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/09/04  14:19:14
+-- Transcription time: 2019/08/22  18:06:00
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 30-Aug-2018
+-- RC Grammar version: 20-Jul-2019
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -214,7 +214,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 289, 210, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 289, 225, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -248,7 +248,7 @@ package body LEA_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 289, 210, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 289, 225, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
@@ -269,19 +269,25 @@ package body LEA_Resource_GUI is
     Create_Label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  157, 81, 118, 8, x,y,w,h);
     Create( Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
-    Dlg_to_Scn(  5, 105, 278, 78, x,y,w,h);
+    Dlg_to_Scn(  5, 105, 278, 93, x,y,w,h);
     Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
     Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
     Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
     Dlg_to_Scn(  132, 119, 147, 8, x,y,w,h);
     Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_Version);
-    Dlg_to_Scn(  23, 134, 118, 8, x,y,w,h);
-    Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
-    Dlg_to_Scn(  23, 149, 170, 8, x,y,w,h);
+    Dlg_to_Scn(  23, 134, 100, 8, x,y,w,h);
     Create( Window.HAC_URL, Window, "HAC Ada Compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => HAC_URL);
-    Dlg_to_Scn(  23, 164, 170, 8, x,y,w,h);
+    Dlg_to_Scn(  132, 134, 146, 8, x,y,w,h);
+    Create( Window.HAC_Version, Window, "HAC Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => HAC_Version);
+    Dlg_to_Scn(  23, 149, 118, 8, x,y,w,h);
+    Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
+    Dlg_to_Scn(  23, 164, 100, 8, x,y,w,h);
+    Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_URL);
+    Dlg_to_Scn(  132, 164, 146, 8, x,y,w,h);
+    Create( Window.ZipAda_Version, Window, "Zip-Ada Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_Version);
+    Dlg_to_Scn(  23, 179, 170, 8, x,y,w,h);
     Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ResEdit_URL);
-    Dlg_to_Scn(  87, 186, 115, 18, x,y,w,h);
+    Dlg_to_Scn(  87, 201, 115, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -294,7 +300,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 227
+  --  Dialog at resource line 230
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -390,7 +396,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  --  Dialog at resource line 240
+  --  Dialog at resource line 243
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -488,7 +494,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 262
+  --  Dialog at resource line 265
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -734,6 +740,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 382
+  -- Last line of resource script file: 385
 
 end LEA_Resource_GUI;

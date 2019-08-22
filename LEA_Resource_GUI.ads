@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2018/09/04  14:19:14
+-- Transcription time: 2019/08/22  18:06:00
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 30-Aug-2018
+-- RC Grammar version: 20-Jul-2019
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -75,14 +75,17 @@ package LEA_Resource_GUI is
     Static_0006: Group_Box_Type;
     GNAT_URL: Label_Type;
     GNAT_Version: Label_Type;
-    GNAVI_URL: Label_Type;
     HAC_URL: Label_Type;
+    HAC_Version: Label_Type;
+    GNAVI_URL: Label_Type;
+    ZipAda_URL: Label_Type;
+    ZipAda_Version: Label_Type;
     ResEdit_URL: Label_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  --  Dialog at resource line 218
+  --  Dialog at resource line 221
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -122,7 +125,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  --  Dialog at resource line 231
+  --  Dialog at resource line 234
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -170,7 +173,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 252
+  --  Dialog at resource line 255
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -216,7 +219,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 275
+  --  Dialog at resource line 278
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -244,7 +247,7 @@ package LEA_Resource_GUI is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
     FileVersion: constant String:= "0.66";
-    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2018";
+    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2019";
     ProductName: constant String:= "LEA";
     Translation: constant:= 1033;
   end Version_info;
@@ -347,6 +350,9 @@ package LEA_Resource_GUI is
   IDM_Show_special_symbols    : constant:=  40070;
   IDM_Find_Previous           : constant:=  40071;
   IDM_Run                     : constant:=  40072;
+  ZipAda_URL                  : constant:=  40073;
+  ZipAda_Version              : constant:=  40074;
+  HAC_Version                 : constant:=  40075;
 
   -- ** Some helper utilities (spec).
 
@@ -358,6 +364,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 382
+  -- Last line of resource script file: 385
 
 end LEA_Resource_GUI;
