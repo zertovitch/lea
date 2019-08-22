@@ -539,7 +539,7 @@ package body LEA_GWin.Editor is
           else  --  Not found *after* the wrap around: find_str is really nowhere!
             --  Restore initial selection
             Editor.SetSel (sel_a, sel_z);
-            Message_Box (MDI_Child, "Search", "No occurrence found", OK_Box, Information_Icon);
+            Message_Box (MDI_Child.MDI_Parent.Search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
             if MDI_Main.Search_box.Visible then
               MDI_Main.Search_box.Focus;
             end if;
@@ -632,7 +632,7 @@ package body LEA_GWin.Editor is
           large_message_width
         );
         Message_Box (
-          Editor,
+          MDI_Child.MDI_Parent.Search_box,
           "Replace all",
           "Replaced all (" &
           Trim (Integer'Wide_Image (count), Left) &
