@@ -1,3 +1,5 @@
+with HAC.UErrors;
+
 with GWindows.Base;
 with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Drawing_Objects;
@@ -6,10 +8,11 @@ package LEA_GWin.Messages is
 
   --  Information attached to each line in the message box - "dope" or "payload"
   type Dope_information is record
-    file   : GString_Unbounded;
+    file              : GString_Unbounded;
+    repair            : HAC.UErrors.Repair_kit;
     line,
     col_a,
-    col_z  : Natural           := 0;
+    col_z             : Natural           := 0;
   end record;
 
   null_dope : constant Dope_information := (others => <>);

@@ -472,14 +472,16 @@ package body LEA_GWin.MDI_Child is
     count: Natural := 0;
     displayed_compilation_file_name: Unbounded_String;
     blurb: constant GString := "[HAC to p-code] ";
+    use HAC.UErrors;
     --
     procedure LEA_HAC_Feedback (
-       message   : String;
-       file_name : String;
-       line      : Natural;
-       column_a  : Natural;
-       column_z  : Natural;
-       kind      : HAC.UErrors.Message_kind
+      message         : String;
+      file_name       : String;
+      line            : Natural;
+      column_a        : Natural;       --  Before first selected character, can be 0.
+      column_z        : Natural;
+      kind            : Message_kind;  --  Error, or warning, or ? ...
+      repair          : Repair_kit     --  Can error be automatically repaired; if so, how ?
      )
     is
     pragma Unreferenced (kind);
@@ -493,14 +495,21 @@ package body LEA_GWin.MDI_Child is
         count := count + 1;
         displayed_compilation_file_name := To_Unbounded_String (file_name);
       end if;
-      ml.Insert_Item (Trim (Integer'Wide_Image (line), Left), count);
+      ml.Insert_Item (
+        Trim (Integer'Wide_Image (line), Left),
+        count,
+        Icon => Boolean'Pos (repair.kind /= none)
+      );
+      --  Here we set a payload in order to get the source file and position
+      --  when selecting a row in the error / warnings message list.
       ml.Item_Data(
         count,
         new LEA_GWin.Messages.Dope_information'(
-          file  => G2GU (S2G (file_name)),
-          line  => line - 1,  --  Scintilla's lines are 0-based
-          col_a => column_a,
-          col_z => column_z
+          file        => G2GU (S2G (file_name)),
+          repair      => repair,
+          line        => line - 1,  --  Scintilla's lines are 0-based
+          col_a       => column_a,
+          col_z       => column_z
         )
       );
       ml.Set_Sub_Item (S2G (msg_up), count, 1);  --   & column_a'Img & column_z'Img
@@ -525,7 +534,7 @@ package body LEA_GWin.MDI_Child is
           HAC.Data.c_Set_Stream (HAC.Data.Stream_Access (Stream (f)), file_name);
         end if;
         ml.Clear;
-        ml.Set_Column ("Line",     0, 40);
+        ml.Set_Column ("Line",     0, 60);
         ml.Set_Column ("Message",  1, 800);
         HAC.Data.Line_Count := 0;
         HAC.Data.current_error_pipe := LEA_HAC_Feedback'Unrestricted_Access;

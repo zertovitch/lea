@@ -347,6 +347,9 @@ package body LEA_GWin.MDI_Main is
        IDM_MRU_9
       );
 
+    --  ** Other resources
+    MDI_Main.Folders_Images.Create (Num_resource(Folders_BMP), 16);
+
     --  ** Main tool bar (New / Open / Save / ...) at top left of the main window:
     LEA_GWin.Toolbars.Init_Main_toolbar(MDI_Main.Tool_Bar, MDI_Main.Toolbar_Images, MDI_Main);
 
@@ -375,10 +378,8 @@ package body LEA_GWin.MDI_Main is
     MDI_Main.Message_Panel.Message_List.Insert_Column ("", 0, 40);
     MDI_Main.Message_Panel.Message_List.Insert_Column ("", 1, 35);
     MDI_Main.Message_Panel.Message_List.Insert_Column ("", 2, 1000);
+    MDI_Main.Message_Panel.Message_List.Set_Image_List (Small, MDI_Main.Folders_Images);
     MDI_Main.Message_Panel.Message_List.Dock (Fill);
-
-    --  ** Other resources
-    MDI_Main.Folders_Images.Create (Num_resource(Folders_BMP), 16);
 
     --  ** Resize according to options:
 

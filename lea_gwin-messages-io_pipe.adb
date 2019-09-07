@@ -6,7 +6,7 @@ package body LEA_GWin.Messages.IO_Pipe is
 
   type ML_access is access all Message_List_Type;
 
-  current_IO_pipe: ML_access := null;
+  current_IO_pipe: ML_access := null;  --  Global here. We assume there is only one main window.
   tick: Ada.Calendar.Time;  --  For display refresh
 
   procedure Set_current_IO_pipe (ML: in out Message_List_Type) is
