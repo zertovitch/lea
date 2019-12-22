@@ -8,14 +8,7 @@ with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.Messages is
 
-  overriding procedure On_Click (Control : in out Message_List_Type) is
-  begin
-    Control.On_Double_Click;
-    --  Focus back on the message list (so the keyboard is also focused there)
-    Control.Focus;
-  end On_Click;
-
-  overriding procedure On_Double_Click (Control : in out Message_List_Type) is
+  procedure Any_Click (Control : in out Message_List_Type; double_click : Boolean) is
     pl: LEA_LV_Ex.Data_Access;
     mm: MDI_Main_Access;
     use HAC.UErrors, LEA_LV_Ex;
@@ -25,9 +18,9 @@ package body LEA_GWin.Messages is
         pl := Control.Item_Data (i);
         if pl /= null then
           mm := MDI_Main_Access (Control.mdi_main_parent);
-          mm.Open_Child_Window_And_Load (pl.file, pl.line, pl.col_a, pl.col_z);
+          mm.Open_Child_Window_And_Load (pl.file, pl.line, pl.col_a, pl.col_a);
           --  At this point focus is on the editor window.
-          if pl.kind /= none then
+          if pl.kind /= none and then double_click then
             LEA_GWin.Repair.Do_Repair (mm.all, pl.all);
             if pl.kind = none then
               --  Remove tool icon:
@@ -38,6 +31,18 @@ package body LEA_GWin.Messages is
         exit;  --  Found selected line, not worth to continue.
       end if;
     end loop;
+  end Any_Click;
+
+  overriding procedure On_Click (Control : in out Message_List_Type) is
+  begin
+    Any_Click (Control, False);
+    --  Focus back on the message list (so the keyboard is also focused there)
+    Control.Focus;
+  end On_Click;
+
+  overriding procedure On_Double_Click (Control : in out Message_List_Type) is
+  begin
+    Any_Click (Control, True);
   end On_Double_Click;
 
   procedure Copy_Messages (Control : in out Message_List_Type) is

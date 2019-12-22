@@ -9,14 +9,16 @@ tools like GNAT.
 
 Platforms supported:
 
-  * Windows
+  * Windows (see LEA_GWin package and children)
   * Some effort has been made to make LEA cross-UI-toolkits-portable
     without redoing it from scratch on another platform.
     See the LEA_Common package and children.
   
 How to build & modify LEA
 
-  * You need the GNAT compiler: http://libre.adacore.com
+  * You need the GNAT compiler: https://www.adacore.com/community
+      Caution (Windows): due to the Scintilla DLL which is
+      32-bit, you need a 32-bit GNAT for Windows (<= 2017)
   * Read the comments in the lea.gpr project file 
       (just open as text file) for further instructions.
   
