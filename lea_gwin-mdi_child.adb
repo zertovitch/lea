@@ -20,6 +20,7 @@ with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+with LEA_GWin.Messages;
 
 package body LEA_GWin.MDI_Child is
 
@@ -486,7 +487,14 @@ package body LEA_GWin.MDI_Child is
     is
     pragma Unreferenced (kind);
       msg_up: String := message;
+      extended_repair : LEA_GWin.Messages.Editor_repair_information;
     begin
+      Repair_kit (extended_repair) := repair;
+      extended_repair.file  := G2GU (S2G (file_name));
+      extended_repair.line  := line - 1;  --  Scintilla's lines are 0-based
+      extended_repair.col_a := column_a;
+      extended_repair.col_z := column_z;
+      --
       msg_up(msg_up'First) := To_Upper (msg_up(msg_up'First));
       if displayed_compilation_file_name /= file_name then
         --  New compilation unit, show its name.
@@ -504,13 +512,7 @@ package body LEA_GWin.MDI_Child is
       --  when selecting a row in the error / warnings message list.
       ml.Item_Data(
         count,
-        new LEA_GWin.Messages.Dope_information'(
-          file        => G2GU (S2G (file_name)),
-          repair      => repair,
-          line        => line - 1,  --  Scintilla's lines are 0-based
-          col_a       => column_a,
-          col_z       => column_z
-        )
+        new LEA_GWin.Messages.Editor_repair_information'(extended_repair)
       );
       ml.Set_Sub_Item (S2G (msg_up), count, 1);  --   & column_a'Img & column_z'Img
       count := count + 1;

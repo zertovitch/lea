@@ -7,17 +7,18 @@ with GWindows.Drawing_Objects;
 package LEA_GWin.Messages is
 
   --  Information attached to each line in the message box - "dope" or "payload"
-  type Dope_information is record
-    file              : GString_Unbounded;
-    repair            : HAC.UErrors.Repair_kit;
+  type Editor_repair_information is
+    new HAC.UErrors.Repair_kit with
+  record
+    file   : GString_Unbounded;
     line,
     col_a,
-    col_z             : Natural           := 0;
+    col_z  : Natural           := 0;
   end record;
 
-  null_dope : constant Dope_information := (others => <>);
+  null_dope : constant Editor_repair_information := (others => <>);
 
-  package LEA_LV_Ex is new GWindows.Common_Controls.Ex_List_View (Dope_information);
+  package LEA_LV_Ex is new GWindows.Common_Controls.Ex_List_View (Editor_repair_information);
 
   type Message_List_Type is new LEA_LV_Ex.Ex_List_View_Control_Type with record
     mdi_main_parent : GWindows.Base.Pointer_To_Base_Window_Class;

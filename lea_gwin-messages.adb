@@ -1,8 +1,7 @@
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
+with LEA_GWin.Repair;
 
 with GWindows.Clipboard;                use GWindows.Clipboard;
-with GWindows.Cursors;                  use GWindows.Cursors;
-with GWindows.Message_Boxes;
 with GWindows.Windows;                  use GWindows.Windows;
 
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
@@ -17,10 +16,9 @@ package body LEA_GWin.Messages is
   end On_Click;
 
   overriding procedure On_Double_Click (Control : in out Message_List_Type) is
-    use LEA_LV_Ex;
-    pl: Data_Access;
+    pl: LEA_LV_Ex.Data_Access;
     mm: MDI_Main_Access;
-    use HAC.UErrors;
+    use HAC.UErrors, LEA_LV_Ex;
   begin
     for i in 0 .. Control.Item_Count loop
       if Control.Is_Selected (i) then
@@ -29,20 +27,15 @@ package body LEA_GWin.Messages is
           mm := MDI_Main_Access (Control.mdi_main_parent);
           mm.Open_Child_Window_And_Load (pl.file, pl.line, pl.col_a, pl.col_z);
           --  At this point focus is on the editor window.
-          if pl.repair.kind /= none
-            --  There is a repair possible (and the tool icon is on the left of the row).
-            and then Control.Point_To_Client (Get_Cursor_Position).X < 16
-            --  The click happened on the tool icon.
-          then
-            --  !!  TBD: proc Do_repair
-            GWindows.Message_Boxes.Message_Box ("Repair", pl.repair.kind'Wide_Image);  --  !!
-            --  Disable repair:
-            pl.repair.kind := none;
-            --  Remove tool icon:
-            Control.Set_Item (Control.Text(Item => i, SubItem => 0), i, Icon => 0);
+          if pl.kind /= none then
+            LEA_GWin.Repair.Do_Repair (mm.all, pl.all);
+            if pl.kind = none then
+              --  Remove tool icon:
+              Control.Set_Item (Control.Text(Item => i, SubItem => 0), i, Icon => 0);
+            end if;
           end if;
-          exit;
         end if;
+        exit;  --  Found selected line, not worth to continue.
       end if;
     end loop;
   end On_Double_Click;

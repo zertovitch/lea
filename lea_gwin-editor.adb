@@ -4,8 +4,6 @@ with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 with LEA_GWin.Messages;                 use LEA_GWin.Messages;
 
-with HAC.UErrors;
-
 with GWindows.Colors;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
@@ -584,12 +582,12 @@ package body LEA_GWin.Editor is
           ml.Insert_Item (Trim (Integer'Wide_Image (line + 1), Left), count);
           ml.Item_Data(
             count,
-            new Dope_information'(
+            new Editor_repair_information'(
               file        => MDI_Child.File_Name,
-              repair      => HAC.UErrors.nothing_to_repair,
               line        => line,
               col_a       => col,
-              col_z       => col + find_str'Length
+              col_z       => col + find_str'Length,
+              others      => <>
             )
           );
           ml.Set_Sub_Item (Trim (Integer'Wide_Image (col + 1), Left), count, 1);

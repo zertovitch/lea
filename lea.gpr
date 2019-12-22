@@ -1,5 +1,5 @@
 --  This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
---  for the LEA project ( http://l-e-a.sf.net/ , mirror: https://github.com/svn2github/lea )
+--  for the LEA project ( http://l-e-a.sf.net/ , mirror: https://github.com/zertovitch/lea )
 --  Build me with "gprbuild -p -P lea", or open me with GPS
 --  
 --  *** External libraries ***
@@ -12,17 +12,17 @@
 --  *       [gnavi]\gwindows\contrib
 --  *       [gnavi]\gnatcom\framework
 --  *       Project URL: http://sf.net/projects/gnavi/
---  *       Mirror URL: https://github.com/svn2github/gnavi
+--  *       Mirror URL: https://github.com/zertovitch/gwindows
 --  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
 --  *   
 --  *   * HAC Ada Compiler:
 --  *       Project URL: https://sourceforge.net/projects/hacadacompiler/
---  *       Mirror URL: https://github.com/svn2github/hac
+--  *       Mirror URL: https://github.com/zertovitch/hac
 --  *   
 --  *   * Zip-Ada:
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net
---  *       Mirror URL: https://github.com/svn2github/zip-ada
+--  *       Mirror URL: https://github.com/zertovitch/zip-ada
 --  * 
 --  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;C:\Ada\zip-ada\zip_lib;C:\Ada\HAC
 
@@ -56,7 +56,7 @@ project LEA is
               "-gnatybfhiu",  --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
               "-gnatyx",      --  Style: check x:no extra parens
               "-gnato", "-fno-inline", "-fstack-check", "-g", "-gnatwa", "-gnatVa",
-							"-gnatec=" & project'Project_Dir & "debug.pra",
+              "-gnatec=" & project'Project_Dir & "debug.pra",
               "-gnatec=" & project'Project_Dir & "lea_elim.pra");
 
          when "Fast" | "Fast_MinGW" =>

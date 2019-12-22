@@ -69,14 +69,18 @@ package LEA_GWin.Editor is
   --  Search & replace actions
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action);
 
+  --  Bookmarks
   procedure Bookmark_next (Editor : in out LEA_Scintilla_Type);
   procedure Bookmark_previous (Editor : in out LEA_Scintilla_Type);
   procedure Bookmark_toggle (Editor : in out LEA_Scintilla_Type; line : Integer);
 
-  --  Duplicate current line if no selection, or selection. Shortcut: Ctrl-D.
+  --  Duplicate current line if no selection, or duplicate selection. Shortcut: Ctrl-D.
   --  Clipboard remains untouched - that the cool aspect in this feature.
   --
   procedure Duplicate (Editor : in out LEA_Scintilla_Type);
+
+  --  Get end-of-line string (EOL) of correct type (CR+LF, LF, CR).
+  function EOL (Editor : LEA_Scintilla_Type) return GString;
 
   --  I/O
   procedure Load_text (Editor : in out LEA_Scintilla_Type; contents: String);
