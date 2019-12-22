@@ -2,13 +2,14 @@ with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 with LEA_GWin.Repair;
 
 with GWindows.Clipboard;                use GWindows.Clipboard;
+with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Windows;                  use GWindows.Windows;
 
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.Messages is
 
-  procedure Any_Click (Control : in out Message_List_Type; double_click : Boolean) is
+  procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean) is
     pl: LEA_LV_Ex.Data_Access;
     mm: MDI_Main_Access;
     use HAC.UErrors, LEA_LV_Ex;
@@ -20,7 +21,10 @@ package body LEA_GWin.Messages is
           mm := MDI_Main_Access (Control.mdi_main_parent);
           mm.Open_Child_Window_And_Load (pl.file, pl.line, pl.col_a, pl.col_a);
           --  At this point focus is on the editor window.
-          if pl.kind /= none and then double_click then
+          if pl.kind /= none
+            and then real_click
+            and then Control.Point_To_Client (Get_Cursor_Position).X < 16
+          then
             LEA_GWin.Repair.Do_Repair (mm.all, pl.all);
             if pl.kind = none then
               --  Remove tool icon:
@@ -31,18 +35,18 @@ package body LEA_GWin.Messages is
         exit;  --  Found selected line, not worth to continue.
       end if;
     end loop;
-  end Any_Click;
+  end Message_line_action;
 
   overriding procedure On_Click (Control : in out Message_List_Type) is
   begin
-    Any_Click (Control, False);
+    Control.Message_line_action (True);
     --  Focus back on the message list (so the keyboard is also focused there)
     Control.Focus;
   end On_Click;
 
   overriding procedure On_Double_Click (Control : in out Message_List_Type) is
   begin
-    Any_Click (Control, True);
+    Control.Message_line_action (True);
   end On_Double_Click;
 
   procedure Copy_Messages (Control : in out Message_List_Type) is

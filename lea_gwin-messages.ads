@@ -25,6 +25,7 @@ package LEA_GWin.Messages is
     Font            : GWindows.Drawing_Objects.Font_Type;
   end record;
 
+  procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean);
   overriding procedure On_Click (Control : in out Message_List_Type);
   overriding procedure On_Double_Click (Control : in out Message_List_Type);
   procedure Copy_Messages (Control : in out Message_List_Type);

@@ -42,9 +42,9 @@ package body LEA_GWin.Repair is
               when none =>
                 null;  --  We should not get here.
               when insert | insert_line =>
-                pw.Editor.SetSel (line_pos + repair.col_a - 1, line_pos + repair.col_a - 1);
+                pw.Editor.SetSel (line_pos + repair.col_a, line_pos + repair.col_a);
               when replace_token =>
-                pw.Editor.SetSel (line_pos + repair.col_a - 1, line_pos + repair.col_z - 1);
+                pw.Editor.SetSel (line_pos + repair.col_a, line_pos + repair.col_z);
                 pw.Editor.Clear;
             end case;
             pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (To_String (repair.text)) & Optional_EOL);
