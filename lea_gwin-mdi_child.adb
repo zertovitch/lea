@@ -472,7 +472,8 @@ package body LEA_GWin.MDI_Child is
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     count: Natural := 0;
     displayed_compilation_file_name: Unbounded_String;
-    blurb: constant GString := "[HAC to p-code] ";
+    blurb_1: constant GString := "Caution: HAC is not a real Ada compiler!";
+    blurb_2: constant GString := "[HAC to p-code] ";
     use HAC.UErrors;
     --
     procedure LEA_HAC_Feedback (
@@ -497,9 +498,9 @@ package body LEA_GWin.MDI_Child is
       --
       msg_up(msg_up'First) := To_Upper (msg_up(msg_up'First));
       if displayed_compilation_file_name /= file_name then
-        --  New compilation unit, show its name.
+        --  Compilation unit has changed, show its name.
         ml.Insert_Item ("----", count);
-        ml.Set_Sub_Item (blurb & S2G (file_name), count, 1);
+        ml.Set_Sub_Item (blurb_2 & S2G (file_name), count, 1);
         count := count + 1;
         displayed_compilation_file_name := To_Unbounded_String (file_name);
       end if;
@@ -516,7 +517,7 @@ package body LEA_GWin.MDI_Child is
       );
       ml.Set_Sub_Item (S2G (msg_up), count, 1);  --   & column_a'Img & column_z'Img
       count := count + 1;
-    end;
+    end LEA_HAC_Feedback;
     use_editor_stream: constant Boolean := True;
     use Ada.Streams.Stream_IO;
     f: File_Type;
@@ -549,9 +550,11 @@ package body LEA_GWin.MDI_Child is
         MDI_Main.build_successful := HAC.Data.Err_Count = 0;
         if count = 0 then
           ml.Insert_Item ("----", 0);
-          ml.Set_Sub_Item (blurb & GU2G (MDI_Child.File_Name), 0, 1);
-          ml.Insert_Item ("", 1);
-          ml.Set_Sub_Item ("No error, no warning", 1, 1);
+          ml.Set_Sub_Item (blurb_1, 0, 1);
+          ml.Insert_Item ("----", 1);
+          ml.Set_Sub_Item (blurb_2 & GU2G (MDI_Child.File_Name), 1, 1);
+          ml.Insert_Item ("", 2);
+          ml.Set_Sub_Item ("No error, no warning", 2, 1);
         else
           --  Jump on first error
           ml.Selected (1, True);
