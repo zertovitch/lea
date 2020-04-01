@@ -9,6 +9,7 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
+with Ada.Integer_Wide_Text_IO;
 
 package body LEA_GWin.Editor is
 
@@ -65,7 +66,7 @@ package body LEA_GWin.Editor is
 
     Editor.Apply_options;
 
-    Editor.SetMarginWidthN (margin_for_line_numbers, 40);
+    Editor.SetMarginWidthN (margin_for_line_numbers, 50);
     Editor.SetMarginTypeN (margin_for_line_numbers, SC_MARGIN_NUMBER);
     Editor.SetMarginWidthN (margin_for_bookmarks, 20);
     Editor.SetMarginTypeN (margin_for_bookmarks, SC_MARGIN_SYMBOL);
@@ -505,8 +506,20 @@ package body LEA_GWin.Editor is
     pos, sel_a, sel_z: Position;
     line, col, count : Integer;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
-    line_msg_col_width : constant := 40;
-    col_msg_col_width  : constant := 35;
+    line_msg_col_width : constant := 70;
+    col_msg_col_width  : constant := 40;
+    function Right_aligned_line_number (line: Positive) return Wide_String is
+      s: Wide_String := "12345";
+    begin
+      Ada.Integer_Wide_Text_IO.Put (s, line);
+      return s;
+    end;
+    function Right_aligned_column_number (column: Positive) return Wide_String is
+      s: Wide_String := "123";
+    begin
+      Ada.Integer_Wide_Text_IO.Put (s, column);
+      return s;
+    end;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -579,7 +592,7 @@ package body LEA_GWin.Editor is
           exit when pos < 0;
           line := Editor.LineFromPosition (pos);
           col  := Editor.GetColumn (pos);
-          ml.Insert_Item (Trim (Integer'Wide_Image (line + 1), Left), count);
+          ml.Insert_Item (Right_aligned_line_number (line + 1), count);
           ml.Item_Data(
             count,
             new Editor_repair_information'(
@@ -590,7 +603,7 @@ package body LEA_GWin.Editor is
               others      => <>
             )
           );
-          ml.Set_Sub_Item (Trim (Integer'Wide_Image (col + 1), Left), count, 1);
+          ml.Set_Sub_Item (Right_aligned_column_number (col + 1), count, 1);
           ml.Set_Sub_Item (Editor.GetLine (line), count, 2);
           count := count + 1;
           --  Reduce the search target:

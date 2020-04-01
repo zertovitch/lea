@@ -20,5 +20,5 @@ How to build & modify LEA
       Caution (Windows): due to the Scintilla DLL which is
       32-bit, you need a 32-bit GNAT for Windows (<= 2017)
   * Read the comments in the lea.gpr project file 
-      (just open as text file) for further instructions.
+      (just open it as a text file) for further instructions.
   
