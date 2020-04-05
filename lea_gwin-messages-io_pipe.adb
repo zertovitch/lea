@@ -20,6 +20,8 @@ package body LEA_GWin.Messages.IO_Pipe is
     current_IO_pipe.Insert_Item ("", Index => last_line + 1);
   end New_line_IO_pipe;
 
+  package RIO is new Ada.Text_IO.Float_IO (HAC.Data.HAC_Float);
+
   procedure Append_to_IO_pipe (new_text : String) is
     last_line: Integer := current_IO_pipe.Item_Count -1;
     use Ada.Calendar;
@@ -76,7 +78,7 @@ package body LEA_GWin.Messages.IO_Pipe is
    -- Get_Console --
    -----------------
 
-   procedure Get_Console (f: out Float; Width : Ada.Text_IO.Field := 0) is
+   procedure Get_Console (f: out HAC.Data.HAC_Float; Width : Ada.Text_IO.Field := 0) is
    begin
       --  Generated stub: replace with real body!
       pragma Compile_Time_Warning (Standard.True, "Get_Console unimplemented");
@@ -125,14 +127,14 @@ package body LEA_GWin.Messages.IO_Pipe is
    -----------------
 
    procedure Put_Console
-     (f    : Float;
+     (f    : HAC.Data.HAC_Float;
       Fore : Integer := Ada.Float_Text_IO.Default_Fore;
       Aft  : Integer := Ada.Float_Text_IO.Default_Aft;
       Exp  : Integer := Ada.Float_Text_IO.Default_Exp)
    is
      s : String (1..1+Fore+1+Aft+2+Exp);
    begin
-     Ada.Float_Text_IO.Put (s, f, Aft, Exp);
+     RIO.Put (s, f, Aft, Exp);
      Append_to_IO_pipe(s);
    end Put_Console;
 
@@ -141,7 +143,7 @@ package body LEA_GWin.Messages.IO_Pipe is
    -----------------
 
    procedure Put_Console
-     (b: in Boolean;
+     (b     : Boolean;
       Width : Ada.Text_IO.Field    := HAC.PCode.Interpreter.Boolean_Text_IO.Default_Width;
       Set   : Ada.Text_IO.Type_Set := HAC.PCode.Interpreter.Boolean_Text_IO.Default_Setting)
    is
