@@ -1630,7 +1630,6 @@ pragma Eliminate (GWindows.Scroll_Bars, On_Scroll_Handler, Source_Location => "g
 pragma Eliminate (GWindows.Static_Controls.Web, Create_URL, Source_Location => "gwindows-static_controls-web.ads:93");
 pragma Eliminate (HAC.Data, "+", Source_Location => "hac-data.ads:195");
 pragma Eliminate (HAC.Data, cFeedback, Source_Location => "hac-data.ads:577");
-pragma Eliminate (HAC.PCode.Interpreter, Interpret_on_Current_IO_Instance, Source_Location => "hac-pcode-interpreter.adb:1581");
 pragma Eliminate (HAC.PCode.Interpreter, AnyTaskDelayed, Source_Location => "hac-pcode-interpreter.adb:250[hac-pcode-interpreter.adb:1581]");
 pragma Eliminate (HAC.PCode.Interpreter, EIndex, Source_Location => "hac-pcode-interpreter.adb:272[hac-pcode-interpreter.adb:1581]");
 pragma Eliminate (HAC.PCode.Interpreter, Queue, Source_Location => "hac-pcode-interpreter.adb:286[hac-pcode-interpreter.adb:1581]");
