@@ -237,22 +237,24 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Option_box DIALOG 0, 0, 253, 121
+Option_box DIALOG 0, 0, 253, 168
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
 CAPTION "Options"
 FONT 8, "Ms Shell Dlg"
 {
     LTEXT           "Indentation", 0, 7, 10, 50, 15, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Indentation_edit_box, 49, 9, 16, 15, ES_AUTOHSCROLL, WS_EX_LEFT
-    LTEXT           "Right margin", 0, 93, 10, 52, 15, SS_LEFT, WS_EX_LEFT
-    EDITTEXT        Right_margin_edit_box, 147, 9, 31, 15, ES_AUTOHSCROLL, WS_EX_LEFT
-    GROUPBOX        "Color theme", Group_color_theme, 6, 57, 240, 28, 0, WS_EX_LEFT
-    COMBOBOX        Color_theme_list_box, 61, 68, 108, 20, CBS_DROPDOWNLIST | CBS_HASSTRINGS, WS_EX_LEFT
-    GROUPBOX        "Backup", Group_Backup, 6, 26, 240, 28, 0, WS_EX_LEFT
-    AUTORADIOBUTTON "Simple (.bak)", Backup_bak_button, 80, 36, 91, 11, 0, WS_EX_LEFT
-    AUTORADIOBUTTON "None", Backup_none_button, 15, 38, 43, 8, 0, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", IDCANCEL, 191, 98, 50, 19, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "OK", IDOK, 136, 98, 50, 19, 0, WS_EX_LEFT
+    LTEXT           "Tab width (symbol AND keystroke)", 0, 7, 31, 110, 9, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        Tab_width_edit_box, 121, 30, 16, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    LTEXT           "Right margin", 0, 159, 10, 52, 15, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        Right_margin_edit_box, 213, 9, 31, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    GROUPBOX        "Color theme", Group_color_theme, 5, 99, 240, 28, 0, WS_EX_LEFT
+    COMBOBOX        Color_theme_list_box, 60, 110, 108, 20, CBS_DROPDOWNLIST | CBS_HASSTRINGS, WS_EX_LEFT
+    GROUPBOX        "Backup", Group_Backup, 5, 68, 240, 28, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "Simple (.bak)", Backup_bak_button, 79, 78, 91, 11, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "None", Backup_none_button, 14, 80, 43, 8, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 190, 140, 50, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 135, 140, 50, 19, 0, WS_EX_LEFT
 }
 
 

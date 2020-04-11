@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/04/10  16:08:14
+-- Transcription time: 2020/04/11  10:24:02
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -161,6 +161,8 @@ package LEA_Resource_GUI is
     -- Label: 0
     Indentation_edit_box: Edit_Box_Type;
     -- Label: 0
+    Tab_width_edit_box: Edit_Box_Type;
+    -- Label: 0
     Right_margin_edit_box: Edit_Box_Type;
     Group_color_theme: Group_Box_Type;
     Color_theme_list_box: Drop_Down_List_Box_Type;
@@ -173,7 +175,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 255
+  --  Dialog at resource line 257
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -219,7 +221,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 278
+  --  Dialog at resource line 280
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -266,40 +268,25 @@ package LEA_Resource_GUI is
   Toolbar_BMP                 : constant:=    123;
   Folders_BMP                 : constant:=    124;
   Backup_none_button          : constant:=  40000;
-  HAC_URL                     : constant:=  40000;
-  IDM_Next_bookmark           : constant:=  40000;
-  Model_find_box              : constant:=  40000;
   IDM_Go_to_line              : constant:=  40001;
-  Model_replace_box           : constant:=  40001;
   IDM_Open_Project            : constant:=  40002;
   IDM_Previous_bookmark       : constant:=  40003;
-  Line_value_box              : constant:=  40003;
   IDM_Toggle_bookmark         : constant:=  40004;
-  Match_case                  : constant:=  40004;
-  Copyright_label             : constant:=  40005;
   IDM_Copy                    : constant:=  40005;
   IDM_Cut                     : constant:=  40006;
   IDM_Find_Next               : constant:=  40007;
-  Group_Backup                : constant:=  40008;
   IDM_Paste                   : constant:=  40008;
   IDM_Duplicate               : constant:=  40009;
-  Find_next_button            : constant:=  40010;
   IDM_Check_syntax            : constant:=  40010;
   IDM_New_File                : constant:=  40011;
-  AZip_URL                    : constant:=  40012;
   IDM_Build_and_run           : constant:=  40012;
-  Find_previous_button        : constant:=  40013;
   IDM_Build                   : constant:=  40013;
   IDM_Compile_single          : constant:=  40014;
-  Find_all_button             : constant:=  40015;
   IDM_ABOUT                   : constant:=  40015;
   IDM_Open_File               : constant:=  40016;
   IDM_HAC_Mode                : constant:=  40017;
   IDM_GNAT_Mode               : constant:=  40018;
-  Indentation_edit_box        : constant:=  40018;
   IDM_Studio_view             : constant:=  40019;
-  Replace_and_find_next_button: constant:=  40019;
-  Color_theme_list_box        : constant:=  40020;
   IDM_Notepad_view            : constant:=  40020;
   IDM_Copy_Messages           : constant:=  40021;
   Replace_all_button          : constant:=  40021;
@@ -353,6 +340,22 @@ package LEA_Resource_GUI is
   ZipAda_URL                  : constant:=  40073;
   ZipAda_Version              : constant:=  40074;
   HAC_Version                 : constant:=  40075;
+  Tab_width_edit_box          : constant:=  40076;
+  HAC_URL                     : constant:=  40077;
+  IDM_Next_bookmark           : constant:=  40078;
+  Model_find_box              : constant:=  40079;
+  Model_replace_box           : constant:=  40080;
+  Line_value_box              : constant:=  40081;
+  Match_case                  : constant:=  40082;
+  Copyright_label             : constant:=  40083;
+  Group_Backup                : constant:=  40084;
+  Find_next_button            : constant:=  40085;
+  Find_previous_button        : constant:=  40086;
+  AZip_URL                    : constant:=  40087;
+  Find_all_button             : constant:=  40088;
+  Replace_and_find_next_button: constant:=  40089;
+  Color_theme_list_box        : constant:=  40090;
+  Indentation_edit_box        : constant:=  40091;
 
   -- ** Some helper utilities (spec).
 
@@ -364,6 +367,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 385
+  -- Last line of resource script file: 387
 
 end LEA_Resource_GUI;

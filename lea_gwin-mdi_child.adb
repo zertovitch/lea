@@ -641,8 +641,14 @@ package body LEA_GWin.MDI_Child is
       when IDM_Copy =>          MDI_Child.Editor.Copy;
       when IDM_Paste =>         MDI_Child.Editor.Paste;
       when IDM_Select_all =>    MDI_Child.Editor.SelectAll;
-      when IDM_Indent =>        MDI_Child.Editor.Tab;
-      when IDM_Unindent =>      MDI_Child.Editor.BackTab;
+      when IDM_Indent =>
+        MDI_Child.Editor.SetTabWidth (MDI_Child.MDI_Parent.opt.indentation);
+        MDI_Child.Editor.Tab;
+        MDI_Child.Editor.SetTabWidth (MDI_Child.MDI_Parent.opt.tab_width);
+      when IDM_Unindent =>
+        MDI_Child.Editor.SetTabWidth (MDI_Child.MDI_Parent.opt.indentation);
+        MDI_Child.Editor.BackTab;
+        MDI_Child.Editor.SetTabWidth (MDI_Child.MDI_Parent.opt.tab_width);
       when IDM_Comment =>       MDI_Child.Editor.Selection_comment;
       when IDM_Uncomment =>     MDI_Child.Editor.Selection_uncomment;
       when IDM_Find =>          MDI_Child.Show_Search_Box;

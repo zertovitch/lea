@@ -22,6 +22,7 @@ package LEA_Common.User_options is
     color_theme  : Color_Theme_Type           := Default;
     backup       : Backup_mode                := none;
     indentation  : Integer                    := 2;
+    tab_width    : Integer                    := 2;
     right_margin : Integer                    := 100;  --  also called "vertical edge"
     show_special : Show_special_symbol_mode   := none;
     toolset      : Toolset_mode_type          := HAC_mode;

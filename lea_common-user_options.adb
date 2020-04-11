@@ -17,7 +17,9 @@ package body LEA_Common.User_options is
       ( view_mode,      --  Notepad, Studio
         toolset_mode,   --  HAC, GNAT, ...
         color_theme,
-        backup, indent, edge,
+        backup,
+        indent, tab_width,
+        edge,  --  right margin
         show_special,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
@@ -53,6 +55,8 @@ package body LEA_Common.User_options is
                 opt.backup := Backup_mode'Wide_Value(s);
               when indent =>
                 opt.indentation := Integer'Wide_Value(s);
+              when tab_width =>
+                opt.tab_width := Integer'Wide_Value(s);
               when edge =>
                 opt.right_margin := Integer'Wide_Value(s);
               when show_special =>
@@ -120,6 +124,8 @@ package body LEA_Common.User_options is
               R(Backup_mode'Wide_Image(opt.backup));
             when indent =>
               R(Integer'Wide_Image(opt.indentation));
+            when tab_width =>
+              R(Integer'Wide_Image(opt.tab_width));
             when edge =>
               R(Integer'Wide_Image(opt.right_margin));
             when show_special =>

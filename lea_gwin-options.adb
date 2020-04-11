@@ -22,8 +22,9 @@ package body LEA_GWin.Options is
     --
     procedure Set_Data is
     begin
-      box.Indentation_edit_box.Text(Integer'Wide_Image(candidate.indentation));
-      box.Right_margin_edit_box.Text(Integer'Wide_Image(candidate.right_margin));
+      box.Indentation_edit_box.Text  (Integer'Wide_Image(candidate.indentation));
+      box.Tab_width_edit_box.Text    (Integer'Wide_Image(candidate.tab_width));
+      box.Right_margin_edit_box.Text (Integer'Wide_Image(candidate.right_margin));
       box.Backup_none_button.State(boolean_to_state(candidate.backup = none));
       box.Backup_bak_button.State(boolean_to_state(candidate.backup = bak));
       --  Fill the drop-down list.
@@ -35,8 +36,9 @@ package body LEA_GWin.Options is
     --
     procedure Get_Data (Window : in out GWindows.Base.Base_Window_Type'Class) is
     begin
-      candidate.indentation:= Integer'Wide_Value(box.Indentation_edit_box.Text);
-      candidate.right_margin:= Integer'Wide_Value(box.Right_margin_edit_box.Text);
+      candidate.indentation  := Integer'Wide_Value(box.Indentation_edit_box.Text);
+      candidate.tab_width    := Integer'Wide_Value(box.Tab_width_edit_box.Text);
+      candidate.right_margin := Integer'Wide_Value(box.Right_margin_edit_box.Text);
       if box.Backup_none_button.State = Checked then
         candidate.backup := none;
       elsif box.Backup_bak_button.State = Checked then

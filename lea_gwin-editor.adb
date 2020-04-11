@@ -51,7 +51,7 @@ package body LEA_GWin.Editor is
   begin
     --  Set up editor
     Editor.SetEOLMode (SC_EOL_CRLF);
-    Editor.SetUseTabs (False);
+    Editor.SetUseTabs (False);  --  New Tab keystrokes use space only (Tab character euthanasia).
     Editor.SetEdgeMode (EDGE_LINE);
     --
     --  Multi-line edit
@@ -310,7 +310,7 @@ package body LEA_GWin.Editor is
     mdi_root : MDI_Main_Type renames parent.MDI_Parent.all;
     theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
   begin
-    Editor.SetTabWidth (mdi_root.opt.indentation);
+    Editor.SetTabWidth (mdi_root.opt.tab_width);
     Editor.SetEdgeColumn (mdi_root.opt.right_margin);
 
     --  Default style
