@@ -27,7 +27,8 @@ package body LEA_Common.User_options is
         project_tree_portion,
         message_list_portion,
         subprogram_tree_portion,
-        mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9
+        mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
+        ada_files_filter
       );
 
     pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
@@ -84,11 +85,18 @@ package body LEA_Common.User_options is
               when mru1 .. mru9 =>
                 mru_idx := Key'Pos(k) - Key'Pos(mru1) + 1;
                 sep_pos_1:= Index(s, sep);
-                if sep_pos_1 > 0 then
+                if sep_pos_1 > 0 then  --  Separator between file name and line number
                   opt.mru(mru_idx).name := To_Unbounded_Wide_String(s(s'First .. sep_pos_1-1));
                   opt.mru(mru_idx).line := Integer'Wide_Value(s(sep_pos_1+1 .. s'Last));
                 else
                   opt.mru(mru_idx).name := To_Unbounded_Wide_String(s);
+                end if;
+              when ada_files_filter =>
+                if s /= "" and then
+                  s (s'First) = '*'
+                  --  ^ Filter registry garbage AND check that first chatacter is a '*'...
+                then
+                  opt.ada_files_filter := To_Unbounded_Wide_String(s);
                 end if;
             end case;
           end;
@@ -154,6 +162,8 @@ package body LEA_Common.User_options is
               mru_idx := Key'Pos(k) - Key'Pos(mru1) + 1;
               R( To_Wide_String(opt.mru(mru_idx).name) & sep &
                  Integer'Wide_Image(opt.mru(mru_idx).line) );
+            when ada_files_filter =>
+              R (To_Wide_String(opt.ada_files_filter));
           end case;
         end;
       end loop;

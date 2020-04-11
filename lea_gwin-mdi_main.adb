@@ -326,7 +326,8 @@ package body LEA_GWin.MDI_Main is
     --
     start_line : Integer := -1;
   begin
-    Windows_persistence.Load (MDI_Main.opt);  -- Load options from the registry
+    Windows_persistence.Load (MDI_Main.opt);  --  Load options from the registry
+    LEA_GWin.Options.Apply_Main_Options (MDI_Main);
     --
     Replace_default(MDI_Main.opt.win_left);
     Replace_default(MDI_Main.opt.win_width);

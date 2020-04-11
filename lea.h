@@ -96,3 +96,4 @@
 #define Replace_and_find_next_button            40089
 #define Color_theme_list_box                    40090
 #define Indentation_edit_box                    40091
+#define Ada_file_extension_edit_box             40092

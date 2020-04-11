@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/04/11  10:24:02
+-- Transcription time: 2020/04/11  15:11:28
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -164,6 +164,8 @@ package LEA_Resource_GUI is
     Tab_width_edit_box: Edit_Box_Type;
     -- Label: 0
     Right_margin_edit_box: Edit_Box_Type;
+    -- Label: 0
+    Ada_file_extension_edit_box: Edit_Box_Type;
     Group_color_theme: Group_Box_Type;
     Color_theme_list_box: Drop_Down_List_Box_Type;
     Group_Backup: Group_Box_Type;
@@ -175,7 +177,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 257
+  --  Dialog at resource line 259
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -221,7 +223,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 280
+  --  Dialog at resource line 282
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -248,7 +250,7 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion: constant String:= "0.67 preview 1";
+    FileVersion: constant String:= "0.67";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2020";
     ProductName: constant String:= "LEA";
     Translation: constant:= 1033;
@@ -356,6 +358,7 @@ package LEA_Resource_GUI is
   Replace_and_find_next_button: constant:=  40089;
   Color_theme_list_box        : constant:=  40090;
   Indentation_edit_box        : constant:=  40091;
+  Ada_file_extension_edit_box : constant:=  40092;
 
   -- ** Some helper utilities (spec).
 
@@ -367,6 +370,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 387
+  -- Last line of resource script file: 389
 
 end LEA_Resource_GUI;

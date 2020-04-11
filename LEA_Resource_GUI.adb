@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/04/11  10:24:02
+-- Transcription time: 2020/04/11  15:11:28
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -464,6 +464,10 @@ package body LEA_Resource_GUI is
     Create_Label( Window, "Right margin", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  213, 9, 31, 15, x,y,w,h);
     Create( Window.Right_margin_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Right_margin_edit_box);
+    Dlg_to_Scn(  7, 52, 63, 9, x,y,w,h);
+    Create_Label( Window, "Ada file extensions", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  83, 50, 162, 15, x,y,w,h);
+    Create( Window.Ada_file_extension_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Ada_file_extension_edit_box);
     Dlg_to_Scn(  5, 99, 240, 28, x,y,w,h);
     Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
     Dlg_to_Scn(  60, 110, 108, 20, x,y,w,h);
@@ -498,7 +502,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 267
+  --  Dialog at resource line 269
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -744,6 +748,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 387
+  -- Last line of resource script file: 389
 
 end LEA_Resource_GUI;

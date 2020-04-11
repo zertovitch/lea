@@ -248,6 +248,8 @@ FONT 8, "Ms Shell Dlg"
     EDITTEXT        Tab_width_edit_box, 121, 30, 16, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     LTEXT           "Right margin", 0, 159, 10, 52, 15, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Right_margin_edit_box, 213, 9, 31, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    LTEXT           "Ada file extensions", 0, 7, 52, 63, 9, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        Ada_file_extension_edit_box, 83, 50, 162, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     GROUPBOX        "Color theme", Group_color_theme, 5, 99, 240, 28, 0, WS_EX_LEFT
     COMBOBOX        Color_theme_list_box, 60, 110, 108, 20, CBS_DROPDOWNLIST | CBS_HASSTRINGS, WS_EX_LEFT
     GROUPBOX        "Backup", Group_Backup, 5, 68, 240, 28, 0, WS_EX_LEFT
@@ -360,8 +362,8 @@ LEA_Icon           ICON           "ico_bmp/lea.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     0,6,6,0
-    PRODUCTVERSION  0,6,6,0
+    FILEVERSION     0,6,7,0
+    PRODUCTVERSION  0,6,7,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -374,7 +376,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.67 preview 1"
+            VALUE "FileVersion", "0.67"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2020"
             VALUE "ProductName", "LEA"
         }
