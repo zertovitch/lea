@@ -394,7 +394,10 @@ package body LEA_GWin.MDI_Child is
     MDI_Child.Text(GU2G(File_Title));
     MDI_Child.Short_Name:= File_Title;
     MDI_Child.Update_Common_Menus(GU2G(New_File_Name), MDI_Child.Editor.Get_current_line);
-    MDI_Child.Syntax_kind := Guess_syntax (GU2G (MDI_Child.File_Name));
+    MDI_Child.Syntax_kind :=
+      Guess_syntax (GU2G (MDI_Child.File_Name),
+                    GU2G (MDI_Child.MDI_Parent.opt.ada_files_filter)
+      );
     MDI_Child.Editor.Set_syntax (MDI_Child.Syntax_kind);
   end On_Save_As;
 

@@ -149,7 +149,10 @@ package body LEA_GWin.MDI_Main is
       Update_Common_Menus (MDI_Main, GU2G(New_Window.File_Name), mru_line);
       New_Window.Editor.Load_text;
       New_Window.Finish_subwindow_opening;
-      New_Window.Syntax_kind := Guess_syntax (GU2G (New_Window.File_Name));
+      New_Window.Syntax_kind :=
+        Guess_syntax (GU2G (New_Window.File_Name),
+                      GU2G (MDI_Main.opt.ada_files_filter)
+        );
       New_Window.Editor.Set_syntax (New_Window.Syntax_kind);
       New_Window.Editor.Focus;
       --  NB: Scintilla lines are 0-based

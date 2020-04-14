@@ -14,7 +14,7 @@ package LEA_Common.Syntax is
   GPR_keywords : constant UTF_16_String :=
     "abstract case end external for is package project type use when";
 
-  function Guess_syntax (file_name : UTF_16_String) return Syntax_type;
+  function Guess_syntax (file_name, custom_filter : UTF_16_String) return Syntax_type;
 
   function File_type_image (syn: Syntax_type) return UTF_16_String;
 
