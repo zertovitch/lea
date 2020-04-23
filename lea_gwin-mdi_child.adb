@@ -4,7 +4,7 @@ with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Messages.IO_Pipe;
 with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
 
-with HAC.Data, HAC.Compiler, HAC.PCode.Interpreter, HAC.UErrors;
+with HAC.Data, HAC.PCode.Interpreter;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
@@ -477,7 +477,7 @@ package body LEA_GWin.MDI_Child is
     displayed_compilation_file_name: Unbounded_String;
     blurb_1: constant GString := "Caution: HAC is not a real Ada compiler!";
     blurb_2: constant GString := "[HAC to p-code] ";
-    use HAC.UErrors;
+    use HAC.Data;
     --
     procedure LEA_HAC_Feedback (
       message         : String;
@@ -531,26 +531,28 @@ package body LEA_GWin.MDI_Child is
         if use_editor_stream then
           --  We connect the main editor input stream to this window's editor.
           MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
-          HAC.Data.c_Set_Stream (
+          HAC.Compiler.c_Set_Stream (
+            MDI_Child.CD,
             MDI_Child.MDI_Parent.current_editor_stream'Access,
             file_name);
         else
           --  In case the file is not open in an editor, we use Stream_IO.
           Open (f, In_File, file_name);
-          HAC.Data.c_Set_Stream (HAC.Data.Stream_Access (Stream (f)), file_name);
+          HAC.Compiler.c_Set_Stream (
+            MDI_Child.CD,
+            HAC.Compiler.Stream_Access (Stream (f)), file_name);
         end if;
         ml.Clear;
         ml.Set_Column ("Line",     0, 60);
         ml.Set_Column ("Message",  1, 800);
-        HAC.Data.Line_Count := 0;
-        HAC.Data.current_error_pipe := LEA_HAC_Feedback'Unrestricted_Access;
-        HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
-        HAC.Compiler.Compile;
+        MDI_Child.CD.Line_Count := 0;
+        MDI_Child.CD.current_error_pipe := LEA_HAC_Feedback'Unrestricted_Access;
+        HAC.Compiler.Compile (MDI_Child.CD);
         if not use_editor_stream then
           Close (f);
         end if;
-        HAC.Data.current_error_pipe := null;
-        MDI_Main.build_successful := HAC.Data.Err_Count = 0;
+        MDI_Child.CD.current_error_pipe := null;
+        MDI_Main.build_successful := MDI_Child.CD.Err_Count = 0;
         if count = 0 then
           ml.Insert_Item ("----", 0);
           ml.Set_Sub_Item (blurb_1, 0, 1);
@@ -611,11 +613,10 @@ package body LEA_GWin.MDI_Child is
     case MDI_Child.MDI_Parent.opt.toolset is
       when HAC_mode =>
         --  !!  Check if anything compiled ?
-        HAC.Data.qDebug := False;  --  Prevent HAC debug output on terminal
         ml.Clear;
         ml.Set_Column ("Console", 0, 800);
         LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (MDI_Child.MDI_Parent.Message_Panel.Message_List);
-        Windowed_interpret;
+        Windowed_interpret (MDI_Child.CD);
       when GNAT_mode =>
         null;
     end case;
