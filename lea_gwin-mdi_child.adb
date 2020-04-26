@@ -531,16 +531,14 @@ package body LEA_GWin.MDI_Child is
         if use_editor_stream then
           --  We connect the main editor input stream to this window's editor.
           MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
-          HAC.Compiler.c_Set_Stream (
+          HAC.Compiler.Set_Source_Stream (
             MDI_Child.CD,
             MDI_Child.MDI_Parent.current_editor_stream'Access,
             file_name);
         else
-          --  In case the file is not open in an editor, we use Stream_IO.
+          --  In case the file is not open in an editor window in LEA, we use Stream_IO.
           Open (f, In_File, file_name);
-          HAC.Compiler.c_Set_Stream (
-            MDI_Child.CD,
-            HAC.Compiler.Stream_Access (Stream (f)), file_name);
+          HAC.Compiler.Set_Source_Stream (MDI_Child.CD, Stream (f), file_name);
         end if;
         ml.Clear;
         ml.Set_Column ("Line",     0, 60);
