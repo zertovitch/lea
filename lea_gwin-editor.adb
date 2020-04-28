@@ -29,13 +29,38 @@ package body LEA_GWin.Editor is
      Value       : in     GWindows.GCharacter)
   is
   pragma Unreferenced (Special_Key);
-    CurPos : constant Position := GetCurrentPos (Editor);
-    Line     : constant Integer := LineFromPosition (Editor, CurPos);
-    Prev_Ind : constant Integer := GetLineIndentation (Editor, Line - 1);
+    Cur_Pos  : constant Position   := GetCurrentPos (Editor);
+    Line     : constant Integer    := LineFromPosition (Editor, Cur_Pos);
+    Prev_Ind : constant Integer    := GetLineIndentation (Editor, Line - 1);
+    New_Ind  :          Integer;
+    Pos      :          Position;
+    CR       : constant GCharacter := GCharacter'Val (13);
+    LF       : constant GCharacter := GCharacter'Val (10);
   begin
     --  This works on Windows (CR, LF) and Unix (LF); we ignore the old Macs (CR).
-    if Value = GWindows.GCharacter'Val (10) and Line > 0 and Prev_Ind > 0 then
-      Editor.AddText(Prev_Ind * " ");
+    if Value = LF and Line > 0 then
+      New_Ind := Prev_Ind;  --  We mimic previous line's indentation.
+      if Editor.syntax_kind = Ada_syntax then
+        --  Look for extra indentation when the line ends with some specific keywords.
+        Pos := Cur_Pos - 1;
+        if Editor.GetTextRange (Pos - 1, Pos) = (1 => CR) then
+          --  Skip the CR in Windows' CR & LF line end.
+          --  Reminder: Scintilla's Pos is the cursor's position, *between* characters. So,
+          --  (Pos - 1, Pos) wraps *one* character, not *two* like for a slice (Pos - 1 .. Pos).
+          Pos := Pos - 1;
+        end if;
+        if Editor.GetTextRange (Pos - 5, Pos) = "begin"
+          or else Editor.GetTextRange (Pos - 6, Pos) = "record"
+          or else Editor.GetTextRange (Pos - 1, Pos) = "("
+        then
+          --  On a "Return" keypress right after "begin", "record" or "(",
+          --  we add an extra indentation.
+          New_Ind := New_Ind + MDI_Child_Type(Editor.mdi_parent.all).MDI_Parent.opt.indentation;
+        end if;
+      end if;
+      if New_Ind > 0 then
+        Editor.AddText (New_Ind * ' ');
+      end if;
     end if;
   end On_Character_Added;
 
@@ -62,7 +87,7 @@ package body LEA_GWin.Editor is
     --
     --  Editor.SetIndentationGuides (True);
 
-    Editor.Set_syntax (Undefined);
+    Editor.Set_Scintilla_Syntax;
 
     Editor.Apply_options;
 
@@ -857,9 +882,9 @@ package body LEA_GWin.Editor is
     --  Close(f);
   end Save_text;
 
-  procedure Set_syntax (Editor : in out LEA_Scintilla_Type; syntax: Syntax_type) is
+  procedure Set_Scintilla_Syntax (Editor : in out LEA_Scintilla_Type) is
   begin
-    case syntax is
+    case Editor.syntax_kind is
       when Undefined =>
         Editor.SetLexer (SCLEX_NULL);
         Editor.SetKeyWords (0, "");
@@ -872,7 +897,7 @@ package body LEA_GWin.Editor is
         --  !! Issue: keyword'Attribute (e.g. project'Project_Dir)
         --     is not recognized by SCLEX_ADA.
     end case;
-  end Set_syntax;
+  end Set_Scintilla_Syntax;
 
   ------------------------------------------------------
   --  Output of the editor's text as an input stream  --

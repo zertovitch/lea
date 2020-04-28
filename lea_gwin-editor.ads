@@ -14,10 +14,11 @@ package LEA_GWin.Editor is
     --  Direct access to the window owning the editor widget.
     --  This is needed to reach the options (color theme, etc.).
     mdi_parent           : GWindows.Base.Pointer_To_Base_Window_Class;
-    modified             : Boolean:= False;  --  Is the document modified from load or last save ?
-    pos_last_update_UI   : Position := INVALID_POSITION;
-    sel_a_last_update_UI : Position := INVALID_POSITION;
-    sel_z_last_update_UI : Position := INVALID_POSITION;
+    modified             : Boolean     := False;  --  Is the doc modified from load or last save ?
+    pos_last_update_UI   : Position    := INVALID_POSITION;
+    sel_a_last_update_UI : Position    := INVALID_POSITION;
+    sel_z_last_update_UI : Position    := INVALID_POSITION;
+    syntax_kind          : Syntax_type := Undefined;
   end record;
 
   overriding
@@ -87,7 +88,9 @@ package LEA_GWin.Editor is
   procedure Load_text (Editor : in out LEA_Scintilla_Type);  --  Loads from File_Name
   procedure Save_text (Editor : in out LEA_Scintilla_Type; under: GString);
 
-  procedure Set_syntax (Editor : in out LEA_Scintilla_Type; syntax: Syntax_type);
+  --  Propagate the Editor.syntax_kind value to the corresponding
+  --  visible behaviour in the Scintilla widget.
+  procedure Set_Scintilla_Syntax (Editor : in out LEA_Scintilla_Type);
 
   ------------------------------------------------------
   --  Output of the editor's text as an input stream  --

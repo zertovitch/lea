@@ -1,5 +1,4 @@
 with LEA_Common;                        use LEA_Common;
-with LEA_Common.Syntax;                 use LEA_Common.Syntax;
 
 with LEA_GWin.Editor;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
@@ -72,7 +71,6 @@ package LEA_GWin.MDI_Child is
         Menu             : Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Document_kind    : Document_kind_type := editable_text;
-        Syntax_kind      : Syntax_type        := Undefined;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
         Subprogram_Panel : Subprogram_Panel_Type;
         selected_path    : GString_Unbounded:= Null_GString_Unbounded;

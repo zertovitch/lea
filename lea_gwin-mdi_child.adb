@@ -1,3 +1,4 @@
+with LEA_Common.Syntax;                 use LEA_Common.Syntax;
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
@@ -68,7 +69,7 @@ package body LEA_GWin.MDI_Child is
     else
       case MDI_Child.Document_kind is
         when editable_text =>
-          MDI_Child.Status_Bar.Text (File_type_image (MDI_Child.Syntax_kind), 0);
+          MDI_Child.Status_Bar.Text (File_type_image (MDI_Child.Editor.syntax_kind), 0);
         when help_main =>
           MDI_Child.Status_Bar.Text ("Help", 0);
       end case;
@@ -394,11 +395,11 @@ package body LEA_GWin.MDI_Child is
     MDI_Child.Text(GU2G(File_Title));
     MDI_Child.Short_Name:= File_Title;
     MDI_Child.Update_Common_Menus(GU2G(New_File_Name), MDI_Child.Editor.Get_current_line);
-    MDI_Child.Syntax_kind :=
+    MDI_Child.Editor.syntax_kind :=
       Guess_syntax (GU2G (MDI_Child.File_Name),
                     GU2G (MDI_Child.MDI_Parent.opt.ada_files_filter)
       );
-    MDI_Child.Editor.Set_syntax (MDI_Child.Syntax_kind);
+    MDI_Child.Editor.Set_Scintilla_Syntax;
   end On_Save_As;
 
   procedure On_Save_All (MDI_Child : in out MDI_Child_Type) is
