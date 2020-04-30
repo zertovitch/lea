@@ -523,7 +523,7 @@ package body LEA_GWin.MDI_Child is
       count := count + 1;
     end LEA_HAC_Feedback;
     use_editor_stream: constant Boolean := True;
-    use Ada.Streams.Stream_IO;
+    use HAC.Compiler, Ada.Streams.Stream_IO;
     f: File_Type;
     file_name : constant String := G2S (GU2G (MDI_Child.File_Name));
   begin
@@ -532,26 +532,26 @@ package body LEA_GWin.MDI_Child is
         if use_editor_stream then
           --  We connect the main editor input stream to this window's editor.
           MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
-          HAC.Compiler.Set_Source_Stream (
+          Set_Source_Stream (
             MDI_Child.CD,
             MDI_Child.MDI_Parent.current_editor_stream'Access,
             file_name);
         else
           --  In case the file is not open in an editor window in LEA, we use Stream_IO.
           Open (f, In_File, file_name);
-          HAC.Compiler.Set_Source_Stream (MDI_Child.CD, Stream (f), file_name);
+          Set_Source_Stream (MDI_Child.CD, Stream (f), file_name);
         end if;
         ml.Clear;
         ml.Set_Column ("Line",     0, 60);
         ml.Set_Column ("Message",  1, 800);
-        MDI_Child.CD.Line_Count := 0;
-        MDI_Child.CD.current_error_pipe := LEA_HAC_Feedback'Unrestricted_Access;
-        HAC.Compiler.Compile (MDI_Child.CD);
+        Set_Error_Pipe (MDI_Child.CD, LEA_HAC_Feedback'Unrestricted_Access);
+        Compile (MDI_Child.CD);
         if not use_editor_stream then
           Close (f);
         end if;
-        MDI_Child.CD.current_error_pipe := null;
-        MDI_Main.build_successful := MDI_Child.CD.Err_Count = 0;
+        Set_Error_Pipe (MDI_Child.CD, null);
+        --  Here we have a single-unit build:
+        MDI_Main.build_successful := Unit_Compilation_Successful (MDI_Child.CD);
         if count = 0 then
           ml.Insert_Item ("----", 0);
           ml.Set_Sub_Item (blurb_1, 0, 1);
