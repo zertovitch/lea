@@ -591,6 +591,16 @@ package body LEA_GWin.MDI_Child is
     end if;
   end Build_and_run;
 
+  function Fake_Argument_Count return Natural is
+  begin
+    return 0;   --  !! TBD: Add a mode where the arguments are prompted.
+  end;
+
+  function Fake_Argument (Number : Positive) return String is
+  begin
+    return Integer'Image (Number);  --  !! TBD: Add a mode where the arguments are prompted.
+  end;
+
   procedure Run (MDI_Child : in out MDI_Child_Type) is
     procedure Windowed_interpret is new
       HAC.PCode.Interpreter.Interpret(
@@ -605,7 +615,10 @@ package body LEA_GWin.MDI_Child is
         LEA_GWin.Messages.IO_Pipe.Put_Console,
         LEA_GWin.Messages.IO_Pipe.Put_Console,
         LEA_GWin.Messages.IO_Pipe.Put_Console,
-        LEA_GWin.Messages.IO_Pipe.New_Line_Console);
+        LEA_GWin.Messages.IO_Pipe.New_Line_Console,
+        Fake_Argument_Count,
+        Fake_Argument
+      );
     MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
   begin
