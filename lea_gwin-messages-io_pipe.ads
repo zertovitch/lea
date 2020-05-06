@@ -16,6 +16,7 @@ package LEA_GWin.Messages.IO_Pipe is
   procedure Get_Console (i: out Integer;            Width : Ada.Text_IO.Field := 0);
   procedure Get_Console (f: out HAC.Data.HAC_Float; Width : Ada.Text_IO.Field := 0);
   procedure Get_Console (c: out Character);
+  function Get_Line_Console return String;
   procedure Skip_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);
   --
   procedure Put_Console (

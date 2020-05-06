@@ -96,6 +96,13 @@ package body LEA_GWin.Messages.IO_Pipe is
       raise Program_Error with "Unimplemented procedure Get_Console";
    end Get_Console;
 
+  function Get_Line_Console return String is
+  begin
+    pragma Compile_Time_Warning (Standard.True, "Get_Line_Console unimplemented");
+    raise Program_Error with "Unimplemented procedure Get_Line_Console";
+    return "";
+  end;
+
    -----------------------
    -- Skip_Line_Console --
    -----------------------

@@ -614,6 +614,7 @@ package body LEA_GWin.MDI_Child is
         LEA_GWin.Messages.IO_Pipe.Get_Console,
         LEA_GWin.Messages.IO_Pipe.Get_Console,
         LEA_GWin.Messages.IO_Pipe.Get_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Line_Console,
         LEA_GWin.Messages.IO_Pipe.Skip_Line_Console,
         LEA_GWin.Messages.IO_Pipe.Put_Console,
         LEA_GWin.Messages.IO_Pipe.Put_Console,
