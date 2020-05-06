@@ -593,12 +593,17 @@ package body LEA_GWin.MDI_Child is
 
   function Fake_Argument_Count return Natural is
   begin
-    return 0;   --  !! TBD: Add a mode where the arguments are prompted.
+    return 0;  --  !! TBD: Add a mode where the arguments are prompted.
   end;
 
   function Fake_Argument (Number : Positive) return String is
   begin
     return Integer'Image (Number);  --  !! TBD: Add a mode where the arguments are prompted.
+  end;
+
+  function Fake_Shell_Execute (Command : String) return Integer is
+  begin
+    return -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
   end;
 
   procedure Run (MDI_Child : in out MDI_Child_Type) is
@@ -617,7 +622,8 @@ package body LEA_GWin.MDI_Child is
         LEA_GWin.Messages.IO_Pipe.Put_Console,
         LEA_GWin.Messages.IO_Pipe.New_Line_Console,
         Fake_Argument_Count,
-        Fake_Argument
+        Fake_Argument,
+        Fake_Shell_Execute
       );
     MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
