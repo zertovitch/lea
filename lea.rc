@@ -284,6 +284,19 @@ FONT 8, "Ms Shell Dlg"
 
 
 
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+String_Prompt DIALOG 0, 0, 378, 76
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "String_Prompt Title"
+FONT 8, "Ms Shell Dlg"
+{
+    DEFPUSHBUTTON   "OK", IDOK, 307, 54, 62, 18, 0, WS_EX_LEFT
+    LTEXT           "Enter some text...", String_Prompt_Label, 7, 9, 368, 9, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        String_Prompt_Edit_Box, 7, 28, 362, 21, ES_AUTOHSCROLL, WS_EX_LEFT
+}
+
+
+
 //
 // Accelerator resources
 //
@@ -362,8 +375,8 @@ LEA_Icon           ICON           "ico_bmp/lea.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     0,6,8,0
-    PRODUCTVERSION  0,6,8,0
+    FILEVERSION     0,7,0,0
+    PRODUCTVERSION  0,7,0,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -376,7 +389,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.68"
+            VALUE "FileVersion", "0.70"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2020"
             VALUE "ProductName", "LEA"
         }

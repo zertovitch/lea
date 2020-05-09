@@ -1,3 +1,5 @@
+with LEA_GWin.Input_Boxes;              use LEA_GWin.Input_Boxes;
+
 with GWindows.Application;
 
 with Ada.Calendar;
@@ -42,76 +44,101 @@ package body LEA_GWin.Messages.IO_Pipe is
     end if;
   end Append_to_IO_pipe;
 
-   -------------------------
-   -- End_Of_File_Console --
-   -------------------------
+  -------------------------
+  -- End_Of_File_Console --
+  -------------------------
 
-   function End_Of_File_Console return Boolean is
-   begin
-     return False;
-   end End_Of_File_Console;
+  function End_Of_File_Console return Boolean is
+  begin
+    return False;
+  end End_Of_File_Console;
 
-   -------------------------
-   -- End_Of_Line_Console --
-   -------------------------
+  -------------------------
+  -- End_Of_Line_Console --
+  -------------------------
 
-   function End_Of_Line_Console return Boolean is
-   begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "End_Of_Line_Console unimplemented");
-      raise Program_Error with "Unimplemented function End_Of_Line_Console";
-      return End_Of_Line_Console;
-   end End_Of_Line_Console;
+  function End_Of_Line_Console return Boolean is
+  begin
+    return False;
+  end End_Of_Line_Console;
+
+  function Get_Needs_Skip_Line return Boolean is
+  begin
+    return False;  --  The input is immediate with LEA.
+  end Get_Needs_Skip_Line;
 
    -----------------
    -- Get_Console --
    -----------------
 
-   procedure Get_Console (i: out Integer; Width : Ada.Text_IO.Field := 0) is
+   procedure Get_Console (i : out Integer; Width : Ada.Text_IO.Field := 0) is
+   pragma Unreferenced (Width);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Get_Console unimplemented");
-      raise Program_Error with "Unimplemented procedure Get_Console";
+     if current_IO_pipe = null then
+       raise Program_Error with "IO pipe undefined";
+     end if;
+     i := Integer'Wide_Value (
+       String_Input (current_IO_pipe.mdi_main_parent.all, "Integer Input")
+     );
+     --  An eventual error raises an exception like Ada.Text_IO.Get.
    end Get_Console;
 
-   -----------------
-   -- Get_Console --
-   -----------------
-
-   procedure Get_Console (f: out HAC.Data.HAC_Float; Width : Ada.Text_IO.Field := 0) is
+   procedure Get_Console (f : out HAC.Data.HAC_Float; Width : Ada.Text_IO.Field := 0) is
+   pragma Unreferenced (Width);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Get_Console unimplemented");
-      raise Program_Error with "Unimplemented procedure Get_Console";
+     if current_IO_pipe = null then
+       raise Program_Error with "IO pipe undefined";
+     end if;
+     f := HAC.Data.HAC_Float'Wide_Value (
+       String_Input (current_IO_pipe.mdi_main_parent.all, "Floating-point Input")
+     );
+     --  An eventual error raises an exception like Ada.Text_IO.Get.
    end Get_Console;
-
-   -----------------
-   -- Get_Console --
-   -----------------
 
    procedure Get_Console (c: out Character) is
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Get_Console unimplemented");
-      raise Program_Error with "Unimplemented procedure Get_Console";
+     if current_IO_pipe = null then
+       raise Program_Error with "IO pipe undefined";
+     end if;
+     loop
+       declare
+         res  : constant GString :=
+                  String_Input (current_IO_pipe.mdi_main_parent.all, "Character Input");
+         res8 : constant String := G2S (res);  --  8-bit string
+       begin
+         if res8'Length > 0 then
+           c := res8 (res8'First);
+           return;
+         end if;
+       end;
+     end loop;
    end Get_Console;
 
   function Get_Line_Console return String is
   begin
-    pragma Compile_Time_Warning (Standard.True, "Get_Line_Console unimplemented");
-    raise Program_Error with "Unimplemented procedure Get_Line_Console";
-    return "";
-  end;
+    if current_IO_pipe = null then
+      raise Program_Error with "IO pipe undefined";
+    end if;
+    declare
+      s : constant String := G2S (String_Input (current_IO_pipe.mdi_main_parent.all, "String Input"));
+    begin
+      New_Line_Console;  --  Reflect the new line on the "console".
+      return s;
+    end;
+  end Get_Line_Console;
 
    -----------------------
    -- Skip_Line_Console --
    -----------------------
 
    procedure Skip_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1) is
+   pragma Unreferenced (Spacing);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Skip_Line_Console unimplemented");
-      raise Program_Error with "Unimplemented procedure Skip_Line_Console";
+     if current_IO_pipe = null then
+       raise Program_Error with "IO pipe undefined";
+     end if;
+     Skip_Line (current_IO_pipe.mdi_main_parent.all, "Press Return");
+     New_Line_Console;  --  Reflect the new line on the "console".
    end Skip_Line_Console;
 
    -----------------
@@ -145,26 +172,21 @@ package body LEA_GWin.Messages.IO_Pipe is
      Append_to_IO_pipe(s);
    end Put_Console;
 
-   -----------------
-   -- Put_Console --
-   -----------------
-
    procedure Put_Console
      (b     : Boolean;
-      Width : Ada.Text_IO.Field    := HAC.PCode.Interpreter.Boolean_Text_IO.Default_Width;
-      Set   : Ada.Text_IO.Type_Set := HAC.PCode.Interpreter.Boolean_Text_IO.Default_Setting)
+      Width : Ada.Text_IO.Field    := HAC.Data.BIO.Default_Width;
+      Set   : Ada.Text_IO.Type_Set := HAC.Data.BIO.Default_Setting)
    is
+   pragma Unreferenced (Width, Set);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Put_Console unimplemented");
-      raise Program_Error with "Unimplemented procedure Put_Console";
+     if b then
+       Put_Console ("True");
+     else
+       Put_Console ("False");
+     end if;
    end Put_Console;
 
-   -----------------
-   -- Put_Console --
-   -----------------
-
-   procedure Put_Console (c: in Character) is
+   procedure Put_Console (c : in Character) is
    begin
      Append_to_IO_pipe ( (1 => c));
    end Put_Console;

@@ -5,7 +5,7 @@ with Ada.Text_IO,
      Ada.Integer_Text_IO,
      Ada.Float_Text_IO;
 
-with HAC.Data, HAC.PCode.Interpreter;
+with HAC.Data;
 
 package LEA_GWin.Messages.IO_Pipe is
 
@@ -13,6 +13,7 @@ package LEA_GWin.Messages.IO_Pipe is
 
   function End_Of_File_Console return Boolean;
   function End_Of_Line_Console return Boolean;
+  function Get_Needs_Skip_Line return Boolean;
   procedure Get_Console (i: out Integer;            Width : Ada.Text_IO.Field := 0);
   procedure Get_Console (f: out HAC.Data.HAC_Float; Width : Ada.Text_IO.Field := 0);
   procedure Get_Console (c: out Character);
@@ -31,8 +32,8 @@ package LEA_GWin.Messages.IO_Pipe is
   );
   procedure Put_Console (
     b     : Boolean;
-    Width : Ada.Text_IO.Field    := HAC.PCode.Interpreter.Boolean_Text_IO.Default_Width;
-    Set   : Ada.Text_IO.Type_Set := HAC.PCode.Interpreter.Boolean_Text_IO.Default_Setting);
+    Width : Ada.Text_IO.Field    := HAC.Data.BIO.Default_Width;
+    Set   : Ada.Text_IO.Type_Set := HAC.Data.BIO.Default_Setting);
   procedure Put_Console (c: in Character);
   procedure Put_Console (s: in String);
   procedure New_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);

@@ -97,3 +97,5 @@
 #define Color_theme_list_box                    40090
 #define Indentation_edit_box                    40091
 #define Ada_file_extension_edit_box             40092
+#define String_Prompt_Edit_Box                  40093
+#define String_Prompt_Label                     40094

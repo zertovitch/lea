@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/04/18  20:25:32
+-- Transcription time: 2020/05/09  16:43:31
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -247,10 +247,49 @@ package LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
+  type String_Prompt_Type is new Window_Type with record
+
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    String_Prompt_Label: Label_Type;
+    String_Prompt_Edit_Box: Edit_Box_Type;
+  end record; -- String_Prompt_Type
+
+  --  Dialog at resource line 295
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out String_Prompt_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out String_Prompt_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "String_Prompt Title";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out String_Prompt_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion: constant String:= "0.68";
+    FileVersion: constant String:= "0.70";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2020";
     ProductName: constant String:= "LEA";
     Translation: constant:= 1033;
@@ -359,6 +398,8 @@ package LEA_Resource_GUI is
   Color_theme_list_box        : constant:=  40090;
   Indentation_edit_box        : constant:=  40091;
   Ada_file_extension_edit_box : constant:=  40092;
+  String_Prompt_Edit_Box      : constant:=  40093;
+  String_Prompt_Label         : constant:=  40094;
 
   -- ** Some helper utilities (spec).
 
@@ -370,6 +411,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 389
+  -- Last line of resource script file: 402
 
 end LEA_Resource_GUI;

@@ -611,9 +611,11 @@ package body LEA_GWin.MDI_Child is
       HAC.PCode.Interpreter.Interpret(
         LEA_GWin.Messages.IO_Pipe.End_Of_File_Console,
         LEA_GWin.Messages.IO_Pipe.End_Of_Line_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Needs_Skip_Line,
         LEA_GWin.Messages.IO_Pipe.Get_Console,
         LEA_GWin.Messages.IO_Pipe.Get_Console,
-        LEA_GWin.Messages.IO_Pipe.Get_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Console (C)
+        LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Immediate_Console (C)
         LEA_GWin.Messages.IO_Pipe.Get_Line_Console,
         LEA_GWin.Messages.IO_Pipe.Skip_Line_Console,
         LEA_GWin.Messages.IO_Pipe.Put_Console,
