@@ -81,6 +81,7 @@ package body LEA_GWin.Messages.IO_Pipe is
        String_Input (current_IO_pipe.mdi_main_parent.all, "Integer Input")
      );
      --  An eventual error raises an exception like Ada.Text_IO.Get.
+     Put_Console (i);  --  Reflect the input on the "console".
    end Get_Console;
 
    procedure Get_Console (f : out HAC.Data.HAC_Float; Width : Ada.Text_IO.Field := 0) is
@@ -93,6 +94,7 @@ package body LEA_GWin.Messages.IO_Pipe is
        String_Input (current_IO_pipe.mdi_main_parent.all, "Floating-point Input")
      );
      --  An eventual error raises an exception like Ada.Text_IO.Get.
+     Put_Console (f);  --  Reflect the input on the "console".
    end Get_Console;
 
    procedure Get_Console (c: out Character) is
@@ -108,6 +110,7 @@ package body LEA_GWin.Messages.IO_Pipe is
        begin
          if res8'Length > 0 then
            c := res8 (res8'First);
+           Put_Console (c);  --  Reflect the input on the "console".
            return;
          end if;
        end;
@@ -122,7 +125,9 @@ package body LEA_GWin.Messages.IO_Pipe is
     declare
       s : constant String := G2S (String_Input (current_IO_pipe.mdi_main_parent.all, "String Input"));
     begin
-      New_Line_Console;  --  Reflect the new line on the "console".
+      --  Reflect the input on the "console".
+      Put_Console (s);
+      New_Line_Console;
       return s;
     end;
   end Get_Line_Console;
@@ -150,7 +155,7 @@ package body LEA_GWin.Messages.IO_Pipe is
       Width : Ada.Text_IO.Field       := Ada.Integer_Text_IO.Default_Width;
       Base  : Ada.Text_IO.Number_Base := Ada.Integer_Text_IO.Default_Base)
    is
-     s : String (1..Width);
+     s : String (1 .. Width);
    begin
      Ada.Integer_Text_IO.Put (s, i, Base);
      Append_to_IO_pipe(s);
@@ -166,10 +171,14 @@ package body LEA_GWin.Messages.IO_Pipe is
       Aft  : Integer := Ada.Float_Text_IO.Default_Aft;
       Exp  : Integer := Ada.Float_Text_IO.Default_Exp)
    is
-     s : String (1..1+Fore+1+Aft+2+Exp);
+     s : String (1 .. Fore + 1 + Aft + 1 + Exp);
+     l : Integer := s'Last;
    begin
-     RIO.Put (s, f, Aft, Exp);
-     Append_to_IO_pipe(s);
+     if Exp = 0 then
+       l := l - 1;  --  No 'E'
+     end if;
+     RIO.Put (s (1 .. l), f, Aft, Exp);
+     Append_to_IO_pipe(s (1 .. l));
    end Put_Console;
 
    procedure Put_Console
@@ -177,13 +186,10 @@ package body LEA_GWin.Messages.IO_Pipe is
       Width : Ada.Text_IO.Field    := HAC.Data.BIO.Default_Width;
       Set   : Ada.Text_IO.Type_Set := HAC.Data.BIO.Default_Setting)
    is
-   pragma Unreferenced (Width, Set);
+     s : String (1 .. Width);
    begin
-     if b then
-       Put_Console ("True");
-     else
-       Put_Console ("False");
-     end if;
+     HAC.Data.BIO.Put (s, b, Set);
+     Append_to_IO_pipe(s);
    end Put_Console;
 
    procedure Put_Console (c : in Character) is
