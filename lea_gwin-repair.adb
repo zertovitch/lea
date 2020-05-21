@@ -1,7 +1,7 @@
 with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
-with HAC.Data;
+with HAC.Defs;
 with HAC.UErrors;
 
 with GWindows.Base;
@@ -17,7 +17,7 @@ package body LEA_GWin.Repair is
     repair   : in out LEA_GWin.Messages.Editor_repair_information
   )
   is
-    use HAC.Data, HAC.UErrors, GWindows.Base;
+    use HAC.Defs, HAC.UErrors, GWindows.Base;
     --
     procedure Repair_in_editor (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is

@@ -1,4 +1,4 @@
-with HAC.Data;
+with HAC.Defs;
 
 with GWindows.Base;
 with GWindows.Common_Controls.Ex_List_View;
@@ -8,7 +8,7 @@ package LEA_GWin.Messages is
 
   --  Information attached to each line in the message box - "dope" or "payload"
   type Editor_repair_information is
-    new HAC.Data.Repair_kit with
+    new HAC.Defs.Repair_kit with
   record
     file   : GString_Unbounded;
     line,

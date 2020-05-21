@@ -12,7 +12,7 @@ package body LEA_GWin.Messages is
   procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean) is
     pl: LEA_LV_Ex.Data_Access;
     mm: MDI_Main_Access;
-    use HAC.Data, LEA_LV_Ex;
+    use HAC.Defs, LEA_LV_Ex;
   begin
     for i in 0 .. Control.Item_Count loop
       if Control.Is_Selected (i) then

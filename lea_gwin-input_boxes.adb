@@ -32,6 +32,7 @@ package body LEA_GWin.Input_Boxes is
     Set_Data;
     box.Center (Parent);
     box.String_Prompt_Edit_Box.Focus;
+    box.Text ("Get / Get_Immediate / Get_Line");
     On_Destroy_Handler (box, Get_Data'Unrestricted_Access);
     case Show_Dialog (box, Parent) is
       when IDOK     =>

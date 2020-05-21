@@ -5,7 +5,7 @@ with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Messages.IO_Pipe;
 with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
 
-with HAC.Data, HAC.PCode.Interpreter;
+with HAC.Defs, HAC.PCode.Interpreter, HAC_Pack;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
@@ -16,7 +16,6 @@ with GWindows.Scintilla;                use GWindows.Scintilla;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;
---  with Ada.Environment_Variables;         use Ada.Environment_Variables;
 with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
@@ -478,7 +477,7 @@ package body LEA_GWin.MDI_Child is
     displayed_compilation_file_name: Unbounded_String;
     blurb_1: constant GString := "Caution: HAC is not a real Ada compiler!";
     blurb_2: constant GString := "[HAC to p-code] ";
-    use HAC.Data;
+    use HAC.Defs;
     --
     procedure LEA_HAC_Feedback (
       message         : String;
@@ -626,7 +625,8 @@ package body LEA_GWin.MDI_Child is
         LEA_GWin.Messages.IO_Pipe.New_Line_Console,
         Fake_Argument_Count,
         Fake_Argument,
-        Fake_Shell_Execute
+        Fake_Shell_Execute,
+        HAC_Pack.Directory_Separator
       );
     MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
