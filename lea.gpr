@@ -24,7 +24,8 @@
 --  *       Project URL: http://unzip-ada.sf.net
 --  *       Mirror URL: https://github.com/zertovitch/zip-ada
 --  * 
---  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;C:\Ada\zip-ada\zip_lib;C:\Ada\HAC
+--  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;
+--  *             C:\Ada\zip-ada\zip_lib;C:\Ada\HAC\src;C:\Ada\HAC\src\compile;C:\Ada\HAC\src\execute
 
 project LEA is
 

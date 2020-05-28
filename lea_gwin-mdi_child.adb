@@ -5,7 +5,7 @@ with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Messages.IO_Pipe;
 with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
 
-with HAC.Defs, HAC.PCode.Interpreter, HAC_Pack;
+with HAC.Compiler, HAC.Defs, HAC.PCode.Interpreter, HAC_Pack;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
