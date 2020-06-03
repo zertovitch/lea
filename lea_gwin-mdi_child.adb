@@ -2,10 +2,10 @@ with LEA_Common.Syntax;                 use LEA_Common.Syntax;
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
-with LEA_GWin.Messages.IO_Pipe;
+with LEA_GWin.Run_Windowed;
 with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
 
-with HAC.Compiler, HAC.Defs, HAC.PCode.Interpreter, HAC_Pack;
+with HAC.Compiler, HAC.Defs;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
@@ -590,57 +590,9 @@ package body LEA_GWin.MDI_Child is
     end if;
   end Build_and_run;
 
-  function Fake_Argument_Count return Natural is
-  begin
-    return 0;  --  !! TBD: Add a mode where the arguments are prompted.
-  end;
-
-  function Fake_Argument (Number : Positive) return String is
-  begin
-    return Integer'Image (Number);  --  !! TBD: Add a mode where the arguments are prompted.
-  end;
-
-  function Fake_Shell_Execute (Command : String) return Integer is
-  begin
-    return -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
-  end;
-
   procedure Run (MDI_Child : in out MDI_Child_Type) is
-    procedure Windowed_interpret is new
-      HAC.PCode.Interpreter.Interpret(
-        LEA_GWin.Messages.IO_Pipe.End_Of_File_Console,
-        LEA_GWin.Messages.IO_Pipe.End_Of_Line_Console,
-        LEA_GWin.Messages.IO_Pipe.Get_Needs_Skip_Line,
-        LEA_GWin.Messages.IO_Pipe.Get_Console,
-        LEA_GWin.Messages.IO_Pipe.Get_Console,
-        LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Console (C)
-        LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Immediate_Console (C)
-        LEA_GWin.Messages.IO_Pipe.Get_Line_Console,
-        LEA_GWin.Messages.IO_Pipe.Skip_Line_Console,
-        LEA_GWin.Messages.IO_Pipe.Put_Console,
-        LEA_GWin.Messages.IO_Pipe.Put_Console,
-        LEA_GWin.Messages.IO_Pipe.Put_Console,
-        LEA_GWin.Messages.IO_Pipe.Put_Console,
-        LEA_GWin.Messages.IO_Pipe.Put_Console,
-        LEA_GWin.Messages.IO_Pipe.New_Line_Console,
-        Fake_Argument_Count,
-        Fake_Argument,
-        Fake_Shell_Execute,
-        HAC_Pack.Directory_Separator
-      );
-    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
-    ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
   begin
-    case MDI_Child.MDI_Parent.opt.toolset is
-      when HAC_mode =>
-        --  !!  Check if anything compiled ?
-        ml.Clear;
-        ml.Set_Column ("Console", 0, 800);
-        LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (MDI_Child.MDI_Parent.Message_Panel.Message_List);
-        Windowed_interpret (MDI_Child.CD);
-      when GNAT_mode =>
-        null;
-    end case;
+    LEA_GWin.Run_Windowed (MDI_Child);
   end Run;
 
   procedure On_Menu_Select (

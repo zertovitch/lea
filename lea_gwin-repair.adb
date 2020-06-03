@@ -7,7 +7,6 @@ with HAC.UErrors;
 with GWindows.Base;
 
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with GWindows.Scintilla;
 
 package body LEA_GWin.Repair is
@@ -48,7 +47,7 @@ package body LEA_GWin.Repair is
                 pw.Editor.SetSel (line_pos + repair.col_a, line_pos + repair.col_z);
                 pw.Editor.Clear;
             end case;
-            pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (To_String (repair.text)) & Optional_EOL);
+            pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (HAC.Defs.To_String (repair.text)) & Optional_EOL);
             pw.Editor.EndUndoAction;
           end if;
         end;

@@ -65,25 +65,39 @@ all of this is done in a few milliseconds.
 Press F4 for build only; 
 Press F9 for build and run - that's it!
 
-A peculiarity of HAC is to require the following header line:
+A peculiarity of HAC's current version is to require
+the following header line:
 
     with HAC_Pack;  use HAC_Pack;
 
-which allows immediate visibility of text I/O subprograms and of
-some mathematical functions. For compatibility, a *real* Ada implementation
-of HAC_Pack can be found in the trunk/exm/special/ directory, @
+which opens immediate visibility of text I/O, string manipulation,
+system (calls, environment variables, ...), and mathematical subprograms.
+For compatibility, a *real* Ada implementation of HAC_Pack can be
+found in the "src" directory, @
 
     https://sourceforge.net/projects/hacadacompiler/  (see Download or Code)
 or
     https://github.com/zertovitch/hac
     
-Curently only a few examples in the exm directory are working (basically
-those without tasking): 
-   hello.adb
-   test.adb
-   test1.adb
-   shell_sort.adb
-   merge_sort.adb
+You'll find examples in the "exm" directory of the HAC project. Notably:
+    hello.adb
+    ackermann.adb
+    anti_primes.adb
+    arguments.adb
+    days_1901.adb
+    doors.adb
+    env.adb
+    file_copy.adb
+    file_read.adb
+    mandelbrot.adb
+    maze_gen.adb
+    merge_sort.adb
+    shell.adb
+    shell_sort.adb
+    strings_demo.adb
+    three_lakes_s.adb
 
-The available Ada language subset is so far the "Pascal subset" (plus tasking),
-so you already have custom types, nested subprograms, recursion to play with.
+The available Ada language subset supported by HAC is so far the
+"Pascal subset", plus tasking, less pointers.
+So, you already have custom types, nested subprograms, recursion,
+... to play with in your programs.

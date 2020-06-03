@@ -21,4 +21,4 @@ set nice_date=%year%-%month%-%day%_%hour%.%min%
 
 rem --------------------------
 
-zipada -ep2 lea-%nice_date% *.ad* *.gpr lea.rc lea.h lea.rbj save.cmd build.cmd ico_bmp/*.ico ico_bmp/*.bmp ico_bmp/*.ppt
+zipada -ep2 lea-%nice_date% *.ad* *.gpr lea.rc lea.h lea.rbj *.txt save.cmd build.cmd ico_bmp/*.ico ico_bmp/*.bmp ico_bmp/*.ppt
