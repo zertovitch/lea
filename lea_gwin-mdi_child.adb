@@ -475,8 +475,8 @@ package body LEA_GWin.MDI_Child is
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     count: Natural := 0;
     displayed_compilation_file_name: Unbounded_String;
-    blurb_1: constant GString := "Caution: HAC is not a real Ada compiler!";
-    blurb_2: constant GString := "[HAC to p-code] ";
+    blurb_1: constant GString := "Caution: HAC is not a complete Ada compiler!";
+    blurb_2: constant GString := "[HAC to P-Code] ";
     use HAC.Defs;
     --
     procedure LEA_HAC_Feedback (

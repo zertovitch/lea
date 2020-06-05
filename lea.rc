@@ -100,8 +100,8 @@ Menu_MDI_Child MENU
         MENUITEM "&Notepad view", IDM_Notepad_view
         MENUITEM "&Studio view", IDM_Studio_view, INACTIVE
         MENUITEM SEPARATOR
-        MENUITEM "&HAC pseudo-Ada mode", IDM_HAC_Mode
-        MENUITEM "&GNAT Ada mode", IDM_GNAT_Mode, INACTIVE
+        MENUITEM "&HAC restricted Ada mode", IDM_HAC_Mode
+        MENUITEM "&GNAT full Ada mode", IDM_GNAT_Mode, INACTIVE
     }
     POPUP "&Options"
     {
@@ -167,8 +167,8 @@ Menu_MDI_Main MENU
         MENUITEM "&Notepad view", IDM_Notepad_view
         MENUITEM "&Studio view", IDM_Studio_view, INACTIVE
         MENUITEM SEPARATOR
-        MENUITEM "&HAC pseudo-Ada mode", IDM_HAC_Mode
-        MENUITEM "&GNAT Ada mode", IDM_GNAT_Mode, INACTIVE
+        MENUITEM "&HAC restricted Ada mode", IDM_HAC_Mode
+        MENUITEM "&GNAT full Ada mode", IDM_GNAT_Mode, INACTIVE
     }
     POPUP "&Options"
     {

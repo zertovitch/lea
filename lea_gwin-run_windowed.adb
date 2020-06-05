@@ -69,8 +69,8 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     begin
       extended_repair.file  := G2GU (S2G (File_Name));
       extended_repair.line  := Line_Number - 1;  --  Scintilla's lines are 0-based
-      extended_repair.col_a := 1;
-      extended_repair.col_z := 1;
+      extended_repair.col_a := 0;
+      extended_repair.col_z := 0;
       ml.Insert_Item (
         Trim (Integer'Wide_Image (Line_Number), Left),
         count

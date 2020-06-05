@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/06/03  16:04:30
+-- Transcription time: 2020/06/04  18:58:43
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -96,8 +96,8 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0006, "&Studio view", IDM_Studio_view);
     State(Menu.Popup_0006, Command, IDM_Studio_view, Disabled);
     Append_Separator(Menu.Popup_0006);
-    Append_Item(Menu.Popup_0006, "&HAC pseudo-Ada mode", IDM_HAC_Mode);
-    Append_Item(Menu.Popup_0006, "&GNAT Ada mode", IDM_GNAT_Mode);
+    Append_Item(Menu.Popup_0006, "&HAC restricted Ada mode", IDM_HAC_Mode);
+    Append_Item(Menu.Popup_0006, "&GNAT full Ada mode", IDM_GNAT_Mode);
     State(Menu.Popup_0006, Command, IDM_GNAT_Mode, Disabled);
     Menu.Popup_0007:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0007);
@@ -163,8 +163,8 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&Studio view", IDM_Studio_view);
     State(Menu.Popup_0005, Command, IDM_Studio_view, Disabled);
     Append_Separator(Menu.Popup_0005);
-    Append_Item(Menu.Popup_0005, "&HAC pseudo-Ada mode", IDM_HAC_Mode);
-    Append_Item(Menu.Popup_0005, "&GNAT Ada mode", IDM_GNAT_Mode);
+    Append_Item(Menu.Popup_0005, "&HAC restricted Ada mode", IDM_HAC_Mode);
+    Append_Item(Menu.Popup_0005, "&GNAT full Ada mode", IDM_GNAT_Mode);
     State(Menu.Popup_0005, Command, IDM_GNAT_Mode, Disabled);
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0006);
