@@ -72,33 +72,33 @@ package body LEA_GWin.Messages.IO_Pipe is
    -- Get_Console --
    -----------------
 
-   procedure Get_Console (i : out Integer; Width : Ada.Text_IO.Field := 0) is
+   procedure Get_Console (I : out Integer; Width : Ada.Text_IO.Field := 0) is
    pragma Unreferenced (Width);
    begin
      if current_IO_pipe = null then
        raise Program_Error with "IO pipe undefined";
      end if;
-     i := Integer'Wide_Value (
+     I := Integer'Wide_Value (
        String_Input (current_IO_pipe.mdi_main_parent.all, "Integer Input")
      );
      --  An eventual error raises an exception like Ada.Text_IO.Get.
-     Put_Console (i);  --  Reflect the input on the "console".
+     Put_Console (I);  --  Reflect the input on the "console".
    end Get_Console;
 
-   procedure Get_Console (f : out HAC.Defs.HAC_Float; Width : Ada.Text_IO.Field := 0) is
+   procedure Get_Console (F : out HAC.Defs.HAC_Float; Width : Ada.Text_IO.Field := 0) is
    pragma Unreferenced (Width);
    begin
      if current_IO_pipe = null then
        raise Program_Error with "IO pipe undefined";
      end if;
-     f := HAC.Defs.HAC_Float'Wide_Value (
+     F := HAC.Defs.HAC_Float'Wide_Value (
        String_Input (current_IO_pipe.mdi_main_parent.all, "Floating-point Input")
      );
      --  An eventual error raises an exception like Ada.Text_IO.Get.
-     Put_Console (f);  --  Reflect the input on the "console".
+     Put_Console (F);  --  Reflect the input on the "console".
    end Get_Console;
 
-   procedure Get_Console (c: out Character) is
+   procedure Get_Console (C: out Character) is
    begin
      if current_IO_pipe = null then
        raise Program_Error with "IO pipe undefined";
@@ -110,8 +110,8 @@ package body LEA_GWin.Messages.IO_Pipe is
          res8 : constant String := G2S (res);  --  8-bit string
        begin
          if res8'Length > 0 then
-           c := res8 (res8'First);
-           Put_Console (c);  --  Reflect the input on the "console".
+           C := res8 (res8'First);
+           Put_Console (C);  --  Reflect the input on the "console".
            return;
          end if;
        end;
@@ -177,14 +177,19 @@ package body LEA_GWin.Messages.IO_Pipe is
       Aft  : Integer := Ada.Float_Text_IO.Default_Aft;
       Exp  : Integer := Ada.Float_Text_IO.Default_Exp)
    is
-     s : String (1 .. Fore + 1 + Aft + 1 + Exp);
-     l : Integer := s'Last;
+     s : String (1 .. 100);
+     l : Integer := Fore + 1 + Aft + 1 + Exp;
+     use Ada.Strings.Fixed, Ada.Strings;
    begin
      if Exp = 0 then
        l := l - 1;  --  No 'E'
      end if;
      RIO.Put (s (1 .. l), F, Aft, Exp);
-     Append_to_IO_pipe(s (1 .. l));
+     Append_to_IO_pipe (s (1 .. l));
+   exception
+     when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. l
+       RIO.Put (s, F, Aft, Exp);
+       Append_to_IO_pipe (Trim (s, Left));
    end Put_Console;
 
    procedure Put_Console
@@ -198,18 +203,18 @@ package body LEA_GWin.Messages.IO_Pipe is
      Append_to_IO_pipe(s);
    end Put_Console;
 
-   procedure Put_Console (c : in Character) is
+   procedure Put_Console (C : in Character) is
    begin
-     Append_to_IO_pipe ( (1 => c));
+     Append_to_IO_pipe ( (1 => C));
    end Put_Console;
 
    -----------------
    -- Put_Console --
    -----------------
 
-   procedure Put_Console (s: in String) is
+   procedure Put_Console (S: in String) is
    begin
-     Append_to_IO_pipe (s);
+     Append_to_IO_pipe (S);
    end Put_Console;
 
    ----------------------
