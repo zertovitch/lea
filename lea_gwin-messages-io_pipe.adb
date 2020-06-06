@@ -2,7 +2,8 @@ with LEA_GWin.Input_Boxes;              use LEA_GWin.Input_Boxes;
 
 with GWindows.Application;
 
-with Ada.Calendar;
+with Ada.Calendar,
+     Ada.Strings.Fixed;
 
 package body LEA_GWin.Messages.IO_Pipe is
 
@@ -151,14 +152,19 @@ package body LEA_GWin.Messages.IO_Pipe is
    -----------------
 
    procedure Put_Console
-     (i     : Integer;
+     (I     : Integer;
       Width : Ada.Text_IO.Field       := Ada.Integer_Text_IO.Default_Width;
       Base  : Ada.Text_IO.Number_Base := Ada.Integer_Text_IO.Default_Base)
    is
-     s : String (1 .. Width);
+     s : String (1 .. HAC.Defs.HAC_Integer'Size + 4);  --  Longest representation is in base 2.
+     use Ada.Strings.Fixed, Ada.Strings;
    begin
-     Ada.Integer_Text_IO.Put (s, i, Base);
-     Append_to_IO_pipe(s);
+     Ada.Integer_Text_IO.Put (s (1 .. Width), I, Base);
+     Append_to_IO_pipe (s (1 .. Width));
+   exception
+     when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. Width
+       Ada.Integer_Text_IO.Put (s, I, Base);
+       Append_to_IO_pipe (Trim (s, Left));
    end Put_Console;
 
    -----------------
@@ -166,7 +172,7 @@ package body LEA_GWin.Messages.IO_Pipe is
    -----------------
 
    procedure Put_Console
-     (f    : HAC.Defs.HAC_Float;
+     (F    : HAC.Defs.HAC_Float;
       Fore : Integer := Ada.Float_Text_IO.Default_Fore;
       Aft  : Integer := Ada.Float_Text_IO.Default_Aft;
       Exp  : Integer := Ada.Float_Text_IO.Default_Exp)
@@ -177,18 +183,18 @@ package body LEA_GWin.Messages.IO_Pipe is
      if Exp = 0 then
        l := l - 1;  --  No 'E'
      end if;
-     RIO.Put (s (1 .. l), f, Aft, Exp);
+     RIO.Put (s (1 .. l), F, Aft, Exp);
      Append_to_IO_pipe(s (1 .. l));
    end Put_Console;
 
    procedure Put_Console
-     (b     : Boolean;
+     (B     : Boolean;
       Width : Ada.Text_IO.Field    := HAC.Defs.BIO.Default_Width;
       Set   : Ada.Text_IO.Type_Set := HAC.Defs.BIO.Default_Setting)
    is
      s : String (1 .. Width);
    begin
-     HAC.Defs.BIO.Put (s, b, Set);
+     HAC.Defs.BIO.Put (s, B, Set);
      Append_to_IO_pipe(s);
    end Put_Console;
 

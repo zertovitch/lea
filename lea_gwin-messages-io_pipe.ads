@@ -21,17 +21,17 @@ package LEA_GWin.Messages.IO_Pipe is
   procedure Skip_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);
   --
   procedure Put_Console (
-    i     : Integer;
+    I     : Integer;
     Width : Ada.Text_IO.Field       := Ada.Integer_Text_IO.Default_Width;
     Base  : Ada.Text_IO.Number_Base := Ada.Integer_Text_IO.Default_Base);
   procedure Put_Console (
-    f    : HAC.Defs.HAC_Float;
+    F    : HAC.Defs.HAC_Float;
     Fore : Integer := Ada.Float_Text_IO.Default_Fore;
     Aft  : Integer := Ada.Float_Text_IO.Default_Aft;
     Exp  : Integer := Ada.Float_Text_IO.Default_Exp
   );
   procedure Put_Console (
-    b     : Boolean;
+    B     : Boolean;
     Width : Ada.Text_IO.Field    := HAC.Defs.BIO.Default_Width;
     Set   : Ada.Text_IO.Type_Set := HAC.Defs.BIO.Default_Setting);
   procedure Put_Console (c: in Character);
