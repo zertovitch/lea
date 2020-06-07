@@ -197,10 +197,15 @@ package body LEA_GWin.Messages.IO_Pipe is
       Width : Ada.Text_IO.Field    := HAC.Defs.BIO.Default_Width;
       Set   : Ada.Text_IO.Type_Set := HAC.Defs.BIO.Default_Setting)
    is
-     s : String (1 .. Width);
+     s : String (1 .. 5);  --  Length of "FALSE"
+     use Ada.Strings.Fixed, Ada.Strings;
    begin
-     HAC.Defs.BIO.Put (s, B, Set);
-     Append_to_IO_pipe(s);
+     HAC.Defs.BIO.Put (s (1 .. Width), B, Set);
+     Append_to_IO_pipe(s (1 .. Width));
+   exception
+     when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. Width
+       HAC.Defs.BIO.Put (s, B, Set);
+       Append_to_IO_pipe (Trim (s, Left));
    end Put_Console;
 
    procedure Put_Console (C : in Character) is
