@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/06/04  18:58:43
+-- Transcription time: 2020/06/09  20:45:24
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -201,6 +201,47 @@ package LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
+  type Progress_box_Type is new Window_Type with record
+
+    Stack_Bar: Progress_Control_Type;
+    Group_Stack: Group_Box_Type;
+    Label_Stack: Label_Type;
+    Group_VM_Inter: Group_Box_Type;
+    Stop_VM_Button: Dialog_Button_Type;    -- closes parent window after click
+    Stop_VM_Button_permanent: Button_Type; -- doesn't close parent window after click
+  end record; -- Progress_box_Type
+
+  --  Dialog at resource line 274
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Progress_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Progress_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "HAC Virtual Machine is running...";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Progress_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   type Search_box_Type is new Window_Type with record
 
     -- Label: 0
@@ -223,7 +264,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 282
+  --  Dialog at resource line 297
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -255,7 +296,7 @@ package LEA_Resource_GUI is
     String_Prompt_Edit_Box: Edit_Box_Type;
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 295
+  --  Dialog at resource line 310
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -289,7 +330,7 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion: constant String:= "0.71";
+    FileVersion: constant String:= "0.73";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2020";
     ProductName: constant String:= "LEA";
     Translation: constant:= 1033;
@@ -400,6 +441,11 @@ package LEA_Resource_GUI is
   Ada_file_extension_edit_box : constant:=  40092;
   String_Prompt_Edit_Box      : constant:=  40093;
   String_Prompt_Label         : constant:=  40094;
+  Group_VM_Inter              : constant:=  40095;
+  Group_Stack                 : constant:=  40096;
+  Label_Stack                 : constant:=  40097;
+  Stack_Bar                   : constant:=  40098;
+  Stop_VM_Button              : constant:=  40099;
 
   -- ** Some helper utilities (spec).
 
@@ -411,6 +457,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 402
+  -- Last line of resource script file: 417
 
 end LEA_Resource_GUI;

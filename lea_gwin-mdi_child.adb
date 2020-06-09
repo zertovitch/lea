@@ -1,6 +1,7 @@
 with LEA_Common.Syntax;                 use LEA_Common.Syntax;
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
+with LEA_GWin.Messages;
 with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
 with LEA_GWin.Run_Windowed;
 with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
@@ -20,7 +21,6 @@ with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with LEA_GWin.Messages;
 
 package body LEA_GWin.MDI_Child is
 

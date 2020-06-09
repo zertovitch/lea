@@ -261,6 +261,21 @@ FONT 8, "Ms Shell Dlg"
 
 
 
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Progress_box DIALOG 0, 0, 186, 73
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "HAC Virtual Machine is running..."
+FONT 8, "Ms Shell Dlg"
+{
+    CONTROL         "Stack usage", Stack_Bar, PROGRESS_CLASS, PBS_SMOOTH, 57, 14, 114, 15, WS_EX_TRANSPARENT
+    GROUPBOX        "Stack", Group_Stack, 5, 6, 175, 28, 0, WS_EX_LEFT
+    LTEXT           "Usage", Label_Stack, 23, 18, 27, 9, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Virtual Machine Interpreter", Group_VM_Inter, 5, 36, 175, 34, 0, WS_EX_LEFT
+    PUSHBUTTON      "Stop", Stop_VM_Button, 53, 47, 70, 19, 0, WS_EX_LEFT
+}
+
+
+
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Search_box DIALOG 0, 0, 235, 164
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
@@ -375,8 +390,8 @@ LEA_Icon           ICON           "ico_bmp/lea.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     0,7,1,0
-    PRODUCTVERSION  0,7,1,0
+    FILEVERSION     0,7,3,0
+    PRODUCTVERSION  0,7,3,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -389,7 +404,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.71"
+            VALUE "FileVersion", "0.73"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2020"
             VALUE "ProductName", "LEA"
         }

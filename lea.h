@@ -99,3 +99,8 @@
 #define Ada_file_extension_edit_box             40092
 #define String_Prompt_Edit_Box                  40093
 #define String_Prompt_Label                     40094
+#define Group_VM_Inter                          40095
+#define Group_Stack                             40096
+#define Label_Stack                             40097
+#define Stack_Bar                               40098
+#define Stop_VM_Button                          40099

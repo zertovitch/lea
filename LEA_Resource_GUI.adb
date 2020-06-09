@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/06/04  18:58:43
+-- Transcription time: 2020/06/09  20:45:24
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -502,7 +502,98 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 269
+  --  Dialog at resource line 268
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Progress_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Progress_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "HAC Virtual Machine is running...";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 186, 73, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Progress_box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Progress_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 186, 73, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  57, 14, 114, 15, x,y,w,h);
+    Create( Window.Stack_Bar, Window, x,y,w,h, Horizontal, True);
+    Dlg_to_Scn(  5, 6, 175, 28, x,y,w,h);
+    Create( Window.Group_Stack, Window, "Stack", x,y,w,h);
+    Dlg_to_Scn(  23, 18, 27, 9, x,y,w,h);
+    Create( Window.Label_Stack, Window, "Usage", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Stack);
+    Dlg_to_Scn(  5, 36, 175, 34, x,y,w,h);
+    Create( Window.Group_VM_Inter, Window, "Virtual Machine Interpreter", x,y,w,h);
+    Dlg_to_Scn(  53, 47, 70, 19, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Stop_VM_Button, Window, "Stop", x,y,w,h, ID => Stop_VM_Button);
+    Create( Window.Stop_VM_Button_permanent, Window, "Stop", x,y,w,h, ID => Stop_VM_Button);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Stop_VM_Button_permanent);
+    else -- hide the closing button
+      Hide(Window.Stop_VM_Button);
+    end if;
+  end Create_Contents;  --  Progress_box_Type
+
+  --  Dialog at resource line 284
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -638,7 +729,7 @@ package body LEA_Resource_GUI is
     Create( Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
-  --  Dialog at resource line 291
+  --  Dialog at resource line 306
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -835,6 +926,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 402
+  -- Last line of resource script file: 417
 
 end LEA_Resource_GUI;
