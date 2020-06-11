@@ -116,29 +116,39 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     User_Abort := is_aborted;
   end Boxed_Feedback;
 
+  package Windowed_Console is new
+    Console_Traits
+      ( LEA_GWin.Messages.IO_Pipe.End_Of_File_Console,
+        LEA_GWin.Messages.IO_Pipe.End_Of_Line_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Needs_Skip_Line,
+        LEA_GWin.Messages.IO_Pipe.Get_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Console,
+        LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Console (C)
+        LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Immediate_Console (C)
+        LEA_GWin.Messages.IO_Pipe.Get_Line_Console,
+        LEA_GWin.Messages.IO_Pipe.Skip_Line_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.Put_Console,
+        LEA_GWin.Messages.IO_Pipe.New_Line_Console
+      );
+
+  package LEA_System_Calls is new
+    System_Calls_Traits
+      ( Fake_Argument_Count,
+        Fake_Argument,
+        Fake_Shell_Execute,
+        HAC_Pack.Directory_Separator
+      );
+
   procedure Windowed_interpret is new
-    HAC.PCode.Interpreter.Interpret (
-      Boxed_Feedback,
-      LEA_GWin.Messages.IO_Pipe.End_Of_File_Console,
-      LEA_GWin.Messages.IO_Pipe.End_Of_Line_Console,
-      LEA_GWin.Messages.IO_Pipe.Get_Needs_Skip_Line,
-      LEA_GWin.Messages.IO_Pipe.Get_Console,
-      LEA_GWin.Messages.IO_Pipe.Get_Console,
-      LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Console (C)
-      LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Immediate_Console (C)
-      LEA_GWin.Messages.IO_Pipe.Get_Line_Console,
-      LEA_GWin.Messages.IO_Pipe.Skip_Line_Console,
-      LEA_GWin.Messages.IO_Pipe.Put_Console,
-      LEA_GWin.Messages.IO_Pipe.Put_Console,
-      LEA_GWin.Messages.IO_Pipe.Put_Console,
-      LEA_GWin.Messages.IO_Pipe.Put_Console,
-      LEA_GWin.Messages.IO_Pipe.Put_Console,
-      LEA_GWin.Messages.IO_Pipe.New_Line_Console,
-      Fake_Argument_Count,
-      Fake_Argument,
-      Fake_Shell_Execute,
-      HAC_Pack.Directory_Separator
-    );
+    HAC.PCode.Interpreter.Interpret
+      ( Boxed_Feedback,
+        Windowed_Console,
+        LEA_System_Calls
+      );
 
   use Ada.Calendar;
 
