@@ -92,6 +92,8 @@ Menu_MDI_Child MENU
         MENUITEM "&Build application\tF4", IDM_Build
         MENUITEM "Build and &run\tF9", IDM_Build_and_run
         MENUITEM "&Run", IDM_Run
+        MENUITEM SEPARATOR
+        MENUITEM "&Get Ada code sample", IDM_Ada_Sample
     }
     POPUP "&View"
     {
@@ -161,6 +163,8 @@ Menu_MDI_Main MENU
         MENUITEM "&Build application\tF4", IDM_Build, INACTIVE
         MENUITEM "Build and &run\tF9", IDM_Build_and_run, INACTIVE
         MENUITEM "&Run", IDM_Run
+        MENUITEM SEPARATOR
+        MENUITEM "&Get Ada code sample", IDM_Ada_Sample
     }
     POPUP "&View"
     {
@@ -232,6 +236,20 @@ FONT 8, "Ms Shell Dlg"
     EDITTEXT        Line_value_box, 23, 12, 80, 14, ES_AUTOHSCROLL, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 126, 25, 50, 17, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "Go !", IDOK, 126, 4, 50, 17, 0, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+HAC_example_box DIALOG 0, 0, 316, 164
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "HAC Ada source code samples"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT           "HAC template or example", Label_HAC_template, 9, 5, 133, 12, SS_LEFT, WS_EX_LEFT
+    CONTROL         "", Zipped_file_box, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 9, 30, 297, 107, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 193, 143, 50, 16, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 254, 143, 50, 16, 0, WS_EX_LEFT
 }
 
 

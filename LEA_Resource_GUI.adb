@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/06/09  20:45:24
+-- Transcription time: 2020/06/25  16:51:16
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -88,6 +88,8 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F4", IDM_Build);
     Append_Item(Menu.Popup_0005, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "F9", IDM_Build_and_run);
     Append_Item(Menu.Popup_0005, "&Run", IDM_Run);
+    Append_Separator(Menu.Popup_0005);
+    Append_Item(Menu.Popup_0005, "&Get Ada code sample", IDM_Ada_Sample);
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "Show special symbols", IDM_Show_special_symbols);
@@ -116,7 +118,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 129
+  --  Menu at line 131
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -157,6 +159,8 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0004, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "F9", IDM_Build_and_run);
     State(Menu.Popup_0004, Command, IDM_Build_and_run, Disabled);
     Append_Item(Menu.Popup_0004, "&Run", IDM_Run);
+    Append_Separator(Menu.Popup_0004);
+    Append_Item(Menu.Popup_0004, "&Get Ada code sample", IDM_Ada_Sample);
     Menu.Popup_0005:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&Notepad view", IDM_Notepad_view);
@@ -183,7 +187,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0008, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  --  Dialog at resource line 202
+  --  Dialog at resource line 206
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -300,7 +304,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 230
+  --  Dialog at resource line 234
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -396,7 +400,105 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  --  Dialog at resource line 243
+  --  Dialog at resource line 247
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out HAC_example_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out HAC_example_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "HAC Ada source code samples";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 316, 164, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- HAC_example_box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out HAC_example_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 316, 164, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  9, 5, 133, 12, x,y,w,h);
+    Create( Window.Label_HAC_template, Window, "HAC template or example", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_HAC_template);
+    Dlg_to_Scn(  9, 30, 297, 107, x,y,w,h);
+    Create( Window.Zipped_file_box, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
+    Dlg_to_Scn(  193, 143, 50, 16, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  254, 143, 50, 16, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDCANCEL_permanent);
+    else -- hide the closing button
+      Hide(Window.IDCANCEL);
+    end if;
+  end Create_Contents;  --  HAC_example_box_Type
+
+  --  Dialog at resource line 261
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -502,7 +604,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 268
+  --  Dialog at resource line 286
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -593,7 +695,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 284
+  --  Dialog at resource line 302
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -729,7 +831,7 @@ package body LEA_Resource_GUI is
     Create( Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
-  --  Dialog at resource line 306
+  --  Dialog at resource line 324
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -926,6 +1028,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 417
+  -- Last line of resource script file: 435
 
 end LEA_Resource_GUI;

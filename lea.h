@@ -104,3 +104,6 @@
 #define Label_Stack                             40097
 #define Stack_Bar                               40098
 #define Stop_VM_Button                          40099
+#define IDM_Ada_Sample                          40100
+#define Zipped_file_box                         40101
+#define Label_HAC_template                      40102

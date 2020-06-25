@@ -1,6 +1,7 @@
 with LEA_Common;                       use LEA_Common;
 with LEA_Common.Syntax;                use LEA_Common.Syntax;
 
+with LEA_GWin.HAC_Sample;
 with LEA_GWin.Help;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
 with LEA_GWin.Messages;                use LEA_GWin.Messages;
@@ -638,11 +639,13 @@ package body LEA_GWin.MDI_Main is
       when IDM_WINDOW_CLOSE_ALL =>
         My_MDI_Close_All(MDI_Main);
       when IDM_General_options =>
-        LEA_GWin.Options.On_General_Options(MDI_Main);
+        Options.On_General_Options(MDI_Main);
       when IDM_ABOUT =>
         Do_about (MDI_Main);
       when IDM_Quick_Help =>
-        LEA_GWin.Help.Show_help (MDI_Main);
+        Help.Show_help (MDI_Main);
+      when IDM_Ada_Sample =>
+        HAC_Sample.Browse_and_Get (MDI_Main);
       when IDM_Notepad_view =>
         Change_View (MDI_Main, Notepad, force => False);
       when IDM_Studio_view =>

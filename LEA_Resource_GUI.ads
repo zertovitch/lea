@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/06/09  20:45:24
+-- Transcription time: 2020/06/25  16:51:16
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -42,7 +42,7 @@ package LEA_Resource_GUI is
     Popup_0009: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 123
+  --  Menu at line 125
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -58,7 +58,7 @@ package LEA_Resource_GUI is
     Popup_0008: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  --  Menu at line 190
+  --  Menu at line 194
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -85,7 +85,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  --  Dialog at resource line 221
+  --  Dialog at resource line 225
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -125,7 +125,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  --  Dialog at resource line 234
+  --  Dialog at resource line 238
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -156,6 +156,47 @@ package LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
+  type HAC_example_box_Type is new Window_Type with record
+
+    Label_HAC_template: Label_Type;
+    Zipped_file_box: List_View_Control_Type;
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+  end record; -- HAC_example_box_Type
+
+  --  Dialog at resource line 252
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out HAC_example_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out HAC_example_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "HAC Ada source code samples";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out HAC_example_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   type Option_box_Type is new Window_Type with record
 
     -- Label: 0
@@ -177,7 +218,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 259
+  --  Dialog at resource line 277
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -211,7 +252,7 @@ package LEA_Resource_GUI is
     Stop_VM_Button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 274
+  --  Dialog at resource line 292
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -264,7 +305,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 297
+  --  Dialog at resource line 315
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -296,7 +337,7 @@ package LEA_Resource_GUI is
     String_Prompt_Edit_Box: Edit_Box_Type;
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 310
+  --  Dialog at resource line 328
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -446,6 +487,9 @@ package LEA_Resource_GUI is
   Label_Stack                 : constant:=  40097;
   Stack_Bar                   : constant:=  40098;
   Stop_VM_Button              : constant:=  40099;
+  IDM_Ada_Sample              : constant:=  40100;
+  Zipped_file_box             : constant:=  40101;
+  Label_HAC_template          : constant:=  40102;
 
   -- ** Some helper utilities (spec).
 
@@ -457,6 +501,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 417
+  -- Last line of resource script file: 435
 
 end LEA_Resource_GUI;
