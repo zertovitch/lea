@@ -5,7 +5,7 @@ echo Option "%1"
 set target=_MinGW
 if (%1)==() set target=
 
-if not exist _lea_data.zip zipada -eps _lea_data.zip SciLexer.dll lea_help.txt
+if not exist _lea_data.zip call pack_data
 
 del lea.exe
 gprbuild -p -P lea -XBuild_Mode=Debug%target%

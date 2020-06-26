@@ -378,7 +378,7 @@ package body LEA_GWin.MDI_Main is
     MDI_Main.Message_Panel.Message_List.Font.Create_Font (App_default_font, 15);
     MDI_Main.Message_Panel.Message_List.Create (MDI_Main.Message_Panel, 1,1,20,20, View => Report_View);
     MDI_Main.Message_Panel.Message_List.mdi_main_parent := MDI_Main'Unrestricted_Access;
-    MDI_Main.Message_Panel.Message_List.Set_Extended_Style(LEA_LV_Ex.Full_Row_Select);
+    MDI_Main.Message_Panel.Message_List.Set_Extended_Style (Full_Row_Select);
     MDI_Main.Message_Panel.Message_List.Set_Font (MDI_Main.Message_Panel.Message_List.Font);
     MDI_Main.Message_Panel.Message_List.Insert_Column ("", 0, 40);
     MDI_Main.Message_Panel.Message_List.Insert_Column ("", 1, 35);

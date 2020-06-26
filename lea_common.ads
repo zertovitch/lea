@@ -1,5 +1,7 @@
-with Ada.Strings.UTF_Encoding;
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+with HAC_Pack;
+
+with Ada.Strings.UTF_Encoding,
+     Ada.Strings.Wide_Unbounded;
 
 -----------------------------------------------------------------
 -- LEA elements that are common to all GUI systems / toolkits. --
@@ -15,7 +17,7 @@ package LEA_Common is
 
   --  Internal format for LEA: UTF-16
   subtype UTF_16_String is Ada.Strings.UTF_Encoding.UTF_16_Wide_String;
-  subtype UTF_16_Unbounded_String is Unbounded_Wide_String;
+  subtype UTF_16_Unbounded_String is Ada.Strings.Wide_Unbounded.Unbounded_Wide_String;
 
   --  Format for file names on Open / Create operations: UTF-8
   --  See RM A.8.2: File Management
@@ -28,6 +30,8 @@ package LEA_Common is
   --  Conversions UTF-8 <-> UTF-16
   function To_UTF_16(s: UTF_8_String) return UTF_16_String;
   function To_UTF_8(s: UTF_16_String) return UTF_8_String;
+
+  function To_String (V : HAC_Pack.VString) return String renames HAC_Pack.VStr_Pkg.To_String;
 
   --------------------------------
   --  Some useful enumerations  --

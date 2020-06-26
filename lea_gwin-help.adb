@@ -1,24 +1,30 @@
-with LEA_Common;                        use LEA_Common;
-with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
+with LEA_Common.Syntax;
+with LEA_GWin.MDI_Child;
 
-with Zip;
-with UnZip.Streams;
+with HAC_Pack;
 
-with Zip_Streams;                       use Zip_Streams;
+with Zip, UnZip.Streams, Zip_Streams;
 
 with GWindows.Base;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Message_Boxes;
 
-with Ada.Command_Line;                  use Ada.Command_Line;
-with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
+with Ada.Command_Line;
 
 package body LEA_GWin.Help is
 
-  procedure Show_help (MDI_Main : in out MDI_Main_Type) is
-    lea_exe: constant String := Command_Name;
-    zi: Zip.Zip_info;
+  procedure Show_embedded (
+    Main_Window : in out MDI_Main.MDI_Main_Type;
+    File_Name   :        String;
+    Short_Name  :        String;
+    Is_Help     :        Boolean
+  )
+  is
+    use LEA_Common, LEA_Common.Syntax, Zip_Streams, LEA_GWin.MDI_Child, HAC_Pack,
+        GWindows.Message_Boxes;
+    lea_exe : constant String := Ada.Command_Line.Command_Name;
+    zi : Zip.Zip_info;
     mem_stream_unpacked : aliased Memory_Zipstream;
-    unpacked : Unbounded_String;
+    unpacked : HAC_Pack.VString;
     already_open: Boolean := False;
     --
     procedure Check_help_doc (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -38,38 +44,63 @@ package body LEA_GWin.Help is
     --
     New_Window : MDI_Child_Access;
   begin
-    GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Main).all,
-                                      Check_help_doc'Unrestricted_Access);
-    if already_open then
-      return;
+    if Is_Help then  --  We want only one copy of the help file displayed
+      GWindows.Base.Enumerate_Children (Main_Window.MDI_Client_Window.all,
+                                        Check_help_doc'Unrestricted_Access);
+      if already_open then
+        return;
+      end if;
     end if;
     Zip.Load (zi, lea_exe);
-    UnZip.Streams.Extract (mem_stream_unpacked, zi, "lea_help.txt");
+    UnZip.Streams.Extract (mem_stream_unpacked, zi, File_Name);
     Get (mem_stream_unpacked, unpacked);
+    if not Is_Help then
+      unpacked :=
+        "--  This sample is not saved anywhere on your file system." & ASCII.LF &
+        "--  Don't forget to save it if you modify it!" & ASCII.LF &
+        "--" & ASCII.LF &
+        unpacked;
+    end if;
     declare
       unpacked_str: constant String := To_String (unpacked);  --  visible to dbg
     begin
       New_Window := new MDI_Child_Type;
-      New_Window.Document_kind := help_main;
-      New_Window.Short_Name:= G2GU("Help");
-      MDI_Main.User_maximize_restore:= False;
+      if Is_Help then
+        New_Window.Document_kind := help_main;
+      end if;
+      New_Window.Short_Name:= G2GU (S2G (Short_Name));
+      Main_Window.User_maximize_restore:= False;
       Create_MDI_Child (New_Window.all,
-        MDI_Main,
+        Main_Window,
         GU2G (New_Window.Short_Name),
         Is_Dynamic => True
       );
-      MDI_Active_Window (MDI_Main, New_Window.all);
+      Main_Window.MDI_Active_Window (New_Window.all);
       New_Window.Editor.Load_text (contents => unpacked_str);
-      New_Window.Editor.SetReadOnly (True);
+      if Is_Help then
+        New_Window.Editor.SetReadOnly (True);
+      else
+        New_Window.Editor.syntax_kind := Ada_syntax;
+        New_Window.Editor.Set_Scintilla_Syntax;
+      end if;
     end;
     --  This is just to set the MRUs in the new window's menu:
-    MDI_Main.Update_Common_Menus;
+    Main_Window.Update_Common_Menus;
     --
     New_Window.Finish_subwindow_opening;
     New_Window.Editor.Focus;
   exception
     when Zip.Archive_corrupted =>
-      Message_Box (MDI_Main, "Help", "Cannot unpack help file");
+      Message_Box (Main_Window, "Embedded file", "Could not unpack file from " & S2G (lea_exe));
+  end Show_embedded;
+
+  procedure Show_help (Main_Window : in out MDI_Main.MDI_Main_Type) is
+  begin
+    Show_embedded (Main_Window, "lea_help.txt", "Help", Is_Help => True);
   end Show_help;
 
+  procedure Show_sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, File_Name : String) is
+  begin
+    Show_embedded (Main_Window, "hac_samples/" & Dir & '/' & File_Name, File_Name, Is_Help => False);
+  end;
 end LEA_GWin.Help;

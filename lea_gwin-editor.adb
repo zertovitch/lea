@@ -811,8 +811,8 @@ package body LEA_GWin.Editor is
     end if;
   end Duplicate;
 
-  procedure Load_text (Editor : in out LEA_Scintilla_Type; contents: String) is
-    p: Character:= ' ';
+  procedure Load_text (Editor : in out LEA_Scintilla_Type; contents : String) is
+    p : Character := ' ';
   begin
     Editor.SetEOLMode (SC_EOL_CRLF);
     for c of contents loop
@@ -838,12 +838,12 @@ package body LEA_GWin.Editor is
     f: File_Type;
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
-    Open (f, In_File, To_UTF_8(GU2G(parent.File_Name)), Form_For_IO_Open_and_Create);
+    Open (f, In_File, To_UTF_8 (GU2G (parent.File_Name)), Form_For_IO_Open_and_Create);
     declare
-      l: constant Ada.Streams.Stream_IO.Count:= Size (f);
-      s: String (1 .. Integer (l));
+      l : constant Ada.Streams.Stream_IO.Count := Size (f);
+      s : String (1 .. Integer (l));
     begin
-      String'Read(Stream(f), s);
+      String'Read (Stream(f), s);
       Editor.Load_text (contents => s);
     end;
     Close(f);

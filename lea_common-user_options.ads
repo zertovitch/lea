@@ -1,5 +1,7 @@
 package LEA_Common.User_options is
 
+  use Ada.Strings.Wide_Unbounded;
+
   use_default: constant:= -1;
 
   --  MRU (Most Recently Used) files names:
