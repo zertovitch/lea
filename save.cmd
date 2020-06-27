@@ -21,4 +21,14 @@ set nice_date=%year%-%month%-%day%_%hour%.%min%
 
 rem --------------------------
 
-zipada -ep2 lea-%nice_date% *.ad* *.gpr lea.rc lea.h lea.rbj *.txt save.cmd build.cmd pack_data.cmd *.pra ico_bmp/*.ico ico_bmp/*.bmp ico_bmp/*.ppt
+set root=lea
+
+cd..
+
+set files=%root%/*.ad* %root%/*.gpr %root%/lea.rc %root%/lea.h %root%/lea.rbj
+set files=%files% %root%/*.txt %root%/save.cmd %root%/build.cmd %root%/pack_data.cmd %root%/*.pra
+set files=%files% %root%/ico_bmp/*.ico %root%/ico_bmp/*.bmp %root%/ico_bmp/*.ppt
+
+zipada -ep2 %root%/lea-%nice_date% %files%
+
+cd %root%
