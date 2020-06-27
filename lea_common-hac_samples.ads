@@ -19,7 +19,7 @@ package LEA_Common.HAC_Samples is
   standard_sample : constant Sample_List :=
     (
       (Algorithm, +"ackermann.adb",     +"Ackermann recursive function"),
-      (Algorithm, +"bwt.adb",           +"Burrows–Wheeler transform: preprocessing for data compression"),
+      (Algorithm, +"bwt.adb",           +"Burrows-Wheeler transform: preprocessing for data compression"),
       (Algorithm, +"mandelbrot.adb",    +"Mandelbrot set"),
       (Algorithm, +"random.adb",        +"Random generation: Rand (discrete) and Rnd (continuous)"),
       (Algorithm, +"merge_sort.adb",    +"Merge sort"),

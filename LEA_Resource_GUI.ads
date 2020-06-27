@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/06/27  12:37:06
+-- Transcription time: 2020/06/27  13:26:31
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -160,13 +160,14 @@ package LEA_Resource_GUI is
 
     Label_HAC_template: Label_Type;
     Zipped_file_box: List_View_Control_Type;
+    Topic_box: List_Box_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- HAC_example_box_Type
 
-  --  Dialog at resource line 252
+  --  Dialog at resource line 253
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -218,7 +219,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 277
+  --  Dialog at resource line 278
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -252,7 +253,7 @@ package LEA_Resource_GUI is
     Stop_VM_Button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 292
+  --  Dialog at resource line 293
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -305,7 +306,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 315
+  --  Dialog at resource line 316
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -337,7 +338,7 @@ package LEA_Resource_GUI is
     String_Prompt_Edit_Box: Edit_Box_Type;
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 328
+  --  Dialog at resource line 329
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -490,6 +491,7 @@ package LEA_Resource_GUI is
   IDM_Ada_Sample              : constant:=  40100;
   Zipped_file_box             : constant:=  40101;
   Label_HAC_template          : constant:=  40102;
+  Topic_box                   : constant:=  40103;
 
   -- ** Some helper utilities (spec).
 
@@ -501,6 +503,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 435
+  -- Last line of resource script file: 436
 
 end LEA_Resource_GUI;
