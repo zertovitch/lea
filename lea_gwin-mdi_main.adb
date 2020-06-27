@@ -1,11 +1,10 @@
 with LEA_Common;                       use LEA_Common;
 with LEA_Common.Syntax;                use LEA_Common.Syntax;
 
-with LEA_GWin.HAC_Sample;
 with LEA_GWin.Help;
 with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
 with LEA_GWin.Messages;                use LEA_GWin.Messages;
-with LEA_GWin.Modal_dialogs;           use LEA_GWin.Modal_dialogs;
+with LEA_GWin.Modal_Dialogs;
 with LEA_GWin.Options;
 with LEA_GWin.Toolbars;
 
@@ -641,11 +640,11 @@ package body LEA_GWin.MDI_Main is
       when IDM_General_options =>
         Options.On_General_Options(MDI_Main);
       when IDM_ABOUT =>
-        Do_about (MDI_Main);
+        Modal_Dialogs.Show_About_Box (MDI_Main);
       when IDM_Quick_Help =>
         Help.Show_help (MDI_Main);
       when IDM_Ada_Sample =>
-        HAC_Sample.Browse_and_Get (MDI_Main);
+        Modal_Dialogs.Browse_and_Get_Code_Sample (MDI_Main);
       when IDM_Notepad_view =>
         Change_View (MDI_Main, Notepad, force => False);
       when IDM_Studio_view =>

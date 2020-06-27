@@ -2,7 +2,7 @@ with LEA_Common.Syntax;                 use LEA_Common.Syntax;
 with LEA_Common.User_options;           use LEA_Common.User_options;
 
 with LEA_GWin.Messages;
-with LEA_GWin.Modal_dialogs;            use LEA_GWin.Modal_dialogs;
+with LEA_GWin.Modal_Dialogs;            use LEA_GWin.Modal_Dialogs;
 with LEA_GWin.Run_Windowed;
 with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
 
@@ -45,7 +45,7 @@ package body LEA_GWin.MDI_Child is
     --  Child window, not relative to MDI main!
     x := x - parent.Left - Bar.Left - frame_width;
     if x in length_and_lines .. line_and_col then
-      Do_go_to_line (parent);
+      Do_Go_to_Line (parent);
     end if;
   end On_Click;
 
@@ -367,7 +367,11 @@ package body LEA_GWin.MDI_Child is
     File_Title    : GWindows.GString_Unbounded;
     Success       : Boolean;
   begin
-    New_File_Name := MDI_Child.File_Name;
+    if MDI_Child.File_Name = "" then
+      New_File_Name := MDI_Child.Short_Name;  --  Try with short name (window title).
+    else
+      New_File_Name := MDI_Child.File_Name;  --  Tentative name is current file name.
+    end if;
     Save_File (
       MDI_Child, "Save file as...", New_File_Name, Text_files_filters,
       ".ada", File_Title,
@@ -637,7 +641,7 @@ package body LEA_GWin.MDI_Child is
       when IDM_Find_Previous =>
         Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
         MDI_Child.Editor.Search(find_previous);
-      when IDM_Go_to_line =>    Do_go_to_line (MDI_Child);
+      when IDM_Go_to_line =>    Do_Go_to_Line (MDI_Child);
       when IDM_Toggle_bookmark =>
         MDI_Child.Editor.Bookmark_toggle (MDI_Child.Editor.Get_current_line);
       when IDM_Next_bookmark =>
