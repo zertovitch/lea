@@ -80,7 +80,7 @@ package LEA_GWin.MDI_Main is
         is_closing             : Boolean:= False;  --  True only during and after On_Close
         --  Direct input stream from an editor window:
         current_editor_stream  : aliased LEA_GWin.Editor.Editor_Stream_Type;
-        build_successful       : Boolean;
+        build_successful       : Boolean := False;
         close_this_search_box  : Boolean := False;
         pragma Volatile (close_this_search_box);
       end record;

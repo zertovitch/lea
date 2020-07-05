@@ -91,9 +91,8 @@ Menu_MDI_Child MENU
         MENUITEM "&Compile this file\tShift-F4", IDM_Compile_single
         MENUITEM "&Build application\tF4", IDM_Build
         MENUITEM "Build and &run\tF9", IDM_Build_and_run
-        MENUITEM "&Run", IDM_Run
         MENUITEM SEPARATOR
-        MENUITEM "&Code sam&ple", IDM_Ada_Sample
+        MENUITEM "Code sam&ple", IDM_Ada_Sample
     }
     POPUP "&View"
     {
@@ -162,9 +161,8 @@ Menu_MDI_Main MENU
         MENUITEM "&Compile this file\tShift-F4", IDM_Compile_single, INACTIVE
         MENUITEM "&Build application\tF4", IDM_Build, INACTIVE
         MENUITEM "Build and &run\tF9", IDM_Build_and_run, INACTIVE
-        MENUITEM "&Run", IDM_Run
         MENUITEM SEPARATOR
-        MENUITEM "&Code sam&ple", IDM_Ada_Sample
+        MENUITEM "Code sam&ple", IDM_Ada_Sample
     }
     POPUP "&View"
     {
@@ -241,16 +239,17 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-HAC_example_box DIALOG 0, 0, 472, 164
+HAC_example_box DIALOG 0, 0, 472, 188
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "HAC Ada source code samples"
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT           "Topic", Label_HAC_template, 9, 5, 96, 12, SS_LEFT, WS_EX_LEFT
-    CONTROL         "", Zipped_file_box, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 145, 7, 319, 129, WS_EX_LEFT
+    LTEXT           "Topic", Label_HAC_topic, 9, 5, 96, 12, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Sample", Label_HAC_sample, 145, 5, 96, 12, SS_LEFT, WS_EX_LEFT
     LISTBOX         Topic_box, 9, 22, 123, 95, WS_TABSTOP | WS_VSCROLL | LBS_NOINTEGRALHEIGHT | LBS_SORT | LBS_NOTIFY, WS_EX_LEFT
-    DEFPUSHBUTTON   "OK", IDOK, 354, 143, 50, 16, 0, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", IDCANCEL, 415, 143, 50, 16, 0, WS_EX_LEFT
+    CONTROL         "", Zipped_file_box, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 144, 22, 319, 137, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 352, 166, 50, 16, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 413, 166, 50, 16, 0, WS_EX_LEFT
 }
 
 

@@ -162,6 +162,5 @@ package LEA_GWin.MDI_Child is
   procedure Compile_single (MDI_Child : in out MDI_Child_Type);
   procedure Build          (MDI_Child : in out MDI_Child_Type);
   procedure Build_and_run  (MDI_Child : in out MDI_Child_Type);
-  procedure Run            (MDI_Child : in out MDI_Child_Type);
 
 end LEA_GWin.MDI_Child;

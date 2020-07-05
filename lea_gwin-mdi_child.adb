@@ -553,7 +553,7 @@ package body LEA_GWin.MDI_Child is
           Close (f);
         end if;
         Set_Error_Pipe (MDI_Child.CD, null);
-        --  Here we have a single-unit build:
+        --  Here we have a single-unit build, from the current child window:
         MDI_Main.build_successful := Unit_Compilation_Successful (MDI_Child.CD);
         if count = 0 then
           ml.Insert_Item ("----", 0);
@@ -575,11 +575,16 @@ package body LEA_GWin.MDI_Child is
 
   procedure Build (MDI_Child : in out MDI_Child_Type) is
   begin
-    --  !!  Obviously should occur (most of the time) at MDI_Main level
     case MDI_Child.MDI_Parent.opt.toolset is
       when HAC_mode =>
-        --  !!  At least in project/studio mode, we will build main, from editors or files
-        MDI_Child.Compile_single;
+        case MDI_Child.MDI_Parent.opt.view_mode is
+          when Notepad =>
+            MDI_Child.Compile_single;
+          when Studio =>
+            null;
+            --  !!  In project/studio mode, we will build
+            --      project's main, from editors or files
+        end case;
       when GNAT_mode =>
         null;
     end case;
@@ -587,17 +592,11 @@ package body LEA_GWin.MDI_Child is
 
   procedure Build_and_run (MDI_Child : in out MDI_Child_Type) is
   begin
-    --  !!  A la Turbo Pascal: check if changed
     MDI_Child.Build;
     if MDI_Child.MDI_Parent.build_successful then
-      MDI_Child.Run;
+      LEA_GWin.Run_Windowed (MDI_Child);
     end if;
   end Build_and_run;
-
-  procedure Run (MDI_Child : in out MDI_Child_Type) is
-  begin
-    LEA_GWin.Run_Windowed (MDI_Child);
-  end Run;
 
   procedure On_Menu_Select (
         MDI_Child : in out MDI_Child_Type;
@@ -653,7 +652,6 @@ package body LEA_GWin.MDI_Child is
       when IDM_Compile_single =>  MDI_Child.Compile_single;
       when IDM_Build          =>  MDI_Child.Build;
       when IDM_Build_and_run  =>  MDI_Child.Build_and_run;
-      when IDM_Run            =>  MDI_Child.Run;
       --
       when IDM_Show_special_symbols =>
         Toggle_show_special(MDI_Child.MDI_Parent.opt);

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/06/27  13:26:31
+-- Transcription time: 2020/07/05  09:37:24
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -42,7 +42,7 @@ package LEA_Resource_GUI is
     Popup_0009: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 125
+  --  Menu at line 124
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -58,7 +58,7 @@ package LEA_Resource_GUI is
     Popup_0008: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  --  Menu at line 194
+  --  Menu at line 192
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -85,7 +85,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  --  Dialog at resource line 225
+  --  Dialog at resource line 223
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -125,7 +125,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  --  Dialog at resource line 238
+  --  Dialog at resource line 236
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -158,16 +158,17 @@ package LEA_Resource_GUI is
 
   type HAC_example_box_Type is new Window_Type with record
 
-    Label_HAC_template: Label_Type;
-    Zipped_file_box: List_View_Control_Type;
+    Label_HAC_topic: Label_Type;
+    Label_HAC_sample: Label_Type;
     Topic_box: List_Box_Type;
+    Zipped_file_box: List_View_Control_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- HAC_example_box_Type
 
-  --  Dialog at resource line 253
+  --  Dialog at resource line 252
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -219,7 +220,7 @@ package LEA_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 278
+  --  Dialog at resource line 277
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -253,7 +254,7 @@ package LEA_Resource_GUI is
     Stop_VM_Button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 293
+  --  Dialog at resource line 292
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -306,7 +307,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 316
+  --  Dialog at resource line 315
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -338,7 +339,7 @@ package LEA_Resource_GUI is
     String_Prompt_Edit_Box: Edit_Box_Type;
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 329
+  --  Dialog at resource line 328
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -460,7 +461,6 @@ package LEA_Resource_GUI is
   IDM_Uncomment               : constant:=  40069;
   IDM_Show_special_symbols    : constant:=  40070;
   IDM_Find_Previous           : constant:=  40071;
-  IDM_Run                     : constant:=  40072;
   ZipAda_URL                  : constant:=  40073;
   ZipAda_Version              : constant:=  40074;
   HAC_Version                 : constant:=  40075;
@@ -490,8 +490,9 @@ package LEA_Resource_GUI is
   Stop_VM_Button              : constant:=  40099;
   IDM_Ada_Sample              : constant:=  40100;
   Zipped_file_box             : constant:=  40101;
-  Label_HAC_template          : constant:=  40102;
   Topic_box                   : constant:=  40103;
+  Label_HAC_topic             : constant:=  40104;
+  Label_HAC_sample            : constant:=  40105;
 
   -- ** Some helper utilities (spec).
 
@@ -503,6 +504,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 436
+  -- Last line of resource script file: 435
 
 end LEA_Resource_GUI;

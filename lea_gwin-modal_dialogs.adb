@@ -96,13 +96,13 @@ package body LEA_GWin.Modal_Dialogs is
     row : Natural := 0;
     fn, dir : array (standard_sample'Range) of VString;
     --
-    sel_top : Sample_Topic := Template;
+    sel_topic : Sample_Topic := Template;
     --
     procedure Find_Selected_Topic is
     begin
       for i in 1 .. box.Topic_box.Count loop
         if box.Topic_box.Selected (i) then
-          sel_top := Sample_Topic'Val (i - 1);
+          sel_topic := Sample_Topic'Val (i - 1);
         end if;
       end loop;
     end Find_Selected_Topic;
@@ -114,13 +114,13 @@ package body LEA_GWin.Modal_Dialogs is
       Find_Selected_Topic;
       row := 0;
       for i in standard_sample'Range loop
-        if standard_sample (i).topic = sel_top then
+        if standard_sample (i).topic = sel_topic then
           zb.Insert_Item (S2G (To_String (standard_sample (i).name)), row);
           zb.Set_Sub_Item (S2G (To_String (standard_sample (i).description)), row, 1);
           --  The list might be filtered by topic, so the row count
           --  is not always the sample count.
           row := row + 1;
-          dir (row) := directory (sel_top);
+          dir (row) := directory (sel_topic);
           fn (row)  := standard_sample (i).name;
         end if;
       end loop;
@@ -140,7 +140,7 @@ package body LEA_GWin.Modal_Dialogs is
           box.Topic_box.Add (wi);
         end;
       end loop;
-      box.Topic_box.Selected (Sample_Topic'Pos (sel_top) + 1);
+      box.Topic_box.Selected (Sample_Topic'Pos (sel_topic) + 1);
       Refresh_Cat;
     end Set_Data;
     --
@@ -189,6 +189,7 @@ package body LEA_GWin.Modal_Dialogs is
     box.Zipped_file_box.On_Lost_Focus_Handler (On_list_quit'Unrestricted_Access);
     box.Zipped_file_box.On_Double_Click_Handler (On_list_double_click'Unrestricted_Access);
     box.Topic_box.On_Selection_Change_Handler (On_topic_change'Unrestricted_Access);
+    box.Topic_box.Focus;  --  Better for using with keyboard, without mouse.
     case Show_Dialog (box, Main_Window) is
       when IDOK   =>
         if sel > 0 then

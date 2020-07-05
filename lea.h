@@ -76,7 +76,6 @@
 #define IDM_Uncomment                           40069
 #define IDM_Show_special_symbols                40070
 #define IDM_Find_Previous                       40071
-#define IDM_Run                                 40072
 #define ZipAda_URL                              40073
 #define ZipAda_Version                          40074
 #define HAC_Version                             40075
@@ -106,5 +105,6 @@
 #define Stop_VM_Button                          40099
 #define IDM_Ada_Sample                          40100
 #define Zipped_file_box                         40101
-#define Label_HAC_template                      40102
 #define Topic_box                               40103
+#define Label_HAC_topic                         40104
+#define Label_HAC_sample                        40105
