@@ -20,10 +20,12 @@ package LEA_Common.HAC_Samples is
     (
       (Algorithm, +"ackermann.adb",     +"Ackermann recursive function"),
       (Algorithm, +"bwt.adb",           +"Burrows-Wheeler transform: preprocessing for data compression"),
+      (Algorithm, +"covid_19_s.adb",    +"Model for simulating the Coronavirus (COVID-19) pandemic"),
       (Algorithm, +"mandelbrot.adb",    +"Mandelbrot set"),
+      (Algorithm, +"maze_gen.adb",      +"Maze generator"),
       (Algorithm, +"random.adb",        +"Random generation: Rand (discrete) and Rnd (continuous)"),
-      (Algorithm, +"merge_sort.adb",    +"Merge sort"),
-      (Algorithm, +"shell_sort.adb",    +"Shell sort"),
+      (Algorithm, +"merge_sort.adb",    +"Sorting: Merge sort"),
+      (Algorithm, +"shell_sort.adb",    +"Sorting: Shell sort"),
       (Algorithm, +"three_lakes_s.adb", +"Three lakes: ordinary differential equation system"),
       --
       (Script,    +"env.adb",       +"System's Environment Variables: Set & Get"),
