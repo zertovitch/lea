@@ -1,16 +1,30 @@
---  Mix of various functionalities. Some of them would be good as part of GWindows.
+--  GWin_Util is a collection of various functionalities around Windows and GWindows.
+--  Some of them might be good as part of the GWindows framework.
+--
+--  GWin_Util is used in the following open-source projects:
+--
+--    AZip   : https://azip.sourceforge.io/
+--    LEA    : https://l-e-a.sourceforge.io/
+--    TeXCAD : https://texcad.sourceforge.io/
+--
+--  Mirrors of the projects are located here: https://github.com/zertovitch
 
-with GWindows.Base;
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Common_Controls;          use GWindows.Common_Controls;
-with GWindows.GControls.GSize_Bars;
-with GWindows.GStrings;                 use GWindows.GStrings;
-with GWindows.Static_Controls;
-with GWindows.Windows;
+with GWindows.Base,
+     GWindows.Buttons,
+     GWindows.GControls.GSize_Bars,
+     GWindows.GStrings,
+     GWindows.Static_Controls,
+     GWindows.Windows;
 
-use GWindows;
+--  21-Jul-2020 : Exist removed (it's in Ada.Directories).
+--                Added: Create_Desktop_Shortcut.
+--  17-Apr-2018 : Fix_Tabbed_control moved to GWindows.Common_Controls as Set_As_Control_Parent.
+--  15-Dec-2008 : Create_URL moved to new GWindows.Static_Controls.Web.
+--   2-Feb-2007
 
 package GWin_Util is
+
+  use GWindows;
 
   -- Tab:
   HT : constant GCharacter := GCharacter'Val (9);
@@ -22,29 +36,35 @@ package GWin_Util is
 
   function To_URL_Encoding( s: String ) return String;
 
-  function S2G (Value : String) return GString renames To_GString_From_String;
+  function S2G (Value : String) return GString renames GWindows.GStrings.To_GString_From_String;
+
+  use GWindows.Buttons;
 
   boolean_to_state: constant array(Boolean) of Check_State_Type:=
     (True => Checked, False => Unchecked);
 
   procedure Use_GUI_Font(Window: in out GWindows.Base.Base_Window_Type'Class);
 
-  function Exist(Name : String) return Boolean;
-
   -----------------------------------------
   -- Execute or start external processes --
   -----------------------------------------
 
-  procedure Start(
+  procedure Start (
     File       : in String;
-    Parameter  : in String := "";
-    Minimized  : in Boolean:= False
+    Parameter  : in String  := "";
+    Minimized  : in Boolean := False
   );
 
-  procedure Exec(name: String; param: String:= "");
-  Exec_failed: exception;
+  procedure Exec (name : String; param : String:= "");
+  Exec_failed : exception;
 
-  procedure Exec_Command(the_command: String);
+  procedure Exec_Command (the_command : String);
+
+ procedure Create_Desktop_Shortcut (
+    Link_Name   : String;  --  Name without extension, e.g. "AZip".
+    Target_Path : String;  --  Full path. E.g. Ada.Command_Line.Command_Name
+    All_Users   : Boolean  --  When False, shortcut is created only on current user's desktop.
+  );
 
   type Windows_family is (Win32s, Win9x, NT);
   procedure Get_Windows_version(
@@ -60,10 +80,10 @@ package GWin_Util is
 
   function Temp_dir return String;
 
-  function Minimized(Window: GWindows.Base.Base_Window_Type'Class)
+  function Minimized (Window: GWindows.Base.Base_Window_Type'Class)
     return Boolean;
 
-  function Valid_Left_Top(Left, Top: Integer)
+  function Valid_Left_Top (Left, Top: Integer)
     return Boolean;
 
   function Find_short_path_name( long: String ) return String;
@@ -71,12 +91,6 @@ package GWin_Util is
   ------------------------------
   --  Tabs - Property sheets  --
   ------------------------------
-
-  -- 6-Jan-2007 : Solution to buttons in tabs creating an infinte loop
-  --              in Windows' GUI system. This should be corrected
-  --              inside of GWindows.
-  --              By André van Splunter
-  procedure Fix_Tabbed_control( Tab_Control: Tab_Window_Control_Type );
 
   -- The package Property_Tabs_Package is indeed a kind of generic object type
   -- An instance, like:
@@ -97,12 +111,6 @@ package GWin_Util is
     cancel: Button_Type;
     procedure Create(Parent: in out GWindows.Base.Base_Window_Type'Class);
   end Property_Tabs_Package;
-
-  --  ----------------------
-  --  -- Fix Dialog style --
-  --  ----------------------
-
-  --  procedure Fix_Dialog(Dialog: in GWindows.Windows.Window_Type);
 
   ------------------------------------------
   --  Split bar including a visible grip  --

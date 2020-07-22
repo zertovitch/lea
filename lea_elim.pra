@@ -105,7 +105,6 @@ pragma Eliminate (GWindows.GStrings, To_GString_From_VARIANT, Source_Location =>
 pragma Eliminate (GNATCOM.VARIANT, To_Ada_Wide, Source_Location => "gnatcom-variant.ads:123");
 pragma Eliminate (GWindows.GStrings, To_VARIANT_From_GString, Source_Location => "gwindows-gstrings.ads:92");
 pragma Eliminate (GNATCOM.VARIANT, To_VARIANT_From_Wide, Source_Location => "gnatcom-variant.ads:72");
-pragma Eliminate (GWindows.GStrings, To_Lower, Source_Location => "gwindows-gstrings.ads:99");
 pragma Eliminate (GWindows.GStrings, To_Mixed, Source_Location => "gwindows-gstrings.ads:102");
 pragma Eliminate (GWindows.GStrings, Resource_ID, Source_Location => "gwindows-gstrings.ads:105");
 pragma Eliminate (GWindows.Message_Boxes, Message_Beep, Source_Location => "gwindows-message_boxes.ads:120");
