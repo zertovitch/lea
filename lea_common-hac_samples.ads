@@ -29,8 +29,8 @@ package LEA_Common.HAC_Samples is
       (Algorithm, +"three_lakes_s.adb", +"Three lakes: ordinary differential equation system"),
       --
       (Script,    +"env.adb",       +"System's Environment Variables: Set & Get"),
-      (Script,    +"file_copy.adb", +"Reads a file (itself) and copies it to another file"),
-      (Script,    +"file_read.adb", +"Reads a file (itself) and displays it on the console"),
+      (Script,    +"file_copy.adb", +"Reads a text file (itself) and copies it to another file"),
+      (Script,    +"file_read.adb", +"Reads a text file (itself) and displays it on the console"),
       (Script,    +"timing.adb",    +"Demo for types Time & Duration"),
       --
       (Template,  +"hello.adb",     +"Tiny program (Hello World)")
