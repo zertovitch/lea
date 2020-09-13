@@ -1,6 +1,11 @@
---  This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
---  for the LEA project ( http://l-e-a.sf.net/ , mirror: https://github.com/zertovitch/lea )
---  Build me with "gprbuild -p -P lea", or open me with GPS
+--  This is a GNAT, GCC or GNAT Studio project file
+--  for the LEA project:
+--
+--      home page:     http://l-e-a.sf.net/
+--      project page:  http://sf.net/projects/l-e-a/
+--      mirror:        https://github.com/zertovitch/lea
+--
+--  Build me with "gprbuild -P lea", or open me with GNAT Studio
 --
 --  Caution (Windows): due to the Scintilla DLL which is
 --  32-bit, you need a 32-bit GNAT for Windows (<= 2017)
@@ -39,6 +44,7 @@ project LEA is
    for Main use ("lea.adb", "sample_catalogue.adb");
    for Source_Dirs use (".") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
+   for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
 
    case Build_Mode is
       when "Debug" =>
