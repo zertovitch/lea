@@ -4,7 +4,7 @@ with HAC_Pack;
 
 package LEA_Common.HAC_Samples is
 
-  type Sample_Topic is (Algorithm, Script, Template);
+  type Sample_Topic is (Algorithm, Script, Template, Compatibility);
 
   use HAC_Pack;
 
@@ -33,13 +33,17 @@ package LEA_Common.HAC_Samples is
       (Script,    +"file_read.adb", +"Reads a text file (itself) and displays it on the console"),
       (Script,    +"timing.adb",    +"Demo for types Time & Duration"),
       --
-      (Template,  +"hello.adb",     +"Tiny program (Hello World)")
+      (Template,  +"hello.adb",     +"Tiny program (Hello World)"),
+      --
+      (Compatibility, +"hac_pack.ads", +"Package specification of HAC_Pack for use with a full Ada system"),
+      (Compatibility, +"hac_pack.adb", +"Package body of HAC_Pack for use with a full Ada system")
     );
 
   directory : array (Sample_Topic) of VString :=
-    ( Algorithm => +"algorithms",
-      Script    => +"scripts",
-      Template  => +"templates"
+    ( Algorithm     => +"algorithms",
+      Script        => +"scripts",
+      Template      => +"templates",
+      Compatibility => +"compatibility"
     );
 
 end LEA_Common.HAC_Samples;

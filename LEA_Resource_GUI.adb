@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/07/05  09:37:24
+-- Transcription time: 2020/09/18  18:09:32
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -473,7 +473,7 @@ package body LEA_Resource_GUI is
     Dlg_to_Scn(  145, 5, 96, 12, x,y,w,h);
     Create( Window.Label_HAC_sample, Window, "Sample", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_HAC_sample);
     Dlg_to_Scn(  9, 22, 123, 95, x,y,w,h);
-    Create( Window.Topic_box, Window, x,y,w,h, True, ID => Topic_box);
+    Create( Window.Topic_box, Window, x,y,w,h, False, ID => Topic_box);
     Dlg_to_Scn(  144, 22, 319, 137, x,y,w,h);
     Create( Window.Zipped_file_box, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
     Dlg_to_Scn(  352, 166, 50, 16, x,y,w,h);

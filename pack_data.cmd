@@ -1,7 +1,9 @@
-mkdir hac_samples
+rem This script is automatically written by sample_catalogue.adb
+
 mkdir hac_samples\algorithms
 mkdir hac_samples\scripts
 mkdir hac_samples\templates
+mkdir hac_samples\compatibility
 
 copy ..\hac\exm\ackermann.adb      hac_samples\algorithms
 copy ..\hac\exm\bwt.adb            hac_samples\algorithms
@@ -17,7 +19,9 @@ copy ..\hac\exm\file_copy.adb      hac_samples\scripts
 copy ..\hac\exm\file_read.adb      hac_samples\scripts
 copy ..\hac\exm\timing.adb         hac_samples\scripts
 copy ..\hac\exm\hello.adb          hac_samples\templates
+copy ..\hac\src\hac_pack.ads       hac_samples\compatibility
+copy ..\hac\src\hac_pack.adb       hac_samples\compatibility
 
-set samples=hac_samples\algorithms\* hac_samples\scripts\* hac_samples\templates\*
+set samples=hac_samples\algorithms\* hac_samples\scripts\* hac_samples\templates\* hac_samples\compatibility\* 
 
 zipada -eps _lea_data.zip SciLexer.dll lea_help.txt %samples%

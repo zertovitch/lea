@@ -13,15 +13,20 @@ begin
     ml := Integer'Max (ml, Length (standard_sample (i).name));
   end loop;
   Create (f, "pack_data.cmd");
-  Put_Line (f, "mkdir hac_samples");
-  Put_Line (f, "mkdir hac_samples\algorithms");
-  Put_Line (f, "mkdir hac_samples\scripts");
-  Put_Line (f, "mkdir hac_samples\templates");
+  Put_Line (f, "rem This script is automatically written by sample_catalogue.adb");
+  New_Line (f);
+  for topic in Sample_Topic loop
+    Put_Line (f, "mkdir hac_samples\" & directory (topic));
+  end loop;
   New_Line (f);
   --
   for i in standard_sample'Range loop
+    if standard_sample (i).topic = Compatibility then
+      Put (f, "copy ..\hac\src\");
+    else
+      Put (f, "copy ..\hac\exm\");
+    end if;
     Put_Line (f,
-      "copy ..\hac\exm\" &
       standard_sample (i).name &
       (ml - Length (standard_sample (i).name)) * ' ' &
       "  hac_samples\" &
@@ -30,7 +35,11 @@ begin
   end loop;
   --
   New_Line (f);
-  Put_Line (f, "set samples=hac_samples\algorithms\* hac_samples\scripts\* hac_samples\templates\*");
+  Put (f, "set samples=");
+  for topic in Sample_Topic loop
+    Put (f, "hac_samples\" & directory (topic) & "\* ");
+  end loop;
+  New_Line (f);
   New_Line (f);
   Put_Line (f, "zipada -eps _lea_data.zip SciLexer.dll lea_help.txt %samples%");
   Close (f);

@@ -129,18 +129,24 @@ package body LEA_GWin.Modal_Dialogs is
     procedure Set_Data is
       zb : List_View_Control_Type renames box.Zipped_file_box;
     begin
-      zb.Set_Extended_Style (Full_Row_Select);
-      zb.Insert_Column ("File name", 0, 100);
-      zb.Insert_Column ("Description", 1, 350);
-      for t in Sample_Topic loop
+      --
+      --  List on the left, with topics (Algorithm, Script,... ).
+      --
+      for topic in Sample_Topic loop
         declare
-          wi : GString := Sample_Topic'Wide_Image (t);
+          wi : GString := Sample_Topic'Wide_Image (topic);
         begin
           wi (wi'First + 1 .. wi'Last) := Ada.Wide_Characters.Handling.To_Lower (wi (wi'First + 1 .. wi'Last));
           box.Topic_box.Add (wi);
         end;
       end loop;
       box.Topic_box.Selected (Sample_Topic'Pos (sel_topic) + 1);
+      --
+      --  List on the right with samples for the selected topic.
+      --
+      zb.Set_Extended_Style (Full_Row_Select);
+      zb.Insert_Column ("File name", 0, 100);
+      zb.Insert_Column ("Description", 1, 350);
       Refresh_Cat;
     end Set_Data;
     --
