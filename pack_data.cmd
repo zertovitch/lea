@@ -1,5 +1,6 @@
 rem This script is automatically written by sample_catalogue.adb
 
+mkdir hac_samples
 mkdir hac_samples\algorithms
 mkdir hac_samples\scripts
 mkdir hac_samples\templates

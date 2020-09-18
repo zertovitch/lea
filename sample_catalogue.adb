@@ -15,6 +15,7 @@ begin
   Create (f, "pack_data.cmd");
   Put_Line (f, "rem This script is automatically written by sample_catalogue.adb");
   New_Line (f);
+  Put_Line (f, "mkdir hac_samples");
   for topic in Sample_Topic loop
     Put_Line (f, "mkdir hac_samples\" & directory (topic));
   end loop;
