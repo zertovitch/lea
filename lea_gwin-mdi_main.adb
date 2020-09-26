@@ -627,6 +627,12 @@ package body LEA_GWin.MDI_Main is
         GWin_Util.Start(LEA_web_page);
       when IDM_QUIT  =>
         Close (MDI_Main);
+      when IDM_Close =>
+        if MDI_Main.Count_MDI_Children = 0 then
+          Close (MDI_Main);  --  Ctrl-W when no subwindow is open.
+        else
+          On_Menu_Select (Window_Type (MDI_Main), Item);
+        end if;
       when IDM_Copy_Messages =>
         MDI_Main.Message_Panel.Message_List.Copy_Messages;
       when IDM_WINDOW_CASCADE   =>

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/09/18  18:09:32
+-- Transcription time: 2020/09/26  22:23:31
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -143,7 +143,7 @@ package body LEA_Resource_GUI is
     Append_Item(Menu.Popup_0001, "Open &Project", IDM_Open_Project);
     State(Menu.Popup_0001, Command, IDM_Open_Project, Disabled);
     Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
+    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Copy message &list to clipboard", IDM_Copy_Messages);

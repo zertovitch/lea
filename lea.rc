@@ -149,7 +149,7 @@ Menu_MDI_Main MENU
         MENUITEM SEPARATOR
         MENUITEM "Open &Project", IDM_Open_Project, INACTIVE
         MENUITEM SEPARATOR
-        MENUITEM "&Quit\tAlt+F4", IDM__QUIT
+        MENUITEM "&Quit\tCtrl+W / Alt+F4", IDM__QUIT
     }
     POPUP "&Edit"
     {
