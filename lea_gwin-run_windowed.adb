@@ -26,6 +26,11 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     return Integer'Image (Number);  --  !! TBD: Add a mode where the arguments are prompted.
   end;
 
+  function HAC_Command_Name return String is
+  begin
+    return G2S (GU2G (MDI_Child.File_Name));
+  end;
+
   function Fake_Shell_Execute (Command : String) return Integer is
   begin
     return -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
@@ -139,6 +144,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     System_Calls_Traits
       ( Fake_Argument_Count,
         Fake_Argument,
+        HAC_Command_Name,
         Fake_Shell_Execute,
         HAC_Pack.Directory_Separator
       );
