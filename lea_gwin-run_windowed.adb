@@ -5,7 +5,7 @@ with LEA_GWin.Messages.IO_Pipe;
 
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
-with HAC.PCode.Interpreter, HAC_Pack;
+with HAC_Sys.PCode.Interpreter, HAC_Pack;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;
@@ -31,15 +31,15 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     return G2S (GU2G (MDI_Child.File_Name));
   end;
 
-  function Fake_Shell_Execute (Command : String) return Integer is
+  procedure Fake_Shell_Execute (Command : String; Result : out Integer) is
   begin
-    return -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
+    Result := -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
   end;
 
   MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
   ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
 
-  use LEA_Common, HAC.PCode.Interpreter;
+  use LEA_Common, HAC_Sys.PCode.Interpreter;
 
   unhandled : Exception_Propagation_Data;
 
@@ -150,7 +150,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
       );
 
   procedure Windowed_interpret is new
-    HAC.PCode.Interpreter.Interpret
+    HAC_Sys.PCode.Interpreter.Interpret
       ( Boxed_Feedback,
         Windowed_Console,
         LEA_System_Calls

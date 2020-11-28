@@ -1,8 +1,8 @@
 with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
 with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
-with HAC.Defs;
-with HAC.UErrors;
+with HAC_Sys.Defs;
+with HAC_Sys.UErrors;
 
 with GWindows.Base;
 
@@ -16,7 +16,7 @@ package body LEA_GWin.Repair is
     repair   : in out LEA_GWin.Messages.Editor_repair_information
   )
   is
-    use HAC.Defs, HAC.UErrors, GWindows.Base;
+    use HAC_Sys.Defs, HAC_Sys.UErrors, GWindows.Base;
     --
     procedure Repair_in_editor (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
@@ -47,7 +47,7 @@ package body LEA_GWin.Repair is
                 pw.Editor.SetSel (line_pos + repair.col_a, line_pos + repair.col_z);
                 pw.Editor.Clear;
             end case;
-            pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (HAC.Defs.To_String (repair.text)) & Optional_EOL);
+            pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (HAC_Sys.Defs.To_String (repair.text)) & Optional_EOL);
             pw.Editor.EndUndoAction;
           end if;
         end;

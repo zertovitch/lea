@@ -16,6 +16,7 @@ copy ..\hac\exm\merge_sort.adb     hac_samples\algorithms
 copy ..\hac\exm\shell_sort.adb     hac_samples\algorithms
 copy ..\hac\exm\three_lakes_s.adb  hac_samples\algorithms
 copy ..\hac\exm\env.adb            hac_samples\scripts
+copy ..\hac\exm\file_append.adb    hac_samples\scripts
 copy ..\hac\exm\file_copy.adb      hac_samples\scripts
 copy ..\hac\exm\file_read.adb      hac_samples\scripts
 copy ..\hac\exm\timing.adb         hac_samples\scripts

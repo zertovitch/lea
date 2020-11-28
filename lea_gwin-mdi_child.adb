@@ -6,7 +6,7 @@ with LEA_GWin.Modal_Dialogs;            use LEA_GWin.Modal_Dialogs;
 with LEA_GWin.Run_Windowed;
 with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
 
-with HAC.Compiler, HAC.Defs;
+with HAC_Sys.Compiler, HAC_Sys.Defs;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
@@ -481,7 +481,7 @@ package body LEA_GWin.MDI_Child is
     displayed_compilation_file_name: Unbounded_String;
     blurb_1: constant GString := "Caution: HAC is not a complete Ada compiler!";
     blurb_2: constant GString := "[HAC to P-Code] ";
-    use HAC.Defs;
+    use HAC_Sys.Defs;
     --
     procedure LEA_HAC_Feedback (
       message         : String;
@@ -526,7 +526,7 @@ package body LEA_GWin.MDI_Child is
       count := count + 1;
     end LEA_HAC_Feedback;
     use_editor_stream: constant Boolean := True;
-    use HAC.Compiler, Ada.Streams.Stream_IO;
+    use HAC_Sys.Compiler, Ada.Streams.Stream_IO;
     f: File_Type;
     file_name : constant String := G2S (GU2G (MDI_Child.File_Name));
   begin

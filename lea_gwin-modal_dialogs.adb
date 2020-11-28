@@ -6,7 +6,7 @@ with LEA_GWin.Help;
 
 with LEA_Resource_GUI;
 
-with HAC, Zip;
+with HAC_Sys, Zip;
 
 with HAC_Pack;
 
@@ -79,7 +79,7 @@ package body LEA_GWin.Modal_Dialogs is
     box.GNAT_Version.Text (S2G("version " & GNAT_Version_string));
     Create_and_Swap (url_gnavi,   box.GNAVI_URL,   box, "http://sf.net/projects/gnavi");
     Create_and_Swap (url_hac,     box.HAC_URL,     box, "https://hacadacompiler.sourceforge.io/");
-    box.HAC_Version.Text (S2G ("version " & HAC.version & ", ref. " & HAC.reference));
+    box.HAC_Version.Text (S2G ("version " & HAC_Sys.version & ", ref. " & HAC_Sys.reference));
     Create_and_Swap (url_zipada,  box.ZipAda_URL,  box, S2G (Zip.web));
     box.ZipAda_Version.Text (S2G ("version " & Zip.version & ", ref. " & Zip.reference));
     Create_and_Swap (url_resedit, box.ResEdit_URL, box, "http://resedit.net");

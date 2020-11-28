@@ -23,7 +23,7 @@ package body LEA_GWin.Messages.IO_Pipe is
     current_IO_pipe.Insert_Item ("", Index => last_line + 1);
   end New_line_IO_pipe;
 
-  package RIO is new Ada.Text_IO.Float_IO (HAC.Defs.HAC_Float);
+  package RIO is new Ada.Text_IO.Float_IO (HAC_Sys.Defs.HAC_Float);
 
   procedure Append_to_IO_pipe (new_text : String) is
     last_line: Integer := current_IO_pipe.Item_Count -1;
@@ -85,13 +85,13 @@ package body LEA_GWin.Messages.IO_Pipe is
      Put_Console (I);  --  Reflect the input on the "console".
    end Get_Console;
 
-   procedure Get_Console (F : out HAC.Defs.HAC_Float; Width : Ada.Text_IO.Field := 0) is
+   procedure Get_Console (F : out HAC_Sys.Defs.HAC_Float; Width : Ada.Text_IO.Field := 0) is
    pragma Unreferenced (Width);
    begin
      if current_IO_pipe = null then
        raise Program_Error with "IO pipe undefined";
      end if;
-     F := HAC.Defs.HAC_Float'Wide_Value (
+     F := HAC_Sys.Defs.HAC_Float'Wide_Value (
        String_Input (current_IO_pipe.mdi_main_parent.all, "Floating-point Input")
      );
      --  An eventual error raises an exception like Ada.Text_IO.Get.
@@ -156,7 +156,7 @@ package body LEA_GWin.Messages.IO_Pipe is
       Width : Ada.Text_IO.Field       := Ada.Integer_Text_IO.Default_Width;
       Base  : Ada.Text_IO.Number_Base := Ada.Integer_Text_IO.Default_Base)
    is
-     s : String (1 .. HAC.Defs.HAC_Integer'Size + 4);  --  Longest representation is in base 2.
+     s : String (1 .. HAC_Sys.Defs.HAC_Integer'Size + 4);  --  Longest representation is in base 2.
      use Ada.Strings.Fixed, Ada.Strings;
    begin
      Ada.Integer_Text_IO.Put (s (1 .. Width), I, Base);
@@ -172,7 +172,7 @@ package body LEA_GWin.Messages.IO_Pipe is
    -----------------
 
    procedure Put_Console
-     (F    : HAC.Defs.HAC_Float;
+     (F    : HAC_Sys.Defs.HAC_Float;
       Fore : Integer := Ada.Float_Text_IO.Default_Fore;
       Aft  : Integer := Ada.Float_Text_IO.Default_Aft;
       Exp  : Integer := Ada.Float_Text_IO.Default_Exp)
@@ -194,17 +194,17 @@ package body LEA_GWin.Messages.IO_Pipe is
 
    procedure Put_Console
      (B     : Boolean;
-      Width : Ada.Text_IO.Field    := HAC.Defs.BIO.Default_Width;
-      Set   : Ada.Text_IO.Type_Set := HAC.Defs.BIO.Default_Setting)
+      Width : Ada.Text_IO.Field    := HAC_Sys.Defs.BIO.Default_Width;
+      Set   : Ada.Text_IO.Type_Set := HAC_Sys.Defs.BIO.Default_Setting)
    is
      s : String (1 .. 5);  --  Length of "FALSE"
      use Ada.Strings.Fixed, Ada.Strings;
    begin
-     HAC.Defs.BIO.Put (s (1 .. Width), B, Set);
+     HAC_Sys.Defs.BIO.Put (s (1 .. Width), B, Set);
      Append_to_IO_pipe(s (1 .. Width));
    exception
      when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. Width
-       HAC.Defs.BIO.Put (s, B, Set);
+       HAC_Sys.Defs.BIO.Put (s, B, Set);
        Append_to_IO_pipe (Trim (s, Left));
    end Put_Console;
 
