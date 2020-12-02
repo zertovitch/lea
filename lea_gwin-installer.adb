@@ -6,9 +6,9 @@ with Ada.Command_Line;                  use Ada.Command_Line;
 
 package body LEA_GWin.Installer is
 
-  procedure Unpack_DLL (target: String := "") is
-    lea_exe: constant String := Command_Name;
-    bs: Integer;
+  procedure Unpack_DLL (target : String := "") is
+    lea_exe : constant String := Command_Name;
+    bs : Integer;
   begin
     for i in reverse lea_exe'Range loop
       if lea_exe (i) = '\' then

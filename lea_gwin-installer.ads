@@ -6,7 +6,7 @@
 
 package LEA_GWin.Installer is
 
-  procedure Unpack_DLL (target: String := "");
+  procedure Unpack_DLL (target : String := "");
 
   --  TBD: Unpacking SciLexer.dll and spawn lea.exe into a target directory
 

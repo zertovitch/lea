@@ -9,16 +9,16 @@ package body LEA_GWin.Messages.IO_Pipe is
 
   type ML_access is access all Message_List_Type;
 
-  current_IO_pipe: ML_access := null;  --  Global here. We assume there is only one main window.
-  tick: Ada.Calendar.Time;  --  For display refresh
+  current_IO_pipe : ML_access := null;  --  Global here. We assume there is only one main window.
+  tick : Ada.Calendar.Time;  --  For display refresh
 
-  procedure Set_current_IO_pipe (ML: in out Message_List_Type) is
+  procedure Set_current_IO_pipe (ML : in out Message_List_Type) is
   begin
     current_IO_pipe := ML'Unchecked_Access;
   end Set_current_IO_pipe;
 
   procedure New_line_IO_pipe is
-    last_line: constant Integer := current_IO_pipe.Item_Count -1;
+    last_line : constant Integer := current_IO_pipe.Item_Count - 1;
   begin
     current_IO_pipe.Insert_Item ("", Index => last_line + 1);
   end New_line_IO_pipe;
@@ -26,22 +26,23 @@ package body LEA_GWin.Messages.IO_Pipe is
   package RIO is new Ada.Text_IO.Float_IO (HAC_Sys.Defs.HAC_Float);
 
   procedure Append_to_IO_pipe (new_text : String) is
-    last_line: Integer := current_IO_pipe.Item_Count -1;
-    use Ada.Calendar;
-    now: constant Time:= Clock;
+    last_line : Integer := current_IO_pipe.Item_Count - 1;
+    use Ada.Calendar, GWindows.Common_Controls;
+    now : constant Time := Clock;
   begin
     if last_line < 0 then
       current_IO_pipe.Insert_Item ("", Index => 0);  --  First line
       tick := Clock;
       last_line := 0;
     end if;
-    current_IO_pipe.Set_Item(
+    current_IO_pipe.Set_Item (
       Text => current_IO_pipe.Text (Item => last_line, SubItem => 0) & S2G (new_text),
       Index => last_line
     );
     if now - tick >= 0.04 then
+      current_IO_pipe.Ensure_Visible (last_line, Partial);  --  Scroll to last line
       GWindows.Application.Message_Check;  --  Refresh display
-      tick:= now;
+      tick := now;
     end if;
   end Append_to_IO_pipe;
 
@@ -98,7 +99,7 @@ package body LEA_GWin.Messages.IO_Pipe is
      Put_Console (F);  --  Reflect the input on the "console".
    end Get_Console;
 
-   procedure Get_Console (C: out Character) is
+   procedure Get_Console (C : out Character) is
    begin
      if current_IO_pipe = null then
        raise Program_Error with "IO pipe undefined";
@@ -201,7 +202,7 @@ package body LEA_GWin.Messages.IO_Pipe is
      use Ada.Strings.Fixed, Ada.Strings;
    begin
      HAC_Sys.Defs.BIO.Put (s (1 .. Width), B, Set);
-     Append_to_IO_pipe(s (1 .. Width));
+     Append_to_IO_pipe (s (1 .. Width));
    exception
      when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. Width
        HAC_Sys.Defs.BIO.Put (s, B, Set);
@@ -210,14 +211,14 @@ package body LEA_GWin.Messages.IO_Pipe is
 
    procedure Put_Console (C : in Character) is
    begin
-     Append_to_IO_pipe ( (1 => C));
+     Append_to_IO_pipe ((1 => C));
    end Put_Console;
 
    -----------------
    -- Put_Console --
    -----------------
 
-   procedure Put_Console (S: in String) is
+   procedure Put_Console (S : in String) is
    begin
      Append_to_IO_pipe (S);
    end Put_Console;

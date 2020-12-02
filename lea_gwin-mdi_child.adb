@@ -207,13 +207,14 @@ package body LEA_GWin.MDI_Child is
     --  MDI_Child.Subprogram_Panel.Subprogram_Tree.Create (MDI_Child.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
     --  MDI_Child.Subprogram_Panel.Subprogram_Tree.Dock (Fill);
 
-    MDI_Child.Editor.mdi_parent:= MDI_Child'Unrestricted_Access;
-    MDI_Child.Editor.Create(MDI_Child, 50,1,20,20);
-    MDI_Child.Editor.Dock(Fill);
+    MDI_Child.Editor.mdi_parent := MDI_Child'Unrestricted_Access;
+    MDI_Child.Editor.Create (MDI_Child, 50, 1, 20, 20);  --  Widget starts as a small square...
+    MDI_Child.Editor.Dock (Fill);                        --  ...expands into MDI child window.
+    MDI_Child.Editor.SetEOLMode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
 
-    MDI_Child.Status_Bar.Create(MDI_Child, "No file");
+    MDI_Child.Status_Bar.Create (MDI_Child, "No file");
     MDI_Child.Status_Bar.Parts (
-      (  0 => Status_bar_parts.general_info,      --  General info ("Ada file", ...)
+        (0 => Status_bar_parts.general_info,      --  General info ("Ada file", ...)
          1 => Status_bar_parts.length_and_lines,  --  Length & lines
          2 => Status_bar_parts.line_and_col,      --  Line / Col
          3 => Status_bar_parts.selection,         --  Selection
@@ -222,7 +223,7 @@ package body LEA_GWin.MDI_Child is
          6 => Status_bar_parts.ins_ovr            --  Ins / Ovr
        )
     );
-    MDI_Child.Status_Bar.Dock(At_Bottom);
+    MDI_Child.Status_Bar.Dock (At_Bottom);
     MDI_Child.Dock_Children;
 
     LEA_Resource_GUI.Create_Full_Menu(MDI_Child.Menu);

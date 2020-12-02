@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/09/26  22:23:31
+-- Transcription time: 2020/12/02  10:29:41
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -373,7 +373,7 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion: constant String:= "0.74";
+    FileVersion: constant String:= "0.75";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2020";
     ProductName: constant String:= "LEA";
     Translation: constant:= 1033;
@@ -504,6 +504,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 435
+  -- Last line of resource script file: 436
 
 end LEA_Resource_GUI;

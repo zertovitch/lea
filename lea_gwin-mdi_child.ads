@@ -22,7 +22,7 @@ package LEA_GWin.MDI_Child is
   type MDI_Child_Type;
   type MDI_Child_Access is access all MDI_Child_Type;
 
-  type MDI_Child_Status_bar_part is ( directory_info, task_message );
+  type MDI_Child_Status_bar_part is (directory_info, task_message );
 
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
@@ -67,13 +67,13 @@ package LEA_GWin.MDI_Child is
         Short_Name       : GString_Unbounded;
         MDI_Parent       : MDI_Main_Access; -- -> access to the containing window
         --  new file closed if kept virgin when opening another one (like blank Excel sheet).
-        Extra_first_doc  : Boolean:= False;
+        Extra_first_doc  : Boolean := False;
         Menu             : Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Document_kind    : Document_kind_type := editable_text;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
         Subprogram_Panel : Subprogram_Panel_Type;
-        selected_path    : GString_Unbounded:= Null_GString_Unbounded;
+        selected_path    : GString_Unbounded := Null_GString_Unbounded;
         --  opt              : Option_Pack_Type;  --  No per-child-window option in this app
         Status_Bar       : MDI_Child_Status_Bar_Type;
         name_search      : GString_Unbounded;
@@ -82,8 +82,8 @@ package LEA_GWin.MDI_Child is
         temp_name_gen    : Ada.Numerics.Float_Random.Generator;
         any_path_in_zip  : Boolean;
         extract_dir      : GString_Unbounded;
-        refreshing_list  : Boolean:= False;
-        is_closing       : Boolean:= False;  --  True only during and after On_Close
+        refreshing_list  : Boolean := False;
+        is_closing       : Boolean := False;  --  True only during and after On_Close
         last_op_comment_1: GString_Unbounded;
         last_op_comment_2: GString_Unbounded;
         save_all_hint    : Boolean;  --  Used during Update_display only.
@@ -149,7 +149,7 @@ package LEA_GWin.MDI_Child is
   );
 
   --  This will update File menu of parent, itself, and all brothers and sisters
-  procedure Update_Common_Menus(MDI_Child : MDI_Child_Type;
+  procedure Update_Common_Menus (MDI_Child : MDI_Child_Type;
     top_entry_name : GString := "";
     top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
   );

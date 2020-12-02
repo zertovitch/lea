@@ -348,6 +348,7 @@ Main_Menu ACCELERATORS
     "E",            IDM_EXTRACT, VIRTKEY, CONTROL
     "T",            IDM_TEST_ARCHIVE, VIRTKEY, CONTROL
     "F",            IDM_Find, VIRTKEY, CONTROL
+    "H",            IDM_Find, VIRTKEY, CONTROL
     VK_F3,         IDM_Find_Next, VIRTKEY
     VK_F3,         IDM_Find_Previous, VIRTKEY, SHIFT
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
@@ -408,8 +409,8 @@ LEA_Icon           ICON           "ico_bmp/lea.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     0,7,4,0
-    PRODUCTVERSION  0,7,4,0
+    FILEVERSION     0,7,5,0
+    PRODUCTVERSION  0,7,5,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -422,7 +423,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.74"
+            VALUE "FileVersion", "0.75"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2020"
             VALUE "ProductName", "LEA"
         }

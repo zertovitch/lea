@@ -9,14 +9,14 @@ with HAC_Sys.Defs;
 
 package LEA_GWin.Messages.IO_Pipe is
 
-  procedure Set_current_IO_pipe (ML: in out Message_List_Type);
+  procedure Set_current_IO_pipe (ML : in out Message_List_Type);
 
   function End_Of_File_Console return Boolean;
   function End_Of_Line_Console return Boolean;
   function Get_Needs_Skip_Line return Boolean;
-  procedure Get_Console (I: out Integer;            Width : Ada.Text_IO.Field := 0);
-  procedure Get_Console (F: out HAC_Sys.Defs.HAC_Float; Width : Ada.Text_IO.Field := 0);
-  procedure Get_Console (C: out Character);
+  procedure Get_Console (I : out Integer;                Width : Ada.Text_IO.Field := 0);
+  procedure Get_Console (F : out HAC_Sys.Defs.HAC_Float; Width : Ada.Text_IO.Field := 0);
+  procedure Get_Console (C : out Character);
   function Get_Line_Console return String;
   procedure Skip_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);
   --
@@ -34,8 +34,8 @@ package LEA_GWin.Messages.IO_Pipe is
     B     : Boolean;
     Width : Ada.Text_IO.Field    := HAC_Sys.Defs.BIO.Default_Width;
     Set   : Ada.Text_IO.Type_Set := HAC_Sys.Defs.BIO.Default_Setting);
-  procedure Put_Console (C: in Character);
-  procedure Put_Console (S: in String);
+  procedure Put_Console (C : in Character);
+  procedure Put_Console (S : in String);
   procedure New_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);
 
 end LEA_GWin.Messages.IO_Pipe;

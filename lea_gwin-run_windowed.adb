@@ -7,9 +7,10 @@ with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with HAC_Sys.PCode.Interpreter, HAC_Pack;
 
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Base;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Application,
+     GWindows.Base,
+     GWindows.Common_Controls,
+     GWindows.Message_Boxes;
 
 with Ada.Calendar;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
@@ -75,6 +76,8 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
 
     procedure ML_Trace_Back is new Show_Trace_Back (Show_Line_Information);
 
+    use GWindows.Message_Boxes;
+
   begin
     Message_Box (MDI_Main,
       "Unhandled exception - run-time error",
@@ -106,7 +109,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     User_Abort                 :    out Boolean
   )
   is
-    use Ada.Calendar;
+    use Ada.Calendar, GWindows.Application;
   begin
     --  Display only at most every n-th/100 second.
     --  Otherwise Windows may be overflown by messages and it would
@@ -156,7 +159,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
         LEA_System_Calls
       );
 
-  use Ada.Calendar;
+  use Ada.Calendar, GWindows.Application, GWindows.Common_Controls;
 
 begin
   case MDI_Child.MDI_Parent.opt.toolset is
@@ -183,7 +186,12 @@ begin
         delay 0.03;
       end loop;
       MDI_Child.MDI_Parent.Disable;
-      Windowed_interpret (MDI_Child.CD, unhandled);
+      Windowed_interpret (MDI_Child.CD, unhandled);  --  Running the HAC program happens here.
+      --  Scroll to last output line:
+      MDI_Child.MDI_Parent.Message_Panel.Message_List.Ensure_Visible (
+        MDI_Child.MDI_Parent.Message_Panel.Message_List.Item_Count - 1,
+        Full
+      );
       MDI_Child.MDI_Parent.Enable;
       MDI_Child.MDI_Parent.Focus;
       if Is_Exception_Raised (unhandled) then
