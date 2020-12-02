@@ -39,7 +39,7 @@ package body LEA_GWin.Messages.IO_Pipe is
       Text => current_IO_pipe.Text (Item => last_line, SubItem => 0) & S2G (new_text),
       Index => last_line
     );
-    if now - tick >= 0.04 then
+    if now - tick >= 0.3333 then
       current_IO_pipe.Ensure_Visible (last_line, Partial);  --  Scroll to last line
       GWindows.Application.Message_Check;  --  Refresh display
       tick := now;

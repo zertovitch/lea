@@ -16,6 +16,6 @@ package LEA_Common.Syntax is
 
   function Guess_syntax (file_name, custom_filter : UTF_16_String) return Syntax_type;
 
-  function File_type_image (syn: Syntax_type) return UTF_16_String;
+  function File_type_image (syn : Syntax_type) return UTF_16_String;
 
 end LEA_Common.Syntax;

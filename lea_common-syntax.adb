@@ -8,12 +8,12 @@ package body LEA_Common.Syntax is
   begin
     --  Go through the filter, like: "*.ADS;*.ADB;*.A"
     for s1 in u_filt'Range loop
-      if u_filt (s1) ='*' then  --  Wildcard spotted.
+      if u_filt (s1) = '*' then  --  Wildcard spotted.
         for s2 in s1 + 1 .. u_filt'Last loop
           --  Now we are with s2, for instance, in the substring: ".ADB;*.A"
           if s2 = u_filt'Last or else u_filt (s2 + 1) = ';' then
             declare
-              ext: constant UTF_16_String := u_filt (s1 + 1 .. s2);  --  Ex: ".ADB"
+              ext : constant UTF_16_String := u_filt (s1 + 1 .. s2);  --  Ex: ".ADB"
             begin
               if u_name'Length >= ext'Length
                  and then u_name (u_name'Last - ext'Length + 1 .. u_name'Last) = ext
@@ -36,7 +36,7 @@ package body LEA_Common.Syntax is
     return Undefined;
   end Guess_syntax;
 
-  function File_type_image (syn: Syntax_type) return UTF_16_String is
+  function File_type_image (syn : Syntax_type) return UTF_16_String is
   begin
     case syn is
       when Undefined  => return "Text file";

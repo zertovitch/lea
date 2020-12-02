@@ -41,7 +41,7 @@ package LEA_Common.HAC_Samples is
     );
 
   directory : array (Sample_Topic) of VString :=
-    ( Algorithm     => +"algorithms",
+     (Algorithm     => +"algorithms",
       Script        => +"scripts",
       Template      => +"templates",
       Compatibility => +"compatibility"
