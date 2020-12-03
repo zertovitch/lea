@@ -73,13 +73,13 @@ package body LEA_GWin.Messages.IO_Pipe is
    -- Get_Console --
    -----------------
 
-   procedure Get_Console (I : out Integer; Width : Ada.Text_IO.Field := 0) is
+   procedure Get_Console (I : out HAC_Sys.Defs.HAC_Integer; Width : Ada.Text_IO.Field := 0) is
    pragma Unreferenced (Width);
    begin
      if current_IO_pipe = null then
        raise Program_Error with "IO pipe undefined";
      end if;
-     I := Integer'Wide_Value (
+     I := HAC_Sys.Defs.HAC_Integer'Wide_Value (
        String_Input (current_IO_pipe.mdi_main_parent.all, "Integer Input")
      );
      --  An eventual error raises an exception like Ada.Text_IO.Get.
@@ -153,18 +153,18 @@ package body LEA_GWin.Messages.IO_Pipe is
    -----------------
 
    procedure Put_Console
-     (I     : Integer;
+     (I     : HAC_Sys.Defs.HAC_Integer;
       Width : Ada.Text_IO.Field       := Ada.Integer_Text_IO.Default_Width;
       Base  : Ada.Text_IO.Number_Base := Ada.Integer_Text_IO.Default_Base)
    is
      s : String (1 .. HAC_Sys.Defs.HAC_Integer'Size + 4);  --  Longest representation is in base 2.
      use Ada.Strings.Fixed, Ada.Strings;
    begin
-     Ada.Integer_Text_IO.Put (s (1 .. Width), I, Base);
+     HAC_Sys.Defs.IIO.Put (s (1 .. Width), I, Base);
      Append_to_IO_pipe (s (1 .. Width));
    exception
      when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. Width
-       Ada.Integer_Text_IO.Put (s, I, Base);
+       HAC_Sys.Defs.IIO.Put (s, I, Base);
        Append_to_IO_pipe (Trim (s, Left));
    end Put_Console;
 

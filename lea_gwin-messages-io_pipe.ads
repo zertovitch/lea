@@ -14,14 +14,14 @@ package LEA_GWin.Messages.IO_Pipe is
   function End_Of_File_Console return Boolean;
   function End_Of_Line_Console return Boolean;
   function Get_Needs_Skip_Line return Boolean;
-  procedure Get_Console (I : out Integer;                Width : Ada.Text_IO.Field := 0);
-  procedure Get_Console (F : out HAC_Sys.Defs.HAC_Float; Width : Ada.Text_IO.Field := 0);
+  procedure Get_Console (I : out HAC_Sys.Defs.HAC_Integer; Width : Ada.Text_IO.Field := 0);
+  procedure Get_Console (F : out HAC_Sys.Defs.HAC_Float;   Width : Ada.Text_IO.Field := 0);
   procedure Get_Console (C : out Character);
   function Get_Line_Console return String;
   procedure Skip_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);
   --
   procedure Put_Console (
-    I     : Integer;
+    I     : HAC_Sys.Defs.HAC_Integer;
     Width : Ada.Text_IO.Field       := Ada.Integer_Text_IO.Default_Width;
     Base  : Ada.Text_IO.Number_Base := Ada.Integer_Text_IO.Default_Base);
   procedure Put_Console (
