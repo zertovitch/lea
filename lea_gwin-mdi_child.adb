@@ -567,7 +567,6 @@ package body LEA_GWin.MDI_Child is
           --  Jump on first error
           ml.Selected (1, True);
           ml.Message_line_action (real_click => False);
-          ml.Focus;
         end if;
       when GNAT_mode =>
         null;
