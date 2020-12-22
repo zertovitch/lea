@@ -38,4 +38,7 @@ package LEA_GWin.Messages.IO_Pipe is
   procedure Put_Console (S : in String);
   procedure New_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);
 
+  --  A global variable here. We assume there is only one main window.
+  is_aborted_flag: Boolean;
+
 end LEA_GWin.Messages.IO_Pipe;

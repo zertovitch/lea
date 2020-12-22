@@ -93,12 +93,12 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
   --  The following is copied and adapted from AZip's progress bar.
   --
   progress_box: Progress_box_Type;
-  is_aborted: Boolean:= False;
   --
   procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
     pragma Warnings(off, dummy);
   begin
-    is_aborted:= True;  --  Will propagate user_abort upon next Boxed_Feedback.
+    LEA_GWin.Messages.IO_Pipe.is_aborted_flag:= True;
+    --  Will propagate user_abort upon next Boxed_Feedback.
   end Abort_clicked;
   --
   tick: Ada.Calendar.Time;
@@ -121,7 +121,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
       Message_Check;
       tick := Wall_Clock;
     end if;
-    User_Abort := is_aborted;
+    User_Abort := LEA_GWin.Messages.IO_Pipe.is_aborted_flag;
   end Boxed_Feedback;
 
   package Windowed_Console is new
@@ -162,6 +162,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
   use Ada.Calendar, GWindows.Application, GWindows.Common_Controls;
 
 begin
+  LEA_GWin.Messages.IO_Pipe.is_aborted_flag := False;
   case MDI_Child.MDI_Parent.opt.toolset is
     when HAC_mode =>
       --  !!  Check if anything compiled ?

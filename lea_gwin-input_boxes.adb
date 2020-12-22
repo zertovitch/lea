@@ -8,7 +8,7 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 package body LEA_GWin.Input_Boxes is
 
   function String_Input (
-    Parent  : in out Base_Window_Type'Class;
+    Parent  : in out GWindows.Base.Base_Window_Type'Class;
     Message :        GString
   )
   return GString is
@@ -43,12 +43,13 @@ package body LEA_GWin.Input_Boxes is
   end String_Input;
 
   procedure Skip_Line (
-    Parent  : Base_Window_Type'Class;
-    Message : GString
+    Parent  : in  GWindows.Base.Base_Window_Type'Class;
+    Message : in  GWindows.GString;
+    Result  : out GWindows.Message_Boxes.Message_Box_Result
   )
   is
   begin
-    Message_Box (Parent, "Skip_Line", Message);
+    Result := Message_Box (Parent, "Skip_Line", Message, GWindows.Message_Boxes.OK_Cancel_Box);
   end Skip_Line;
 
 end LEA_GWin.Input_Boxes;

@@ -1,6 +1,7 @@
 with LEA_GWin.Input_Boxes;              use LEA_GWin.Input_Boxes;
 
-with GWindows.Application;
+with GWindows.Application,
+     GWindows.Message_Boxes;
 
 with Ada.Calendar,
      Ada.Strings.Fixed;
@@ -9,7 +10,8 @@ package body LEA_GWin.Messages.IO_Pipe is
 
   type ML_access is access all Message_List_Type;
 
-  current_IO_pipe : ML_access := null;  --  Global here. We assume there is only one main window.
+  --  A few global variables here. We assume there is only one main window.
+  current_IO_pipe : ML_access := null;
   tick : Ada.Calendar.Time;  --  For display refresh
 
   procedure Set_current_IO_pipe (ML : in out Message_List_Type) is
@@ -140,12 +142,21 @@ package body LEA_GWin.Messages.IO_Pipe is
 
    procedure Skip_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1) is
    pragma Unreferenced (Spacing);
+     use GWindows.Message_Boxes;
+     Result : Message_Box_Result;
    begin
      if current_IO_pipe = null then
        raise Program_Error with "IO pipe undefined";
      end if;
-     Skip_Line (current_IO_pipe.mdi_main_parent.all, "Press Return");
+     Skip_Line (
+       current_IO_pipe.mdi_main_parent.all,
+       "Press Return" & NL & NL & "Cancel = abort program.",
+       Result
+     );
      New_Line_Console;  --  Reflect the new line on the "console".
+     if Result = Cancel then
+       is_aborted_flag := True;
+     end if;
    end Skip_Line_Console;
 
    -----------------
