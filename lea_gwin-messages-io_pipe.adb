@@ -150,7 +150,10 @@ package body LEA_GWin.Messages.IO_Pipe is
      end if;
      Skip_Line (
        current_IO_pipe.mdi_main_parent.all,
-       "Press Return" & NL & NL & "Cancel = abort program.",
+       "Press  Return key  or click  ""OK""." & NL & NL &
+       "---" & NL & NL &
+       "Press  Esc key  or click on  ""Cancel""" & NL & 
+       "for aborting the program.",
        Result
      );
      New_Line_Console;  --  Reflect the new line on the "console".
