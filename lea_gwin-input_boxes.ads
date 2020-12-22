@@ -3,16 +3,17 @@ with GWindows.Base,
 
 package LEA_GWin.Input_Boxes is
 
-  function String_Input (
-    Parent  : in out GWindows.Base.Base_Window_Type'Class;
-    Message :        GString
-  )
-  return GString;
+  procedure String_Input (
+    Parent     : in out GWindows.Base.Base_Window_Type'Class;
+    Message    : in     GString;
+    User_Input :    out GString_Unbounded;
+    Result     :    out GWindows.Message_Boxes.Message_Box_Result
+  );
 
   procedure Skip_Line (
-    Parent  : in  GWindows.Base.Base_Window_Type'Class;
-    Message : in  GWindows.GString;
-    Result  : out GWindows.Message_Boxes.Message_Box_Result
+    Parent  : in     GWindows.Base.Base_Window_Type'Class;
+    Message : in     GString;
+    Result  :    out GWindows.Message_Boxes.Message_Box_Result
   );
 
 end LEA_GWin.Input_Boxes;

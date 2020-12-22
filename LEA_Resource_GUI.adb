@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/12/02  10:29:41
+-- Transcription time: 2020/12/22  18:59:34
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -903,7 +903,11 @@ package body LEA_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  307, 54, 62, 18, x,y,w,h);
+    Dlg_to_Scn(  7, 9, 368, 9, x,y,w,h);
+    Create( Window.String_Prompt_Label, Window, "Enter some text...", x,y,w,h, GWindows.Static_Controls.Left, None, ID => String_Prompt_Label);
+    Dlg_to_Scn(  7, 28, 362, 21, x,y,w,h);
+    Create( Window.String_Prompt_Edit_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => String_Prompt_Edit_Box);
+    Dlg_to_Scn(  235, 54, 62, 18, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -914,10 +918,17 @@ package body LEA_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  7, 9, 368, 9, x,y,w,h);
-    Create( Window.String_Prompt_Label, Window, "Enter some text...", x,y,w,h, GWindows.Static_Controls.Left, None, ID => String_Prompt_Label);
-    Dlg_to_Scn(  7, 28, 362, 21, x,y,w,h);
-    Create( Window.String_Prompt_Edit_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => String_Prompt_Edit_Box);
+    Dlg_to_Scn(  307, 54, 62, 18, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDCANCEL_permanent);
+    else -- hide the closing button
+      Hide(Window.IDCANCEL);
+    end if;
   end Create_Contents;  --  String_Prompt_Type
 
   -- ** Generated code ends here /\ /\ /\.
@@ -1030,6 +1041,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 436
+  -- Last line of resource script file: 437
 
 end LEA_Resource_GUI;

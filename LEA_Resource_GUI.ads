@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/12/02  10:29:41
+-- Transcription time: 2020/12/22  18:59:34
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -333,13 +333,15 @@ package LEA_Resource_GUI is
 
   type String_Prompt_Type is new Window_Type with record
 
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
     String_Prompt_Label: Label_Type;
     String_Prompt_Edit_Box: Edit_Box_Type;
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 328
+  --  Dialog at resource line 329
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -504,6 +506,6 @@ package LEA_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 436
+  -- Last line of resource script file: 437
 
 end LEA_Resource_GUI;
