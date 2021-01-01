@@ -413,6 +413,26 @@ package body LEA_GWin.Editor is
     Editor.GotoLine (line);            --  Finally, set the correct line
   end Set_current_line;
 
+  --  If the last line of a selection is fully selected, the end of the selection's
+  --  position is at the line *after* the selection and an operation like comment or
+  --  uncomment will involve that extra line - a major annoyance!
+
+  procedure Get_Reduced_Selection (Editor : LEA_Scintilla_Type; sel_a, sel_z : out Position) is
+    sel_y : Position;
+    lin_y, lin_z: Integer;
+  begin
+    sel_a:= Editor.GetSelectionStart;
+    sel_z:= Editor.GetSelectionEnd;
+    if sel_z > sel_a then
+      sel_y := sel_z - 1;
+      lin_y:= Editor.LineFromPosition(sel_y);
+      lin_z:= Editor.LineFromPosition(sel_z);
+      if lin_y < lin_z then
+        sel_z := sel_y;
+      end if;
+    end if;
+  end Get_Reduced_Selection;
+
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type) is
     --
     blank_line_code: constant:= -1;
@@ -446,8 +466,7 @@ package body LEA_GWin.Editor is
     pos, sel_a, sel_z: Position;
     ind, ind_prev_line, ind_min, lin_a, lin_z: Integer;
   begin
-    sel_a:= Editor.GetSelectionStart;
-    sel_z:= Editor.GetSelectionEnd;
+    Get_Reduced_Selection (Editor, sel_a, sel_z);
     lin_a:= Editor.LineFromPosition(sel_a);
     lin_z:= Editor.LineFromPosition(sel_z);
     --  Look for indentation *before* the selected block.
@@ -489,16 +508,15 @@ package body LEA_GWin.Editor is
       Editor.InsertText(pos, ind_prev_line * ' ' & "--  ");
     end loop;
     Editor.EndUndoAction;
-    --  Select the whole block again.
-    Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1) - 1);
+    --  Select the whole block of lines again.
+    Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1));
   end Selection_comment;
 
   procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type) is
     pos, sel_a, sel_z: Position;
     lin_a, lin_z: Integer;
   begin
-    sel_a:= Editor.GetSelectionStart;
-    sel_z:= Editor.GetSelectionEnd;
+    Get_Reduced_Selection (Editor, sel_a, sel_z);
     lin_a:= Editor.LineFromPosition(sel_a);
     lin_z:= Editor.LineFromPosition(sel_z);
     --  The whole uncommenting can be undone and redone in a single "Undo" / Redo":
@@ -517,8 +535,8 @@ package body LEA_GWin.Editor is
       end if;
     end loop;
     Editor.EndUndoAction;
-    --  Select the whole block again.
-    Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1) - 1);
+    --  Select the whole block of lines again.
+    Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1));
   end Selection_uncomment;
 
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action)

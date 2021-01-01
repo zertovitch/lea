@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: LEA.rc
--- Transcription time: 2020/12/22  18:59:34
+-- Transcription time: 2021/01/01  13:49:45
 -- GWenerator project file: lea.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -16,6 +16,8 @@ with GWindows.Drawing;                  use GWindows.Drawing;
 with GWindows.Drawing_Objects;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with System;
+
+pragma Warnings ("U");  --  turn off warnings for unused entity
 
 package body LEA_Resource_GUI is
 
