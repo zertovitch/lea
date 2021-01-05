@@ -549,7 +549,7 @@ package body LEA_GWin.MDI_Child is
         ml.Set_Column ("Line",     0, 60);
         ml.Set_Column ("Message",  1, 800);
         Set_Error_Pipe (MDI_Child.CD, LEA_HAC_Feedback'Unrestricted_Access);
-        Compile (MDI_Child.CD);
+        Compile_Main (MDI_Child.CD);
         if not use_editor_stream then
           Close (f);
         end if;
