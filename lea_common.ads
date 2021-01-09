@@ -1,4 +1,4 @@
-with HAC_Pack;
+with HAL;
 
 with Ada.Strings.UTF_Encoding,
      Ada.Strings.Wide_Unbounded;
@@ -31,7 +31,7 @@ package LEA_Common is
   function To_UTF_16 (s : UTF_8_String) return UTF_16_String;
   function To_UTF_8 (s : UTF_16_String) return UTF_8_String;
 
-  function To_String (V : HAC_Pack.VString) return String renames HAC_Pack.VStr_Pkg.To_String;
+  function To_String (V : HAL.VString) return String renames HAL.VStr_Pkg.To_String;
 
   --------------------------------
   --  Some useful enumerations  --

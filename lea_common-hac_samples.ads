@@ -1,12 +1,12 @@
 --  List of HAC samples with their description.
 
-with HAC_Pack;
+with HAL;
 
 package LEA_Common.HAC_Samples is
 
   type Sample_Topic is (Algorithm, Script, Template, Compatibility);
 
-  use HAC_Pack;
+  use HAL;
 
   type Sample_Item is record
     topic       : Sample_Topic;
@@ -36,8 +36,8 @@ package LEA_Common.HAC_Samples is
       --
       (Template,  +"hello.adb",     +"Tiny program (Hello World)"),
       --
-      (Compatibility, +"hac_pack.ads", +"Package specification of HAC_Pack for use with a full Ada system"),
-      (Compatibility, +"hac_pack.adb", +"Package body of HAC_Pack for use with a full Ada system")
+      (Compatibility, +"hal.ads", +"Package specification of HAL for use with a full Ada system"),
+      (Compatibility, +"hal.adb", +"Package body of HAL for use with a full Ada system")
     );
 
   directory : array (Sample_Topic) of VString :=

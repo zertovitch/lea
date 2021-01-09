@@ -5,7 +5,7 @@ with LEA_GWin.Messages.IO_Pipe;
 
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
-with HAC_Sys.PCode.Interpreter, HAC_Pack;
+with HAC_Sys.PCode.Interpreter, HAL;
 
 with GWindows.Application,
      GWindows.Base,
@@ -149,7 +149,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
         Fake_Argument,
         HAC_Command_Name,
         Fake_Shell_Execute,
-        HAC_Pack.Directory_Separator
+        HAL.Directory_Separator
       );
 
   procedure Windowed_interpret is new

@@ -21,8 +21,8 @@ copy ..\hac\exm\file_copy.adb      hac_samples\scripts
 copy ..\hac\exm\file_read.adb      hac_samples\scripts
 copy ..\hac\exm\timing.adb         hac_samples\scripts
 copy ..\hac\exm\hello.adb          hac_samples\templates
-copy ..\hac\src\hac_pack.ads       hac_samples\compatibility
-copy ..\hac\src\hac_pack.adb       hac_samples\compatibility
+copy ..\hac\src\hal.ads            hac_samples\compatibility
+copy ..\hac\src\hal.adb            hac_samples\compatibility
 
 set samples=hac_samples\algorithms\* hac_samples\scripts\* hac_samples\templates\* hac_samples\compatibility\* 
 

@@ -1,7 +1,7 @@
 with LEA_Common.Syntax;
 with LEA_GWin.MDI_Child;
 
-with HAC_Pack;
+with HAL;
 
 with Zip, UnZip.Streams, Zip_Streams;
 
@@ -19,12 +19,13 @@ package body LEA_GWin.Help is
     Is_Help     :        Boolean
   )
   is
-    use LEA_Common, LEA_Common.Syntax, Zip_Streams, LEA_GWin.MDI_Child, HAC_Pack,
-        GWindows.Message_Boxes;
+    use LEA_Common, LEA_Common.Syntax, LEA_GWin.MDI_Child,
+        HAL,
+        GWindows.Message_Boxes, Zip_Streams;
     lea_exe : constant String := Ada.Command_Line.Command_Name;
     zi : Zip.Zip_info;
     mem_stream_unpacked : aliased Memory_Zipstream;
-    unpacked : HAC_Pack.VString;
+    unpacked : HAL.VString;
     already_open: Boolean := False;
     --
     procedure Check_help_doc (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)

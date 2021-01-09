@@ -8,7 +8,7 @@ with LEA_Resource_GUI;
 
 with HAC_Sys, Zip;
 
-with HAC_Pack;
+with HAL;
 
 with GWindows.Application,
      GWindows.Base,
@@ -90,11 +90,11 @@ package body LEA_GWin.Modal_Dialogs is
   end Show_About_Box;
 
   procedure Browse_and_Get_Code_Sample (Main_Window : in out MDI_Main.MDI_Main_Type) is
-    use HAC_Pack, LEA_Resource_GUI, LEA_Common, LEA_Common.HAC_Samples, GWindows.Common_Controls;
+    use LEA_Resource_GUI, LEA_Common, LEA_Common.HAC_Samples, GWindows.Common_Controls;
     box : HAC_example_box_Type;
     --
     row : Natural := 0;
-    fn, dir : array (standard_sample'Range) of VString;
+    fn, dir : array (standard_sample'Range) of HAL.VString;
     --
     sel_topic : Sample_Topic := Template;
     --
