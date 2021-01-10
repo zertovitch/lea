@@ -36,8 +36,9 @@ package LEA_Common.HAC_Samples is
       --
       (Template,  +"hello.adb",     +"Tiny program (Hello World)"),
       --
-      (Compatibility, +"hal.ads", +"Package specification of HAL for use with a full Ada system"),
-      (Compatibility, +"hal.adb", +"Package body of HAL for use with a full Ada system")
+      (Compatibility, +"hal.ads",              +"Package specification of HAL for use with a full Ada system"),
+      (Compatibility, +"hal.adb",              +"Package body of HAL for use with a full Ada system"),
+      (Compatibility, +"hal-non_standard.adb", +"GNAT-specific part of HAL's body")
     );
 
   directory : array (Sample_Topic) of VString :=

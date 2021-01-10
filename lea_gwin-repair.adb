@@ -1,13 +1,14 @@
-with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
-with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
+with LEA_GWin.MDI_Child;
 
-with HAC_Sys.Defs;
-with HAC_Sys.UErrors;
+with HAC_Sys.Defs,
+     HAC_Sys.UErrors;
 
-with GWindows.Base;
+with HAL;
 
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with GWindows.Scintilla;
+with GWindows.Base,
+     GWindows.Scintilla;
+
+with Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.Repair is
 
@@ -16,7 +17,10 @@ package body LEA_GWin.Repair is
     repair   : in out LEA_GWin.Messages.Editor_repair_information
   )
   is
-    use HAC_Sys.Defs, HAC_Sys.UErrors, GWindows.Base;
+    use LEA_GWin.MDI_Child, LEA_GWin.MDI_Main,
+        HAC_Sys.Defs, HAC_Sys.UErrors,
+        GWindows.Base,
+        Ada.Strings.Wide_Unbounded;
     --
     procedure Repair_in_editor (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
@@ -47,7 +51,7 @@ package body LEA_GWin.Repair is
                 pw.Editor.SetSel (line_pos + repair.col_a, line_pos + repair.col_z);
                 pw.Editor.Clear;
             end case;
-            pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (HAC_Sys.Defs.To_String (repair.text)) & Optional_EOL);
+            pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (HAL.VStr_Pkg.To_String (repair.text)) & Optional_EOL);
             pw.Editor.EndUndoAction;
           end if;
         end;
@@ -59,7 +63,7 @@ package body LEA_GWin.Repair is
     end if;
     MDI_Main.Open_Child_Window_And_Load (repair.file, repair.line, repair.col_a, repair.col_z);
     --  At this point, focus is on the editor window (if the file still exists).
-    Enumerate_Children(
+    Enumerate_Children (
       MDI_Client_Window (MDI_Main).all,
       Repair_in_editor'Unrestricted_Access
     );
