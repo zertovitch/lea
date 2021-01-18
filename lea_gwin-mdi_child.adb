@@ -6,7 +6,7 @@ with LEA_GWin.Modal_Dialogs;            use LEA_GWin.Modal_Dialogs;
 with LEA_GWin.Run_Windowed;
 with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
 
-with HAC_Sys.Compiler, HAC_Sys.Defs;
+with HAC_Sys.Defs;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
@@ -469,13 +469,13 @@ package body LEA_GWin.MDI_Child is
     case MDI_Child.MDI_Parent.opt.toolset is
       when HAC_mode =>
         --  Compilation should be quick enough to avoid the "check syntax" special case
-        MDI_Child.Compile_single;
+        MDI_Child.Build_as_Main;
       when GNAT_mode =>
         null;
     end case;
   end Check_syntax;
 
-  procedure Compile_single (MDI_Child : in out MDI_Child_Type) is
+  procedure Build_as_Main (MDI_Child : in out MDI_Child_Type) is
     MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     count: Natural := 0;
@@ -527,7 +527,7 @@ package body LEA_GWin.MDI_Child is
       count := count + 1;
     end LEA_HAC_Feedback;
     use_editor_stream: constant Boolean := True;
-    use HAC_Sys.Compiler, Ada.Streams.Stream_IO;
+    use HAC_Sys.Builder, Ada.Streams.Stream_IO;
     f: File_Type;
     file_name : constant String := G2S (GU2G (MDI_Child.File_Name));
   begin
@@ -536,26 +536,26 @@ package body LEA_GWin.MDI_Child is
         if use_editor_stream then
           --  We connect the main editor input stream to this window's editor.
           MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
-          Set_Source_Stream (
-            MDI_Child.CD,
+          Set_Main_Source_Stream (
+            MDI_Child.BD,
             MDI_Child.MDI_Parent.current_editor_stream'Access,
             file_name);
         else
           --  In case the file is not open in an editor window in LEA, we use Stream_IO.
           Open (f, In_File, file_name);
-          Set_Source_Stream (MDI_Child.CD, Stream (f), file_name);
+          Set_Main_Source_Stream (MDI_Child.BD, Stream (f), file_name);
         end if;
         ml.Clear;
         ml.Set_Column ("Line",     0, 60);
         ml.Set_Column ("Message",  1, 800);
-        Set_Error_Pipe (MDI_Child.CD, LEA_HAC_Feedback'Unrestricted_Access);
-        Compile_Main (MDI_Child.CD);
+        Set_Error_Pipe (MDI_Child.BD, LEA_HAC_Feedback'Unrestricted_Access);
+        Build_Main (MDI_Child.BD);
         if not use_editor_stream then
           Close (f);
         end if;
-        Set_Error_Pipe (MDI_Child.CD, null);
+        Set_Error_Pipe (MDI_Child.BD, null);
         --  Here we have a single-unit build, from the current child window:
-        MDI_Main.build_successful := Unit_Compilation_Successful (MDI_Child.CD);
+        MDI_Main.build_successful := Build_Successful (MDI_Child.BD);
         if count = 0 then
           ml.Insert_Item ("----", 0);
           ml.Set_Sub_Item (blurb_1, 0, 1);
@@ -571,7 +571,7 @@ package body LEA_GWin.MDI_Child is
       when GNAT_mode =>
         null;
     end case;
-  end Compile_single;
+  end Build_as_Main;
 
   procedure Build (MDI_Child : in out MDI_Child_Type) is
   begin
@@ -579,7 +579,7 @@ package body LEA_GWin.MDI_Child is
       when HAC_mode =>
         case MDI_Child.MDI_Parent.opt.view_mode is
           when Notepad =>
-            MDI_Child.Compile_single;
+            MDI_Child.Build_as_Main;
           when Studio =>
             null;
             --  !!  In project/studio mode, we will build
@@ -649,7 +649,7 @@ package body LEA_GWin.MDI_Child is
         MDI_Child.Editor.Bookmark_previous;
       --  Compile / Build actions
       when IDM_Check_syntax   =>  MDI_Child.Check_syntax;
-      when IDM_Compile_single =>  MDI_Child.Compile_single;
+      when IDM_Compile_single =>  MDI_Child.Build_as_Main;
       when IDM_Build          =>  MDI_Child.Build;
       when IDM_Build_and_run  =>  MDI_Child.Build_and_run;
       --

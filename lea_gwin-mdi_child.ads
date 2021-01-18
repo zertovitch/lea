@@ -5,7 +5,7 @@ with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
 
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
-with HAC_Sys.Co_Defs;
+with HAC_Sys.Builder;
 
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Drawing;
@@ -88,7 +88,7 @@ package LEA_GWin.MDI_Child is
         last_op_comment_2: GString_Unbounded;
         save_all_hint    : Boolean;  --  Used during Update_display only.
         --
-        CD               : HAC_Sys.Co_Defs.Compiler_Data;
+        BD               : HAC_Sys.Builder.Build_Data;
       end record;
 
   overriding procedure On_Create (MDI_Child : in out MDI_Child_Type);
@@ -159,7 +159,7 @@ package LEA_GWin.MDI_Child is
   --  Compile / Build actions
 
   procedure Check_syntax   (MDI_Child : in out MDI_Child_Type);
-  procedure Compile_single (MDI_Child : in out MDI_Child_Type);
+  procedure Build_as_Main (MDI_Child : in out MDI_Child_Type);
   procedure Build          (MDI_Child : in out MDI_Child_Type);
   procedure Build_and_run  (MDI_Child : in out MDI_Child_Type);
 

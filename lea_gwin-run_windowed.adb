@@ -187,7 +187,7 @@ begin
         delay 0.03;
       end loop;
       MDI_Child.MDI_Parent.Disable;
-      Windowed_interpret (MDI_Child.CD, unhandled);  --  Running the HAC program happens here.
+      Windowed_interpret (MDI_Child.BD, unhandled);  --  Running the HAC program happens here.
       --  Scroll to last output line:
       MDI_Child.MDI_Parent.Message_Panel.Message_List.Ensure_Visible (
         MDI_Child.MDI_Parent.Message_Panel.Message_List.Item_Count - 1,
