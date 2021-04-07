@@ -81,7 +81,8 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
   begin
     Message_Box (MDI_Main,
       "Unhandled exception - run-time error",
-      S2G ("HAC VM: raised " & Image (unhandled)),
+      S2G ("HAC VM: raised " & Image (unhandled)) & NL & NL &
+      S2G (Message (unhandled)),
       Icon => Exclamation_Icon
     );
     ml.Clear;
