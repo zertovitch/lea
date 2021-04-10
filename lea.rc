@@ -87,7 +87,6 @@ Menu_MDI_Child MENU
     }
     POPUP "&Actions"
     {
-        MENUITEM "Check &syntax && semantics", IDM_Check_syntax
         MENUITEM "&Compile this file\tShift-F4", IDM_Compile_single
         MENUITEM "&Build application\tF4", IDM_Build
         MENUITEM "Build and &run\tF9", IDM_Build_and_run
@@ -157,7 +156,6 @@ Menu_MDI_Main MENU
     }
     POPUP "&Actions"
     {
-        MENUITEM "Check &syntax && semantics", IDM_Check_syntax, INACTIVE
         MENUITEM "&Compile this file\tShift-F4", IDM_Compile_single, INACTIVE
         MENUITEM "&Build application\tF4", IDM_Build, INACTIVE
         MENUITEM "Build and &run\tF9", IDM_Build_and_run, INACTIVE
@@ -410,8 +408,8 @@ LEA_Icon           ICON           "ico_bmp/lea.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     0,7,7,0
-    PRODUCTVERSION  0,7,7,0
+    FILEVERSION     0,7,8,0
+    PRODUCTVERSION  0,7,8,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -424,7 +422,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.77"
+            VALUE "FileVersion", "0.78"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2021"
             VALUE "ProductName", "LEA"
         }

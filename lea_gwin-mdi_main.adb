@@ -177,7 +177,7 @@ package body LEA_GWin.MDI_Main is
 --        Icon => Exclamation_Icon
 --      );
     when Ada.Text_IO.Name_Error =>
-      Message_Box(MDI_Main, "Error", "Archive file not found", Icon => Exclamation_Icon);
+      Message_Box(MDI_Main, "Error", "File not found", Icon => Exclamation_Icon);
   end Open_Child_Window_And_Load;
 
   procedure On_Button_Select (

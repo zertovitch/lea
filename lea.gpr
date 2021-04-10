@@ -57,24 +57,47 @@ project LEA is
          for Object_Dir use "obj/fast_ming";
    end case;
 
+   Common_Compiler_Options := (
+     "-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
+     "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
+     "-gnatwcijkmopruvz.c.p.t.w.x",  --  Warnings switches (run "gnatmake" for full list)
+     "-gnatf",  --  Full errors. Verbose details, all undefined references
+     "-gnatq",  --  Don't quit, try semantics, even if parse errors
+     "-gnatQ",  --  Don't quit, write ali/tree file even if compile errors
+     --
+     "-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
+     "-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
+     "-gnatyx",       --  Style: check x:no extra parens
+     "-gnatye",       --  Style: check e:end/exit labels present
+     --  "-gnatytc",      --  Style: check t:token separation rules, c:comment format (two spaces)
+     "-gnatec=" & project'Project_Dir & "lea_elim.pra"
+   );
+   
+   Debug_Options := (
+     "-gnata",         --  Assertions enabled
+     "-gnato",         --  Enable overflow checking in STRICT mode
+     "-gnatVa",        --  Enable all validity checking options
+     "-fstack-check",
+     "-fno-inline",
+     --
+     "-gnatec=" & project'Project_Dir & "debug.pra",
+     "-g"              --  Generate debugging information
+   );
+
+   Fast_Options := (
+     "-O2",
+     "-gnatpn", 
+     "-fipa-cp-clone", "-fgcse-after-reload", 
+     "-funroll-loops", "-fpeel-loops", "-funswitch-loops", 
+     "-ftracer", "-fweb", "-ftree-vectorize",
+     "-frename-registers", "-ffunction-sections",
+     "-g"     
+   );
+
    package Compiler is
-
       case Build_Mode is
-
-         when "Debug" | "Debug_MinGW" =>
-            for Default_Switches ("ada") use (
-              "-gnatyaknpr",  --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
-              "-gnatybfhiu",  --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
-              "-gnatyx",      --  Style: check x:no extra parens
-              --  "-gnatye",      --  Style: check e:end/exit labels present
-              --  "-gnatytc",     --  Style: check t:token separation rules, c:comment format (two spaces)
-              "-gnato", "-fno-inline", "-fstack-check", "-g", "-gnatwa", "-gnatVa",
-              "-gnatec=" & project'Project_Dir & "debug.pra",
-              "-gnatec=" & project'Project_Dir & "lea_elim.pra");
-
-         when "Fast" | "Fast_MinGW" =>
-            for Default_Switches ("ada") use ("-O2", "-gnatn", "-gnatp", "-gnatwa", "-fno-strict-aliasing", "-funroll-loops", "-fpeel-loops", "-ftracer", "-funswitch-loops", "-fweb", "-frename-registers",
-              "-gnatec=" & project'Project_Dir & "lea_elim.pra");
+         when "Debug" | "Debug_MinGW" => for Default_Switches ("ada") use Common_Compiler_Options & Debug_Options;
+         when "Fast"  | "Fast_MinGW"  => for Default_Switches ("ada") use Common_Compiler_Options & Fast_Options;
       end case;
    end Compiler;
 

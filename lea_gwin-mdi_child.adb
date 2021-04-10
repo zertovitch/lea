@@ -32,13 +32,13 @@ package body LEA_GWin.MDI_Child is
     eol_indicator     : constant := 130 + selection;
     ansi_unicode      : constant := 120 + eol_indicator;
     ins_ovr           : constant :=  30 + ansi_unicode;
-  end;
+  end Status_bar_parts;
 
   overriding procedure On_Click (Bar : in out MDI_Child_Status_Bar_Type) is
     x : Integer;
     parent : MDI_Child_Type renames MDI_Child_Type (Bar.Parent.all);
     use Status_bar_parts;
-    frame_width: constant := 8;  --  A hack, guessing the window frame's width
+    frame_width : constant := 8;  --  A hack, guessing the window frame's width
   begin
     x := Get_Cursor_Position.X;
     --  NB: parent.Left is the absolute position of the MDI
@@ -49,15 +49,15 @@ package body LEA_GWin.MDI_Child is
     end if;
   end On_Click;
 
-  function Folder_Focus(MDI_Child : in MDI_Child_Type) return Boolean is
+  function Folder_Focus (MDI_Child : in MDI_Child_Type) return Boolean is
   begin
     return
       MDI_Child.MDI_Parent.opt.view_mode = Studio; --  !!  and then
       --  !! MDI_Child.Focus = MDI_Child.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
-  procedure Update_status_bar(MDI_Child : in out MDI_Child_Type) is
-    pos, sel_a, sel_z: Scintilla.Position;
+  procedure Update_status_bar (MDI_Child : in out MDI_Child_Type) is
+    pos, sel_a, sel_z : Scintilla.Position;
   begin
     if MDI_Child.File_Name = Null_GString_Unbounded then
       MDI_Child.Status_Bar.Text("No file", 0);
@@ -231,7 +231,7 @@ package body LEA_GWin.MDI_Child is
     --  the menu indicated with Window_Menu (should be the one with Cascade/Tile/...).
     MDI_Child.MDI_Menu(MDI_Child.Menu.Main, Window_Menu => 7);
 
-    -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
+    --  Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
       memo_unmaximized_children: constant Boolean:=
         not MDI_Child.MDI_Parent.opt.MDI_childen_maximized;
@@ -260,7 +260,7 @@ package body LEA_GWin.MDI_Child is
       MDI_Child.Zoom;
       MDI_Main.Redraw_all;
     end if;
-    -- Show things in the main status bar - effective only after Thaw!
+    --  Show things in the main status bar - effective only after Thaw!
   end Finish_subwindow_opening;
 
   procedure Save (MDI_Child    : in out MDI_Child_Type;
@@ -454,12 +454,11 @@ package body LEA_GWin.MDI_Child is
 
   procedure On_Size (MDI_Child : in out MDI_Child_Type;
                      Width  : in     Integer;
-                     Height : in     Integer) is
-    pragma Warnings (Off, Width);   -- only client area is considered
-    pragma Warnings (Off, Height);  -- only client area is considered
+                     Height : in     Integer)
+  is
   begin
     if MDI_Child.MDI_Parent.User_maximize_restore then
-      MDI_Child.MDI_Parent.opt.MDI_childen_maximized:= Zoom (MDI_Child);
+      MDI_Child.MDI_Parent.opt.MDI_childen_maximized := Zoom (MDI_Child);
     end if;
     Dock_Children (MDI_Child);
   end On_Size;
@@ -478,13 +477,10 @@ package body LEA_GWin.MDI_Child is
   procedure Build_as_Main (MDI_Child : in out MDI_Child_Type) is
     MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
-    count: Natural := 0;
-    displayed_compilation_file_name: Unbounded_String;
-    blurb_1: constant GString := "Caution: HAC is not a complete Ada compiler!";
-    blurb_2: constant GString := "[HAC to P-Code] ";
+    count, err_count : Natural := 0;
     use HAC_Sys.Defs;
     --
-    procedure LEA_HAC_Feedback (
+    procedure LEA_HAC_Error_Feedback (
       message         : String;
       file_name       : String;
       line            : Natural;
@@ -495,7 +491,7 @@ package body LEA_GWin.MDI_Child is
      )
     is
     pragma Unreferenced (kind);
-      msg_up: String := message;
+      msg_up : String := message;
       extended_repair : LEA_GWin.Messages.Editor_repair_information;
     begin
       Repair_kit (extended_repair) := repair;
@@ -504,14 +500,7 @@ package body LEA_GWin.MDI_Child is
       extended_repair.col_a := column_a;
       extended_repair.col_z := column_z;
       --
-      msg_up(msg_up'First) := To_Upper (msg_up(msg_up'First));
-      if displayed_compilation_file_name /= file_name then
-        --  Compilation unit has changed, show its name.
-        ml.Insert_Item ("----", count);
-        ml.Set_Sub_Item (blurb_2 & S2G (file_name), count, 1);
-        count := count + 1;
-        displayed_compilation_file_name := To_Unbounded_String (file_name);
-      end if;
+      msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
       ml.Insert_Item (
         Trim (Integer'Wide_Image (line), Left),
         count,
@@ -519,17 +508,39 @@ package body LEA_GWin.MDI_Child is
       );
       --  Here we set a payload in order to get the source file and position
       --  when selecting a row in the error / warnings message list.
-      ml.Item_Data(
+      ml.Item_Data (
         count,
         new LEA_GWin.Messages.Editor_repair_information'(extended_repair)
       );
-      ml.Set_Sub_Item (S2G (msg_up), count, 1);  --   & column_a'Img & column_z'Img
+      ml.Set_Sub_Item (S2G (msg_up), count, 1);
       count := count + 1;
-    end LEA_HAC_Feedback;
-    use_editor_stream: constant Boolean := True;
+      err_count := err_count + 1;
+    end LEA_HAC_Error_Feedback;
+    --
+    procedure LEA_HAC_Compilation_Feedback (message : String) is
+    begin
+      ml.Insert_Item ("----", count);
+      ml.Set_Sub_Item (S2G (message), count, 1);
+      count := count + 1;
+    end LEA_HAC_Compilation_Feedback;
+    --
+    use_editor_stream : constant Boolean := True;
+    --  ^ So far we don't set a main file name elsewhere, so we
+    --    can always use the editor data as a stream.
     use HAC_Sys.Builder, Ada.Streams.Stream_IO;
-    f: File_Type;
-    file_name : constant String := G2S (GU2G (MDI_Child.File_Name));
+    f : File_Type;
+    file_name  : constant String := G2S (GU2G (MDI_Child.File_Name));
+    short_name : constant String := G2S (GU2G (MDI_Child.Short_Name));
+    --
+    function Best_Name return String is
+    begin
+      if file_name = "" then  --  For example, an unsaved template.
+        return short_name;
+      else
+        return file_name;
+      end if;
+    end Best_Name;
+    --
   begin
     case MDI_Child.MDI_Parent.opt.toolset is
       when HAC_mode =>
@@ -539,30 +550,31 @@ package body LEA_GWin.MDI_Child is
           Set_Main_Source_Stream (
             MDI_Child.BD,
             MDI_Child.MDI_Parent.current_editor_stream'Access,
-            file_name);
+            Best_Name);
         else
-          --  In case the file is not open in an editor window in LEA, we use Stream_IO.
+          --  In case the file is not open in an editor window in LEA,
+          --  we use Stream_IO.
           Open (f, In_File, file_name);
-          Set_Main_Source_Stream (MDI_Child.BD, Stream (f), file_name);
+          Set_Main_Source_Stream (MDI_Child.BD, Stream (f), Best_Name);
         end if;
         ml.Clear;
         ml.Set_Column ("Line",     0, 60);
         ml.Set_Column ("Message",  1, 800);
-        Set_Error_Pipe (MDI_Child.BD, LEA_HAC_Feedback'Unrestricted_Access);
+        Set_Message_Feedbacks (
+          MDI_Child.BD,
+          LEA_HAC_Error_Feedback'Unrestricted_Access,
+          LEA_HAC_Compilation_Feedback'Unrestricted_Access
+        );
         Build_Main (MDI_Child.BD);
         if not use_editor_stream then
           Close (f);
         end if;
-        Set_Error_Pipe (MDI_Child.BD, null);
+        Set_Message_Feedbacks (MDI_Child.BD, null, null);
         --  Here we have a single-unit build, from the current child window:
         MDI_Main.build_successful := Build_Successful (MDI_Child.BD);
-        if count = 0 then
-          ml.Insert_Item ("----", 0);
-          ml.Set_Sub_Item (blurb_1, 0, 1);
-          ml.Insert_Item ("----", 1);
-          ml.Set_Sub_Item (blurb_2 & GU2G (MDI_Child.File_Name), 1, 1);
-          ml.Insert_Item ("", 2);
-          ml.Set_Sub_Item ("No error, no warning", 2, 1);
+        if err_count = 0 then
+          ml.Insert_Item ("", count);
+          ml.Set_Sub_Item ("No error, no warning", count, 1);
         else
           --  Jump on first error
           ml.Selected (1, True);
@@ -600,7 +612,9 @@ package body LEA_GWin.MDI_Child is
 
   procedure On_Menu_Select (
         MDI_Child : in out MDI_Child_Type;
-        Item      : in     Integer        ) is
+        Item      : in     Integer
+  )
+  is
   begin
     case Item is
       when IDM_Save_File =>
@@ -727,10 +741,10 @@ package body LEA_GWin.MDI_Child is
   end On_Close;
 
   procedure Show_Search_Box (MDI_Child : in out MDI_Child_Type) is
-    sel_a, sel_z: Scintilla.Position;
+    sel_a, sel_z : Scintilla.Position;
   begin
-    sel_a:= MDI_Child.Editor.GetSelectionStart;
-    sel_z:= MDI_Child.Editor.GetSelectionEnd;
+    sel_a := MDI_Child.Editor.GetSelectionStart;
+    sel_z := MDI_Child.Editor.GetSelectionEnd;
     if sel_z > sel_a then
       --  Goodie: put the selected text into the "find" box.
       MDI_Child.MDI_Parent.Search_box.Find_box.Text (MDI_Child.Editor.GetTextRange (sel_a, sel_z));

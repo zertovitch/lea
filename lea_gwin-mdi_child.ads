@@ -22,7 +22,7 @@ package LEA_GWin.MDI_Child is
   type MDI_Child_Type;
   type MDI_Child_Access is access all MDI_Child_Type;
 
-  type MDI_Child_Status_bar_part is (directory_info, task_message );
+  type MDI_Child_Status_bar_part is (directory_info, task_message);
 
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
