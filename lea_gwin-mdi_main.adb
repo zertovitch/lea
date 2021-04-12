@@ -72,7 +72,7 @@ package body LEA_GWin.MDI_Main is
   is
   begin
     if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
-      -- !! some content refresh, dbl buffering
+      --  !! some content refresh, dbl buffering
       Any_Window.Redraw;
     end if;
   end Redraw_Child;
@@ -80,7 +80,7 @@ package body LEA_GWin.MDI_Main is
   procedure Redraw_all (MDI_Main: in out MDI_Main_Type) is
   begin
     MDI_Main.Redraw;
-    -- Redraw(MDI_Main.Tool_bar);
+    --  Redraw(MDI_Main.Tool_bar);
     Enumerate_Children(MDI_Client_Window (MDI_Main).all, Redraw_Child'Access);
   end Redraw_all;
 
@@ -117,67 +117,71 @@ package body LEA_GWin.MDI_Main is
     Col_a, Col_z :        Integer := -1
   )
   is
-    is_open: Boolean;
+    is_open, file_loaded: Boolean;
     mru_line : Integer := -1;
     new_pos_a, new_pos_z : GWindows.Scintilla.Position;
+    New_Window : MDI_Child_Access;
   begin
     Focus_an_already_opened_window ( MDI_Main, File_Name, Line, Col_a, Col_z, is_open );
     if is_open then
       return;        -- nothing to do, document already in a window
     end if;
-    declare
-      New_Window : constant MDI_Child_Access := new MDI_Child_Type;
+    New_Window := new MDI_Child_Type;
+    --  We do here like Excel or Word: close the unused blank window
+    Close_extra_first_child (MDI_Main);
+    --
+    MDI_Main.User_maximize_restore:= False;
+    New_Window.File_Name:= File_Name;
+    Create_MDI_Child (New_Window.all,
+      MDI_Main,
+      GU2G (File_Title),
+      Is_Dynamic => True
+    );
+    New_Window.Short_Name:= File_Title;
+    MDI_Active_Window (MDI_Main, New_Window.all);
     begin
-      -- We do here like Excel or Word: close the unused blank window
-      Close_extra_first_child (MDI_Main);
-      --
-      MDI_Main.User_maximize_restore:= False;
-      New_Window.File_Name:= File_Name;
-      Create_MDI_Child (New_Window.all,
-        MDI_Main,
-        GU2G (File_Title),
-        Is_Dynamic => True
-      );
-      New_Window.Short_Name:= File_Title;
-      MDI_Active_Window (MDI_Main, New_Window.all);
+      New_Window.Editor.Load_text;
+      file_loaded := True;
       for m of MDI_Main.opt.mru loop
         if m.name = New_Window.File_Name then
-          mru_line := m.line;
+          mru_line := m.line;  --  This will put MRU item on top.
           exit;
         end if;
       end loop;
       Update_Common_Menus (MDI_Main, GU2G(New_Window.File_Name), mru_line);
-      New_Window.Editor.Load_text;
-      New_Window.Finish_subwindow_opening;
-      New_Window.Editor.syntax_kind :=
-        Guess_syntax (GU2G (New_Window.File_Name),
-                      GU2G (MDI_Main.opt.ada_files_filter)
-        );
-      New_Window.Editor.Set_Scintilla_Syntax;
-      New_Window.Editor.Focus;
-      --  NB: Scintilla lines are 0-based
-      if Line > -1 then
-        New_Window.Editor.Set_current_line (Line);
-      elsif mru_line > -1 then
-        --  Set cursor position to memorized line number
-        New_Window.Editor.Set_current_line (mru_line);
-      end if;
-      if Col_a > -1 then
-        new_pos_a := New_Window.Editor.GetCurrentPos + Col_a;
-        new_pos_z := New_Window.Editor.GetCurrentPos + Col_z;
-        New_Window.Editor.SetSel (new_pos_a, new_pos_z);
-      end if;
+    exception
+      when Ada.Text_IO.Name_Error =>
+        file_loaded := False;
     end;
-  exception
---    when E : TC.Input.Load_Error =>
---      Message_Box(
---        MDI_Main,
---        "Error when loading archive data",
---        Ada.Exceptions.Exception_Message(E),
---        Icon => Exclamation_Icon
---      );
-    when Ada.Text_IO.Name_Error =>
-      Message_Box(MDI_Main, "Error", "File not found", Icon => Exclamation_Icon);
+    New_Window.Finish_subwindow_opening;
+    New_Window.Editor.syntax_kind :=
+      Guess_syntax (GU2G (New_Window.File_Name),
+                    GU2G (MDI_Main.opt.ada_files_filter)
+      );
+    New_Window.Editor.Set_Scintilla_Syntax;
+    New_Window.Editor.Focus;
+    --  NB: Scintilla lines are 0-based
+    if Line > -1 then
+      New_Window.Editor.Set_current_line (Line);
+    elsif mru_line > -1 then
+      --  Set cursor position to memorized line number
+      New_Window.Editor.Set_current_line (mru_line);
+    end if;
+    if Col_a > -1 then
+      new_pos_a := New_Window.Editor.GetCurrentPos + Col_a;
+      new_pos_z := New_Window.Editor.GetCurrentPos + Col_z;
+      New_Window.Editor.SetSel (new_pos_a, new_pos_z);
+    end if;
+    if not file_loaded then
+      Message_Box (MDI_Main,
+        "Error",
+        "File " & GU2G (File_Name) & " not found",
+        Icon => Exclamation_Icon
+      );
+      --  Prevent MRU name addition:
+      New_Window.File_Name := Null_GString_Unbounded;
+      New_Window.Close;
+    end if;
   end Open_Child_Window_And_Load;
 
   procedure On_Button_Select (
@@ -284,7 +288,7 @@ package body LEA_GWin.MDI_Main is
     end case;
     --  Call to On_Size for having splitters adjusted
     MDI_Main.On_Size (MDI_Main.Width, MDI_Main.Height);
-    -- (needed??) Update_display(MDI_Child, status_bar);
+    --  (needed??) Update_display(MDI_Child, status_bar);
     case new_view is
       when Notepad =>
         null;
@@ -318,7 +322,7 @@ package body LEA_GWin.MDI_Main is
   procedure On_Create ( MDI_Main : in out MDI_Main_Type ) is
     use GWindows.Common_Controls, Ada.Command_Line;
     --
-    -- Replace LEA default values by system-dependent ones (here those of GWindows)
+    --  Replace LEA default values by system-dependent ones (here those of GWindows)
     --
     procedure Replace_default(x: in out Integer) is
     begin
@@ -404,9 +408,9 @@ package body LEA_GWin.MDI_Main is
 
     if Argument_Count=0 then
       On_File_New (MDI_Main, extra_first_doc => True);
-      -- ^ The MS Office-like first, empty document
+      --  ^ The MS Office-like first, empty document
     end if;
-    -- !! This works on 1st instance only:
+    --  !! This works on 1st instance only:
     for i in 1 .. Argument_Count loop
       declare
         a : constant String := Argument (i);
@@ -460,11 +464,11 @@ package body LEA_GWin.MDI_Main is
     if MDI_Main.record_dimensions and
        not (Zoom(MDI_Main) or Minimized(MDI_Main))
     then
-      -- ^ Avoids recording dimensions before restoring them
+      --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
       MDI_Main.opt.win_left  := Left;
       MDI_Main.opt.win_top   := Top;
-      -- Will remember position if moved, maximized and closed
+      --  Will remember position if moved, maximized and closed
     end if;
   end On_Move;
 
@@ -492,11 +496,11 @@ package body LEA_GWin.MDI_Main is
     --  Call Dock_Children for the finishing touch...
     MDI_Main.Dock_Children;
     if MDI_Main.record_dimensions and not (MDI_Main.Zoom or Minimized (MDI_Main)) then
-      -- ^ Avoids recording dimensions before restoring them
+      --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
       MDI_Main.opt.win_width := Width;
       MDI_Main.opt.win_height:= Height;
-      -- Will remember position if sized, maximized and closed
+      --  Will remember position if sized, maximized and closed
     end if;
   end On_Size;
 
@@ -531,12 +535,12 @@ package body LEA_GWin.MDI_Main is
     New_Window.Short_Name:= G2GU(File_Title);
     MDI_Active_Window (MDI_Main, New_Window.all);
 
-    -- Transfer user-defined default options:
-    -- New_Window.xxx.Opt:= Gen_Opt.Options_For_New;
-    -- Refresh_size_dependent_parameters(
+    --  Transfer user-defined default options:
+    --  New_Window.xxx.Opt:= Gen_Opt.Options_For_New;
+    --  Refresh_size_dependent_parameters(
     --  New_Window.Draw_Control.Picture,
     --  objects => True
-    -- );
+    --  );
 
     New_MDI_window_counter := New_MDI_window_counter + 1;
 
@@ -716,17 +720,17 @@ package body LEA_GWin.MDI_Main is
       MDI_Main.opt.win_height:= Height(MDI_Main);
     end if;
 
-    -- TC.GWin.Options.Save;
+    --  TC.GWin.Options.Save;
 
     My_MDI_Close_All(MDI_Main);
-    -- ^ Don't forget to save unsaved files !
-    -- Operation can be cancelled by user for one unsaved picture.
+    --  ^ Don't forget to save unsaved files !
+    --  Operation can be cancelled by user for one unsaved picture.
     Can_Close:= MDI_Main.Success_in_enumerated_close;
     --
     if Can_Close then
       Windows_persistence.Save(MDI_Main.opt);
-      -- !! Trick to remove a strange crash on Destroy_Children
-      -- !! on certain Windows platforms - 29-Jun-2012
+      --  !! Trick to remove a strange crash on Destroy_Children
+      --  !! on certain Windows platforms - 29-Jun-2012
       GWindows.Base.On_Exception_Handler (Handler => null);
       --
       Windows_Timers.Kill_Timer(MDI_Main, timer_id);
@@ -825,7 +829,7 @@ package body LEA_GWin.MDI_Main is
       begin
         Update_MRU_Menu(cw.MDI_Parent.all, cw.Menu.Popup_0001);
         Update_View_Menu(cw.Menu.Main, cw.MDI_Parent.opt);
-        -- Update_Toolbar_Menu(cw.View_menu, cw.MDI_Parent.Floating_toolbars);
+        --  Update_Toolbar_Menu(cw.View_menu, cw.MDI_Parent.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
@@ -842,7 +846,7 @@ package body LEA_GWin.MDI_Main is
     end if;
     Update_MRU_Menu(MDI_Main, MDI_Main.Menu.Popup_0001);
     Update_View_Menu(MDI_Main.Menu.Main, MDI_Main.opt);
-    -- Update_Toolbar_Menu(MDI_Main.View_menu, MDI_Main.Floating_toolbars);
+    --  Update_Toolbar_Menu(MDI_Main.View_menu, MDI_Main.Floating_toolbars);
     GWindows.Base.Enumerate_Children(
       MDI_Client_Window (MDI_Main).all,
       Update_Common_Menus_Child'Access

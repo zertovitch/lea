@@ -24,7 +24,7 @@ package LEA_GWin.MDI_Main is
 
   procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
                               Item    : in     Integer);
-  -- Handle click on toolbar
+  --  Handle click on toolbar
 
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
 
@@ -54,8 +54,8 @@ package LEA_GWin.MDI_Main is
         Project_File_Name      : GString_Unbounded;
         Project_Short_Name     : GString_Unbounded;
         Success_in_enumerated_close: Boolean;
-        -- MRU (Most recently used) files names:
-        -- Menu ID's stored into a handy array
+        --  MRU (Most recently used) files names:
+        --  Menu ID's stored into a handy array
         IDM_MRU                : IDM_MRU_List;
         Tool_Bar               : MDI_Toolbar_Type;
         Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
@@ -65,11 +65,11 @@ package LEA_GWin.MDI_Main is
         Message_Panel          : Message_Panel_Type;
         --
         Menu                   : Menu_MDI_Main_Type;
-        -- record_dimensions      : Boolean:= False; -- in On_Move, On_Size
+        --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean:= True;
-        -- ^ Detect user-triggered max/restore commands
+        --  ^ Detect user-triggered max/restore commands
         record_dimensions      : Boolean:= False; -- in On_Move, On_Size
-        -- Options of a "model" child window.
+        --  Options of a "model" child window.
         opt                    : LEA_Common.User_options.Option_Pack_Type;
         --
         Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
