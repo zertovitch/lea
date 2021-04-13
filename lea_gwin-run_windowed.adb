@@ -20,22 +20,28 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
   function Fake_Argument_Count return Natural is
   begin
     return 0;  --  !! TBD: Add a mode where the arguments are prompted.
-  end;
+  end Fake_Argument_Count;
 
   function Fake_Argument (Number : Positive) return String is
   begin
     return Integer'Image (Number);  --  !! TBD: Add a mode where the arguments are prompted.
-  end;
+  end Fake_Argument;
 
   function HAC_Command_Name return String is
   begin
     return G2S (GU2G (MDI_Child.File_Name));
-  end;
+  end HAC_Command_Name;
 
   procedure Fake_Shell_Execute (Command : String; Result : out Integer) is
   begin
     Result := -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
-  end;
+  end Fake_Shell_Execute;
+
+  procedure Fake_Shell_Execute_Output (Command : String; Result : out Integer; Output : out HAL.VString) is
+  begin
+    Result := -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
+    Output := HAL.Null_VString;
+  end Fake_Shell_Execute_Output;
 
   MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
   ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
@@ -96,7 +102,6 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
   progress_box: Progress_box_Type;
   --
   procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-    pragma Warnings(off, dummy);
   begin
     LEA_GWin.Messages.IO_Pipe.is_aborted_flag:= True;
     --  Will propagate user_abort upon next Boxed_Feedback.
@@ -150,6 +155,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
         Fake_Argument,
         HAC_Command_Name,
         Fake_Shell_Execute,
+        Fake_Shell_Execute_Output,
         HAL.Directory_Separator
       );
 
