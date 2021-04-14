@@ -1,14 +1,14 @@
 ---------------------------------------------------------------------------
--- GUI contents of resource script file: LEA.rc
--- Transcription time: 2021/04/10  21:28:32
--- GWenerator project file: lea.gwen
+--  GUI contents of resource script file: LEA.rc
+--  Transcription time: 2021/04/14  12:31:38
+--  GWenerator project file: lea.gwen
 --
--- Translated by the RC2GW or by the GWenerator tool.
--- URL: http://sf.net/projects/gnavi
+--  Translated by the RC2GW or by the GWenerator tool.
+--  URL: http://sf.net/projects/gnavi
 --
--- This file contains only automatically generated code. Do not edit this.
--- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 20-Jul-2019
+--  This file contains only automatically generated code. Do not edit this.
+--  Rework the resource script instead, and re-run the translator.
+--  RC Grammar version: 20-Jul-2019
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -21,7 +21,7 @@ pragma Warnings ("U");  --  turn off warnings for unused entity
 
 package body LEA_Resource_GUI is
 
-  -- ** Generated code begins here \/ \/ \/.
+  --  ** Generated code begins here \/ \/ \/.
 
   --  Menu at line 29
   procedure Create_Full_Menu
@@ -193,9 +193,9 @@ package body LEA_Resource_GUI is
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned)
   is
-    pragma Warnings (Off, Window);
-    pragma Warnings (Off, dwExStyle);
-    WS_SYSMENU: constant:= 16#0008_0000#;
+    pragma Unmodified (Window);
+    pragma Unmodified (dwExStyle);
+    WS_SYSMENU : constant := 16#0008_0000#;
   begin
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
@@ -215,7 +215,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 289, 225, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 289, 225, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -246,58 +246,58 @@ package body LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
-    x,y,w,h: Integer;
+    x,y,w,h : Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 289, 225, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 289, 225, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  12, 14, 87, 80, x,y,w,h);
-    Create( Window.Static_0001, Window, Num_resource(LEA_Icon), x,y,w,h, GWindows.Static_Controls.Static_Size, Half_Sunken);
-    Dlg_to_Scn(  110, 14, 165, 8, x,y,w,h);
-    Create_Label( Window, "LEA - a Lightweight Editor for Ada", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  110, 29, 165, 8, x,y,w,h);
-    Create( Window.Copyright_label, Window, "Copyright © Gautier de Montmollin 2017 .. 2071", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Copyright_label);
-    Dlg_to_Scn(  110, 44, 120, 8, x,y,w,h);
-    Create_Label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  110, 61, 30, 8, x,y,w,h);
-    Create_Label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  157, 61, 89, 8, x,y,w,h);
-    Create( Window.AZip_URL, Window, "http://l-e-a.sf.net/", x,y,w,h, GWindows.Static_Controls.Left, None, ID => AZip_URL);
-    Dlg_to_Scn(  110, 81, 30, 8, x,y,w,h);
-    Create_Label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  157, 81, 118, 8, x,y,w,h);
-    Create( Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
-    Dlg_to_Scn(  5, 105, 278, 93, x,y,w,h);
+    Dlg_to_Scn ( 12, 14, 87, 80, x,y,w,h);
+    Create (Window.Static_0001, Window, Num_resource (LEA_Icon), x,y,w,h, GWindows.Static_Controls.Static_Size, Half_Sunken);
+    Dlg_to_Scn ( 110, 14, 165, 8, x,y,w,h);
+    Create_Label (Window, "LEA - a Lightweight Editor for Ada", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 110, 29, 165, 8, x,y,w,h);
+    Create (Window.Copyright_label, Window, "Copyright © Gautier de Montmollin 2017 .. 2071", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Copyright_label);
+    Dlg_to_Scn ( 110, 44, 120, 8, x,y,w,h);
+    Create_Label (Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 110, 61, 30, 8, x,y,w,h);
+    Create_Label (Window, "Internet:", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 157, 61, 89, 8, x,y,w,h);
+    Create (Window.AZip_URL, Window, "http://l-e-a.sf.net/", x,y,w,h, GWindows.Static_Controls.Left, None, ID => AZip_URL);
+    Dlg_to_Scn ( 110, 81, 30, 8, x,y,w,h);
+    Create_Label (Window, "Version:", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 157, 81, 118, 8, x,y,w,h);
+    Create (Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
+    Dlg_to_Scn ( 5, 105, 278, 93, x,y,w,h);
     Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
-    Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
-    Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
-    Dlg_to_Scn(  132, 119, 147, 8, x,y,w,h);
-    Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_Version);
-    Dlg_to_Scn(  23, 134, 100, 8, x,y,w,h);
-    Create( Window.HAC_URL, Window, "HAC Ada Compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => HAC_URL);
-    Dlg_to_Scn(  132, 134, 146, 8, x,y,w,h);
-    Create( Window.HAC_Version, Window, "HAC Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => HAC_Version);
-    Dlg_to_Scn(  23, 149, 118, 8, x,y,w,h);
-    Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
-    Dlg_to_Scn(  23, 164, 100, 8, x,y,w,h);
-    Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_URL);
-    Dlg_to_Scn(  132, 164, 146, 8, x,y,w,h);
-    Create( Window.ZipAda_Version, Window, "Zip-Ada Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_Version);
-    Dlg_to_Scn(  23, 179, 170, 8, x,y,w,h);
-    Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ResEdit_URL);
-    Dlg_to_Scn(  87, 201, 115, 19, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDOK_permanent);
-    else -- hide the closing button
-      Hide(Window.IDOK);
+    Dlg_to_Scn ( 23, 119, 100, 8, x,y,w,h);
+    Create (Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
+    Dlg_to_Scn ( 132, 119, 147, 8, x,y,w,h);
+    Create (Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_Version);
+    Dlg_to_Scn ( 23, 134, 100, 8, x,y,w,h);
+    Create (Window.HAC_URL, Window, "HAC Ada Compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => HAC_URL);
+    Dlg_to_Scn ( 132, 134, 146, 8, x,y,w,h);
+    Create (Window.HAC_Version, Window, "HAC Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => HAC_Version);
+    Dlg_to_Scn ( 23, 149, 118, 8, x,y,w,h);
+    Create (Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
+    Dlg_to_Scn ( 23, 164, 100, 8, x,y,w,h);
+    Create (Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_URL);
+    Dlg_to_Scn ( 132, 164, 146, 8, x,y,w,h);
+    Create (Window.ZipAda_Version, Window, "Zip-Ada Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_Version);
+    Dlg_to_Scn ( 23, 179, 170, 8, x,y,w,h);
+    Create (Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ResEdit_URL);
+    Dlg_to_Scn ( 87, 201, 115, 19, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDOK_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDOK);
     end if;
   end Create_Contents;  --  About_box_Type
 
@@ -310,9 +310,9 @@ package body LEA_Resource_GUI is
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned)
   is
-    pragma Warnings (Off, Window);
-    pragma Warnings (Off, dwExStyle);
-    WS_SYSMENU: constant:= 16#0008_0000#;
+    pragma Unmodified (Window);
+    pragma Unmodified (dwExStyle);
+    WS_SYSMENU : constant := 16#0008_0000#;
   begin
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
@@ -332,7 +332,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 186, 47, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 186, 47, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -363,37 +363,37 @@ package body LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
-    x,y,w,h: Integer;
+    x,y,w,h : Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 186, 47, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 186, 47, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  23, 12, 80, 14, x,y,w,h);
-    Create( Window.Line_value_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Line_value_box);
-    Dlg_to_Scn(  126, 25, 50, 17, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDCANCEL_permanent);
-    else -- hide the closing button
-      Hide(Window.IDCANCEL);
+    Dlg_to_Scn ( 23, 12, 80, 14, x,y,w,h);
+    Create (Window.Line_value_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Line_value_box);
+    Dlg_to_Scn ( 126, 25, 50, 17, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  126, 4, 50, 17, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "Go !", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "Go !", x,y,w,h, ID => IDOK);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDOK_permanent);
-    else -- hide the closing button
-      Hide(Window.IDOK);
+    Dlg_to_Scn ( 126, 4, 50, 17, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDOK, Window, "Go !", x,y,w,h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "Go !", x,y,w,h, ID => IDOK);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDOK_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDOK);
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
@@ -406,9 +406,9 @@ package body LEA_Resource_GUI is
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned)
   is
-    pragma Warnings (Off, Window);
-    pragma Warnings (Off, dwExStyle);
-    WS_SYSMENU: constant:= 16#0008_0000#;
+    pragma Unmodified (Window);
+    pragma Unmodified (dwExStyle);
+    WS_SYSMENU : constant := 16#0008_0000#;
   begin
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
@@ -428,7 +428,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 472, 188, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 472, 188, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -459,43 +459,43 @@ package body LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
-    x,y,w,h: Integer;
+    x,y,w,h : Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 472, 188, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 472, 188, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  9, 5, 96, 12, x,y,w,h);
-    Create( Window.Label_HAC_topic, Window, "Topic", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_HAC_topic);
-    Dlg_to_Scn(  145, 5, 96, 12, x,y,w,h);
-    Create( Window.Label_HAC_sample, Window, "Sample", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_HAC_sample);
-    Dlg_to_Scn(  9, 22, 123, 95, x,y,w,h);
-    Create( Window.Topic_box, Window, x,y,w,h, False, ID => Topic_box);
-    Dlg_to_Scn(  144, 22, 319, 137, x,y,w,h);
-    Create( Window.Zipped_file_box, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
-    Dlg_to_Scn(  352, 166, 50, 16, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDOK_permanent);
-    else -- hide the closing button
-      Hide(Window.IDOK);
+    Dlg_to_Scn ( 9, 5, 96, 12, x,y,w,h);
+    Create (Window.Label_HAC_topic, Window, "Topic", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_HAC_topic);
+    Dlg_to_Scn ( 145, 5, 96, 12, x,y,w,h);
+    Create (Window.Label_HAC_sample, Window, "Sample", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_HAC_sample);
+    Dlg_to_Scn ( 9, 22, 123, 95, x,y,w,h);
+    Create (Window.Topic_box, Window, x,y,w,h, False, ID => Topic_box);
+    Dlg_to_Scn ( 144, 22, 319, 137, x,y,w,h);
+    Create (Window.Zipped_file_box, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
+    Dlg_to_Scn ( 352, 166, 50, 16, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDOK_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDOK);
     end if;
-    Dlg_to_Scn(  413, 166, 50, 16, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDCANCEL_permanent);
-    else -- hide the closing button
-      Hide(Window.IDCANCEL);
+    Dlg_to_Scn ( 413, 166, 50, 16, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
     end if;
   end Create_Contents;  --  HAC_example_box_Type
 
@@ -516,7 +516,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 253, 168, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 253, 168, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -547,61 +547,61 @@ package body LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
-    x,y,w,h: Integer;
+    x,y,w,h : Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 253, 168, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 253, 168, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  7, 10, 50, 15, x,y,w,h);
-    Create_Label( Window, "Indentation", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  49, 9, 16, 15, x,y,w,h);
-    Create( Window.Indentation_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Indentation_edit_box);
-    Dlg_to_Scn(  7, 31, 110, 9, x,y,w,h);
-    Create_Label( Window, "Tab width (symbol AND keystroke)", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  121, 30, 16, 15, x,y,w,h);
-    Create( Window.Tab_width_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Tab_width_edit_box);
-    Dlg_to_Scn(  159, 10, 52, 15, x,y,w,h);
-    Create_Label( Window, "Right margin", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  213, 9, 31, 15, x,y,w,h);
-    Create( Window.Right_margin_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Right_margin_edit_box);
-    Dlg_to_Scn(  7, 52, 63, 9, x,y,w,h);
-    Create_Label( Window, "Ada file extensions", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  83, 50, 162, 15, x,y,w,h);
-    Create( Window.Ada_file_extension_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Ada_file_extension_edit_box);
-    Dlg_to_Scn(  5, 99, 240, 28, x,y,w,h);
+    Dlg_to_Scn ( 7, 10, 50, 15, x,y,w,h);
+    Create_Label (Window, "Indentation", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 49, 9, 16, 15, x,y,w,h);
+    Create (Window.Indentation_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Indentation_edit_box);
+    Dlg_to_Scn ( 7, 31, 110, 9, x,y,w,h);
+    Create_Label (Window, "Tab width (symbol AND keystroke)", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 121, 30, 16, 15, x,y,w,h);
+    Create (Window.Tab_width_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Tab_width_edit_box);
+    Dlg_to_Scn ( 159, 10, 52, 15, x,y,w,h);
+    Create_Label (Window, "Right margin", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 213, 9, 31, 15, x,y,w,h);
+    Create (Window.Right_margin_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Right_margin_edit_box);
+    Dlg_to_Scn ( 7, 52, 63, 9, x,y,w,h);
+    Create_Label (Window, "Ada file extensions", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 83, 50, 162, 15, x,y,w,h);
+    Create (Window.Ada_file_extension_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Ada_file_extension_edit_box);
+    Dlg_to_Scn ( 5, 99, 240, 28, x,y,w,h);
     Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
-    Dlg_to_Scn(  60, 110, 108, 20, x,y,w,h);
-    Create( Window.Color_theme_list_box, Window, x,y,w,h, False, ID => Color_theme_list_box);
-    Dlg_to_Scn(  5, 68, 240, 28, x,y,w,h);
+    Dlg_to_Scn ( 60, 110, 108, 20, x,y,w,h);
+    Create (Window.Color_theme_list_box, Window, x,y,w,h, False, ID => Color_theme_list_box);
+    Dlg_to_Scn ( 5, 68, 240, 28, x,y,w,h);
     Create( Window.Group_Backup, Window, "Backup", x,y,w,h);
-    Dlg_to_Scn(  79, 78, 91, 11, x,y,w,h);
-    Create( Window.Backup_bak_button, Window, "Simple (.bak)", x,y,w,h, ID => Backup_bak_button);
-    Dlg_to_Scn(  14, 80, 43, 8, x,y,w,h);
-    Create( Window.Backup_none_button, Window, "None", x,y,w,h, ID => Backup_none_button);
-    Dlg_to_Scn(  190, 140, 50, 19, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDCANCEL_permanent);
-    else -- hide the closing button
-      Hide(Window.IDCANCEL);
+    Dlg_to_Scn ( 79, 78, 91, 11, x,y,w,h);
+    Create (Window.Backup_bak_button, Window, "Simple (.bak)", x,y,w,h, ID => Backup_bak_button);
+    Dlg_to_Scn ( 14, 80, 43, 8, x,y,w,h);
+    Create (Window.Backup_none_button, Window, "None", x,y,w,h, ID => Backup_none_button);
+    Dlg_to_Scn ( 190, 140, 50, 19, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  135, 140, 50, 19, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDOK_permanent);
-    else -- hide the closing button
-      Hide(Window.IDOK);
+    Dlg_to_Scn ( 135, 140, 50, 19, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDOK_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDOK);
     end if;
   end Create_Contents;  --  Option_box_Type
 
@@ -614,9 +614,9 @@ package body LEA_Resource_GUI is
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned)
   is
-    pragma Warnings (Off, Window);
-    pragma Warnings (Off, dwExStyle);
-    WS_SYSMENU: constant:= 16#0008_0000#;
+    pragma Unmodified (Window);
+    pragma Unmodified (dwExStyle);
+    WS_SYSMENU : constant := 16#0008_0000#;
   begin
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
@@ -636,7 +636,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 186, 73, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 186, 73, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -667,32 +667,32 @@ package body LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
-    x,y,w,h: Integer;
+    x,y,w,h : Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 186, 73, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 186, 73, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  57, 14, 114, 15, x,y,w,h);
-    Create( Window.Stack_Bar, Window, x,y,w,h, Horizontal, True);
-    Dlg_to_Scn(  5, 6, 175, 28, x,y,w,h);
+    Dlg_to_Scn ( 57, 14, 114, 15, x,y,w,h);
+    Create (Window.Stack_Bar, Window, x,y,w,h, Horizontal, True);
+    Dlg_to_Scn ( 5, 6, 175, 28, x,y,w,h);
     Create( Window.Group_Stack, Window, "Stack", x,y,w,h);
-    Dlg_to_Scn(  23, 18, 27, 9, x,y,w,h);
-    Create( Window.Label_Stack, Window, "Usage", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Stack);
-    Dlg_to_Scn(  5, 36, 175, 34, x,y,w,h);
+    Dlg_to_Scn ( 23, 18, 27, 9, x,y,w,h);
+    Create (Window.Label_Stack, Window, "Usage", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Stack);
+    Dlg_to_Scn ( 5, 36, 175, 34, x,y,w,h);
     Create( Window.Group_VM_Inter, Window, "Virtual Machine Interpreter", x,y,w,h);
-    Dlg_to_Scn(  53, 47, 70, 19, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Stop_VM_Button, Window, "Stop", x,y,w,h, ID => Stop_VM_Button);
-    Create( Window.Stop_VM_Button_permanent, Window, "Stop", x,y,w,h, ID => Stop_VM_Button);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.Stop_VM_Button_permanent);
-    else -- hide the closing button
-      Hide(Window.Stop_VM_Button);
+    Dlg_to_Scn ( 53, 47, 70, 19, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Stop_VM_Button, Window, "Stop", x,y,w,h, ID => Stop_VM_Button);
+    Create (Window.Stop_VM_Button_permanent, Window, "Stop", x,y,w,h, ID => Stop_VM_Button);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Stop_VM_Button_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Stop_VM_Button);
     end if;
   end Create_Contents;  --  Progress_box_Type
 
@@ -713,7 +713,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 235, 164, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 235, 164, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -744,92 +744,92 @@ package body LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
-    x,y,w,h: Integer;
+    x,y,w,h : Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 235, 164, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 235, 164, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  11, 10, 50, 15, x,y,w,h);
-    Create_Label( Window, "Find", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  63, 10, 160, 15, x,y,w,h);
-    Create( Window.Model_find_box, Window, "", x,y,w,h, False, ID => Model_find_box);
-    Dlg_to_Scn(  11, 30, 50, 15, x,y,w,h);
-    Create_Label( Window, "Replace with", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  63, 30, 160, 15, x,y,w,h);
-    Create( Window.Model_replace_box, Window, "", x,y,w,h, False, ID => Model_replace_box);
-    Dlg_to_Scn(  149, 143, 74, 17, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Close_search_box, Window, "Close", x,y,w,h, ID => Close_search_box);
-    Create( Window.Close_search_box_permanent, Window, "Close", x,y,w,h, ID => Close_search_box);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.Close_search_box_permanent);
-    else -- hide the closing button
-      Hide(Window.Close_search_box);
+    Dlg_to_Scn ( 11, 10, 50, 15, x,y,w,h);
+    Create_Label (Window, "Find", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 63, 10, 160, 15, x,y,w,h);
+    Create (Window.Model_find_box, Window, "", x,y,w,h, False, ID => Model_find_box);
+    Dlg_to_Scn ( 11, 30, 50, 15, x,y,w,h);
+    Create_Label (Window, "Replace with", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn ( 63, 30, 160, 15, x,y,w,h);
+    Create (Window.Model_replace_box, Window, "", x,y,w,h, False, ID => Model_replace_box);
+    Dlg_to_Scn ( 149, 143, 74, 17, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Close_search_box, Window, "Close", x,y,w,h, ID => Close_search_box);
+    Create (Window.Close_search_box_permanent, Window, "Close", x,y,w,h, ID => Close_search_box);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Close_search_box_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Close_search_box);
     end if;
-    Dlg_to_Scn(  11, 53, 58, 18, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Find_next_button, Window, "Find next", x,y,w,h, ID => Find_next_button);
-    Create( Window.Find_next_button_permanent, Window, "Find next", x,y,w,h, ID => Find_next_button);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.Find_next_button_permanent);
-    else -- hide the closing button
-      Hide(Window.Find_next_button);
+    Dlg_to_Scn ( 11, 53, 58, 18, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Find_next_button, Window, "Find next", x,y,w,h, ID => Find_next_button);
+    Create (Window.Find_next_button_permanent, Window, "Find next", x,y,w,h, ID => Find_next_button);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Find_next_button_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Find_next_button);
     end if;
-    Dlg_to_Scn(  82, 53, 58, 18, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Find_previous_button, Window, "Find previous", x,y,w,h, ID => Find_previous_button);
-    Create( Window.Find_previous_button_permanent, Window, "Find previous", x,y,w,h, ID => Find_previous_button);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.Find_previous_button_permanent);
-    else -- hide the closing button
-      Hide(Window.Find_previous_button);
+    Dlg_to_Scn ( 82, 53, 58, 18, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Find_previous_button, Window, "Find previous", x,y,w,h, ID => Find_previous_button);
+    Create (Window.Find_previous_button_permanent, Window, "Find previous", x,y,w,h, ID => Find_previous_button);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Find_previous_button_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Find_previous_button);
     end if;
-    Dlg_to_Scn(  165, 53, 58, 18, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Find_all_button, Window, "Find all", x,y,w,h, ID => Find_all_button);
-    Create( Window.Find_all_button_permanent, Window, "Find all", x,y,w,h, ID => Find_all_button);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.Find_all_button_permanent);
-    else -- hide the closing button
-      Hide(Window.Find_all_button);
+    Dlg_to_Scn ( 165, 53, 58, 18, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Find_all_button, Window, "Find all", x,y,w,h, ID => Find_all_button);
+    Create (Window.Find_all_button_permanent, Window, "Find all", x,y,w,h, ID => Find_all_button);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Find_all_button_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Find_all_button);
     end if;
-    Dlg_to_Scn(  20, 82, 110, 18, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Replace_and_find_next_button, Window, "Replace and find next", x,y,w,h, ID => Replace_and_find_next_button);
-    Create( Window.Replace_and_find_next_button_permanent, Window, "Replace and find next", x,y,w,h, ID => Replace_and_find_next_button);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.Replace_and_find_next_button_permanent);
-    else -- hide the closing button
-      Hide(Window.Replace_and_find_next_button);
+    Dlg_to_Scn ( 20, 82, 110, 18, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Replace_and_find_next_button, Window, "Replace and find next", x,y,w,h, ID => Replace_and_find_next_button);
+    Create (Window.Replace_and_find_next_button_permanent, Window, "Replace and find next", x,y,w,h, ID => Replace_and_find_next_button);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Replace_and_find_next_button_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Replace_and_find_next_button);
     end if;
-    Dlg_to_Scn(  165, 82, 58, 18, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Replace_all_button, Window, "Replace all", x,y,w,h, ID => Replace_all_button);
-    Create( Window.Replace_all_button_permanent, Window, "Replace all", x,y,w,h, ID => Replace_all_button);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.Replace_all_button_permanent);
-    else -- hide the closing button
-      Hide(Window.Replace_all_button);
+    Dlg_to_Scn ( 165, 82, 58, 18, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Replace_all_button, Window, "Replace all", x,y,w,h, ID => Replace_all_button);
+    Create (Window.Replace_all_button_permanent, Window, "Replace all", x,y,w,h, ID => Replace_all_button);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Replace_all_button_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Replace_all_button);
     end if;
-    Dlg_to_Scn(  11, 112, 81, 11, x,y,w,h);
-    Create( Window.Whole_word, Window, "Whole word", x,y,w,h, ID => Whole_word);
-    Dlg_to_Scn(  11, 129, 81, 11, x,y,w,h);
-    Create( Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
+    Dlg_to_Scn ( 11, 112, 81, 11, x,y,w,h);
+    Create (Window.Whole_word, Window, "Whole word", x,y,w,h, ID => Whole_word);
+    Dlg_to_Scn ( 11, 129, 81, 11, x,y,w,h);
+    Create (Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
   --  Dialog at resource line 322
@@ -841,9 +841,9 @@ package body LEA_Resource_GUI is
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned)
   is
-    pragma Warnings (Off, Window);
-    pragma Warnings (Off, dwExStyle);
-    WS_SYSMENU: constant:= 16#0008_0000#;
+    pragma Unmodified (Window);
+    pragma Unmodified (dwExStyle);
+    WS_SYSMENU : constant := 16#0008_0000#;
   begin
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
@@ -863,7 +863,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 378, 76, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 378, 76, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -894,61 +894,61 @@ package body LEA_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
-    x,y,w,h: Integer;
+    x,y,w,h : Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 378, 76, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 378, 76, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  7, 9, 368, 9, x,y,w,h);
-    Create( Window.String_Prompt_Label, Window, "Enter some text...", x,y,w,h, GWindows.Static_Controls.Left, None, ID => String_Prompt_Label);
-    Dlg_to_Scn(  7, 28, 362, 21, x,y,w,h);
-    Create( Window.String_Prompt_Edit_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => String_Prompt_Edit_Box);
-    Dlg_to_Scn(  235, 54, 62, 18, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDOK_permanent);
-    else -- hide the closing button
-      Hide(Window.IDOK);
+    Dlg_to_Scn ( 7, 9, 368, 9, x,y,w,h);
+    Create (Window.String_Prompt_Label, Window, "Enter some text...", x,y,w,h, GWindows.Static_Controls.Left, None, ID => String_Prompt_Label);
+    Dlg_to_Scn ( 7, 28, 362, 21, x,y,w,h);
+    Create (Window.String_Prompt_Edit_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => String_Prompt_Edit_Box);
+    Dlg_to_Scn ( 235, 54, 62, 18, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDOK_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDOK);
     end if;
-    Dlg_to_Scn(  307, 54, 62, 18, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDCANCEL_permanent);
-    else -- hide the closing button
-      Hide(Window.IDCANCEL);
+    Dlg_to_Scn ( 307, 54, 62, 18, x,y,w,h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
     end if;
   end Create_Contents;  --  String_Prompt_Type
 
-  -- ** Generated code ends here /\ /\ /\.
+  --  ** Generated code ends here /\ /\ /\.
 
-  -- ** Some helper utilities (body).
+  --  ** Some helper utilities (body).
 
-  procedure Dlg_to_Scn( -- converts dialog coords to screen (pixel) coords.
-    xd,yd,wd,hd:  in Integer;
-    xs,ys,ws,hs: out Integer)
+  procedure Dlg_to_Scn (  --  Converts dialog coords to screen (pixel) coordinates.
+    xd,yd,wd,hd :  in Integer;
+    xs,ys,ws,hs : out Integer)
   is
-    -- function GetDialogBaseUnits return Integer;
-    -- pragma Import (StdCall, GetDialogBaseUnits, "GetDialogBaseUnits");
-    -- baseunit, baseunitX, baseunitY: Integer;
+    --  function GetDialogBaseUnits return Integer;
+    --  pragma Import (StdCall, GetDialogBaseUnits, "GetDialogBaseUnits");
+    --  baseunit, baseunitX, baseunitY: Integer;
     baseunitX: constant:= 6;
     baseunitY: constant:= 13;
   begin
-    -- baseunit:= GetDialogBaseUnits; -- this gives X=8, Y=16 (SYSTEM font)
-    -- baseunitX:= baseunit mod (2 ** 16);
-    -- baseunitY:= baseunit  / (2 ** 16);
-    -- NB: the other way with MapDialogRect works only
-    --   by full moon, hence the use-defined units.
+    --  baseunit := GetDialogBaseUnits; -- this gives X=8, Y=16 (SYSTEM font)
+    --  baseunitX := baseunit mod (2 ** 16);
+    --  baseunitY := baseunit  / (2 ** 16);
+    --  NB: the other way with MapDialogRect works only
+    --    by full moon, hence the user-defined units.
     xs := (xd * baseunitX) / 4;
     ws := (wd * baseunitX) / 4;
     ys := (yd * baseunitY) / 8;
@@ -958,20 +958,20 @@ package body LEA_Resource_GUI is
   package Common_Fonts is
     GUI_Font : GWindows.Drawing_Objects.Font_Type;
     URL_Font : GWindows.Drawing_Objects.Font_Type;
-    -- ^ These fonts are created once, at startup
-    --   it avoid GUI resource leak under Windows 95/98/ME
+    --  ^ These fonts are created once, at startup
+    --    it avoid GUI resource leak under Windows 95/98/ME
     procedure Create_Common_Fonts;
-    -- in initialisation part if this pkg becomes standalone
+    --  in initialisation part if this pkg becomes standalone
   end Common_Fonts;
 
-  procedure Use_GUI_Font(Window: in out GWindows.Base.Base_Window_Type'Class)
+  procedure Use_GUI_Font (Window: in out GWindows.Base.Base_Window_Type'Class)
   is
   begin
     --  Use Standard Windows GUI font instead of system font
     GWindows.Base.Set_Font (Window, Common_Fonts.GUI_Font);
   end Use_GUI_Font;
 
-  function Num_resource(id: Natural) return GString is
+  function Num_resource (id: Natural) return GString is
     img: constant String:= Integer'Image(id);
   begin
     return To_GString_From_String('#' & img(img'First+1..img'Last));
@@ -981,13 +981,13 @@ package body LEA_Resource_GUI is
 
     procedure Create_Common_Fonts is
 
-     type Face_Name_Type is array(1..32) of GWindows.GChar_C;
+     type Face_Name_Type is array (1 .. 32) of GWindows.GChar_C;
 
      type LOGFONT is record
-       lfHeight: Interfaces.C.long;
-       lfWidth: Interfaces.C.long;
-       lfEscapement: Interfaces.C.long;
-       lfOrientation: Interfaces.C.long;
+       lfHeight : Interfaces.C.long;
+       lfWidth  : Interfaces.C.long;
+       lfEscapement  : Interfaces.C.long;
+       lfOrientation : Interfaces.C.long;
        lfWeight: Interfaces.C.long;
        lfItalic: Interfaces.C.char;
        lfUnderline: Interfaces.C.char;
@@ -1000,7 +1000,7 @@ package body LEA_Resource_GUI is
        lfFaceName: Face_Name_Type;
      end record;
 
-     Log_of_current_font: aliased LOGFONT;
+     Log_of_current_font : aliased LOGFONT;
 
      subtype PVOID   is System.Address;                      --  winnt.h
      subtype LPVOID  is PVOID;                               --  windef.h
@@ -1025,13 +1025,13 @@ package body LEA_Resource_GUI is
         GWindows.Drawing_Objects.Default_GUI
       );
       if GetObject = 0 then
-        GWindows.Drawing_Objects.Create_Font(URL_Font,
+        GWindows.Drawing_Objects.Create_Font (URL_Font,
           "MS Sans Serif",
           14, Underline => True);
-            -- !! ^ Not so nice (non-unsharpened font, size ~..., color ?)
+            --  !! ^ Not so nice (non-unsharpened font, size ~..., color ?)
       else
-        Log_of_current_font.lfUnderline:= Interfaces.C.char'Val(1);
-        GWindows.Drawing_Objects.Handle(URL_Font, CreateFontIndirect);
+        Log_of_current_font.lfUnderline := Interfaces.C.char'Val(1);
+        GWindows.Drawing_Objects.Handle (URL_Font, CreateFontIndirect);
       end if;
     end Create_Common_Fonts;
 
@@ -1040,6 +1040,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 435
+  --  Last line of resource script file: 435
 
 end LEA_Resource_GUI;

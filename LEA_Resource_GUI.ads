@@ -1,14 +1,14 @@
 ---------------------------------------------------------------------------
--- GUI contents of resource script file: LEA.rc
--- Transcription time: 2021/04/10  21:28:32
--- GWenerator project file: lea.gwen
+--  GUI contents of resource script file: LEA.rc
+--  Transcription time: 2021/04/14  12:31:38
+--  GWenerator project file: lea.gwen
 --
--- Translated by the RC2GW or by the GWenerator tool.
--- URL: http://sf.net/projects/gnavi
+--  Translated by the RC2GW or by the GWenerator tool.
+--  URL: http://sf.net/projects/gnavi
 --
--- This file contains only automatically generated code. Do not edit this.
--- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 20-Jul-2019
+--  This file contains only automatically generated code. Do not edit this.
+--  Rework the resource script instead, and re-run the translator.
+--  RC Grammar version: 20-Jul-2019
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -67,12 +67,12 @@ package LEA_Resource_GUI is
   type About_box_Type is new Window_Type with record
 
     Static_0001: Icon_Type;
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Copyright_label: Label_Type;
-    -- Label: IDC_STATIC
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
     AZip_URL: Label_Type;
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Version_label: Label_Type;
     Static_0006: Group_Box_Type;
     GNAT_URL: Label_Type;
@@ -83,8 +83,8 @@ package LEA_Resource_GUI is
     ZipAda_URL: Label_Type;
     ZipAda_Version: Label_Type;
     ResEdit_URL: Label_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- About_box_Type
 
   --  Dialog at resource line 221
@@ -121,10 +121,10 @@ package LEA_Resource_GUI is
   type Go_to_line_box_Type is new Window_Type with record
 
     Line_value_box: Edit_Box_Type;
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
   --  Dialog at resource line 234
@@ -164,10 +164,10 @@ package LEA_Resource_GUI is
     Label_HAC_sample: Label_Type;
     Topic_box: List_Box_Type;
     Zipped_file_box: List_View_Control_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- HAC_example_box_Type
 
   --  Dialog at resource line 250
@@ -203,23 +203,23 @@ package LEA_Resource_GUI is
 
   type Option_box_Type is new Window_Type with record
 
-    -- Label: 0
+    --  Label: 0
     Indentation_edit_box: Edit_Box_Type;
-    -- Label: 0
+    --  Label: 0
     Tab_width_edit_box: Edit_Box_Type;
-    -- Label: 0
+    --  Label: 0
     Right_margin_edit_box: Edit_Box_Type;
-    -- Label: 0
+    --  Label: 0
     Ada_file_extension_edit_box: Edit_Box_Type;
     Group_color_theme: Group_Box_Type;
     Color_theme_list_box: Drop_Down_List_Box_Type;
     Group_Backup: Group_Box_Type;
     Backup_bak_button: Radio_Button_Type;
     Backup_none_button: Radio_Button_Type;
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Option_box_Type
 
   --  Dialog at resource line 275
@@ -252,8 +252,8 @@ package LEA_Resource_GUI is
     Group_Stack: Group_Box_Type;
     Label_Stack: Label_Type;
     Group_VM_Inter: Group_Box_Type;
-    Stop_VM_Button: Dialog_Button_Type;    -- closes parent window after click
-    Stop_VM_Button_permanent: Button_Type; -- doesn't close parent window after click
+    Stop_VM_Button: Dialog_Button_Type;    --  Closes parent window after click
+    Stop_VM_Button_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- Progress_box_Type
 
   --  Dialog at resource line 290
@@ -289,22 +289,22 @@ package LEA_Resource_GUI is
 
   type Search_box_Type is new Window_Type with record
 
-    -- Label: 0
+    --  Label: 0
     Model_find_box: Drop_Down_Combo_Box_Type;
-    -- Label: 0
+    --  Label: 0
     Model_replace_box: Drop_Down_Combo_Box_Type;
-    Close_search_box: Dialog_Button_Type;    -- closes parent window after click
-    Close_search_box_permanent: Button_Type; -- doesn't close parent window after click
-    Find_next_button: Default_Dialog_Button_Type;    -- closes parent window after click
-    Find_next_button_permanent: Default_Button_Type; -- doesn't close parent window after click
-    Find_previous_button: Dialog_Button_Type;    -- closes parent window after click
-    Find_previous_button_permanent: Button_Type; -- doesn't close parent window after click
-    Find_all_button: Dialog_Button_Type;    -- closes parent window after click
-    Find_all_button_permanent: Button_Type; -- doesn't close parent window after click
-    Replace_and_find_next_button: Dialog_Button_Type;    -- closes parent window after click
-    Replace_and_find_next_button_permanent: Button_Type; -- doesn't close parent window after click
-    Replace_all_button: Dialog_Button_Type;    -- closes parent window after click
-    Replace_all_button_permanent: Button_Type; -- doesn't close parent window after click
+    Close_search_box: Dialog_Button_Type;    --  Closes parent window after click
+    Close_search_box_permanent: Button_Type;  --  Doesn't close parent window after click
+    Find_next_button: Default_Dialog_Button_Type;    --  Closes parent window after click
+    Find_next_button_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    Find_previous_button: Dialog_Button_Type;    --  Closes parent window after click
+    Find_previous_button_permanent: Button_Type;  --  Doesn't close parent window after click
+    Find_all_button: Dialog_Button_Type;    --  Closes parent window after click
+    Find_all_button_permanent: Button_Type;  --  Doesn't close parent window after click
+    Replace_and_find_next_button: Dialog_Button_Type;    --  Closes parent window after click
+    Replace_and_find_next_button_permanent: Button_Type;  --  Doesn't close parent window after click
+    Replace_all_button: Dialog_Button_Type;    --  Closes parent window after click
+    Replace_all_button_permanent: Button_Type;  --  Doesn't close parent window after click
     Whole_word: Check_Box_Type;
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
@@ -337,10 +337,10 @@ package LEA_Resource_GUI is
 
     String_Prompt_Label: Label_Type;
     String_Prompt_Edit_Box: Edit_Box_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- String_Prompt_Type
 
   --  Dialog at resource line 327
@@ -383,12 +383,12 @@ package LEA_Resource_GUI is
     Translation: constant:= 1033;
   end Version_info;
 
-  ------------------------------------------------
-  -- Defined resource symbols --> Ada constants --
-  ------------------------------------------------
+  --------------------------------------------------
+  --  Defined resource symbols --> Ada constants  --
+  --------------------------------------------------
 
-  -- NB: only items with a defined symbol get a constant here
-  -- These constants are needed for getting button and menu feedbacks.
+  --  NB: only items with a defined symbol get a constant here
+  --  These constants are needed for getting button and menu feedbacks.
 
   IDC_STATIC                  : constant:=     -1;
   Menu_MDI_Main               : constant:=    102;
@@ -498,16 +498,16 @@ package LEA_Resource_GUI is
   Label_HAC_topic             : constant:=  40104;
   Label_HAC_sample            : constant:=  40105;
 
-  -- ** Some helper utilities (spec).
+  --  ** Some helper utilities (spec).
 
   procedure Dlg_to_Scn(
-    xd,yd,wd,hd:  in Integer;
-    xs,ys,ws,hs: out Integer);
+    xd,yd,wd,hd :  in Integer;
+    xs,ys,ws,hs : out Integer);
 
-  procedure Use_GUI_Font(Window: in out GWindows.Base.Base_Window_Type'Class);
+  procedure Use_GUI_Font (Window : in out GWindows.Base.Base_Window_Type'Class);
 
-  function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
+  function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 435
+  --  Last line of resource script file: 435
 
 end LEA_Resource_GUI;
