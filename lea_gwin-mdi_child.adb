@@ -463,17 +463,6 @@ package body LEA_GWin.MDI_Child is
     Dock_Children (MDI_Child);
   end On_Size;
 
-  procedure Check_syntax (MDI_Child : in out MDI_Child_Type) is
-  begin
-    case MDI_Child.MDI_Parent.opt.toolset is
-      when HAC_mode =>
-        --  Compilation should be quick enough to avoid the "check syntax" special case
-        MDI_Child.Build_as_Main;
-      when GNAT_mode =>
-        null;
-    end case;
-  end Check_syntax;
-
   procedure Build_as_Main (MDI_Child : in out MDI_Child_Type) is
     MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
@@ -662,7 +651,6 @@ package body LEA_GWin.MDI_Child is
       when IDM_Previous_bookmark =>
         MDI_Child.Editor.Bookmark_previous;
       --  Compile / Build actions
-      when IDM_Check_syntax   =>  MDI_Child.Check_syntax;
       when IDM_Compile_single =>  MDI_Child.Build_as_Main;
       when IDM_Build          =>  MDI_Child.Build;
       when IDM_Build_and_run  =>  MDI_Child.Build_and_run;

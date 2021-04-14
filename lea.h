@@ -17,7 +17,6 @@
 #define IDM_Find_Next                           40007
 #define IDM_Paste                               40008
 #define IDM_Duplicate                           40009
-#define IDM_Check_syntax                        40010
 #define IDM_New_File                            40011
 #define IDM_Build_and_run                       40012
 #define IDM_Build                               40013
@@ -100,7 +99,6 @@
 #define String_Prompt_Label                     40094
 #define Group_VM_Inter                          40095
 #define Group_Stack                             40096
-#define Label_Stack                             40097
 #define Stack_Bar                               40098
 #define Stop_VM_Button                          40099
 #define IDM_Ada_Sample                          40100

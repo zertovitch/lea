@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2021/04/14  12:31:38
+--  Transcription time: 2021/04/14  15:17:19
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 --  This file contains only automatically generated code. Do not edit this.
 --  Rework the resource script instead, and re-run the translator.
---  RC Grammar version: 20-Jul-2019
+--  RC Grammar version: 14-Apr-2021
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -32,37 +32,35 @@ pragma Warnings ("U");  --  turn off warnings for unused entity
 package LEA_Resource_GUI is
 
   type Menu_MDI_Child_Type is tagged record
-    Main: Menu_Type; -- Root of the whole menu tree
-    Popup_0001: Menu_Type;  -- level 1; title: "&File"
-    Popup_0002: Menu_Type;  -- level 2; title: "Open &recent"
-    Popup_0003: Menu_Type;  -- level 1; title: "&Edit"
-    Popup_0004: Menu_Type;  -- level 1; title: "&Navigate"
-    Popup_0005: Menu_Type;  -- level 1; title: "&Actions"
-    Popup_0006: Menu_Type;  -- level 1; title: "&View"
-    Popup_0007: Menu_Type;  -- level 1; title: "&Options"
-    Popup_0008: Menu_Type;  -- level 1; title: "&Window"
-    Popup_0009: Menu_Type;  -- level 1; title: "&Help"
+    Main: Menu_Type;  --  Root of the whole menu tree
+    Popup_0001 : Menu_Type;   --  Popup level: 1; title: "&File"
+    Popup_0002 : Menu_Type;   --  Popup level: 2; title: "Open &recent"
+    Popup_0003 : Menu_Type;   --  Popup level: 1; title: "&Edit"
+    Popup_0004 : Menu_Type;   --  Popup level: 1; title: "&Navigate"
+    Popup_0005 : Menu_Type;   --  Popup level: 1; title: "&Actions"
+    Popup_0006 : Menu_Type;   --  Popup level: 1; title: "&View"
+    Popup_0007 : Menu_Type;   --  Popup level: 1; title: "&Options"
+    Popup_0008 : Menu_Type;   --  Popup level: 1; title: "&Window"
+    Popup_0009 : Menu_Type;   --  Popup level: 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
   --  Menu at line 123
-  procedure Create_Full_Menu
-     (Menu        : in out Menu_MDI_Child_Type);
+  procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Child_Type);
 
   type Menu_MDI_Main_Type is tagged record
-    Main: Menu_Type; -- Root of the whole menu tree
-    Popup_0001: Menu_Type;  -- level 1; title: "&File"
-    Popup_0002: Menu_Type;  -- level 2; title: "&Recent"
-    Popup_0003: Menu_Type;  -- level 1; title: "&Edit"
-    Popup_0004: Menu_Type;  -- level 1; title: "&Actions"
-    Popup_0005: Menu_Type;  -- level 1; title: "&View"
-    Popup_0006: Menu_Type;  -- level 1; title: "&Options"
-    Popup_0007: Menu_Type;  -- level 1; title: "&Window"
-    Popup_0008: Menu_Type;  -- level 1; title: "&Help"
+    Main: Menu_Type;  --  Root of the whole menu tree
+    Popup_0001 : Menu_Type;   --  Popup level: 1; title: "&File"
+    Popup_0002 : Menu_Type;   --  Popup level: 2; title: "&Recent"
+    Popup_0003 : Menu_Type;   --  Popup level: 1; title: "&Edit"
+    Popup_0004 : Menu_Type;   --  Popup level: 1; title: "&Actions"
+    Popup_0005 : Menu_Type;   --  Popup level: 1; title: "&View"
+    Popup_0006 : Menu_Type;   --  Popup level: 1; title: "&Options"
+    Popup_0007 : Menu_Type;   --  Popup level: 1; title: "&Window"
+    Popup_0008 : Menu_Type;   --  Popup level: 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
   --  Menu at line 190
-  procedure Create_Full_Menu
-     (Menu        : in out Menu_MDI_Main_Type);
+  procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Main_Type);
 
   type About_box_Type is new Window_Type with record
 
@@ -248,15 +246,14 @@ package LEA_Resource_GUI is
 
   type Progress_box_Type is new Window_Type with record
 
-    Stack_Bar: Progress_Control_Type;
     Group_Stack: Group_Box_Type;
-    Label_Stack: Label_Type;
+    Stack_Bar: Progress_Control_Type;
     Group_VM_Inter: Group_Box_Type;
     Stop_VM_Button: Dialog_Button_Type;    --  Closes parent window after click
     Stop_VM_Button_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 290
+  --  Dialog at resource line 289
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -309,7 +306,7 @@ package LEA_Resource_GUI is
     Match_case: Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 313
+  --  Dialog at resource line 312
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -343,7 +340,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 327
+  --  Dialog at resource line 326
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -406,7 +403,6 @@ package LEA_Resource_GUI is
   IDM_Find_Next               : constant:=  40007;
   IDM_Paste                   : constant:=  40008;
   IDM_Duplicate               : constant:=  40009;
-  IDM_Check_syntax            : constant:=  40010;
   IDM_New_File                : constant:=  40011;
   IDM_Build_and_run           : constant:=  40012;
   IDM_Build                   : constant:=  40013;
@@ -489,7 +485,6 @@ package LEA_Resource_GUI is
   String_Prompt_Label         : constant:=  40094;
   Group_VM_Inter              : constant:=  40095;
   Group_Stack                 : constant:=  40096;
-  Label_Stack                 : constant:=  40097;
   Stack_Bar                   : constant:=  40098;
   Stop_VM_Button              : constant:=  40099;
   IDM_Ada_Sample              : constant:=  40100;
@@ -508,6 +503,6 @@ package LEA_Resource_GUI is
 
   function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  --  Last line of resource script file: 435
+  --  Last line of resource script file: 434
 
 end LEA_Resource_GUI;

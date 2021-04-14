@@ -185,14 +185,6 @@ begin
       progress_box.Center;
       progress_box.Redraw;
       progress_box.Show;
-      for Windows_Woodoo in 1 .. 3 loop
-        --  Rain dance to make Windows display the
-        --  progress box from the beginning.
-        progress_box.Redraw (Redraw_Now => True);
-        delay 0.01;
-        Message_Check;
-        delay 0.03;
-      end loop;
       MDI_Child.MDI_Parent.Disable;
       Windowed_interpret (MDI_Child.BD, unhandled);  --  Running the HAC program happens here.
       --  Scroll to last output line:

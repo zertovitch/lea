@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2021/04/14  12:31:38
+--  Transcription time: 2021/04/14  15:17:19
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 --  This file contains only automatically generated code. Do not edit this.
 --  Rework the resource script instead, and re-run the translator.
---  RC Grammar version: 20-Jul-2019
+--  RC Grammar version: 14-Apr-2021
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -24,165 +24,163 @@ package body LEA_Resource_GUI is
   --  ** Generated code begins here \/ \/ \/.
 
   --  Menu at line 29
-  procedure Create_Full_Menu
-     (Menu        : in out Menu_MDI_Child_Type)
+  procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Child_Type)
   is
   begin
-    Menu.Main:= Create_Menu;
-    Menu.Popup_0001:= Create_Popup;
-    Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&New" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_New_File);
-    Append_Item(Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_Open_File);
-    Menu.Popup_0002:= Create_Popup;
-    Append_Menu(Menu.Popup_0001, "Open &recent", Menu.Popup_0002);
-    Append_Item(Menu.Popup_0002, "mru_1", IDM_MRU_1);
-    Append_Item(Menu.Popup_0002, "mru_2", IDM_MRU_2);
-    Append_Item(Menu.Popup_0002, "mru_3", IDM_MRU_3);
-    Append_Item(Menu.Popup_0002, "mru_4", IDM_MRU_4);
-    Append_Item(Menu.Popup_0002, "mru_5", IDM_MRU_5);
-    Append_Item(Menu.Popup_0002, "mru_6", IDM_MRU_6);
-    Append_Item(Menu.Popup_0002, "mru_7", IDM_MRU_7);
-    Append_Item(Menu.Popup_0002, "mru_8", IDM_MRU_8);
-    Append_Item(Menu.Popup_0002, "mru_9", IDM_MRU_9);
-    Append_Item(Menu.Popup_0001, "Save" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+S", IDM_Save_File);
-    Append_Item(Menu.Popup_0001, "Save &as..." & To_GString_From_String((1=>ASCII.HT)) & "F12", IDM_Save_As);
-    Append_Item(Menu.Popup_0001, "Sav&e all modified", IDM_Save_All);
-    Append_Item(Menu.Popup_0001, "&Close" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_Close);
-    Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "Open &Project", IDM_Open_Project);
-    State(Menu.Popup_0001, Command, IDM_Open_Project, Disabled);
-    Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
-    Menu.Popup_0003:= Create_Popup;
-    Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "&Undo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Z", IDM_Undo);
-    Append_Item(Menu.Popup_0003, "&Redo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Y", IDM_Redo);
-    Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Cu&t to clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+X or Shift+Del", IDM_Cut);
-    Append_Item(Menu.Popup_0003, "&Copy to clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+C or Ctrl+Ins", IDM_Copy);
-    Append_Item(Menu.Popup_0003, "Copy message &list to clipboard", IDM_Copy_Messages);
-    Append_Item(Menu.Popup_0003, "&Paste from clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+V or Shift+Ins", IDM_Paste);
-    Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "&Duplicate line or selection" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Duplicate);
-    Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Select &all" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
-    Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "&Indent" & To_GString_From_String((1=>ASCII.HT)) & "Tab", IDM_Indent);
-    Append_Item(Menu.Popup_0003, "&Unindent" & To_GString_From_String((1=>ASCII.HT)) & "Shift+Tab", IDM_Unindent);
-    Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Co&mment" & To_GString_From_String((1=>ASCII.HT)) & "F7", IDM_Comment);
-    Append_Item(Menu.Popup_0003, "U&ncomment" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F7", IDM_Uncomment);
-    Menu.Popup_0004:= Create_Popup;
-    Append_Menu(Menu.Main, "&Navigate", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "Find && Replace..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F", IDM_Find);
-    Append_Item(Menu.Popup_0004, "Find next" & To_GString_From_String((1=>ASCII.HT)) & "F3", IDM_Find_Next);
-    Append_Item(Menu.Popup_0004, "Find previous" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F3", IDM_Find_Previous);
-    Append_Separator(Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Go to line..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+G", IDM_Go_to_line);
-    Append_Separator(Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "Next bookmark" & To_GString_From_String((1=>ASCII.HT)) & "F2", IDM_Next_bookmark);
-    Append_Item(Menu.Popup_0004, "Previous bookmark" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F2", IDM_Previous_bookmark);
-    Append_Item(Menu.Popup_0004, "Toggle bookmark" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F2", IDM_Toggle_bookmark);
-    Menu.Popup_0005:= Create_Popup;
-    Append_Menu(Menu.Main, "&Actions", Menu.Popup_0005);
-    Append_Item(Menu.Popup_0005, "&Compile this file" & To_GString_From_String((1=>ASCII.HT)) & "Shift-F4", IDM_Compile_single);
-    Append_Item(Menu.Popup_0005, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F4", IDM_Build);
-    Append_Item(Menu.Popup_0005, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "F9", IDM_Build_and_run);
-    Append_Separator(Menu.Popup_0005);
-    Append_Item(Menu.Popup_0005, "Code sam&ple", IDM_Ada_Sample);
-    Menu.Popup_0006:= Create_Popup;
-    Append_Menu(Menu.Main, "&View", Menu.Popup_0006);
-    Append_Item(Menu.Popup_0006, "Show special symbols", IDM_Show_special_symbols);
-    Append_Separator(Menu.Popup_0006);
-    Append_Item(Menu.Popup_0006, "&Notepad view", IDM_Notepad_view);
-    Append_Item(Menu.Popup_0006, "&Studio view", IDM_Studio_view);
-    State(Menu.Popup_0006, Command, IDM_Studio_view, Disabled);
-    Append_Separator(Menu.Popup_0006);
-    Append_Item(Menu.Popup_0006, "&HAC restricted Ada mode", IDM_HAC_Mode);
-    Append_Item(Menu.Popup_0006, "&GNAT full Ada mode", IDM_GNAT_Mode);
-    State(Menu.Popup_0006, Command, IDM_GNAT_Mode, Disabled);
-    Menu.Popup_0007:= Create_Popup;
-    Append_Menu(Menu.Main, "&Options", Menu.Popup_0007);
-    Append_Item(Menu.Popup_0007, "&General options", IDM_General_options);
-    Menu.Popup_0008:= Create_Popup;
-    Append_Menu(Menu.Main, "&Window", Menu.Popup_0008);
-    Append_Item(Menu.Popup_0008, "&Cascade", IDM_WINDOW_CASCADE);
-    Append_Item(Menu.Popup_0008, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
-    Append_Item(Menu.Popup_0008, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
-    Append_Item(Menu.Popup_0008, "&Close All", IDM_WINDOW_CLOSE_ALL);
-    Menu.Popup_0009:= Create_Popup;
-    Append_Menu(Menu.Main, "&Help", Menu.Popup_0009);
-    Append_Item(Menu.Popup_0009, "&Quick help" & To_GString_From_String((1=>ASCII.HT)) & "F1", IDM_Quick_Help);
-    Append_Item(Menu.Popup_0009, "LEA &Web page (contact, support)", IDM_Web);
-    Append_Separator(Menu.Popup_0009);
-    Append_Item(Menu.Popup_0009, "&About LEA", IDM_ABOUT);
-  end Create_Full_Menu;  --  Menu_MDI_Child_Type
+    New_Menu.Main := Create_Menu;
+    New_Menu.Popup_0001 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&File", New_Menu.Popup_0001);
+    Append_Item (New_Menu.Popup_0001, "&New" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_New_File);
+    Append_Item (New_Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_Open_File);
+    New_Menu.Popup_0002 := Create_Popup;
+    Append_Menu (New_Menu.Popup_0001, "Open &recent", New_Menu.Popup_0002);
+    Append_Item (New_Menu.Popup_0002, "mru_1", IDM_MRU_1);
+    Append_Item (New_Menu.Popup_0002, "mru_2", IDM_MRU_2);
+    Append_Item (New_Menu.Popup_0002, "mru_3", IDM_MRU_3);
+    Append_Item (New_Menu.Popup_0002, "mru_4", IDM_MRU_4);
+    Append_Item (New_Menu.Popup_0002, "mru_5", IDM_MRU_5);
+    Append_Item (New_Menu.Popup_0002, "mru_6", IDM_MRU_6);
+    Append_Item (New_Menu.Popup_0002, "mru_7", IDM_MRU_7);
+    Append_Item (New_Menu.Popup_0002, "mru_8", IDM_MRU_8);
+    Append_Item (New_Menu.Popup_0002, "mru_9", IDM_MRU_9);
+    Append_Item (New_Menu.Popup_0001, "Save" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+S", IDM_Save_File);
+    Append_Item (New_Menu.Popup_0001, "Save &as..." & To_GString_From_String((1=>ASCII.HT)) & "F12", IDM_Save_As);
+    Append_Item (New_Menu.Popup_0001, "Sav&e all modified", IDM_Save_All);
+    Append_Item (New_Menu.Popup_0001, "&Close" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_Close);
+    Append_Separator (New_Menu.Popup_0001);
+    Append_Item (New_Menu.Popup_0001, "Open &Project", IDM_Open_Project);
+    State (New_Menu.Popup_0001, Command, IDM_Open_Project, Disabled);
+    Append_Separator (New_Menu.Popup_0001);
+    Append_Item (New_Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
+    New_Menu.Popup_0003 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Edit", New_Menu.Popup_0003);
+    Append_Item (New_Menu.Popup_0003, "&Undo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Z", IDM_Undo);
+    Append_Item (New_Menu.Popup_0003, "&Redo" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+Y", IDM_Redo);
+    Append_Separator (New_Menu.Popup_0003);
+    Append_Item (New_Menu.Popup_0003, "Cu&t to clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+X or Shift+Del", IDM_Cut);
+    Append_Item (New_Menu.Popup_0003, "&Copy to clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+C or Ctrl+Ins", IDM_Copy);
+    Append_Item (New_Menu.Popup_0003, "Copy message &list to clipboard", IDM_Copy_Messages);
+    Append_Item (New_Menu.Popup_0003, "&Paste from clipboard" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+V or Shift+Ins", IDM_Paste);
+    Append_Separator (New_Menu.Popup_0003);
+    Append_Item (New_Menu.Popup_0003, "&Duplicate line or selection" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Duplicate);
+    Append_Separator (New_Menu.Popup_0003);
+    Append_Item (New_Menu.Popup_0003, "Select &all" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
+    Append_Separator (New_Menu.Popup_0003);
+    Append_Item (New_Menu.Popup_0003, "&Indent" & To_GString_From_String((1=>ASCII.HT)) & "Tab", IDM_Indent);
+    Append_Item (New_Menu.Popup_0003, "&Unindent" & To_GString_From_String((1=>ASCII.HT)) & "Shift+Tab", IDM_Unindent);
+    Append_Separator (New_Menu.Popup_0003);
+    Append_Item (New_Menu.Popup_0003, "Co&mment" & To_GString_From_String((1=>ASCII.HT)) & "F7", IDM_Comment);
+    Append_Item (New_Menu.Popup_0003, "U&ncomment" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F7", IDM_Uncomment);
+    New_Menu.Popup_0004 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Navigate", New_Menu.Popup_0004);
+    Append_Item (New_Menu.Popup_0004, "Find && Replace..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F", IDM_Find);
+    Append_Item (New_Menu.Popup_0004, "Find next" & To_GString_From_String((1=>ASCII.HT)) & "F3", IDM_Find_Next);
+    Append_Item (New_Menu.Popup_0004, "Find previous" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F3", IDM_Find_Previous);
+    Append_Separator (New_Menu.Popup_0004);
+    Append_Item (New_Menu.Popup_0004, "&Go to line..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+G", IDM_Go_to_line);
+    Append_Separator (New_Menu.Popup_0004);
+    Append_Item (New_Menu.Popup_0004, "Next bookmark" & To_GString_From_String((1=>ASCII.HT)) & "F2", IDM_Next_bookmark);
+    Append_Item (New_Menu.Popup_0004, "Previous bookmark" & To_GString_From_String((1=>ASCII.HT)) & "Shift+F2", IDM_Previous_bookmark);
+    Append_Item (New_Menu.Popup_0004, "Toggle bookmark" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F2", IDM_Toggle_bookmark);
+    New_Menu.Popup_0005 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Actions", New_Menu.Popup_0005);
+    Append_Item (New_Menu.Popup_0005, "&Compile this file" & To_GString_From_String((1=>ASCII.HT)) & "Shift-F4", IDM_Compile_single);
+    Append_Item (New_Menu.Popup_0005, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F4", IDM_Build);
+    Append_Item (New_Menu.Popup_0005, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "F9", IDM_Build_and_run);
+    Append_Separator (New_Menu.Popup_0005);
+    Append_Item (New_Menu.Popup_0005, "Code sam&ple", IDM_Ada_Sample);
+    New_Menu.Popup_0006 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&View", New_Menu.Popup_0006);
+    Append_Item (New_Menu.Popup_0006, "Show special symbols", IDM_Show_special_symbols);
+    Append_Separator (New_Menu.Popup_0006);
+    Append_Item (New_Menu.Popup_0006, "&Notepad view", IDM_Notepad_view);
+    Append_Item (New_Menu.Popup_0006, "&Studio view", IDM_Studio_view);
+    State (New_Menu.Popup_0006, Command, IDM_Studio_view, Disabled);
+    Append_Separator (New_Menu.Popup_0006);
+    Append_Item (New_Menu.Popup_0006, "&HAC restricted Ada mode", IDM_HAC_Mode);
+    Append_Item (New_Menu.Popup_0006, "&GNAT full Ada mode", IDM_GNAT_Mode);
+    State (New_Menu.Popup_0006, Command, IDM_GNAT_Mode, Disabled);
+    New_Menu.Popup_0007 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Options", New_Menu.Popup_0007);
+    Append_Item (New_Menu.Popup_0007, "&General options", IDM_General_options);
+    New_Menu.Popup_0008 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Window", New_Menu.Popup_0008);
+    Append_Item (New_Menu.Popup_0008, "&Cascade", IDM_WINDOW_CASCADE);
+    Append_Item (New_Menu.Popup_0008, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
+    Append_Item (New_Menu.Popup_0008, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
+    Append_Item (New_Menu.Popup_0008, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    New_Menu.Popup_0009 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Help", New_Menu.Popup_0009);
+    Append_Item (New_Menu.Popup_0009, "&Quick help" & To_GString_From_String((1=>ASCII.HT)) & "F1", IDM_Quick_Help);
+    Append_Item (New_Menu.Popup_0009, "LEA &Web page (contact, support)", IDM_Web);
+    Append_Separator (New_Menu.Popup_0009);
+    Append_Item (New_Menu.Popup_0009, "&About LEA", IDM_ABOUT);
+  end Create_Full_Menu;  --  For type: Menu_MDI_Child_Type
 
   --  Menu at line 129
-  procedure Create_Full_Menu
-     (Menu        : in out Menu_MDI_Main_Type)
+  procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Main_Type)
   is
   begin
-    Menu.Main:= Create_Menu;
-    Menu.Popup_0001:= Create_Popup;
-    Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&New" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_New_File);
-    Append_Item(Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_Open_File);
-    Append_Separator(Menu.Popup_0001);
-    Menu.Popup_0002:= Create_Popup;
-    Append_Menu(Menu.Popup_0001, "&Recent", Menu.Popup_0002);
-    Append_Item(Menu.Popup_0002, "mru_1", IDM_MRU_1);
-    Append_Item(Menu.Popup_0002, "mru_2", IDM_MRU_2);
-    Append_Item(Menu.Popup_0002, "mru_3", IDM_MRU_3);
-    Append_Item(Menu.Popup_0002, "mru_4", IDM_MRU_4);
-    Append_Item(Menu.Popup_0002, "mru_5", IDM_MRU_5);
-    Append_Item(Menu.Popup_0002, "mru_6", IDM_MRU_6);
-    Append_Item(Menu.Popup_0002, "mru_7", IDM_MRU_7);
-    Append_Item(Menu.Popup_0002, "mru_8", IDM_MRU_8);
-    Append_Item(Menu.Popup_0002, "mru_9", IDM_MRU_9);
-    Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "Open &Project", IDM_Open_Project);
-    State(Menu.Popup_0001, Command, IDM_Open_Project, Disabled);
-    Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Alt+F4", IDM_QUIT);
-    Menu.Popup_0003:= Create_Popup;
-    Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Copy message &list to clipboard", IDM_Copy_Messages);
-    Menu.Popup_0004:= Create_Popup;
-    Append_Menu(Menu.Main, "&Actions", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Compile this file" & To_GString_From_String((1=>ASCII.HT)) & "Shift-F4", IDM_Compile_single);
-    State(Menu.Popup_0004, Command, IDM_Compile_single, Disabled);
-    Append_Item(Menu.Popup_0004, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F4", IDM_Build);
-    State(Menu.Popup_0004, Command, IDM_Build, Disabled);
-    Append_Item(Menu.Popup_0004, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "F9", IDM_Build_and_run);
-    State(Menu.Popup_0004, Command, IDM_Build_and_run, Disabled);
-    Append_Separator(Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "Code sam&ple", IDM_Ada_Sample);
-    Menu.Popup_0005:= Create_Popup;
-    Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
-    Append_Item(Menu.Popup_0005, "&Notepad view", IDM_Notepad_view);
-    Append_Item(Menu.Popup_0005, "&Studio view", IDM_Studio_view);
-    State(Menu.Popup_0005, Command, IDM_Studio_view, Disabled);
-    Append_Separator(Menu.Popup_0005);
-    Append_Item(Menu.Popup_0005, "&HAC restricted Ada mode", IDM_HAC_Mode);
-    Append_Item(Menu.Popup_0005, "&GNAT full Ada mode", IDM_GNAT_Mode);
-    State(Menu.Popup_0005, Command, IDM_GNAT_Mode, Disabled);
-    Menu.Popup_0006:= Create_Popup;
-    Append_Menu(Menu.Main, "&Options", Menu.Popup_0006);
-    Append_Item(Menu.Popup_0006, "&General options", IDM_General_options);
-    Menu.Popup_0007:= Create_Popup;
-    Append_Menu(Menu.Main, "&Window", Menu.Popup_0007);
-    Append_Item(Menu.Popup_0007, "&Cascade", IDM_WINDOW_CASCADE);
-    Append_Item(Menu.Popup_0007, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
-    Append_Item(Menu.Popup_0007, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
-    Append_Item(Menu.Popup_0007, "&Close All", IDM_WINDOW_CLOSE_ALL);
-    Menu.Popup_0008:= Create_Popup;
-    Append_Menu(Menu.Main, "&Help", Menu.Popup_0008);
-    Append_Item(Menu.Popup_0008, "&Quick help" & To_GString_From_String((1=>ASCII.HT)) & "F1", IDM_Quick_Help);
-    Append_Item(Menu.Popup_0008, "LEA &Web page (contact, support)", IDM_Web);
-    Append_Separator(Menu.Popup_0008);
-    Append_Item(Menu.Popup_0008, "&About LEA", IDM_ABOUT);
-  end Create_Full_Menu;  --  Menu_MDI_Main_Type
+    New_Menu.Main := Create_Menu;
+    New_Menu.Popup_0001 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&File", New_Menu.Popup_0001);
+    Append_Item (New_Menu.Popup_0001, "&New" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_New_File);
+    Append_Item (New_Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_Open_File);
+    Append_Separator (New_Menu.Popup_0001);
+    New_Menu.Popup_0002 := Create_Popup;
+    Append_Menu (New_Menu.Popup_0001, "&Recent", New_Menu.Popup_0002);
+    Append_Item (New_Menu.Popup_0002, "mru_1", IDM_MRU_1);
+    Append_Item (New_Menu.Popup_0002, "mru_2", IDM_MRU_2);
+    Append_Item (New_Menu.Popup_0002, "mru_3", IDM_MRU_3);
+    Append_Item (New_Menu.Popup_0002, "mru_4", IDM_MRU_4);
+    Append_Item (New_Menu.Popup_0002, "mru_5", IDM_MRU_5);
+    Append_Item (New_Menu.Popup_0002, "mru_6", IDM_MRU_6);
+    Append_Item (New_Menu.Popup_0002, "mru_7", IDM_MRU_7);
+    Append_Item (New_Menu.Popup_0002, "mru_8", IDM_MRU_8);
+    Append_Item (New_Menu.Popup_0002, "mru_9", IDM_MRU_9);
+    Append_Separator (New_Menu.Popup_0001);
+    Append_Item (New_Menu.Popup_0001, "Open &Project", IDM_Open_Project);
+    State (New_Menu.Popup_0001, Command, IDM_Open_Project, Disabled);
+    Append_Separator (New_Menu.Popup_0001);
+    Append_Item (New_Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Alt+F4", IDM_QUIT);
+    New_Menu.Popup_0003 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Edit", New_Menu.Popup_0003);
+    Append_Item (New_Menu.Popup_0003, "Copy message &list to clipboard", IDM_Copy_Messages);
+    New_Menu.Popup_0004 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Actions", New_Menu.Popup_0004);
+    Append_Item (New_Menu.Popup_0004, "&Compile this file" & To_GString_From_String((1=>ASCII.HT)) & "Shift-F4", IDM_Compile_single);
+    State (New_Menu.Popup_0004, Command, IDM_Compile_single, Disabled);
+    Append_Item (New_Menu.Popup_0004, "&Build application" & To_GString_From_String((1=>ASCII.HT)) & "F4", IDM_Build);
+    State (New_Menu.Popup_0004, Command, IDM_Build, Disabled);
+    Append_Item (New_Menu.Popup_0004, "Build and &run" & To_GString_From_String((1=>ASCII.HT)) & "F9", IDM_Build_and_run);
+    State (New_Menu.Popup_0004, Command, IDM_Build_and_run, Disabled);
+    Append_Separator (New_Menu.Popup_0004);
+    Append_Item (New_Menu.Popup_0004, "Code sam&ple", IDM_Ada_Sample);
+    New_Menu.Popup_0005 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&View", New_Menu.Popup_0005);
+    Append_Item (New_Menu.Popup_0005, "&Notepad view", IDM_Notepad_view);
+    Append_Item (New_Menu.Popup_0005, "&Studio view", IDM_Studio_view);
+    State (New_Menu.Popup_0005, Command, IDM_Studio_view, Disabled);
+    Append_Separator (New_Menu.Popup_0005);
+    Append_Item (New_Menu.Popup_0005, "&HAC restricted Ada mode", IDM_HAC_Mode);
+    Append_Item (New_Menu.Popup_0005, "&GNAT full Ada mode", IDM_GNAT_Mode);
+    State (New_Menu.Popup_0005, Command, IDM_GNAT_Mode, Disabled);
+    New_Menu.Popup_0006 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Options", New_Menu.Popup_0006);
+    Append_Item (New_Menu.Popup_0006, "&General options", IDM_General_options);
+    New_Menu.Popup_0007 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Window", New_Menu.Popup_0007);
+    Append_Item (New_Menu.Popup_0007, "&Cascade", IDM_WINDOW_CASCADE);
+    Append_Item (New_Menu.Popup_0007, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
+    Append_Item (New_Menu.Popup_0007, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
+    Append_Item (New_Menu.Popup_0007, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    New_Menu.Popup_0008 := Create_Popup;
+    Append_Menu (New_Menu.Main, "&Help", New_Menu.Popup_0008);
+    Append_Item (New_Menu.Popup_0008, "&Quick help" & To_GString_From_String((1=>ASCII.HT)) & "F1", IDM_Quick_Help);
+    Append_Item (New_Menu.Popup_0008, "LEA &Web page (contact, support)", IDM_Web);
+    Append_Separator (New_Menu.Popup_0008);
+    Append_Item (New_Menu.Popup_0008, "&About LEA", IDM_ABOUT);
+  end Create_Full_Menu;  --  For type: Menu_MDI_Main_Type
 
   --  Dialog at resource line 202
 
@@ -636,7 +634,7 @@ package body LEA_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn ( 0, 0, 186, 73, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 177, 65, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -670,20 +668,18 @@ package body LEA_Resource_GUI is
     x,y,w,h : Integer;
   begin
     if resize then
-    Dlg_to_Scn ( 0, 0, 186, 73, x,y,w,h);
+    Dlg_to_Scn ( 0, 0, 177, 65, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn ( 57, 14, 114, 15, x,y,w,h);
-    Create (Window.Stack_Bar, Window, x,y,w,h, Horizontal, True);
-    Dlg_to_Scn ( 5, 6, 175, 28, x,y,w,h);
-    Create( Window.Group_Stack, Window, "Stack", x,y,w,h);
-    Dlg_to_Scn ( 23, 18, 27, 9, x,y,w,h);
-    Create (Window.Label_Stack, Window, "Usage", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Stack);
-    Dlg_to_Scn ( 5, 36, 175, 34, x,y,w,h);
-    Create( Window.Group_VM_Inter, Window, "Virtual Machine Interpreter", x,y,w,h);
-    Dlg_to_Scn ( 53, 47, 70, 19, x,y,w,h);
+    Dlg_to_Scn ( 109, 7, 64, 55, x,y,w,h);
+    Create( Window.Group_Stack, Window, "Stack usage", x,y,w,h);
+    Dlg_to_Scn ( 124, 20, 36, 30, x,y,w,h);
+    Create (Window.Stack_Bar, Window, x,y,w,h, Vertical, True);
+    Dlg_to_Scn ( 3, 7, 99, 55, x,y,w,h);
+    Create( Window.Group_VM_Inter, Window, "Interpreter control", x,y,w,h);
+    Dlg_to_Scn ( 16, 26, 70, 19, x,y,w,h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
@@ -696,7 +692,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 300
+  --  Dialog at resource line 299
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -832,7 +828,7 @@ package body LEA_Resource_GUI is
     Create (Window.Match_case, Window, "Match case", x,y,w,h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
-  --  Dialog at resource line 322
+  --  Dialog at resource line 321
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1040,6 +1036,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 435
+  --  Last line of resource script file: 434
 
 end LEA_Resource_GUI;
