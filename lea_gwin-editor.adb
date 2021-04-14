@@ -224,7 +224,7 @@ package body LEA_GWin.Editor is
       s : constant GString := Editor.GetTextRange (pos, pos + 1);
     begin
       return s (s'First);
-    end;
+    end Get_character;
     function Is_ident_char (c: GCharacter) return Boolean is
       (c in 'a'..'z' or c in 'A'..'Z' or c in '0'..'9' or c = '_');
   begin
@@ -556,13 +556,13 @@ package body LEA_GWin.Editor is
     begin
       Ada.Integer_Wide_Text_IO.Put (s, line);
       return s;
-    end;
+    end Right_aligned_line_number;
     function Right_aligned_column_number (column: Positive) return Wide_String is
       s: Wide_String := "123";
     begin
       Ada.Integer_Wide_Text_IO.Put (s, column);
       return s;
-    end;
+    end Right_aligned_column_number;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;

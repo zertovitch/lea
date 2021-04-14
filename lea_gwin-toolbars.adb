@@ -9,8 +9,8 @@ package body LEA_GWin.Toolbars is
 
   use GWindows.Image_Lists, Interfaces.C;
 
-  -- Filter & and \t
-  -- Not having TTS_NO_PREFIX in tool_tip creation would do it as well.
+  --  Filter & and \t
+  --  Not having TTS_NO_PREFIX in tool_tip creation would do it as well.
   function Filter(s: GString) return GString is
     use type GString_Unbounded;
     u: GString_Unbounded;
@@ -34,10 +34,10 @@ package body LEA_GWin.Toolbars is
       end case;
     end loop;
     return To_GString_From_Unbounded(u);
-  end;
+  end Filter;
 
-  -- How to Display Tooltips for Buttons (Windows)
-  -- http://msdn.microsoft.com/en-us/library/windows/desktop/hh298386(v=vs.85).aspx
+  --  How to Display Tooltips for Buttons (Windows)
+  --  http://msdn.microsoft.com/en-us/library/windows/desktop/hh298386(v=vs.85).aspx
 
   TBSTYLE_TOOLTIPS : constant:= 16#100#;
   TBSTYLE_FLAT     : constant:= 16#800#;
@@ -68,7 +68,7 @@ package body LEA_GWin.Toolbars is
     is
       use GWindows.Common_Controls;
     begin
-      -- The tool tip's text is a copy of the menu's text.
+      --  The tool tip's text is a copy of the menu's text.
       tb.Add_String(Filter(Text(Fake_Menu.Main, Command, Command_ID)));
       tb.Add_Button(Image_Index, Command_ID, string_count);
       string_count:= string_count + 1;

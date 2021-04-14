@@ -4,7 +4,7 @@ with GWindows.Common_Controls, GWindows.Image_Lists;
 
 package LEA_GWin.Toolbars is
 
-  -- ** Main tool bar (add / remove / ...) at top left of the main window:
+  --  ** Main tool bar (add / remove / ...) at top left of the main window:
 
   procedure Init_Main_toolbar(
     tb    : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;

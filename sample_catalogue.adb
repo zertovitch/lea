@@ -44,4 +44,4 @@ begin
   New_Line (f);
   Put_Line (f, "zipada -eps _lea_data.zip SciLexer.dll lea_help.txt %samples%");
   Close (f);
-end;
+end Sample_catalogue;

@@ -4,8 +4,8 @@ package body Windows_Timers is
 
   use GWindows.Base, Interfaces.C;
 
-  -- Windows interfacing part.
-  -- Functionalities from Windows API's Winuser.
+  --  Windows interfacing part.
+  --  Functionalities from Windows API's Winuser.
 
   type TIMERPROC is access procedure (hwnd    : GWindows.Types.Handle;
                                       uMsg    : Interfaces.C.unsigned;

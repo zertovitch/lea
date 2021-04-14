@@ -103,5 +103,6 @@ package body LEA_GWin.Help is
   procedure Show_sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, File_Name : String) is
   begin
     Show_embedded (Main_Window, "hac_samples/" & Dir & '/' & File_Name, File_Name, Is_Help => False);
-  end;
+  end Show_sample;
+
 end LEA_GWin.Help;

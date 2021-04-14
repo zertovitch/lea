@@ -165,13 +165,11 @@ package body LEA_GWin.Modal_Dialogs is
     --  So a solution is to catch the selection *before* losing focus.
     --
     procedure On_list_quit (Window : in out GWindows.Base.Base_Window_Type'Class) is
-      pragma Warnings (Off, Window);
     begin
       Remember_selection;
     end On_list_quit;
 
     procedure On_list_double_click (Window : in out GWindows.Base.Base_Window_Type'Class) is
-      pragma Warnings (Off, Window);
     begin
       Remember_selection;
       if sel > 0 then
@@ -184,7 +182,7 @@ package body LEA_GWin.Modal_Dialogs is
     begin
       Find_Selected_Topic;
       Refresh_Cat;
-    end;
+    end On_topic_change;
 
     --
     use GWindows.Application, GWindows.Constants;
