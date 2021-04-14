@@ -188,10 +188,7 @@ begin
       MDI_Child.MDI_Parent.Disable;
       Windowed_interpret (MDI_Child.BD, unhandled);  --  Running the HAC program happens here.
       --  Scroll to last output line:
-      MDI_Child.MDI_Parent.Message_Panel.Message_List.Ensure_Visible (
-        MDI_Child.MDI_Parent.Message_Panel.Message_List.Item_Count - 1,
-        Full
-      );
+      ml.Ensure_Visible (ml.Item_Count, Full);
       MDI_Child.MDI_Parent.Enable;
       MDI_Child.MDI_Parent.Focus;
       if Is_Exception_Raised (unhandled) then
