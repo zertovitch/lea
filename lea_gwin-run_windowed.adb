@@ -188,7 +188,7 @@ begin
       MDI_Child.MDI_Parent.Disable;
       Windowed_interpret (MDI_Child.BD, unhandled);  --  Running the HAC program happens here.
       --  Scroll to last output line:
-      ml.Ensure_Visible (ml.Item_Count, Full);
+      ml.Ensure_Visible (Integer'Max (0, ml.Item_Count - 1), Full);
       MDI_Child.MDI_Parent.Enable;
       MDI_Child.MDI_Parent.Focus;
       if Is_Exception_Raised (unhandled) then
