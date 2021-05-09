@@ -4,7 +4,13 @@ with HAL;
 
 package LEA_Common.HAC_Samples is
 
-  type Sample_Topic is (Algorithm, Script, Template, Compatibility);
+  type Sample_Topic is
+   (Algorithm,
+    Mathematics,
+    Script,
+    Template,
+    --
+    Compatibility);
 
   use HAL;
 
@@ -18,15 +24,17 @@ package LEA_Common.HAC_Samples is
 
   standard_sample : constant Sample_List :=
     (
-      (Algorithm, +"ackermann.adb",     +"Ackermann recursive function"),
       (Algorithm, +"bwt.adb",           +"Burrows-Wheeler transform: preprocessing for data compression"),
-      (Algorithm, +"covid_19_s.adb",    +"Model for simulating the Coronavirus (COVID-19) pandemic"),
-      (Algorithm, +"mandelbrot.adb",    +"Mandelbrot set"),
       (Algorithm, +"maze_gen.adb",      +"Maze generator"),
-      (Algorithm, +"random.adb",        +"Random generation: Rand (discrete) and Rnd (continuous)"),
       (Algorithm, +"merge_sort.adb",    +"Sorting: Merge sort"),
       (Algorithm, +"shell_sort.adb",    +"Sorting: Shell sort"),
-      (Algorithm, +"three_lakes_s.adb", +"Three lakes: ordinary differential equation system"),
+      --
+      (Mathematics, +"ackermann.adb",     +"Ackermann recursive function"),
+      (Mathematics, +"covid_19_s.adb",    +"Model for simulating the Coronavirus (COVID-19) pandemic"),
+      (Mathematics, +"mandelbrot.adb",    +"Mandelbrot set"),
+      (Mathematics, +"random.adb",        +"Random generation: Rand (discrete) and Rnd (continuous)"),
+      (Mathematics, +"series.adb",        +"Series (e.g. 1 + x + x^2 + ...) and partial sums demo"),
+      (Mathematics, +"three_lakes_s.adb", +"Three lakes: ordinary differential equation system"),
       --
       (Script,    +"env.adb",         +"System's Environment Variables: Set & Get"),
       (Script,    +"file_append.adb", +"Creates a file in multiple steps, via the Append procedure"),
@@ -43,6 +51,7 @@ package LEA_Common.HAC_Samples is
 
   directory : array (Sample_Topic) of VString :=
      (Algorithm     => +"algorithms",
+      Mathematics   => +"mathematics",
       Script        => +"scripts",
       Template      => +"templates",
       Compatibility => +"compatibility"

@@ -13,7 +13,8 @@ begin
     ml := Integer'Max (ml, Length (standard_sample (i).name));
   end loop;
   Create (f, "pack_data.cmd");
-  Put_Line (f, "rem This script is automatically written by sample_catalogue.adb");
+  Put_Line (f, "rem  *** This script is automatically written by sample_catalogue.adb");
+  Put_Line (f, "rem  *** Do not edit it, change lea_common-hac_samples.ads instead! ");
   New_Line (f);
   Put_Line (f, "mkdir hac_samples");
   for topic in Sample_Topic loop
