@@ -48,7 +48,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
 
   use LEA_Common, HAC_Sys.PCode.Interpreter;
 
-  unhandled : Exception_Propagation_Data;
+  post_mortem : Post_Mortem_Data;
 
   procedure Show_Error is
 
@@ -87,14 +87,14 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
   begin
     Message_Box (MDI_Main,
       "Unhandled exception - run-time error",
-      S2G ("HAC VM: raised " & Image (unhandled)) & NL & NL &
-      S2G (Message (unhandled)),
+      S2G ("HAC Virtual Machine: raised " & Image (post_mortem.Unhandled)) & NL & NL &
+      S2G (Message (post_mortem.Unhandled)),
       Icon => Exclamation_Icon
     );
     ml.Clear;
     ml.Set_Column ("Line", 0, 60);
     ml.Set_Column ("Trace-back location", 1, 800);
-    ML_Trace_Back (unhandled);
+    ML_Trace_Back (post_mortem.Unhandled);
   end Show_Error;
 
   --  The following is copied and adapted from AZip's progress bar.
@@ -186,12 +186,12 @@ begin
       progress_box.Redraw;
       progress_box.Show;
       MDI_Child.MDI_Parent.Disable;
-      Windowed_interpret (MDI_Child.BD, unhandled);  --  Running the HAC program happens here.
+      Windowed_interpret (MDI_Child.BD, post_mortem);  --  Running the HAC program happens here.
       --  Scroll to last output line:
       ml.Ensure_Visible (Integer'Max (0, ml.Item_Count - 1), Full);
       MDI_Child.MDI_Parent.Enable;
       MDI_Child.MDI_Parent.Focus;
-      if Is_Exception_Raised (unhandled) then
+      if Is_Exception_Raised (post_mortem.Unhandled) then
         Show_Error;
       end if;
     when GNAT_mode =>
