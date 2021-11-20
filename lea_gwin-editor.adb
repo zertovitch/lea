@@ -174,8 +174,9 @@ package body LEA_GWin.Editor is
     line : constant Integer := Editor.Get_current_line;
     --  Performance: we scope the highlighting to 'around' lines around current one.
     around : constant := 200;
-    line_a : constant Integer := Integer'Max(line - around, 1);
-    line_z : constant Integer := Integer'Min(line + around, Editor.LineFromPosition (Editor.GetLength));
+    line_a : constant Integer := Integer'Max (line - around, 1);
+    line_z : constant Integer := Integer'Min (line + around,
+      Editor.LineFromPosition (Editor.GetLength));
     pos_a : Position := Editor.PositionFromLine (line_a);
     pos_z : constant Position := Editor.PositionFromLine (line_z);
     pos, found_a, found_z : Position;
@@ -218,13 +219,16 @@ package body LEA_GWin.Editor is
     p1, p2 : Position := INVALID_POSITION;
     sel_a, sel_z : Position;
     lin_a, lin_z: Integer;
+    --
     function Is_parenthesis (s: GString) return Boolean is (s="(" or else s=")");
     is_whole : Boolean;
-    function Get_character (pos : Integer) return GCharacter is
+    --
+    function Get_character (pos : Position) return GCharacter is
       s : constant GString := Editor.GetTextRange (pos, pos + 1);
     begin
       return s (s'First);
     end Get_character;
+    --
     function Is_ident_char (c: GCharacter) return Boolean is
       (c in 'a'..'z' or c in 'A'..'Z' or c in '0'..'9' or c = '_');
   begin
@@ -496,7 +500,7 @@ package body LEA_GWin.Editor is
     for l in lin_a .. lin_z loop
       --  1) First, remove leading blanks up to ind_min column.
       pos:= Position'Min(
-        Editor.PositionFromLine(l) + ind_min,
+        Editor.PositionFromLine(l) + Position (ind_min),
         --  A blank line (ignored by ind_min) may have less than ind_min columns:
         Editor.GetLineIndentPosition(l)
       );
@@ -576,10 +580,10 @@ package body LEA_GWin.Editor is
       when find_next | find_previous =>
         for attempt in 1 .. 2 loop
           if action = find_next then
-            Editor.SetTargetStart (Integer'Max (Editor.GetCurrentPos, Editor.GetAnchor));
+            Editor.SetTargetStart (Position'Max (Editor.GetCurrentPos, Editor.GetAnchor));
             Editor.SetTargetEnd (Editor.GetLength);
           else
-            Editor.SetTargetStart (Integer'Min (Editor.GetCurrentPos, Editor.GetAnchor));
+            Editor.SetTargetStart (Position'Min (Editor.GetCurrentPos, Editor.GetAnchor));
             Editor.SetTargetEnd (0);
           end if;
           pos := Editor.SearchInTarget(find_str);
@@ -779,7 +783,7 @@ package body LEA_GWin.Editor is
       selections := Editor.Get_Selections;
       declare
         sel_n_a, sel_n_z, caret_n : array (1..selections) of Position;
-        length: Natural;
+        length : Position;
       begin
         for n in 1 .. selections loop
           sel_n_a (n) := Editor.Get_Selection_N_Start (n);
@@ -935,8 +939,11 @@ package body LEA_GWin.Editor is
   is
     use Ada.Streams;
     --
-    procedure Copy_slice (amount: Integer) is
-      slice: constant String := G2S (Stream.editor.GetTextRange(Stream.index, Stream.index + amount));
+    procedure Copy_slice (amount: Ada.Streams.Stream_Element_Offset) is
+      slice: constant String :=
+        G2S (Stream.editor.GetTextRange(
+          Position (Stream.index),
+          Position (Stream.index + amount)));
       ei: Stream_Element_Offset := Item'First;
     begin
       for s of slice loop
@@ -946,7 +953,7 @@ package body LEA_GWin.Editor is
       Stream.index := Stream.index + amount;
     end Copy_slice;
   begin
-    if Stream.index >= Stream.editor.GetLength then
+    if Position (Stream.index) >= Stream.editor.GetLength then
       --  Zero transfer -> Last:= Item'First - 1, see RM 13.13.1(8)
       --  No End_Error here, T'Read will raise it: RM 13.13.2(37)
       if Item'First > Stream_Element_Offset'First then
@@ -964,7 +971,7 @@ package body LEA_GWin.Editor is
     end if;
     --  From now on, we can assume Item'Length > 0.
 
-    if Stream.index + Item'Length < Stream.editor.GetLength then
+    if Position (Stream.index + Item'Length) < Stream.editor.GetLength then
       --  * Normal case: even after reading, the index will be in the range
       Last := Item'Last;
       Copy_slice (Item'Length);
@@ -972,8 +979,8 @@ package body LEA_GWin.Editor is
       --  then at least one element is left to be read
     else
       --  * Special case: we exhaust the buffer
-      Last:= Item'First + Stream_Element_Offset (Stream.editor.GetLength - 1 - Stream.index);
-      Copy_slice (Integer (Last - Item'First) + 1);
+      Last := Item'First + Stream_Element_Offset (Stream.editor.GetLength) - 1 - Stream.index;
+      Copy_slice (Last - Item'First + 1);
       --  If Last < Item'Last, the T'Read attribute raises End_Error
       --  because of the incomplete reading.
     end if;

@@ -74,7 +74,7 @@ package body LEA_GWin.MDI_Child is
       end case;
     end if;
     MDI_Child.Status_Bar.Text(
-      "Length:" & Integer'Wide_Image(MDI_Child.Editor.GetLength) &
+      "Length:" & Int'Wide_Image(MDI_Child.Editor.GetLength) &
       "     Lines:" & Integer'Wide_Image(MDI_Child.Editor.GetLineCount),
       1);
     pos   := MDI_Child.Editor.GetCurrentPos;
@@ -84,7 +84,7 @@ package body LEA_GWin.MDI_Child is
       "Line:"  & Integer'Wide_Image(1 + MDI_Child.Editor.LineFromPosition(pos)) &
       " Col:" & Integer'Wide_Image(1 + MDI_Child.Editor.GetColumn(pos)),
       2);
-    MDI_Child.Status_Bar.Text("Sel:" & Integer'Wide_Image(sel_z - sel_a) &
+    MDI_Child.Status_Bar.Text("Sel:" & Scintilla.Position'Wide_Image(sel_z - sel_a) &
       " (ln:" & Integer'Wide_Image(
          1 +
          MDI_Child.Editor.LineFromPosition(sel_z) -

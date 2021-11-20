@@ -24,7 +24,8 @@ package body LEA_GWin.Repair is
     --
     procedure Repair_in_editor (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
-      line_pos : GWindows.Scintilla.Position;
+      use GWindows.Scintilla;
+      line_pos, start_pos, end_pos : Position;
     begin
       if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
         declare
@@ -42,13 +43,15 @@ package body LEA_GWin.Repair is
             pw.Focus;  --  Focus on document already open in our app.
             pw.Editor.BeginUndoAction;
             line_pos := pw.Editor.PositionFromLine (repair.line);
+            start_pos := line_pos + Position (repair.col_a);
+            end_pos   := line_pos + Position (repair.col_z);
             case repair.kind is
               when none =>
                 null;  --  We should not get here.
               when insert | insert_line =>
-                pw.Editor.SetSel (line_pos + repair.col_a, line_pos + repair.col_a);
+                pw.Editor.SetSel (start_pos, start_pos);
               when replace_token =>
-                pw.Editor.SetSel (line_pos + repair.col_a, line_pos + repair.col_z);
+                pw.Editor.SetSel (start_pos, end_pos);
                 pw.Editor.Clear;
             end case;
             pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (HAL.VStr_Pkg.To_String (repair.text)) & Optional_EOL);

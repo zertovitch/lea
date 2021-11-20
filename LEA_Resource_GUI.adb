@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2021/04/14  15:17:19
+--  Transcription time: 2021/11/20  16:51:50
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -211,13 +211,13 @@ package body LEA_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 289, 225, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -263,13 +263,13 @@ package body LEA_Resource_GUI is
     Dlg_to_Scn ( 110, 61, 30, 8, x,y,w,h);
     Create_Label (Window, "Internet:", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 157, 61, 89, 8, x,y,w,h);
-    Create (Window.AZip_URL, Window, "http://l-e-a.sf.net/", x,y,w,h, GWindows.Static_Controls.Left, None, ID => AZip_URL);
+    Create (Window.LEA_URL, Window, "http://l-e-a.sf.net/", x,y,w,h, GWindows.Static_Controls.Left, None, ID => LEA_URL);
     Dlg_to_Scn ( 110, 81, 30, 8, x,y,w,h);
     Create_Label (Window, "Version:", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 157, 81, 118, 8, x,y,w,h);
     Create (Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
     Dlg_to_Scn ( 5, 105, 278, 93, x,y,w,h);
-    Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
+    Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x, y, w, h);
     Dlg_to_Scn ( 23, 119, 100, 8, x,y,w,h);
     Create (Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
     Dlg_to_Scn ( 132, 119, 147, 8, x,y,w,h);
@@ -328,13 +328,13 @@ package body LEA_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 186, 47, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -424,13 +424,13 @@ package body LEA_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 472, 188, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -512,13 +512,13 @@ package body LEA_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 253, 168, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -570,11 +570,11 @@ package body LEA_Resource_GUI is
     Dlg_to_Scn ( 83, 50, 162, 15, x,y,w,h);
     Create (Window.Ada_file_extension_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Ada_file_extension_edit_box);
     Dlg_to_Scn ( 5, 99, 240, 28, x,y,w,h);
-    Create( Window.Group_color_theme, Window, "Color theme", x,y,w,h);
+    Create( Window.Group_color_theme, Window, "Color theme", x, y, w, h);
     Dlg_to_Scn ( 60, 110, 108, 20, x,y,w,h);
     Create (Window.Color_theme_list_box, Window, x,y,w,h, False, ID => Color_theme_list_box);
     Dlg_to_Scn ( 5, 68, 240, 28, x,y,w,h);
-    Create( Window.Group_Backup, Window, "Backup", x,y,w,h);
+    Create( Window.Group_Backup, Window, "Backup", x, y, w, h);
     Dlg_to_Scn ( 79, 78, 91, 11, x,y,w,h);
     Create (Window.Backup_bak_button, Window, "Simple (.bak)", x,y,w,h, ID => Backup_bak_button);
     Dlg_to_Scn ( 14, 80, 43, 8, x,y,w,h);
@@ -632,13 +632,13 @@ package body LEA_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 177, 65, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -674,11 +674,11 @@ package body LEA_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn ( 109, 7, 64, 55, x,y,w,h);
-    Create( Window.Group_Stack, Window, "Stack usage", x,y,w,h);
+    Create( Window.Group_Stack, Window, "Stack usage", x, y, w, h);
     Dlg_to_Scn ( 124, 20, 36, 30, x,y,w,h);
     Create (Window.Stack_Bar, Window, x,y,w,h, Vertical, True);
     Dlg_to_Scn ( 3, 7, 99, 55, x,y,w,h);
-    Create( Window.Group_VM_Inter, Window, "Interpreter control", x,y,w,h);
+    Create( Window.Group_VM_Inter, Window, "Interpreter control", x, y, w, h);
     Dlg_to_Scn ( 16, 26, 70, 19, x,y,w,h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
@@ -707,13 +707,13 @@ package body LEA_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 235, 164, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -857,13 +857,13 @@ package body LEA_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 378, 76, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,

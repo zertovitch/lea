@@ -15,7 +15,8 @@ with GWindows.Application,
      GWindows.Common_Controls,
      GWindows.Constants,
      GWindows.Message_Boxes,
-     GWindows.Static_Controls.Web;
+     GWindows.Static_Controls.Web,
+     GWindows.Types;
 
 with GNAT.Compiler_Version;
 
@@ -59,30 +60,25 @@ package body LEA_GWin.Modal_Dialogs is
     box : About_box_Type;
     url_lea, url_gnat, url_gnavi, url_hac, url_resedit, url_zipada : URL_Type;
     --
-    function GNAT_Version_string return String is
-      package CVer is new GNAT.Compiler_Version;
-      v: constant String:= CVer.Version;
-    begin
-      if v(v'First..v'First+2) = "GPL" then
-        return v;
-      else
-        return "GMGPL " & v & " (TDM-GCC / MinGW)";
-      end if;
-    end GNAT_Version_string;
+    package CVer is new GNAT.Compiler_Version;
+    GNAT_Version_string : constant String := CVer.Version;
     --
   begin
-    box.Create_Full_Dialog(Main_Window);
-    box.Copyright_label.Text(S2G(Version_info.LegalCopyright));
-    box.Version_label.Text(S2G(Version_info.FileVersion));
-    Create_and_Swap (url_lea,     box.AZip_URL,    box, S2G(LEA_Common.LEA_web_page));
+    box.Create_Full_Dialog (Main_Window);
+    box.Copyright_label.Text (S2G(Version_info.LegalCopyright));
+    box.Version_label.Text (
+      S2G(Version_info.FileVersion) & ", built as" &
+      GWindows.GStrings.To_GString_From_String (Integer'Image (GWindows.Types.Wparam'Size)) &
+      " bit app."
+    );
+    Create_and_Swap (url_lea,     box.LEA_URL,     box, S2G(LEA_Common.LEA_web_page));
     Create_and_Swap (url_gnat,    box.GNAT_URL,    box, "https://www.adacore.com/community");
-    box.GNAT_Version.Text (S2G("version " & GNAT_Version_string));
+    box.GNAT_Version.Text    (S2G("version: " & GNAT_Version_string));
     Create_and_Swap (url_gnavi,   box.GNAVI_URL,   box, "http://sf.net/projects/gnavi");
     Create_and_Swap (url_hac,     box.HAC_URL,     box, "https://hacadacompiler.sourceforge.io/");
-    box.HAC_Version.Text (S2G ("version " & HAC_Sys.version & ", ref. " & HAC_Sys.reference));
+    box.HAC_Version.Text    (S2G ("version: " & HAC_Sys.version & ", ref. " & HAC_Sys.reference));
     Create_and_Swap (url_zipada,  box.ZipAda_URL,  box, S2G (Zip.web));
-    box.ZipAda_Version.Text (S2G ("version " & Zip.version & ", ref. " & Zip.reference));
-    Create_and_Swap (url_resedit, box.ResEdit_URL, box, "http://resedit.net");
+    box.ZipAda_Version.Text (S2G ("version: " & Zip.version & ", ref. " & Zip.reference));
     box.Center;
     if Show_Dialog (box, Main_Window) = IDOK then
       null;

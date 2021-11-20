@@ -26,13 +26,13 @@ with Windows_Timers;
 
 package body LEA_GWin.MDI_Main is
 
-  use type GString_Unbounded;
+  use type GString_Unbounded, Scintilla.Position;
 
   procedure Focus_an_already_opened_window(
     MDI_Main     :     MDI_Main_Type;
     File_Name    :     GString_Unbounded;
     Line         :     Integer            := -1;
-    Col_a, Col_z :     Integer            := -1;
+    Col_a, Col_z :     Scintilla.Position := -1;
     is_open      : out Boolean )
   is
     procedure Identify (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -113,8 +113,8 @@ package body LEA_GWin.MDI_Main is
     MDI_Main     : in out MDI_Main_Type;
     File_Name,
     File_Title   :        GWindows.GString_Unbounded;
-    Line         :        Integer := -1;
-    Col_a, Col_z :        Integer := -1
+    Line         :        Integer            := -1;
+    Col_a, Col_z :        Scintilla.Position := -1
   )
   is
     is_open, file_loaded: Boolean;
@@ -225,7 +225,9 @@ package body LEA_GWin.MDI_Main is
       MDI_Main,
       File_Name,
       G2GU(Shorten_file_name(GU2G(File_Name))),
-      Line, Col_a, Col_z
+      Line,
+      Scintilla.Position (Col_a),
+      Scintilla.Position (Col_z)
     );
   end Open_Child_Window_And_Load;
 

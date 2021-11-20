@@ -97,7 +97,7 @@ package LEA_GWin.Editor is
   ------------------------------------------------------
 
   type Editor_Stream_Type is new Ada.Streams.Root_Stream_Type with record
-    index  : Natural := 0;
+    index  : Ada.Streams.Stream_Element_Offset := 0;
     editor : access LEA_Scintilla_Type'Class;
   end record;
 

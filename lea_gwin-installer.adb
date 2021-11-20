@@ -32,10 +32,11 @@ package body LEA_GWin.Installer is
   exception
     when others =>
       Message_Box
-        ("LEA",
+        ("LEA startup",
          "Installation error: cannot unpack ""scilexer.dll"" from ""lea.exe""." & NL &
          "Path = " & S2G (Command_Name),
-          OK_Box
+          OK_Box,
+          Error_Icon
         );
       raise;
   end Unpack_DLL;

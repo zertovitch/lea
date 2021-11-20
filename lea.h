@@ -89,7 +89,7 @@
 #define Group_Backup                            40084
 #define Find_next_button                        40085
 #define Find_previous_button                    40086
-#define AZip_URL                                40087
+#define LEA_URL                                 40087
 #define Find_all_button                         40088
 #define Replace_and_find_next_button            40089
 #define Color_theme_list_box                    40090

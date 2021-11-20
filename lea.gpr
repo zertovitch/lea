@@ -59,7 +59,7 @@ project LEA is
 
    Common_Compiler_Options := (
      "-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
-     "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
+     --  "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
      "-gnatwcijkmopruvz.c.p.t.w.x",    --  Warnings switches (run "gnatmake" for full list)
      "-gnatf",  --  Full errors. Verbose details, all undefined references
      "-gnatq",  --  Don't quit, try semantics, even if parse errors
@@ -69,9 +69,8 @@ project LEA is
      "-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
      "-gnatyx",       --  Style: check x:no extra parens
      "-gnatye",       --  Style: check e:end/exit labels present
-     "-gnatyc",       --  Style: check c:comment format (two spaces)
+     "-gnatyc"        --  Style: check c:comment format (two spaces)
      --  "-gnatyt",       --  Style: check t:token separation rules
-     "-gnatec=" & project'Project_Dir & "lea_elim.pra"
    );
    
    Debug_Options := (
@@ -81,7 +80,6 @@ project LEA is
      "-fstack-check",
      "-fno-inline",
      --
-     "-gnatec=" & project'Project_Dir & "debug.pra",
      "-g"              --  Generate debugging information
    );
 
@@ -97,8 +95,12 @@ project LEA is
 
    package Compiler is
       case Build_Mode is
-         when "Debug" | "Debug_MinGW" => for Default_Switches ("ada") use Common_Compiler_Options & Debug_Options;
-         when "Fast"  | "Fast_MinGW"  => for Default_Switches ("ada") use Common_Compiler_Options & Fast_Options;
+         when "Debug" | "Debug_MinGW" =>
+            for Default_Switches ("ada") use Common_Compiler_Options & Debug_Options;
+            for Local_Configuration_Pragmas use project'Project_Dir & "debug.pra";
+         when "Fast"  | "Fast_MinGW"  =>
+            for Default_Switches ("ada") use Common_Compiler_Options & Fast_Options;
+            for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
       end case;
    end Compiler;
 

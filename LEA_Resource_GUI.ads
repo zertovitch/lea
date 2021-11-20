@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2021/04/14  15:17:19
+--  Transcription time: 2021/11/20  16:51:50
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -69,7 +69,7 @@ package LEA_Resource_GUI is
     Copyright_label: Label_Type;
     --  Label: IDC_STATIC
     --  Label: IDC_STATIC
-    AZip_URL: Label_Type;
+    LEA_URL: Label_Type;
     --  Label: IDC_STATIC
     Version_label: Label_Type;
     Static_0006: Group_Box_Type;
@@ -374,7 +374,7 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion: constant String:= "0.78";
+    FileVersion: constant String:= "0.79";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2017 .. 2021";
     ProductName: constant String:= "LEA";
     Translation: constant:= 1033;
@@ -475,7 +475,7 @@ package LEA_Resource_GUI is
   Group_Backup                : constant:=  40084;
   Find_next_button            : constant:=  40085;
   Find_previous_button        : constant:=  40086;
-  AZip_URL                    : constant:=  40087;
+  LEA_URL                     : constant:=  40087;
   Find_all_button             : constant:=  40088;
   Replace_and_find_next_button: constant:=  40089;
   Color_theme_list_box        : constant:=  40090;
