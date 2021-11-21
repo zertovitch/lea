@@ -41,21 +41,23 @@ package body LEA_GWin.Repair is
         begin
           if pw.File_Name = repair.file then
             pw.Focus;  --  Focus on document already open in our app.
-            pw.Editor.BeginUndoAction;
-            line_pos := pw.Editor.PositionFromLine (repair.line);
+            pw.Editor.Begin_Undo_Action;
+            --
+            line_pos := pw.Editor.Position_From_Line (repair.line);
             start_pos := line_pos + Position (repair.col_a);
             end_pos   := line_pos + Position (repair.col_z);
             case repair.kind is
               when none =>
                 null;  --  We should not get here.
               when insert | insert_line =>
-                pw.Editor.SetSel (start_pos, start_pos);
+                pw.Editor.Set_Sel (start_pos, start_pos);
               when replace_token =>
-                pw.Editor.SetSel (start_pos, end_pos);
+                pw.Editor.Set_Sel (start_pos, end_pos);
                 pw.Editor.Clear;
             end case;
-            pw.Editor.InsertText (pw.Editor.GetCurrentPos, S2G (HAL.VStr_Pkg.To_String (repair.text)) & Optional_EOL);
-            pw.Editor.EndUndoAction;
+            pw.Editor.Insert_Text (pw.Editor.Get_Current_Pos, S2G (HAL.VStr_Pkg.To_String (repair.text)) & Optional_EOL);
+            --
+            pw.Editor.End_Undo_Action;
           end if;
         end;
       end if;

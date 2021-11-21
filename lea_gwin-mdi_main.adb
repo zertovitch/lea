@@ -51,9 +51,9 @@ package body LEA_GWin.MDI_Main is
               pw.Editor.Set_current_line (Line);
             end if;
             if Col_a > -1 then
-              new_pos_a := pw.Editor.GetCurrentPos + Col_a;
-              new_pos_z := pw.Editor.GetCurrentPos + Col_z;
-              pw.Editor.SetSel (new_pos_a, new_pos_z);
+              new_pos_a := pw.Editor.Get_Current_Pos + Col_a;
+              new_pos_z := pw.Editor.Get_Current_Pos + Col_z;
+              pw.Editor.Set_Sel (new_pos_a, new_pos_z);
             end if;
           end if;
         end;
@@ -168,9 +168,9 @@ package body LEA_GWin.MDI_Main is
       New_Window.Editor.Set_current_line (mru_line);
     end if;
     if Col_a > -1 then
-      new_pos_a := New_Window.Editor.GetCurrentPos + Col_a;
-      new_pos_z := New_Window.Editor.GetCurrentPos + Col_z;
-      New_Window.Editor.SetSel (new_pos_a, new_pos_z);
+      new_pos_a := New_Window.Editor.Get_Current_Pos + Col_a;
+      new_pos_z := New_Window.Editor.Get_Current_Pos + Col_z;
+      New_Window.Editor.Set_Sel (new_pos_a, new_pos_z);
     end if;
     if not file_loaded then
       Message_Box (MDI_Main,

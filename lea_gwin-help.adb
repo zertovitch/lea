@@ -79,7 +79,7 @@ package body LEA_GWin.Help is
       Main_Window.MDI_Active_Window (New_Window.all);
       New_Window.Editor.Load_text (contents => unpacked_str);
       if Is_Help then
-        New_Window.Editor.SetReadOnly (True);
+        New_Window.Editor.Set_Read_Only (True);
       else
         New_Window.Editor.syntax_kind := Ada_syntax;
         New_Window.Editor.Set_Scintilla_Syntax;

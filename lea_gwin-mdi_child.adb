@@ -74,24 +74,24 @@ package body LEA_GWin.MDI_Child is
       end case;
     end if;
     MDI_Child.Status_Bar.Text(
-      "Length:" & Int'Wide_Image(MDI_Child.Editor.GetLength) &
-      "     Lines:" & Integer'Wide_Image(MDI_Child.Editor.GetLineCount),
+      "Length:" & Int'Wide_Image(MDI_Child.Editor.Get_Length) &
+      "     Lines:" & Integer'Wide_Image(MDI_Child.Editor.Get_Line_Count),
       1);
-    pos   := MDI_Child.Editor.GetCurrentPos;
-    sel_a := MDI_Child.Editor.GetSelectionStart;
-    sel_z := MDI_Child.Editor.GetSelectionEnd;
+    pos   := MDI_Child.Editor.Get_Current_Pos;
+    sel_a := MDI_Child.Editor.Get_Selection_Start;
+    sel_z := MDI_Child.Editor.Get_Selection_End;
     MDI_Child.Status_Bar.Text(
-      "Line:"  & Integer'Wide_Image(1 + MDI_Child.Editor.LineFromPosition(pos)) &
-      " Col:" & Integer'Wide_Image(1 + MDI_Child.Editor.GetColumn(pos)),
+      "Line:"  & Integer'Wide_Image(1 + MDI_Child.Editor.Line_From_Position(pos)) &
+      " Col:" & Integer'Wide_Image(1 + MDI_Child.Editor.Get_Column(pos)),
       2);
     MDI_Child.Status_Bar.Text("Sel:" & Scintilla.Position'Wide_Image(sel_z - sel_a) &
       " (ln:" & Integer'Wide_Image(
          1 +
-         MDI_Child.Editor.LineFromPosition(sel_z) -
-         MDI_Child.Editor.LineFromPosition(sel_a)
+         MDI_Child.Editor.Line_From_Position(sel_z) -
+         MDI_Child.Editor.Line_From_Position(sel_a)
       ) & ')',
       3);
-    case MDI_Child.Editor.GetEOLMode is
+    case MDI_Child.Editor.Get_EOL_Mode is
       when SC_EOL_CR =>
         MDI_Child.Status_Bar.Text("EOL: Mac (CR)",        4);
       when SC_EOL_CRLF =>
@@ -101,25 +101,25 @@ package body LEA_GWin.MDI_Child is
       when others =>
         null;
     end case;
-    if MDI_Child.Editor.GetOvertype then
+    if MDI_Child.Editor.Get_Overtype then
       MDI_Child.Status_Bar.Text("OVR", 6);
     else
       MDI_Child.Status_Bar.Text("INS", 6);
     end if;
   end Update_status_bar;
 
-  procedure Update_tool_bar(MDI_Child : in out MDI_Child_Type) is
+  procedure Update_tool_bar (MDI_Child : in out MDI_Child_Type) is
     bar: MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
     is_any_selection: constant Boolean :=
-      MDI_Child.Editor.GetSelectionStart < MDI_Child.Editor.GetSelectionEnd;
+      MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
   begin
-    bar.Enabled(IDM_Undo, MDI_Child.Editor.CanUndo);
-    bar.Enabled(IDM_Redo, MDI_Child.Editor.CanRedo);
+    bar.Enabled(IDM_Undo, MDI_Child.Editor.Can_Undo);
+    bar.Enabled(IDM_Redo, MDI_Child.Editor.Can_Redo);
     bar.Enabled(IDM_Save_File, MDI_Child.Editor.modified);
     bar.Enabled(IDM_Save_All, MDI_Child.save_all_hint);
     bar.Enabled(IDM_Cut, is_any_selection);
     bar.Enabled(IDM_Copy, is_any_selection);
-    bar.Enabled(IDM_Paste, MDI_Child.Editor.CanPaste);
+    bar.Enabled(IDM_Paste, MDI_Child.Editor.Can_Paste);
     bar.Enabled(IDM_Indent, True);
     bar.Enabled(IDM_Unindent, True);
     bar.Enabled(IDM_Comment, True);
@@ -134,15 +134,15 @@ package body LEA_GWin.MDI_Child is
   procedure Update_menus(MDI_Child : in out MDI_Child_Type) is
     bool_to_state: constant array(Boolean) of State_Type := (Disabled, Enabled);
     is_any_selection: constant Boolean :=
-      MDI_Child.Editor.GetSelectionStart < MDI_Child.Editor.GetSelectionEnd;
+      MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
   begin
-    State(MDI_Child.Menu.Main, Command, IDM_Cut, bool_to_state(is_any_selection));
-    State(MDI_Child.Menu.Main, Command, IDM_Copy, bool_to_state(is_any_selection));
-    State(MDI_Child.Menu.Main, Command, IDM_Paste, bool_to_state(MDI_Child.Editor.CanPaste));
-    State(MDI_Child.Menu.Main, Command, IDM_Undo, bool_to_state(MDI_Child.Editor.CanUndo));
-    State(MDI_Child.Menu.Main, Command, IDM_Redo, bool_to_state(MDI_Child.Editor.CanRedo));
-    State(MDI_Child.Menu.Main, Command, IDM_Save_File, bool_to_state(MDI_Child.Editor.modified));
-    State(MDI_Child.Menu.Main, Command, IDM_Save_All, bool_to_state(MDI_Child.save_all_hint));
+    State (MDI_Child.Menu.Main, Command, IDM_Cut,       bool_to_state (is_any_selection));
+    State (MDI_Child.Menu.Main, Command, IDM_Copy,      bool_to_state (is_any_selection));
+    State (MDI_Child.Menu.Main, Command, IDM_Paste,     bool_to_state (MDI_Child.Editor.Can_Paste));
+    State (MDI_Child.Menu.Main, Command, IDM_Undo,      bool_to_state (MDI_Child.Editor.Can_Undo));
+    State (MDI_Child.Menu.Main, Command, IDM_Redo,      bool_to_state (MDI_Child.Editor.Can_Redo));
+    State (MDI_Child.Menu.Main, Command, IDM_Save_File, bool_to_state (MDI_Child.Editor.modified));
+    State (MDI_Child.Menu.Main, Command, IDM_Save_All,  bool_to_state (MDI_Child.save_all_hint));
   end Update_menus;
 
   procedure Update_display(
@@ -210,7 +210,7 @@ package body LEA_GWin.MDI_Child is
     MDI_Child.Editor.mdi_parent := MDI_Child'Unrestricted_Access;
     MDI_Child.Editor.Create (MDI_Child, 50, 1, 20, 20);  --  Widget starts as a small square...
     MDI_Child.Editor.Dock (Fill);                        --  ...expands into MDI child window.
-    MDI_Child.Editor.SetEOLMode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
+    MDI_Child.Editor.Set_EOL_Mode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
 
     MDI_Child.Status_Bar.Create (MDI_Child, "No file");
     MDI_Child.Status_Bar.Parts (
@@ -325,9 +325,9 @@ package body LEA_GWin.MDI_Child is
     --  So, in any case, we won't close it now on next window open.
     MDI_Child.Extra_first_doc:= False;
     MDI_Child.Update_Common_Menus (File_Name, MDI_Child.Editor.Get_current_line);
-    MDI_Child.Editor.SetSavePoint;
+    MDI_Child.Editor.Set_Save_Point;
     MDI_Child.Editor.modified:= False;
-    MDI_Child.Editor.SetReadOnly (False);
+    MDI_Child.Editor.Set_Read_Only (False);
   exception
     when backup_error_1 =>
       Message_Box (MDI_Child, "Save", "Cannot delete old backup" & NL & "-> " & backup_name, OK_Box, Exclamation_Icon);
@@ -342,9 +342,9 @@ package body LEA_GWin.MDI_Child is
   procedure On_Save (MDI_Child : in out MDI_Child_Type) is
     File_Name : constant GWindows.GString := GU2G (MDI_Child.File_Name);
   begin
-    if File_Name = "" or else MDI_Child.Editor.GetReadOnly then
+    if File_Name = "" or else MDI_Child.Editor.Get_Read_Only then
       MDI_Child.Focus;
-      if MDI_Child.Editor.GetReadOnly then
+      if MDI_Child.Editor.Get_Read_Only then
         Message_Box (MDI_Child, "Save", "This document is read-only" & NL & "You need to save it under another name");
       end if;
       MDI_Child.On_Save_As;
@@ -623,15 +623,15 @@ package body LEA_GWin.MDI_Child is
       when IDM_Cut =>           MDI_Child.Editor.Cut;
       when IDM_Copy =>          MDI_Child.Editor.Copy;
       when IDM_Paste =>         MDI_Child.Editor.Paste;
-      when IDM_Select_all =>    MDI_Child.Editor.SelectAll;
+      when IDM_Select_all =>    MDI_Child.Editor.Select_All;
       when IDM_Indent =>
-        MDI_Child.Editor.SetTabWidth (MDI_Child.MDI_Parent.opt.indentation);
+        MDI_Child.Editor.Set_Tab_Width (MDI_Child.MDI_Parent.opt.indentation);
         MDI_Child.Editor.Tab;
-        MDI_Child.Editor.SetTabWidth (MDI_Child.MDI_Parent.opt.tab_width);
+        MDI_Child.Editor.Set_Tab_Width (MDI_Child.MDI_Parent.opt.tab_width);
       when IDM_Unindent =>
-        MDI_Child.Editor.SetTabWidth (MDI_Child.MDI_Parent.opt.indentation);
-        MDI_Child.Editor.BackTab;
-        MDI_Child.Editor.SetTabWidth (MDI_Child.MDI_Parent.opt.tab_width);
+        MDI_Child.Editor.Set_Tab_Width (MDI_Child.MDI_Parent.opt.indentation);
+        MDI_Child.Editor.Back_Tab;
+        MDI_Child.Editor.Set_Tab_Width (MDI_Child.MDI_Parent.opt.tab_width);
       when IDM_Comment =>       MDI_Child.Editor.Selection_comment;
       when IDM_Uncomment =>     MDI_Child.Editor.Selection_uncomment;
       when IDM_Find =>          MDI_Child.Show_Search_Box;
@@ -731,11 +731,11 @@ package body LEA_GWin.MDI_Child is
   procedure Show_Search_Box (MDI_Child : in out MDI_Child_Type) is
     sel_a, sel_z : Scintilla.Position;
   begin
-    sel_a := MDI_Child.Editor.GetSelectionStart;
-    sel_z := MDI_Child.Editor.GetSelectionEnd;
+    sel_a := MDI_Child.Editor.Get_Selection_Start;
+    sel_z := MDI_Child.Editor.Get_Selection_End;
     if sel_z > sel_a then
       --  Goodie: put the selected text into the "find" box.
-      MDI_Child.MDI_Parent.Search_box.Find_box.Text (MDI_Child.Editor.GetTextRange (sel_a, sel_z));
+      MDI_Child.MDI_Parent.Search_box.Find_box.Text (MDI_Child.Editor.Get_Text_Range (sel_a, sel_z));
     end if;
     MDI_Child.MDI_Parent.Search_box.Show;
     MDI_Child.MDI_Parent.Search_box.Find_box.Focus;

@@ -29,9 +29,9 @@ package body LEA_GWin.Editor is
      Value       : in     GWindows.GCharacter)
   is
   pragma Unreferenced (Special_Key);
-    Cur_Pos  : constant Position   := GetCurrentPos (Editor);
-    Line     : constant Integer    := LineFromPosition (Editor, Cur_Pos);
-    Prev_Ind : constant Integer    := GetLineIndentation (Editor, Line - 1);
+    Cur_Pos  : constant Position   := Get_Current_Pos (Editor);
+    Line     : constant Integer    := Line_From_Position (Editor, Cur_Pos);
+    Prev_Ind : constant Integer    := Get_Line_Indentation (Editor, Line - 1);
     New_Ind  :          Integer;
     Pos      :          Position;
     CR       : constant GCharacter := GCharacter'Val (13);
@@ -43,15 +43,15 @@ package body LEA_GWin.Editor is
       if Editor.syntax_kind = Ada_syntax then
         --  Look for extra indentation when the line ends with some specific keywords.
         Pos := Cur_Pos - 1;
-        if Editor.GetTextRange (Pos - 1, Pos) = (1 => CR) then
+        if Editor.Get_Text_Range (Pos - 1, Pos) = (1 => CR) then
           --  Skip the CR in Windows' CR & LF line end.
           --  Reminder: Scintilla's Pos is the cursor's position, *between* characters. So,
           --  (Pos - 1, Pos) wraps *one* character, not *two* like for a slice (Pos - 1 .. Pos).
           Pos := Pos - 1;
         end if;
-        if Editor.GetTextRange (Pos - 5, Pos) = "begin"
-          or else Editor.GetTextRange (Pos - 6, Pos) = "record"
-          or else Editor.GetTextRange (Pos - 1, Pos) = "("
+        if Editor.Get_Text_Range (Pos - 5, Pos) = "begin"
+          or else Editor.Get_Text_Range (Pos - 6, Pos) = "record"
+          or else Editor.Get_Text_Range (Pos - 1, Pos) = "("
         then
           --  On a "Return" keypress right after "begin", "record" or "(",
           --  we add an extra indentation.
@@ -59,7 +59,7 @@ package body LEA_GWin.Editor is
         end if;
       end if;
       if New_Ind > 0 then
-        Editor.AddText (New_Ind * ' ');
+        Editor.Add_Text (New_Ind * ' ');
       end if;
     end if;
   end On_Character_Added;
@@ -75,9 +75,9 @@ package body LEA_GWin.Editor is
     use GWindows.Colors;
   begin
     --  Set up editor
-    Editor.SetEOLMode (SC_EOL_CRLF);
-    Editor.SetUseTabs (False);  --  New Tab keystrokes use space only (Tab character euthanasia).
-    Editor.SetEdgeMode (EDGE_LINE);
+    Editor.Set_EOL_Mode (SC_EOL_CRLF);
+    Editor.Set_Use_Tabs (False);  --  New Tab keystrokes use space only (Tab character euthanasia).
+    Editor.Set_Edge_Mode (EDGE_LINE);
     --
     --  Multi-line edit
     Editor.Set_Multiple_Selection;
@@ -91,17 +91,17 @@ package body LEA_GWin.Editor is
 
     Editor.Apply_options;
 
-    Editor.SetMarginWidthN (margin_for_line_numbers, 50);
-    Editor.SetMarginTypeN (margin_for_line_numbers, SC_MARGIN_NUMBER);
-    Editor.SetMarginWidthN (margin_for_bookmarks, 20);
-    Editor.SetMarginTypeN (margin_for_bookmarks, SC_MARGIN_SYMBOL);
-    Editor.SetMarginSensitiveN (margin_for_bookmarks, True);
-    Editor.SetMarginMaskN (margin_leftmost,         0);
-    Editor.SetMarginMaskN (margin_for_line_numbers, 0);
-    Editor.SetMarginMaskN (margin_for_bookmarks,    2 ** marker_for_bookmarks);
-    Editor.MarkerDefine (marker_for_bookmarks, SC_MARK_BOOKMARK);
-    Editor.MarkerSetFore (marker_for_bookmarks, Blue);
-    Editor.MarkerSetBack (marker_for_bookmarks, Light_Blue);
+    Editor.Set_Margin_Width_N (margin_for_line_numbers, 50);
+    Editor.Set_Margin_Type_N (margin_for_line_numbers, SC_MARGIN_NUMBER);
+    Editor.Set_Margin_Width_N (margin_for_bookmarks, 20);
+    Editor.Set_Margin_Type_N (margin_for_bookmarks, SC_MARGIN_SYMBOL);
+    Editor.Set_Margin_Sensitive_N (margin_for_bookmarks, True);
+    Editor.Set_Margin_Mask_N (margin_leftmost,         0);
+    Editor.Set_Margin_Mask_N (margin_for_line_numbers, 0);
+    Editor.Set_Margin_Mask_N (margin_for_bookmarks,    2 ** marker_for_bookmarks);
+    Editor.Marker_Define (marker_for_bookmarks, SC_MARK_BOOKMARK);
+    Editor.Marker_Set_Fore (marker_for_bookmarks, Blue);
+    Editor.Marker_Set_Back (marker_for_bookmarks, Light_Blue);
     Editor.Focus;
   end On_Create;
 
@@ -110,7 +110,7 @@ package body LEA_GWin.Editor is
                              Pos     : in     Position;
                              Margin  : in     Integer)
   is
-    line : constant Integer := Editor.LineFromPosition (Pos);
+    line : constant Integer := Editor.Line_From_Position (Pos);
   begin
     if Margin = margin_for_bookmarks then
       Editor.Bookmark_toggle (line);
@@ -176,32 +176,32 @@ package body LEA_GWin.Editor is
     around : constant := 200;
     line_a : constant Integer := Integer'Max (line - around, 1);
     line_z : constant Integer := Integer'Min (line + around,
-      Editor.LineFromPosition (Editor.GetLength));
-    pos_a : Position := Editor.PositionFromLine (line_a);
-    pos_z : constant Position := Editor.PositionFromLine (line_z);
+      Editor.Line_From_Position (Editor.Get_Length));
+    pos_a :          Position := Editor.Position_From_Line (line_a);
+    pos_z : constant Position := Editor.Position_From_Line (line_z);
     pos, found_a, found_z : Position;
     sel_a, sel_z : Position;
     flags : Integer := SCFIND_MATCHCASE;
   begin
-    Editor.Indicator_Clear_Range (0, Editor.GetLength);
+    Editor.Indicator_Clear_Range (0, Editor.Get_Length);
     if word = "" then
       return;
     end if;
-    sel_a:= Editor.GetSelectionStart;
-    sel_z:= Editor.GetSelectionEnd;
-    Editor.IndicSetStyle (word_highlighting_indicator_index, INDIC_ROUNDBOX);
+    sel_a:= Editor.Get_Selection_Start;
+    sel_z:= Editor.Get_Selection_End;
+    Editor.Indic_Set_Style (word_highlighting_indicator_index, INDIC_ROUNDBOX);
     if is_whole then
       flags := flags + SCFIND_WHOLEWORD;
     end if;
-    Editor.SetSearchFlags(flags);
+    Editor.Set_Search_Flags(flags);
     while pos_a < pos_z loop
-      Editor.SetTargetStart (pos_a);
-      Editor.SetTargetEnd (pos_z);
-      pos := Editor.SearchInTarget(word);
+      Editor.Set_Target_Start (pos_a);
+      Editor.Set_Target_End (pos_z);
+      pos := Editor.Search_In_Target(word);
       exit when pos < 0;
       --  Mark the found word
-      found_a := Editor.GetTargetStart;
-      found_z := Editor.GetTargetEnd;
+      found_a := Editor.Get_Target_Start;
+      found_z := Editor.Get_Target_End;
       if found_a >= sel_a and then found_z <= sel_z then
         null;  --  We don't want highlighting within selection.
       else
@@ -215,7 +215,7 @@ package body LEA_GWin.Editor is
   overriding
   procedure On_Update_UI (Editor : in out LEA_Scintilla_Type) is
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
-    pos : constant Position := Editor.GetCurrentPos;
+    pos : constant Position := Editor.Get_Current_Pos;
     p1, p2 : Position := INVALID_POSITION;
     sel_a, sel_z : Position;
     lin_a, lin_z: Integer;
@@ -224,7 +224,7 @@ package body LEA_GWin.Editor is
     is_whole : Boolean;
     --
     function Get_character (pos : Position) return GCharacter is
-      s : constant GString := Editor.GetTextRange (pos, pos + 1);
+      s : constant GString := Editor.Get_Text_Range (pos, pos + 1);
     begin
       return s (s'First);
     end Get_character;
@@ -239,42 +239,44 @@ package body LEA_GWin.Editor is
     Editor.pos_last_update_UI := pos;
     parent.Update_display(status_bar);
     --  Highlight instances of selected word
-    sel_a:= Editor.GetSelectionStart;
-    sel_z:= Editor.GetSelectionEnd;
+    sel_a:= Editor.Get_Selection_Start;
+    sel_z:= Editor.Get_Selection_End;
     if sel_a /= Editor.sel_a_last_update_UI
       or else sel_z /= Editor.sel_z_last_update_UI
     then  --  Any change ?
       Editor.sel_a_last_update_UI := sel_a;
       Editor.sel_z_last_update_UI := sel_z;
-      lin_a:= Editor.LineFromPosition (sel_a);
-      lin_z:= Editor.LineFromPosition (sel_z);
+      lin_a:= Editor.Line_From_Position (sel_a);
+      lin_z:= Editor.Line_From_Position (sel_z);
       if sel_z > sel_a and then lin_a = lin_z then  --  We consider only a selection on one line
         --  If selection is a whole word, we highlight only whole words:
         is_whole :=
           (sel_a = 0 or else not Is_ident_char (Get_character (sel_a - 1)))
           and then
-          (sel_z = Editor.GetLength or else not Is_ident_char (Get_character (sel_z)));
-        Highlight_word (Editor, Trim (Editor.GetTextRange (sel_a, sel_z), Both), is_whole);
+          (sel_z = Editor.Get_Length or else not Is_ident_char (Get_character (sel_z)));
+        Highlight_word (Editor, Trim (Editor.Get_Text_Range (sel_a, sel_z), Both), is_whole);
       else
-        Editor.Indicator_Clear_Range (0, Editor.GetLength);
+        Editor.Indicator_Clear_Range (0, Editor.Get_Length);
       end if;
     end if;
+    --
     --  Parentheses matching
-    if pos > 0 and then Is_parenthesis (Editor.GetTextRange (pos - 1, pos)) then
+    --
+    if pos > 0 and then Is_parenthesis (Editor.Get_Text_Range (pos - 1, pos)) then
       p1 := pos - 1;  --  Found on the left of the cursor
-    elsif Is_parenthesis (Editor.GetTextRange (pos, pos + 1)) then
+    elsif Is_parenthesis (Editor.Get_Text_Range (pos, pos + 1)) then
       p1 := pos;      --  Found at the cursor
     end if;
     if p1 = INVALID_POSITION then
       --  No parenthesis
-      Editor.BraceHighlight (INVALID_POSITION, INVALID_POSITION);
+      Editor.Brace_Highlight (INVALID_POSITION, INVALID_POSITION);
     else
-      p2 := Editor.BraceMatch (p1);
+      p2 := Editor.Brace_Match (p1);
       if p2 = INVALID_POSITION then
         --  Parenthesis unmatched
-        Editor.BraceBadLight (p1);
+        Editor.Brace_Bad_Light (p1);
       else
-        Editor.BraceHighlight (p1, p2);
+        Editor.Brace_Highlight (p1, p2);
       end if;
     end if;
   end On_Update_UI;
@@ -339,70 +341,70 @@ package body LEA_GWin.Editor is
     mdi_root : MDI_Main_Type renames parent.MDI_Parent.all;
     theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
   begin
-    Editor.SetTabWidth (mdi_root.opt.tab_width);
-    Editor.SetEdgeColumn (mdi_root.opt.right_margin);
+    Editor.Set_Tab_Width (mdi_root.opt.tab_width);
+    Editor.Set_Edge_Column (mdi_root.opt.right_margin);
 
     --  Default style
-    Editor.StyleSetFore (STYLE_DEFAULT, Gray);  --  For the line numbers
-    Editor.StyleSetBack (STYLE_DEFAULT, theme_color(theme, background));
-    Editor.StyleSetSize (STYLE_DEFAULT, App_default_font_size);
-    Editor.StyleSetFont (STYLE_DEFAULT, App_default_font);
-    Editor.StyleClearAll;
+    Editor.Style_Set_Fore (STYLE_DEFAULT, Gray);  --  For the line numbers
+    Editor.Style_Set_Back (STYLE_DEFAULT, theme_color(theme, background));
+    Editor.Style_Set_Size (STYLE_DEFAULT, App_default_font_size);
+    Editor.Style_Set_Font (STYLE_DEFAULT, App_default_font);
+    Editor.Style_Clear_All;
 
     --  Parentheses coloring
     --    For matched parentheses:
-    Editor.StyleSetFore (STYLE_BRACELIGHT, theme_color(theme, matched_parenthesis));
-    Editor.StyleSetBack (STYLE_BRACELIGHT, theme_color(theme, parenthesis_background));
+    Editor.Style_Set_Fore (STYLE_BRACELIGHT, theme_color(theme, matched_parenthesis));
+    Editor.Style_Set_Back (STYLE_BRACELIGHT, theme_color(theme, parenthesis_background));
     --    For unmatched parentheses:
-    Editor.StyleSetFore (STYLE_BRACEBAD, theme_color(theme, unmatched_parenthesis));
-    Editor.StyleSetBack (STYLE_BRACEBAD, theme_color(theme, parenthesis_background));
+    Editor.Style_Set_Fore (STYLE_BRACEBAD, theme_color(theme, unmatched_parenthesis));
+    Editor.Style_Set_Back (STYLE_BRACEBAD, theme_color(theme, parenthesis_background));
 
-    Editor.StyleSetFore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
-    Editor.SetSelFore (True, theme_color(theme, selection_foreground));
-    Editor.StyleSetBack (SCE_ADA_DEFAULT, theme_color(theme, background));
-    Editor.SetSelBack (True, theme_color(theme, selection_background));
-    Editor.StyleSetSize (SCE_ADA_DEFAULT, App_default_font_size);
-    Editor.StyleSetFont (SCE_ADA_DEFAULT, App_default_font);
+    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
+    Editor.Style_Set_Back (SCE_ADA_DEFAULT, theme_color(theme, background));
+    Editor.Set_Sel_Fore (True, theme_color(theme, selection_foreground));
+    Editor.Set_Sel_Back (True, theme_color(theme, selection_background));
+    Editor.Style_Set_Size (SCE_ADA_DEFAULT, App_default_font_size);
+    Editor.Style_Set_Font (SCE_ADA_DEFAULT, App_default_font);
 
-    Editor.StyleSetFore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
-    Editor.StyleSetFore (SCE_ADA_NUMBER,      theme_color(theme, number));
-    Editor.StyleSetFore (SCE_ADA_WORD,        theme_color(theme, keyword));
-    Editor.StyleSetFore (SCE_ADA_STRING,      theme_color(theme, string));
-    Editor.StyleSetFore (SCE_ADA_CHARACTER,   theme_color(theme, character));
-    Editor.StyleSetFore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
+    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
+    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      theme_color(theme, number));
+    Editor.Style_Set_Fore (SCE_ADA_WORD,        theme_color(theme, keyword));
+    Editor.Style_Set_Fore (SCE_ADA_STRING,      theme_color(theme, string));
+    Editor.Style_Set_Fore (SCE_ADA_CHARACTER,   theme_color(theme, character));
+    Editor.Style_Set_Fore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
 
     --  Cases where the text is obviously wrong
     --  (unfinished character or string, illegal identifier)
-    Editor.StyleSetFore (SCE_ADA_CHARACTEREOL, theme_color(theme, error_foreground));
-    Editor.StyleSetBack (SCE_ADA_CHARACTEREOL, theme_color(theme, error_background));
-    Editor.StyleSetFore (SCE_ADA_STRINGEOL, theme_color(theme, error_foreground));
-    Editor.StyleSetBack (SCE_ADA_STRINGEOL, theme_color(theme, error_background));
-    Editor.StyleSetFore (SCE_ADA_ILLEGAL, theme_color(theme, error_foreground));
-    Editor.StyleSetBack (SCE_ADA_ILLEGAL, theme_color(theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_CHARACTEREOL, theme_color(theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_CHARACTEREOL, theme_color(theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_STRINGEOL, theme_color(theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_STRINGEOL, theme_color(theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_ILLEGAL, theme_color(theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_ILLEGAL, theme_color(theme, error_background));
 
-    Editor.SetCaretFore (theme_color(theme, caret));
-    Editor.IndicSetFore (
+    Editor.Set_Caret_Fore (theme_color(theme, caret));
+    Editor.Indic_Set_Fore (
       word_highlighting_indicator_index,
       theme_color(theme, matched_word_highlight)
     );
 
     case mdi_root.opt.show_special is
       when none =>
-        Editor.SetViewWS(SCWS_INVISIBLE);
-        Editor.SetViewEOL(False);
+        Editor.Set_View_WS (SCWS_INVISIBLE);
+        Editor.Set_View_EOL (False);
       when spaces =>
-        Editor.SetViewWS(SCWS_VISIBLEALWAYS);
-        Editor.SetViewEOL(False);
+        Editor.Set_View_WS (SCWS_VISIBLEALWAYS);
+        Editor.Set_View_EOL (False);
       when spaces_eols =>
-        Editor.SetViewWS(SCWS_VISIBLEALWAYS);
-        Editor.SetViewEOL(True);
+        Editor.Set_View_WS (SCWS_VISIBLEALWAYS);
+        Editor.Set_View_EOL (True);
     end case;
 
   end Apply_options;
 
   function Get_current_line (Editor : LEA_Scintilla_Type) return Integer is
   begin
-    return Editor.LineFromPosition (Editor.GetCurrentPos);
+    return Editor.Line_From_Position (Editor.Get_Current_Pos);
   end Get_current_line;
 
   procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line: Integer) is
@@ -411,10 +413,10 @@ package body LEA_GWin.Editor is
     --  Tactic to show the desired line closer to the middle of the window,
     --  avoiding top or bottom if possible.
     if line > shake then
-      Editor.GotoLine (line - shake);  --  A bit too high
+      Editor.Go_To_Line (line - shake);  --  A bit too high
     end if;
-    Editor.GotoLine (line + shake);    --  A bit too low
-    Editor.GotoLine (line);            --  Finally, set the correct line
+    Editor.Go_To_Line (line + shake);    --  A bit too low
+    Editor.Go_To_Line (line);            --  Finally, set the correct line
   end Set_current_line;
 
   --  If the last line of a selection is fully selected, the end of the selection's
@@ -425,12 +427,12 @@ package body LEA_GWin.Editor is
     sel_y : Position;
     lin_y, lin_z: Integer;
   begin
-    sel_a:= Editor.GetSelectionStart;
-    sel_z:= Editor.GetSelectionEnd;
+    sel_a:= Editor.Get_Selection_Start;
+    sel_z:= Editor.Get_Selection_End;
     if sel_z > sel_a then
       sel_y := sel_z - 1;
-      lin_y:= Editor.LineFromPosition(sel_y);
-      lin_z:= Editor.LineFromPosition(sel_z);
+      lin_y:= Editor.Line_From_Position(sel_y);
+      lin_z:= Editor.Line_From_Position(sel_z);
       if lin_y < lin_z then
         sel_z := sel_y;
       end if;
@@ -456,23 +458,24 @@ package body LEA_GWin.Editor is
       return blank_line_code;
     end Get_visible_indentation;
     --
-    function Get_visible_indentation(line: Integer) return Integer is
+    function Get_visible_indentation (line: Integer) return Integer is
       pos, pos_next: Position;
     begin
-      pos     := Editor.PositionFromLine(line);
-      pos_next:= Editor.PositionFromLine(line+1);
+      pos     := Editor.Position_From_Line (line);
+      pos_next:= Editor.Position_From_Line (line+1);
       if pos = pos_next then
         return blank_line_code;  --  Empty document case
       end if;
-      return Get_visible_indentation(Editor.GetTextRange(pos, pos_next));  --  analyse whole line
+      return Get_visible_indentation
+               (Editor.Get_Text_Range (pos, pos_next));  --  analyse whole line
     end Get_visible_indentation;
     --
     pos, sel_a, sel_z: Position;
     ind, ind_prev_line, ind_min, lin_a, lin_z: Integer;
   begin
     Get_Reduced_Selection (Editor, sel_a, sel_z);
-    lin_a:= Editor.LineFromPosition(sel_a);
-    lin_z:= Editor.LineFromPosition(sel_z);
+    lin_a:= Editor.Line_From_Position(sel_a);
+    lin_z:= Editor.Line_From_Position(sel_z);
     --  Look for indentation *before* the selected block.
     ind_prev_line:= 0;
     for l in reverse 1 .. lin_a - 1 loop
@@ -496,24 +499,26 @@ package body LEA_GWin.Editor is
       ind_min := 0;
     end if;
     --  The whole commenting can be undone and redone in a single "Undo" / Redo":
-    Editor.BeginUndoAction;
+    Editor.Begin_Undo_Action;
+    --
     for l in lin_a .. lin_z loop
       --  1) First, remove leading blanks up to ind_min column.
       pos:= Position'Min(
-        Editor.PositionFromLine(l) + Position (ind_min),
+        Editor.Position_From_Line(l) + Position (ind_min),
         --  A blank line (ignored by ind_min) may have less than ind_min columns:
-        Editor.GetLineIndentPosition(l)
+        Editor.Get_Line_Indent_Position (l)
       );
-      Editor.SetCurrentPos(pos);
-      Editor.DelLineLeft;
+      Editor.Set_Current_Pos(pos);
+      Editor.Del_Line_Left;
       --  2) Then, insert an indented "--  ", with a fixed indentation (ind_prev_line)
       --    which is using indentation of any non-blank line above the block.
-      pos:= Editor.PositionFromLine(l);
-      Editor.InsertText(pos, ind_prev_line * ' ' & "--  ");
+      pos:= Editor.Position_From_Line(l);
+      Editor.Insert_Text(pos, ind_prev_line * ' ' & "--  ");
     end loop;
-    Editor.EndUndoAction;
+    --
+    Editor.End_Undo_Action;
     --  Select the whole block of lines again.
-    Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1));
+    Editor.Set_Sel (Editor.Position_From_Line(lin_a), Editor.Position_From_Line(lin_z + 1));
   end Selection_comment;
 
   procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type) is
@@ -521,26 +526,29 @@ package body LEA_GWin.Editor is
     lin_a, lin_z: Integer;
   begin
     Get_Reduced_Selection (Editor, sel_a, sel_z);
-    lin_a:= Editor.LineFromPosition(sel_a);
-    lin_z:= Editor.LineFromPosition(sel_z);
+    lin_a:= Editor.Line_From_Position(sel_a);
+    lin_z:= Editor.Line_From_Position(sel_z);
     --  The whole uncommenting can be undone and redone in a single "Undo" / Redo":
-    Editor.BeginUndoAction;
+    Editor.Begin_Undo_Action;
     for l in lin_a .. lin_z loop
-      pos := Editor.GetLineIndentPosition(l);
-      if Editor.GetTextRange(pos, pos + 4) = "--  " then
-        Editor.SetSel(pos, pos + 4);
+      pos := Editor.Get_Line_Indent_Position(l);
+      if Editor.Get_Text_Range(pos, pos + 4) = "--  " then
+        Editor.Set_Sel(pos, pos + 4);
         Editor.Clear;
-      elsif Editor.GetTextRange(pos, pos + 3) = "-- " then
-        Editor.SetSel(pos, pos + 3);
+      elsif Editor.Get_Text_Range(pos, pos + 3) = "-- " then
+        Editor.Set_Sel(pos, pos + 3);
         Editor.Clear;
-      elsif Editor.GetTextRange(pos, pos + 2) = "--" then
-        Editor.SetSel(pos, pos + 2);
+      elsif Editor.Get_Text_Range(pos, pos + 2) = "--" then
+        Editor.Set_Sel(pos, pos + 2);
         Editor.Clear;
       end if;
     end loop;
-    Editor.EndUndoAction;
+    Editor.End_Undo_Action;
     --  Select the whole block of lines again.
-    Editor.SetSel(Editor.PositionFromLine(lin_a), Editor.PositionFromLine(lin_z + 1));
+    Editor.Set_Sel (
+      Editor.Position_From_Line (lin_a),
+      Editor.Position_From_Line (lin_z + 1)
+    );
   end Selection_uncomment;
 
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action)
@@ -573,32 +581,32 @@ package body LEA_GWin.Editor is
       return;
     end if;
     --  Remember selection
-    sel_a:= Editor.GetSelectionStart;
-    sel_z:= Editor.GetSelectionEnd;
-    Editor.SetSearchFlags(MDI_Main.Search_box.Compose_Scintilla_search_flags);
+    sel_a := Editor.Get_Selection_Start;
+    sel_z := Editor.Get_Selection_End;
+    Editor.Set_Search_Flags (MDI_Main.Search_box.Compose_Scintilla_search_flags);
     case action is
       when find_next | find_previous =>
         for attempt in 1 .. 2 loop
           if action = find_next then
-            Editor.SetTargetStart (Position'Max (Editor.GetCurrentPos, Editor.GetAnchor));
-            Editor.SetTargetEnd (Editor.GetLength);
+            Editor.Set_Target_Start (Position'Max (Editor.Get_Current_Pos, Editor.Get_Anchor));
+            Editor.Set_Target_End (Editor.Get_Length);
           else
-            Editor.SetTargetStart (Position'Min (Editor.GetCurrentPos, Editor.GetAnchor));
-            Editor.SetTargetEnd (0);
+            Editor.Set_Target_Start (Position'Min (Editor.Get_Current_Pos, Editor.Get_Anchor));
+            Editor.Set_Target_End (0);
           end if;
-          pos := Editor.SearchInTarget(find_str);
+          pos := Editor.Search_In_Target (find_str);
           if pos >= 0 then  --  Found
-            Editor.SetSel (Editor.GetTargetStart, Editor.GetTargetEnd);
+            Editor.Set_Sel (Editor.Get_Target_Start, Editor.Get_Target_End);
             exit;
           elsif attempt = 1 then  --  Not found: wrap around and try again.
             if action = find_next then
-              Editor.SetSel (0, 0);  --  Will search the entire document from the top on 2nd attempt.
+              Editor.Set_Sel (0, 0);  --  Will search the entire document from the top on 2nd attempt.
             else
-              Editor.SetSel (Editor.GetLength , Editor.GetLength);  --  Same, but from the bottom.
+              Editor.Set_Sel (Editor.Get_Length , Editor.Get_Length);  --  Same, but from the bottom.
             end if;
           else  --  Not found *after* the wrap around: find_str is really nowhere!
             --  Restore initial selection
-            Editor.SetSel (sel_a, sel_z);
+            Editor.Set_Sel (sel_a, sel_z);
             Message_Box (MDI_Child.MDI_Parent.Search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
             if MDI_Main.Search_box.Visible then
               MDI_Main.Search_box.Focus;
@@ -609,16 +617,17 @@ package body LEA_GWin.Editor is
         --  Selection must be identical to the text to be found.
         --  But wait: we cannot just compare strings: the options (match case, ...) must
         --  be taken into account as well. Solution: we do a search *within* the selection.
-        Editor.SetTargetStart (sel_a);
-        Editor.SetTargetEnd (sel_z);
-        pos := Editor.SearchInTarget (find_str);
+        Editor.Set_Target_Start (sel_a);
+        Editor.Set_Target_End (sel_z);
+        pos := Editor.Search_In_Target (find_str);
         if pos >= 0 then  --  Found
           --  The replacement can be undone and redone in a single "Undo" / Redo":
-          Editor.BeginUndoAction;
+          Editor.Begin_Undo_Action;
           --  Replace: Clear, then Insert.
           Editor.Clear;
-          Editor.InsertText (sel_a, repl_str);
-          Editor.EndUndoAction;
+          Editor.Insert_Text (sel_a, repl_str);
+          --
+          Editor.End_Undo_Action;
         end if;
         --  Find next - anyway.
         Editor.Search (action => find_next);
@@ -631,14 +640,14 @@ package body LEA_GWin.Editor is
           large_message_width - line_msg_col_width - col_msg_col_width
         );
         --  Prepare a forward search in the entire document:
-        Editor.SetTargetStart (0);
-        Editor.SetTargetEnd (Editor.GetLength);
+        Editor.Set_Target_Start (0);
+        Editor.Set_Target_End (Editor.Get_Length);
         count := 0;
         loop
-          pos := Editor.SearchInTarget (find_str);
+          pos := Editor.Search_In_Target (find_str);
           exit when pos < 0;
-          line := Editor.LineFromPosition (pos);
-          col  := Editor.GetColumn (pos);
+          line := Editor.Line_From_Position (pos);
+          col  := Editor.Get_Column (pos);
           ml.Insert_Item (Right_aligned_line_number (line + 1), count);
           ml.Item_Data(
             count,
@@ -651,11 +660,11 @@ package body LEA_GWin.Editor is
             )
           );
           ml.Set_Sub_Item (Right_aligned_column_number (col + 1), count, 1);
-          ml.Set_Sub_Item (Editor.GetLine (line), count, 2);
+          ml.Set_Sub_Item (Editor.Get_Line (line), count, 2);
           count := count + 1;
           --  Reduce the search target:
-          Editor.SetTargetStart (Editor.GetTargetEnd);
-          Editor.SetTargetEnd (Editor.GetLength);
+          Editor.Set_Target_Start (Editor.Get_Target_End);
+          Editor.Set_Target_End (Editor.Get_Length);
         end loop;
         ml.Set_Column ("Search for [" & find_str & "] (" &
           Trim (Integer'Wide_Image (count), Left) & " items)", 2,
@@ -669,24 +678,27 @@ package body LEA_GWin.Editor is
         ml.Set_Column ("", 1, 0);
         ml.Set_Column ("", 2, 0);
         --  Prepare a forward search in the entire document:
-        Editor.SetTargetStart (0);
-        Editor.SetTargetEnd (Editor.GetLength);
-        --  The replacement can be undone and redone in a single "Undo" / Redo":
-        Editor.BeginUndoAction;
+        Editor.Set_Target_Start (0);
+        Editor.Set_Target_End (Editor.Get_Length);
+        --  We decide that the "Replace All" replacement can be undone
+        --  and redone in single "Undo" or Redo":
+        Editor.Begin_Undo_Action;
+        --
         count := 0;
         loop
-          pos := Editor.SearchInTarget (find_str);
+          pos := Editor.Search_In_Target (find_str);
           exit when pos < 0;
           count := count + 1;
           --  Replace: Clear, then Insert.
-          Editor.SetSel (Editor.GetTargetStart, Editor.GetTargetEnd);
+          Editor.Set_Sel (Editor.Get_Target_Start, Editor.Get_Target_End);
           Editor.Clear;
-          Editor.InsertText (pos, repl_str);
+          Editor.Insert_Text (pos, repl_str);
           --  Reduce the search target:
-          Editor.SetTargetStart (pos + repl_str'Length);
-          Editor.SetTargetEnd (Editor.GetLength);
+          Editor.Set_Target_Start (pos + repl_str'Length);
+          Editor.Set_Target_End (Editor.Get_Length);
         end loop;
-        Editor.EndUndoAction;
+        --
+        Editor.End_Undo_Action;
         ml.Set_Column (
           "Replaced all [" & find_str & "] by [" & repl_str & "] (" &
           Trim (Integer'Wide_Image (count), Left) & " items)", 0,
@@ -710,7 +722,7 @@ package body LEA_GWin.Editor is
 
   procedure Bookmark_next (Editor : in out LEA_Scintilla_Type) is
     line : constant Integer :=
-      Editor.MarkerNext (Editor.Get_current_line + 1, 2 ** marker_for_bookmarks);
+      Editor.Marker_Next (Editor.Get_current_line + 1, 2 ** marker_for_bookmarks);
   begin
     if line >= 0 then
       Editor.Set_current_line (line);
@@ -719,7 +731,7 @@ package body LEA_GWin.Editor is
 
   procedure Bookmark_previous (Editor : in out LEA_Scintilla_Type) is
     line : constant Integer :=
-      Editor.MarkerPrevious (Editor.Get_current_line - 1, 2 ** marker_for_bookmarks);
+      Editor.Marker_Previous (Editor.Get_current_line - 1, 2 ** marker_for_bookmarks);
   begin
     if line >= 0 then
       Editor.Set_current_line (line);
@@ -732,17 +744,17 @@ package body LEA_GWin.Editor is
     flags: U32;
     dummy : Integer;
   begin
-    flags := U32 (Editor.MarkerGet (line));
+    flags := U32 (Editor.Marker_Get (line));
     if (flags and 2 ** marker_for_bookmarks) = 0 then
-      dummy := Editor.MarkerAdd (line, marker_for_bookmarks);
+      dummy := Editor.Marker_Add (line, marker_for_bookmarks);
     else
-      Editor.MarkerDelete (line, marker_for_bookmarks);
+      Editor.Marker_Delete (line, marker_for_bookmarks);
     end if;
   end Bookmark_toggle;
 
   function EOL (Editor : LEA_Scintilla_Type) return GString is
   begin
-    case Editor.GetEOLMode is
+    case Editor.Get_EOL_Mode is
       when SC_EOL_CRLF =>
         return GWindows.GCharacter'Val (13) & GWindows.GCharacter'Val (10);
       when SC_EOL_CR =>
@@ -760,23 +772,25 @@ package body LEA_GWin.Editor is
     --  At least, it gives the possibility to customize it...
     pos, sel_a, sel_z, line_start, next_line_start: Position;
     lin : Integer;
-    selections: Positive;
+    selections : Positive;
   begin
-    sel_a:= Editor.GetSelectionStart;
-    sel_z:= Editor.GetSelectionEnd;
-    pos := Editor.GetCurrentPos;
+    sel_a:= Editor.Get_Selection_Start;
+    sel_z:= Editor.Get_Selection_End;
+    pos  := Editor.Get_Current_Pos;
     if sel_a = sel_z then  --  No selection: we duplicate the current line
-      lin := Editor.LineFromPosition(sel_a);
-      line_start      := Editor.PositionFromLine(lin);
-      next_line_start := Editor.PositionFromLine(lin+1);
+      lin := Editor.Line_From_Position(sel_a);
+      line_start      := Editor.Position_From_Line(lin);
+      next_line_start := Editor.Position_From_Line(lin+1);
       if line_start < next_line_start then
-        if Editor.LineFromPosition(next_line_start) = lin then
+        if Editor.Line_From_Position(next_line_start) = lin then
           --  Special case: we are on last line. Actually, next_line_start is the
           --  end of current line - and of the whole document as well.
           --  We need to add an EOL first.
-          Editor.InsertText(next_line_start, EOL(Editor) & Editor.GetTextRange(line_start, next_line_start));
+          Editor.Insert_Text (next_line_start,
+            EOL(Editor) & Editor.Get_Text_Range (line_start, next_line_start));
         else
-          Editor.InsertText(next_line_start, Editor.GetTextRange(line_start, next_line_start));
+          Editor.Insert_Text (next_line_start,
+                          Editor.Get_Text_Range (line_start, next_line_start));
         end if;
       end if;
     else  --  There is a selection (or selections): we duplicate it (them).
@@ -790,11 +804,11 @@ package body LEA_GWin.Editor is
           sel_n_z (n) := Editor.Get_Selection_N_End (n);
           caret_n (n) := Editor.Get_Selection_N_Caret (n);
         end loop;
-        Editor.BeginUndoAction;
+        Editor.Begin_Undo_Action;
         for n in 1 .. selections loop
           --  Duplicate text at the end of the nth selection.
           length := sel_n_z (n) - sel_n_a (n);
-          Editor.InsertText (sel_n_z (n), Editor.GetTextRange (sel_n_a (n), sel_n_z (n)));
+          Editor.Insert_Text (sel_n_z (n), Editor.Get_Text_Range (sel_n_a (n), sel_n_z (n)));
           for nn in 1 .. selections loop
             --  All selections located after the current one will be shifted by the text insertion.
             if sel_n_a (nn) > sel_n_z (n) then
@@ -804,13 +818,13 @@ package body LEA_GWin.Editor is
             end if;
           end loop;
         end loop;
-        Editor.EndUndoAction;
+        Editor.End_Undo_Action;
         if selections = 1 then
           --  Restore selection *and* cursor as before
           if pos = sel_a then
-            Editor.SetSel (sel_z, sel_a);  --  Right to left: cursor at begin of selection
+            Editor.Set_Sel (sel_z, sel_a);  --  Right to left: cursor at begin of selection
           else
-            Editor.SetSel (sel_a, sel_z);  --  Left to right: cursor at end of selection
+            Editor.Set_Sel (sel_a, sel_z);  --  Left to right: cursor at end of selection
           end if;
         else
           --  Version for multiple selections (TBD: try removing special case above).
@@ -836,23 +850,23 @@ package body LEA_GWin.Editor is
   procedure Load_text (Editor : in out LEA_Scintilla_Type; contents : String) is
     p : Character := ' ';
   begin
-    Editor.SetEOLMode (SC_EOL_CRLF);
+    Editor.Set_EOL_Mode (SC_EOL_CRLF);
     for c of contents loop
       if c = ASCII.LF then
-        exit when p = ASCII.CR;           --  CR LF
-        Editor.SetEOLMode (SC_EOL_LF);    --  non-CR LF
+        exit when p = ASCII.CR;             --  CR LF
+        Editor.Set_EOL_Mode (SC_EOL_LF);    --  non-CR LF (Unix / Linux)
         exit;
       else
-        if p = ASCII.CR then              --  CR non-LF
-          Editor.SetEOLMode (SC_EOL_CR);
+        if p = ASCII.CR then                --  CR non-LF (old Mac's)
+          Editor.Set_EOL_Mode (SC_EOL_CR);
           exit;
         end if;
       end if;
       p:= c;
     end loop;
-    Editor.InsertText(0, S2G(contents));  --  ASCII to Unicode (UTF-16) conversion
-    Editor.EmptyUndoBuffer;
-    Editor.SetSavePoint;
+    Editor.Insert_Text(0, S2G(contents));  --  ASCII to Unicode (UTF-16) conversion
+    Editor.Empty_Undo_Buffer;
+    Editor.Set_Save_Point;
     Editor.modified:= False;
   end Load_text;
 
@@ -876,20 +890,21 @@ package body LEA_GWin.Editor is
     --  s : aliased Editor_Stream_Type;
     --  c : Character;
   begin
-    Create(f, Out_File, To_UTF_8(under), Form_For_IO_Open_and_Create);
-    if Editor.GetLength > 0 then
+    Create(f, Out_File, To_UTF_8 (under), Form_For_IO_Open_and_Create);
+    if Editor.Get_Length > 0 then
       declare
-        b: constant GString:= Editor.GetTextRange(Min => 0, Max => Editor.GetLength);
+        b : constant GString := Editor.Get_Text_Range (Min => 0, Max => Editor.Get_Length);
       begin
-        String'Write(Stream(f), G2S(b));
+        String'Write (Stream(f), G2S(b));
       end;
     end if;
     Close(f);
     --  We do *not* change Editor.SetSavePoint and Editor.modified until
     --  all operations around backups are successful. This is managed by
     --  the parent window's method, MDI_Child_Type.Save.
+
     --  --
-    --  --  Testing Editor_Stream_Type:
+    --  --  Chunk of code for testing Editor_Stream_Type:
     --  --
     --  Create(f, Out_File, To_UTF_8(under) & "_STREAM_.txt", Form_For_IO_Open_and_Create);
     --  s.Reset (Editor);
@@ -908,22 +923,22 @@ package body LEA_GWin.Editor is
   begin
     case Editor.syntax_kind is
       when Undefined =>
-        Editor.SetLexer (SCLEX_NULL);
-        Editor.SetKeyWords (0, "");
+        Editor.Set_Lexer (SCLEX_NULL);
+        Editor.Set_Key_Words (0, "");
       when Ada_syntax =>
-        Editor.SetLexer (SCLEX_ADA);
-        Editor.SetKeyWords (0, Ada_keywords);
+        Editor.Set_Lexer (SCLEX_ADA);
+        Editor.Set_Key_Words (0, Ada_keywords);
       when GPR_syntax =>
-        Editor.SetLexer (SCLEX_ADA);
-        Editor.SetKeyWords (0, GPR_keywords);
+        Editor.Set_Lexer (SCLEX_ADA);
+        Editor.Set_Key_Words (0, GPR_keywords);
         --  !! Issue: keyword'Attribute (e.g. project'Project_Dir)
         --     is not recognized by SCLEX_ADA.
     end case;
   end Set_Scintilla_Syntax;
 
-  ------------------------------------------------------
-  --  Output of the editor's text as an input stream  --
-  ------------------------------------------------------
+  --------------------------------------------------------------
+  --  Output of the editor's text is used as an input stream  --
+  --------------------------------------------------------------
 
   procedure Reset (Stream : in out Editor_Stream_Type; using : in out LEA_Scintilla_Type'Class) is
   begin
@@ -941,7 +956,7 @@ package body LEA_GWin.Editor is
     --
     procedure Copy_slice (amount: Ada.Streams.Stream_Element_Offset) is
       slice: constant String :=
-        G2S (Stream.editor.GetTextRange(
+        G2S (Stream.editor.Get_Text_Range(
           Position (Stream.index),
           Position (Stream.index + amount)));
       ei: Stream_Element_Offset := Item'First;
@@ -953,7 +968,7 @@ package body LEA_GWin.Editor is
       Stream.index := Stream.index + amount;
     end Copy_slice;
   begin
-    if Position (Stream.index) >= Stream.editor.GetLength then
+    if Position (Stream.index) >= Stream.editor.Get_Length then
       --  Zero transfer -> Last:= Item'First - 1, see RM 13.13.1(8)
       --  No End_Error here, T'Read will raise it: RM 13.13.2(37)
       if Item'First > Stream_Element_Offset'First then
@@ -971,7 +986,7 @@ package body LEA_GWin.Editor is
     end if;
     --  From now on, we can assume Item'Length > 0.
 
-    if Position (Stream.index + Item'Length) < Stream.editor.GetLength then
+    if Position (Stream.index + Item'Length) < Stream.editor.Get_Length then
       --  * Normal case: even after reading, the index will be in the range
       Last := Item'Last;
       Copy_slice (Item'Length);
@@ -979,7 +994,7 @@ package body LEA_GWin.Editor is
       --  then at least one element is left to be read
     else
       --  * Special case: we exhaust the buffer
-      Last := Item'First + Stream_Element_Offset (Stream.editor.GetLength) - 1 - Stream.index;
+      Last := Item'First + Stream_Element_Offset (Stream.editor.Get_Length) - 1 - Stream.index;
       Copy_slice (Last - Item'First + 1);
       --  If Last < Item'Last, the T'Read attribute raises End_Error
       --  because of the incomplete reading.
