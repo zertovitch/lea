@@ -69,22 +69,24 @@ package body LEA_GWin.Toolbars is
       use GWindows.Common_Controls;
     begin
       --  The tool tip's text is a copy of the menu's text.
-      tb.Add_String(Filter(Text(Fake_Menu.Main, Command, Command_ID)));
-      tb.Add_Button(Image_Index, Command_ID, string_count);
+      tb.Add_String (Filter(Text(Fake_Menu.Main, Command, Command_ID)));
+      tb.Add_Button (Image_Index, Command_ID, string_count);
       string_count:= string_count + 1;
     end Add_Button_with_Tip;
 
     use GWindows.Common_Controls;
     st: Interfaces.C.unsigned;
+    --  check : GString (1 .. 100);
+    --  len : Natural;
   begin
     Create (tb, parent, 0, 0, 0, 40);
     Dock (tb, GWindows.Base.At_Top);
 
     Create (il, Num_resource(Toolbar_BMP), 32);
     Set_Image_List (tb, il);
-    st:= Get_Style(tb);
-    Set_Style(tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);
-    Set_Extended_Style(tb, TBSTYLE_EX_MIXEDBUTTONS);
+    st:= Get_Style (tb);
+    Set_Style (tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);
+    Set_Extended_Style (tb, TBSTYLE_EX_MIXEDBUTTONS);
 
     Create_Full_Menu(Fake_Menu);
     Add_Button_with_Tip ( 0, IDM_New_File);
@@ -108,6 +110,16 @@ package body LEA_GWin.Toolbars is
     Add_Button_with_Tip ( 3, IDM_Find);
     Add_Separator(tb, sep_width);
     Add_Button_with_Tip (12, IDM_Show_special_symbols);
+    --
+    --
+    --  Here a piece of code to check whether strings are correctly sent
+    --  to Windows API. It works on Windows x86 and amd64.
+    --  Issue being investigated: tooltips are not displayed on amd64.
+    --
+    --  for i in 0 .. 14 loop
+    --    tb.Get_String (i, check, len);
+    --    Ada.Text_IO.Put_Line (i'Image & " -> " & G2S (check (1 .. len)));
+    --  end loop;
   end Init_Main_toolbar;
 
 end LEA_GWin.Toolbars;
