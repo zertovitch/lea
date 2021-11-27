@@ -85,7 +85,7 @@ package body LEA_GWin.Options is
     end Apply_changes_to_child;
     use LEA_GWin.MDI_Main;
   begin
-    Text_files_filters (Text_files_filters'First).Filter := main.opt.ada_files_filter;
+    main.text_files_filters (main.text_files_filters'First).Filter := main.opt.ada_files_filter;
     MDI_Client_Window (main).Enumerate_Children (Apply_changes_to_child'Unrestricted_Access);
   end Apply_Main_Options;
 

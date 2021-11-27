@@ -6,7 +6,7 @@ package body LEA_Common.Syntax is
     u_name : constant UTF_16_String := To_Upper (file_name);
     u_filt : constant UTF_16_String := To_Upper (custom_filter);
   begin
-    --  Go through the filter, like: "*.ADS;*.ADB;*.A"
+    --  Go through the custom filter, like: "*.ADS;*.ADB;*.A"
     for s1 in u_filt'Range loop
       if u_filt (s1) = '*' then  --  Wildcard spotted.
         for s2 in s1 + 1 .. u_filt'Last loop

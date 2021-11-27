@@ -581,8 +581,12 @@ package body LEA_GWin.MDI_Main is
     );
   begin
     GWindows.Common_Dialogs.Open_Files (
-      MDI_Main, "Open file(s)",
-      File_Names, Text_files_filters, ".ad*", File_Title,
+      MDI_Main,
+      "Open file(s)",
+      File_Names,
+      MDI_Main.text_files_filters,
+      ".ad*",
+      File_Title,
       Success
     );
     if Success then

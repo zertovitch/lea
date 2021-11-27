@@ -82,6 +82,10 @@ package LEA_GWin.MDI_Main is
         build_successful       : Boolean := False;
         close_this_search_box  : Boolean := False;
         pragma Volatile (close_this_search_box);
+        --
+        text_files_filters     : GWindows.Common_Dialogs.Filter_Array
+                                   (Initial_text_files_filters'Range):=
+                                      Initial_text_files_filters;
       end record;
 
   overriding procedure On_Create (MDI_Main : in out MDI_Main_Type);

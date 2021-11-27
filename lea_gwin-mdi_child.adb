@@ -385,8 +385,12 @@ package body LEA_GWin.MDI_Child is
       New_File_Name := MDI_Child.File_Name;  --  Tentative name is current file name.
     end if;
     GWindows.Common_Dialogs.Save_File (
-      MDI_Child, "Save file as...", New_File_Name, Text_files_filters,
-      ".ada", File_Title,
+      MDI_Child,
+      "Save file as...",
+      New_File_Name,
+      MDI_Child.MDI_Parent.text_files_filters,
+      ".ada",
+      File_Title,
       Success
     );
     if not Success then
