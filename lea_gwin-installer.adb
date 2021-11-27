@@ -7,7 +7,8 @@ with Ada.Command_Line;                  use Ada.Command_Line;
 package body LEA_GWin.Installer is
 
   procedure Unpack_DLL (target : String := "") is
-    lea_exe : constant String := Command_Name;
+    lea_exe       : constant String := Command_Name;
+    scintilla_dll : constant String := "SciLexer.dll";
     bs : Integer;
   begin
     for i in reverse lea_exe'Range loop
@@ -19,21 +20,22 @@ package body LEA_GWin.Installer is
     if target = "" then
       Extract (
         from   => lea_exe,
-        what   => "SciLexer.dll",
-        rename => lea_exe (lea_exe'First .. bs) & "SciLexer.dll"
+        what   => scintilla_dll,
+        rename => lea_exe (lea_exe'First .. bs) & scintilla_dll
       );
     else
       Extract (
         from   => lea_exe,
-        what   => "SciLexer.dll",
-        rename => target & "SciLexer.dll"
+        what   => scintilla_dll,
+        rename => target & scintilla_dll
       );
     end if;
   exception
     when others =>
       Message_Box
         ("LEA startup",
-         "Installation error: cannot unpack ""scilexer.dll"" from ""lea.exe""." & NL &
+         "Installation error: cannot unpack """ & S2G (scintilla_dll) & '"' & NL &
+         "from Zip archive appended to ""lea.exe""." & NL &
          "Path = " & S2G (Command_Name),
           OK_Box,
           Error_Icon
