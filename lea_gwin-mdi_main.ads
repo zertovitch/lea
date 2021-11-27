@@ -5,6 +5,7 @@ with LEA_GWin.Search_box;
 with LEA_Resource_GUI;                  use LEA_Resource_GUI;
 
 with GWindows.Common_Controls;
+with GWindows.Common_Controls.Ex_Tb;
 with GWindows.Drawing;
 with GWindows.Image_Lists;
 with GWindows.Panels;
@@ -20,7 +21,7 @@ with Interfaces.C;
 package LEA_GWin.MDI_Main is
 
   type MDI_Toolbar_Type is
-    new GWindows.Common_Controls.Toolbar_Control_Type with null record;
+    new GWindows.Common_Controls.Ex_Tb.Ex_Toolbar_Control_Type with null record;
 
   procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
                               Item    : in     Integer);
