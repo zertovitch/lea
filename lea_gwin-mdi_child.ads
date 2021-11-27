@@ -1,19 +1,18 @@
-with LEA_Common;                        use LEA_Common;
+with LEA_Common;
 
 with LEA_GWin.Editor;
-with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
+with LEA_GWin.MDI_Main;
 
-with LEA_Resource_GUI;                  use LEA_Resource_GUI;
+with LEA_Resource_GUI;
 
 with HAC_Sys.Builder;
 
-with GWindows.Common_Controls;          use GWindows.Common_Controls;
+with GWindows.Common_Controls;
 with GWindows.Drawing;
 with GWindows.Packing_Boxes;
 with GWindows.Panels;
 with GWindows.Types;
 with GWindows.Windows.MDI;
-with GWindows.Windows;                  use GWindows.Windows;
 
 with Ada.Numerics.Float_Random;
 
@@ -30,7 +29,7 @@ package LEA_GWin.MDI_Child is
   --  Clicks on some some parts of the status bar have effects (like "Go to line")
   overriding procedure On_Click (Bar : in out MDI_Child_Status_Bar_Type);
 
-  type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
+  type MDI_Child_Tree_View_Control_Type is new GWindows.Common_Controls.Tree_View_Control_Type with null record;
   --  overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
   --  overriding procedure On_Focus (Control : in out MDI_Child_Tree_View_Control_Type);
 
@@ -56,7 +55,7 @@ package LEA_GWin.MDI_Child is
 
   type Subprogram_Panel_Type is new GWindows.Panels.Panel_Type with record
     Subprogram_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter        : LEA_splitter;
+    Splitter        : LEA_GWin.MDI_Main.LEA_splitter;
   end record;
 
   type MDI_Child_Type is
@@ -65,12 +64,12 @@ package LEA_GWin.MDI_Child is
         File_Name        : GString_Unbounded;
         --  Window title = Short_Name & {""|" *"}
         Short_Name       : GString_Unbounded;
-        MDI_Parent       : MDI_Main_Access; -- -> access to the containing window
+        MDI_Parent       : LEA_GWin.MDI_Main.MDI_Main_Access; -- -> access to the containing window
         --  new file closed if kept virgin when opening another one (like blank Excel sheet).
         Extra_first_doc  : Boolean := False;
-        Menu             : Menu_MDI_Child_Type;
+        Menu             : LEA_Resource_GUI.Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
-        Document_kind    : Document_kind_type := editable_text;
+        Document_kind    : LEA_Common.Document_kind_type := LEA_Common.editable_text;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
         Subprogram_Panel : Subprogram_Panel_Type;
         selected_path    : GString_Unbounded := Null_GString_Unbounded;
@@ -107,7 +106,7 @@ package LEA_GWin.MDI_Child is
 
   overriding procedure On_File_Drop (
     MDI_Child  : in out MDI_Child_Type;
-    File_Names : in     Array_Of_File_Names
+    File_Names : in     GWindows.Windows.Array_Of_File_Names
   );
 
   overriding procedure On_Size (

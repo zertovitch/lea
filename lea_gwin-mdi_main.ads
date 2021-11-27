@@ -2,17 +2,15 @@ with LEA_Common.User_options;
 with LEA_GWin.Editor;
 with LEA_GWin.Messages;
 with LEA_GWin.Search_box;
-with LEA_Resource_GUI;                  use LEA_Resource_GUI;
+with LEA_Resource_GUI;
 
 with GWindows.Common_Controls;
-with GWindows.Common_Controls.Ex_Tb;
 with GWindows.Drawing;
 with GWindows.Image_Lists;
 with GWindows.Panels;
-with GWindows.Taskbar;                  use GWindows.Taskbar;
+with GWindows.Taskbar;
 with GWindows.Types;
 with GWindows.Windows.MDI;
-with GWindows.Windows;                  use GWindows.Windows;
 
 with GWin_Util;
 
@@ -21,7 +19,7 @@ with Interfaces.C;
 package LEA_GWin.MDI_Main is
 
   type MDI_Toolbar_Type is
-    new GWindows.Common_Controls.Ex_Tb.Ex_Toolbar_Control_Type with null record;
+    new GWindows.Common_Controls.Toolbar_Control_Type with null record;
 
   procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
                               Item    : in     Integer);
@@ -65,7 +63,7 @@ package LEA_GWin.MDI_Main is
         Project_Panel          : Project_Panel_Type;
         Message_Panel          : Message_Panel_Type;
         --
-        Menu                   : Menu_MDI_Main_Type;
+        Menu                   : LEA_Resource_GUI.Menu_MDI_Main_Type;
         --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean:= True;
         --  ^ Detect user-triggered max/restore commands
@@ -74,7 +72,7 @@ package LEA_GWin.MDI_Main is
         opt                    : LEA_Common.User_options.Option_Pack_Type;
         --
         Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
-        Task_bar_gadget        : Taskbar_List;
+        Task_bar_gadget        : GWindows.Taskbar.Taskbar_List;
         --
         Search_box             : LEA_GWin.Search_box.LEA_search_box_type;
         --
@@ -101,7 +99,7 @@ package LEA_GWin.MDI_Main is
                                 Height   : in     Integer);
 
   overriding procedure On_File_Drop (MDI_Main   : in out MDI_Main_Type;
-                                     File_Names : in     Array_Of_File_Names);
+                                     File_Names : in     GWindows.Windows.Array_Of_File_Names);
 
   overriding procedure On_Erase_Background
      (MDI_Main : in out MDI_Main_Type;

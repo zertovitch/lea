@@ -1,17 +1,21 @@
 --  LEA_GWin.Editor is derived from: gnavi\gwindows\samples\scintilla
 
-with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
-with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
-with LEA_GWin.Messages;                 use LEA_GWin.Messages;
+with LEA_GWin.MDI_Child;
+with LEA_GWin.MDI_Main;
+with LEA_GWin.Messages;
 
 with GWindows.Colors;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Message_Boxes;
 
-with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
+with Ada.Streams.Stream_IO;
+with Ada.Strings.Wide_Fixed;
 with Ada.Integer_Wide_Text_IO;
 
 package body LEA_GWin.Editor is
+
+  use LEA_GWin.MDI_Main, LEA_GWin.MDI_Child;
+  use Ada.Strings, Ada.Strings.Wide_Fixed;
+  use GWindows.Message_Boxes;
 
   overriding
   procedure On_Change (Editor : in out LEA_Scintilla_Type) is
@@ -55,7 +59,7 @@ package body LEA_GWin.Editor is
         then
           --  On a "Return" keypress right after "begin", "record" or "(",
           --  we add an extra indentation.
-          New_Ind := New_Ind + MDI_Child_Type(Editor.mdi_parent.all).MDI_Parent.opt.indentation;
+          New_Ind := New_Ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Parent.opt.indentation;
         end if;
       end if;
       if New_Ind > 0 then
@@ -575,6 +579,7 @@ package body LEA_GWin.Editor is
       Ada.Integer_Wide_Text_IO.Put (s, column);
       return s;
     end Right_aligned_column_number;
+    use LEA_GWin.Messages;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -871,7 +876,8 @@ package body LEA_GWin.Editor is
   end Load_text;
 
   procedure Load_text (Editor : in out LEA_Scintilla_Type) is
-    f: File_Type;
+    use Ada.Streams.Stream_IO;
+    f : File_Type;
     parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
   begin
     Open (f, In_File, To_UTF_8 (GU2G (parent.File_Name)), Form_For_IO_Open_and_Create);
@@ -886,6 +892,7 @@ package body LEA_GWin.Editor is
   end Load_text;
 
   procedure Save_text (Editor : in out LEA_Scintilla_Type; under: GString) is
+    use Ada.Streams.Stream_IO;
     f : File_Type;
     --  s : aliased Editor_Stream_Type;
     --  c : Character;

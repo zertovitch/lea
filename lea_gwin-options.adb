@@ -1,33 +1,34 @@
-with LEA_Common;                        use LEA_Common;
-with LEA_Common.User_options;           use LEA_Common.User_options;
-with LEA_GWin.MDI_Child;                use LEA_GWin.MDI_Child;
-
-with LEA_Resource_GUI;                  use LEA_Resource_GUI;
+with LEA_Common.User_options;
+with LEA_GWin.MDI_Child;
+with LEA_Resource_GUI;
 
 with GWindows;
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Constants;                use GWindows.Constants;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Application;
+with GWindows.Base;
+with GWindows.Buttons;
+with GWindows.Constants;
+with GWindows.Message_Boxes;
 
-with GWin_Util;                         use GWin_Util;
+with GWin_Util;
 
 package body LEA_GWin.Options is
 
-  procedure On_General_Options (main : in out MDI_Main_Type) is
+  procedure On_General_Options (main : in out LEA_GWin.MDI_Main.MDI_Main_Type) is
+    use LEA_Resource_GUI, LEA_Common, LEA_Common.User_options;
     --
-    box: Option_box_Type;
-    candidate: Option_Pack_Type:= main.opt;
+    box : Option_box_Type;
+    candidate : Option_Pack_Type := main.opt;
     --
     procedure Set_Data is
+      use GWin_Util;
     begin
       box.Indentation_edit_box.Text        (Integer'Wide_Image(candidate.indentation));
       box.Tab_width_edit_box.Text          (Integer'Wide_Image(candidate.tab_width));
       box.Right_margin_edit_box.Text       (Integer'Wide_Image(candidate.right_margin));
       box.Ada_file_extension_edit_box.Text (GU2G (candidate.ada_files_filter));
-      box.Backup_none_button.State(boolean_to_state(candidate.backup = none));
-      box.Backup_bak_button.State(boolean_to_state(candidate.backup = bak));
+      --
+      box.Backup_none_button.State (boolean_to_state(candidate.backup = none));
+      box.Backup_bak_button.State  (boolean_to_state(candidate.backup = bak));
       --  Fill the drop-down list.
       for t in Color_Theme_Type loop
         box.Color_theme_list_box.Add(Nice_Image(t) );
@@ -36,6 +37,7 @@ package body LEA_GWin.Options is
     end Set_Data;
     --
     procedure Get_Data (Window : in out GWindows.Base.Base_Window_Type'Class) is
+      use GWindows.Buttons, GWindows.Message_Boxes;
     begin
       candidate.indentation      := Integer'Wide_Value(box.Indentation_edit_box.Text);
       candidate.tab_width        := Integer'Wide_Value(box.Tab_width_edit_box.Text);
@@ -49,7 +51,8 @@ package body LEA_GWin.Options is
       candidate.color_theme:= Nice_Value(box.Color_theme_list_box.Text);
     exception
       when others =>
-        Message_Box(Window, "Invalid data", "Incomplete reading of your changes", OK_Box, Error_Icon);
+        Message_Box
+          (Window, "Invalid data", "Incomplete reading of your changes", OK_Box, Error_Icon);
     end Get_Data;
     --
     has_changes: Boolean;
@@ -60,8 +63,8 @@ package body LEA_GWin.Options is
     box.Center(main);
     box.Small_Icon ("Options_Icon");
     On_Destroy_Handler (box, Get_Data'Unrestricted_Access);
-    case Show_Dialog (box, main) is
-      when IDOK     =>
+    case GWindows.Application.Show_Dialog (box, main) is
+      when GWindows.Constants.IDOK =>
         has_changes := main.opt /= candidate;
         if has_changes then
           main.opt:= candidate;
@@ -72,16 +75,18 @@ package body LEA_GWin.Options is
     end case;
   end On_General_Options;
 
-  procedure Apply_Main_Options (main : in out MDI_Main_Type) is
-    procedure Apply_changes_to_child(Window : GWindows.Base.Pointer_To_Base_Window_Class) is
+  procedure Apply_Main_Options (main : in out LEA_GWin.MDI_Main.MDI_Main_Type) is
+    procedure Apply_changes_to_child (Window : GWindows.Base.Pointer_To_Base_Window_Class) is
+      use LEA_GWin.MDI_Child;
     begin
       if Window.all in MDI_Child_Type'Class then
-        MDI_Child_Type(Window.all).Editor.Apply_options;
+        MDI_Child_Type (Window.all).Editor.Apply_options;
       end if;
     end Apply_changes_to_child;
+    use LEA_GWin.MDI_Main;
   begin
     Text_files_filters (Text_files_filters'First).Filter := main.opt.ada_files_filter;
-    Enumerate_Children(MDI_Client_Window (main).all, Apply_changes_to_child'Unrestricted_Access);
+    MDI_Client_Window (main).Enumerate_Children (Apply_changes_to_child'Unrestricted_Access);
   end Apply_Main_Options;
 
 end LEA_GWin.Options;

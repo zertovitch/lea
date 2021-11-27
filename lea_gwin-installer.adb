@@ -1,12 +1,11 @@
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-
-with UnZip;                             use UnZip;
-
-with Ada.Command_Line;                  use Ada.Command_Line;
+with GWindows.Message_Boxes;
+with UnZip;
+with Ada.Command_Line;
 
 package body LEA_GWin.Installer is
 
   procedure Unpack_DLL (target : String := "") is
+    use Ada.Command_Line, GWindows.Message_Boxes, UnZip;
     lea_exe       : constant String := Command_Name;
     scintilla_dll : constant String := "SciLexer.dll";
     bs : Integer;

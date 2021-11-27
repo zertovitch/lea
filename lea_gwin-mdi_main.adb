@@ -1,32 +1,32 @@
-with LEA_Common;                       use LEA_Common;
-with LEA_Common.Syntax;                use LEA_Common.Syntax;
+with LEA_Common.Syntax;
 
 with LEA_GWin.Help;
-with LEA_GWin.MDI_Child;               use LEA_GWin.MDI_Child;
-with LEA_GWin.Messages;                use LEA_GWin.Messages;
+with LEA_GWin.MDI_Child;
 with LEA_GWin.Modal_Dialogs;
 with LEA_GWin.Options;
 with LEA_GWin.Toolbars;
 
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
-with GWindows.Constants;                use GWindows.Constants;
-with GWindows.Menus;                    use GWindows.Menus;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Application;
+with GWindows.Base;
+with GWindows.Common_Dialogs;
+with GWindows.Constants;
+with GWindows.Menus;
+with GWindows.Message_Boxes;
 with GWindows.Registry;
 with GWindows.Scintilla;
-with GWindows.Types;                    use GWindows.Types;
 
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+
 with Windows_Timers;
 
 package body LEA_GWin.MDI_Main is
 
   use type GString_Unbounded, Scintilla.Position;
+  use LEA_Common, LEA_GWin.MDI_Child;
+  use GWindows.Base, GWindows.Menus;
 
   procedure Focus_an_already_opened_window(
     MDI_Main     :     MDI_Main_Type;
@@ -117,10 +117,11 @@ package body LEA_GWin.MDI_Main is
     Col_a, Col_z :        Scintilla.Position := -1
   )
   is
-    is_open, file_loaded: Boolean;
+    is_open, file_loaded : Boolean;
     mru_line : Integer := -1;
     new_pos_a, new_pos_z : GWindows.Scintilla.Position;
     New_Window : MDI_Child_Access;
+    use GWindows.Message_Boxes;
   begin
     Focus_an_already_opened_window ( MDI_Main, File_Name, Line, Col_a, Col_z, is_open );
     if is_open then
@@ -155,8 +156,9 @@ package body LEA_GWin.MDI_Main is
     end;
     New_Window.Finish_subwindow_opening;
     New_Window.Editor.syntax_kind :=
-      Guess_syntax (GU2G (New_Window.File_Name),
-                    GU2G (MDI_Main.opt.ada_files_filter)
+      LEA_Common.Syntax.Guess_syntax (
+        GU2G (New_Window.File_Name),
+        GU2G (MDI_Main.opt.ada_files_filter)
       );
     New_Window.Editor.Set_Scintilla_Syntax;
     New_Window.Editor.Focus;
@@ -173,7 +175,8 @@ package body LEA_GWin.MDI_Main is
       New_Window.Editor.Set_Sel (new_pos_a, new_pos_z);
     end if;
     if not file_loaded then
-      Message_Box (MDI_Main,
+      Message_Box (
+        MDI_Main,
         "Error",
         "File " & GU2G (File_Name) & " not found",
         Icon => Exclamation_Icon
@@ -231,9 +234,10 @@ package body LEA_GWin.MDI_Main is
     );
   end Open_Child_Window_And_Load;
 
-  function Valid_Left_Top(Left, Top: Integer)
+  function Valid_Left_Top (Left, Top : Integer)
     return Boolean
   is
+    use GWindows.Application;
   begin
     return Left in -320 .. Desktop_Width  - 30 and
            Top  in -320 .. Desktop_Height - 80;
@@ -334,6 +338,7 @@ package body LEA_GWin.MDI_Main is
     end Replace_default;
     --
     start_line : Integer := -1;
+    use GWindows.Taskbar, LEA_Resource_GUI;
   begin
     Windows_persistence.Load (MDI_Main.opt);  --  Load options from the registry
     LEA_GWin.Options.Apply_Main_Options (MDI_Main);
@@ -476,12 +481,14 @@ package body LEA_GWin.MDI_Main is
 
   procedure On_Size (MDI_Main : in out MDI_Main_Type;
                      Width    : in     Integer;
-                     Height   : in     Integer) is
-    w: constant Natural:= MDI_Main.Client_Area_Width;
-    tbh: constant Natural:= MDI_Main.Tool_Bar.Height;
-    h: constant Natural:= Integer'Max(2, MDI_Main.Client_Area_Height - tbh);
-    tree_w: constant Integer:= Integer (MDI_Main.opt.project_tree_portion * Float(w));
-    list_h: constant Integer:= Integer (MDI_Main.opt.message_list_portion * Float(h));
+                     Height   : in     Integer)
+  is
+    w   : constant Natural := MDI_Main.Client_Area_Width;
+    tbh : constant Natural := MDI_Main.Tool_Bar.Height;
+    h   : constant Natural := Integer'Max(2, MDI_Main.Client_Area_Height - tbh);
+    tree_w : constant Integer := Integer (MDI_Main.opt.project_tree_portion * Float(w));
+    list_h : constant Integer := Integer (MDI_Main.opt.message_list_portion * Float(h));
+    use GWindows.Types;
   begin
     --  Resize project tree and message list panels using the recorded proportions
     --  This operation is reciprocal to Memorize_Splitters.
@@ -566,13 +573,14 @@ package body LEA_GWin.MDI_Main is
   procedure On_File_Open (MDI_Main : in out MDI_Main_Type) is
     File_Title : GString_Unbounded;
     Success    : Boolean;
+    use GWindows.Windows;
     File_Names: Array_Of_File_Names_Access;
     procedure Dispose is new Ada.Unchecked_Deallocation(
       Array_Of_File_Names,
       Array_Of_File_Names_Access
     );
   begin
-    Open_Files (
+    GWindows.Common_Dialogs.Open_Files (
       MDI_Main, "Open file(s)",
       File_Names, Text_files_filters, ".ad*", File_Title,
       Success
@@ -586,7 +594,7 @@ package body LEA_GWin.MDI_Main is
   end On_File_Open;
 
   procedure On_File_Drop (MDI_Main   : in out MDI_Main_Type;
-                          File_Names : in     Array_Of_File_Names) is
+                          File_Names : in     GWindows.Windows.Array_Of_File_Names) is
   begin
     MDI_Main.Focus;
     for File_Name of File_Names loop
@@ -622,7 +630,13 @@ package body LEA_GWin.MDI_Main is
 
   procedure On_Menu_Select (
         MDI_Main : in out MDI_Main_Type;
-        Item     : in     Integer        ) is
+        Item     : in     Integer        )
+  is
+    procedure Call_Parent_Method is
+    begin
+      GWindows.Windows.Window_Type (MDI_Main).On_Menu_Select (Item);
+    end Call_Parent_Method;
+    use LEA_Resource_GUI;
   begin
     case Item is
       when IDM_New_File=>
@@ -637,7 +651,7 @@ package body LEA_GWin.MDI_Main is
         if MDI_Main.Count_MDI_Children = 0 then
           Close (MDI_Main);  --  Ctrl-W when no subwindow is open.
         else
-          On_Menu_Select (Window_Type (MDI_Main), Item);
+          Call_Parent_Method;
         end if;
       when IDM_Copy_Messages =>
         MDI_Main.Message_Panel.Message_List.Copy_Messages;
@@ -676,8 +690,7 @@ package body LEA_GWin.MDI_Main is
             exit;
           end if;
         end loop;
-        --  Call parent method
-        On_Menu_Select (Window_Type (MDI_Main), Item);
+        Call_Parent_Method;
     end case;
   end On_Menu_Select;
 
@@ -803,6 +816,7 @@ package body LEA_GWin.MDI_Main is
   --  Menus of MDI main *and* all children need to have their "View" menu up-to-date.
   --
   procedure Update_View_Menu (m: Menu_Type; o: LEA_Common.User_options.Option_Pack_Type) is
+    use LEA_Resource_GUI;
   begin
     case o.view_mode is
       when Notepad =>

@@ -1,8 +1,7 @@
-with LEA_Resource_GUI;                  use LEA_Resource_GUI;
+with LEA_Resource_GUI;
 
-with GWindows;
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Constants;                use GWindows.Constants;
+with GWindows.Application;
+with GWindows.Constants;
 
 package body LEA_GWin.Input_Boxes is
 
@@ -13,6 +12,7 @@ package body LEA_GWin.Input_Boxes is
     Result     :    out GWindows.Message_Boxes.Message_Box_Result
   )
   is
+    use LEA_Resource_GUI;
     --
     box : String_Prompt_Type;
     --
@@ -34,9 +34,9 @@ package body LEA_GWin.Input_Boxes is
     box.String_Prompt_Edit_Box.Focus;
     box.Text ("Get / Get_Immediate / Get_Line");
     On_Destroy_Handler (box, Get_Data'Unrestricted_Access);
-    case Show_Dialog (box, Parent) is
-      when IDOK   => Result := GWindows.Message_Boxes.OK;
-      when others => Result := GWindows.Message_Boxes.Cancel;
+    case GWindows.Application.Show_Dialog (box, Parent) is
+      when GWindows.Constants.IDOK => Result := GWindows.Message_Boxes.OK;
+      when others                  => Result := GWindows.Message_Boxes.Cancel;
     end case;
   end String_Input;
 

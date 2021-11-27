@@ -1,9 +1,7 @@
 with LEA_Common;
-
 with LEA_GWin.MDI_Main;
 with LEA_GWin.Messages.IO_Pipe;
-
-with LEA_Resource_GUI;                  use LEA_Resource_GUI;
+with LEA_Resource_GUI;
 
 with HAC_Sys.PCode.Interpreter, HAL;
 
@@ -13,7 +11,7 @@ with GWindows.Application,
      GWindows.Message_Boxes;
 
 with Ada.Calendar;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
+with Ada.Strings.Wide_Fixed;
 
 procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
 
@@ -61,6 +59,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     )
     is
       extended_repair : LEA_GWin.Messages.Editor_repair_information;
+      use Ada.Strings, Ada.Strings.Wide_Fixed;
     begin
       extended_repair.file  := G2GU (S2G (File_Name));
       extended_repair.line  := Line_Number - 1;  --  Scintilla's lines are 0-based
@@ -99,7 +98,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
 
   --  The following is copied and adapted from AZip's progress bar.
   --
-  progress_box: Progress_box_Type;
+  progress_box : LEA_Resource_GUI.Progress_box_Type;
   --
   procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
   begin

@@ -1,12 +1,12 @@
-with LEA_Common;                        use LEA_Common;
+with LEA_Common;
+with LEA_GWin.MDI_Main;
 
-with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
-
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Key_States;               use GWindows.Key_States;
-with GWindows.Scintilla;                use GWindows.Scintilla;
+with GWindows.Buttons;
+with GWindows.Key_States;
+with GWindows.Scintilla;
 
 package body LEA_GWin.Search_box is
+  use LEA_Common, LEA_GWin.MDI_Main, GWindows.Key_States;
 
   procedure Update_drop_downs (SB: in out LEA_search_box_type) is
 
@@ -82,8 +82,8 @@ package body LEA_GWin.Search_box is
       Return_Value : in out GWindows.Types.Lresult)
   is
     CB_GETDROPPEDSTATE : constant := 343;
+    do_find_next : Boolean := False;
     use Interfaces.C;
-    do_find_next: Boolean := False;
   begin
     if message = CB_GETDROPPEDSTATE then
       if Is_Key_Down (VK_ESCAPE) then
@@ -173,6 +173,7 @@ package body LEA_GWin.Search_box is
 
   function Compose_Scintilla_search_flags (SB: in  LEA_search_box_type) return Integer is
     flags : Integer := 0;
+    use GWindows.Scintilla, GWindows.Buttons;
   begin
     if SB.Match_case.State = Checked then
       flags := flags + SCFIND_MATCHCASE;

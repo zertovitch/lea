@@ -1,18 +1,18 @@
-with LEA_GWin.MDI_Main;                 use LEA_GWin.MDI_Main;
+with LEA_GWin.MDI_Main;
 with LEA_GWin.Repair;
 
-with GWindows.Clipboard;                use GWindows.Clipboard;
-with GWindows.Cursors;                  use GWindows.Cursors;
-with GWindows.Windows;                  use GWindows.Windows;
+with GWindows.Clipboard;
+with GWindows.Cursors;
+with GWindows.Windows;
 
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+with Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.Messages is
 
   procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean) is
-    pl: LEA_LV_Ex.Data_Access;
-    mm: MDI_Main_Access;
-    use HAC_Sys.Defs, LEA_LV_Ex;
+    pl : LEA_LV_Ex.Data_Access;
+    use HAC_Sys.Defs, LEA_LV_Ex, LEA_GWin.MDI_Main;
+    mm : MDI_Main_Access;
   begin
     for i in 0 .. Control.Item_Count loop
       if Control.Is_Selected (i) then
@@ -23,7 +23,7 @@ package body LEA_GWin.Messages is
           --  At this point focus is on the editor window.
           if pl.kind /= none
             and then real_click
-            and then Control.Point_To_Client (Get_Cursor_Position).X < 16
+            and then Control.Point_To_Client (GWindows.Cursors.Get_Cursor_Position).X < 16
           then
             LEA_GWin.Repair.Do_Repair (mm.all, pl.all);
             if pl.kind = none then
@@ -54,6 +54,7 @@ package body LEA_GWin.Messages is
     res  : GString_Unbounded;
     --  We separate columns with Tabs - useful when pasting into a spreadsheet.
     HTab : constant GCharacter := GCharacter'Val (9);
+    use Ada.Strings.Wide_Unbounded;
   begin
     loop
       declare
@@ -80,7 +81,8 @@ package body LEA_GWin.Messages is
     --
     --  Now, send the whole stuff to the clipboard.
     --
-    Clipboard_Text (Window_Access (Control.mdi_main_parent).all, res);
+    GWindows.Clipboard.Clipboard_Text
+      (GWindows.Windows.Window_Access (Control.mdi_main_parent).all, res);
   end Copy_Messages;
 
 end LEA_GWin.Messages;

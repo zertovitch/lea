@@ -1,28 +1,31 @@
-with LEA_Common.Syntax;                 use LEA_Common.Syntax;
-with LEA_Common.User_options;           use LEA_Common.User_options;
+with LEA_Common.Syntax;
+with LEA_Common.User_options;
 
 with LEA_GWin.Messages;
-with LEA_GWin.Modal_Dialogs;            use LEA_GWin.Modal_Dialogs;
+with LEA_GWin.Modal_Dialogs;
 with LEA_GWin.Run_Windowed;
-with LEA_GWin.Search_box;               use LEA_GWin.Search_box;
+with LEA_GWin.Search_box;
 
 with HAC_Sys.Defs;
 
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
-with GWindows.Cursors;                  use GWindows.Cursors;
-with GWindows.Menus;                    use GWindows.Menus;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Scintilla;                use GWindows.Scintilla;
+with GWindows.Base;
+with GWindows.Common_Dialogs;
+with GWindows.Cursors;
+with GWindows.Menus;
+with GWindows.Message_Boxes;
+with GWindows.Scintilla;
 
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Characters.Handling;
 with Ada.Directories;
 with Ada.Streams.Stream_IO;
-with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings, Ada.Strings.Wide_Fixed;
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+with Ada.Strings.Unbounded;
+with Ada.Strings.Wide_Fixed;
+with Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.MDI_Child is
+  use LEA_Common, LEA_GWin.MDI_Main;
+  use GWindows.Message_Boxes, GWindows.Scintilla;
+  use Ada.Strings.Wide_Unbounded;
 
   package Status_bar_parts is
     general_info      : constant := 130;
@@ -40,12 +43,12 @@ package body LEA_GWin.MDI_Child is
     use Status_bar_parts;
     frame_width : constant := 8;  --  A hack, guessing the window frame's width
   begin
-    x := Get_Cursor_Position.X;
+    x := GWindows.Cursors.Get_Cursor_Position.X;
     --  NB: parent.Left is the absolute position of the MDI
     --  Child window, not relative to MDI main!
     x := x - parent.Left - Bar.Left - frame_width;
     if x in length_and_lines .. line_and_col then
-      Do_Go_to_Line (parent);
+      Modal_Dialogs.Do_Go_to_Line (parent);
     end if;
   end On_Click;
 
@@ -68,7 +71,9 @@ package body LEA_GWin.MDI_Child is
     else
       case MDI_Child.Document_kind is
         when editable_text =>
-          MDI_Child.Status_Bar.Text (File_type_image (MDI_Child.Editor.syntax_kind), 0);
+          MDI_Child.Status_Bar.Text (
+            LEA_Common.Syntax.File_type_image (MDI_Child.Editor.syntax_kind), 0
+          );
         when help_main =>
           MDI_Child.Status_Bar.Text ("Help", 0);
       end case;
@@ -109,30 +114,32 @@ package body LEA_GWin.MDI_Child is
   end Update_status_bar;
 
   procedure Update_tool_bar (MDI_Child : in out MDI_Child_Type) is
-    bar: MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
+    bar : MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
     is_any_selection: constant Boolean :=
       MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
+    use LEA_Resource_GUI;
   begin
-    bar.Enabled(IDM_Undo, MDI_Child.Editor.Can_Undo);
-    bar.Enabled(IDM_Redo, MDI_Child.Editor.Can_Redo);
-    bar.Enabled(IDM_Save_File, MDI_Child.Editor.modified);
-    bar.Enabled(IDM_Save_All, MDI_Child.save_all_hint);
-    bar.Enabled(IDM_Cut, is_any_selection);
-    bar.Enabled(IDM_Copy, is_any_selection);
-    bar.Enabled(IDM_Paste, MDI_Child.Editor.Can_Paste);
-    bar.Enabled(IDM_Indent, True);
-    bar.Enabled(IDM_Unindent, True);
-    bar.Enabled(IDM_Comment, True);
-    bar.Enabled(IDM_Uncomment, True);
-    bar.Enabled(IDM_Find, True);
-    bar.Enabled(IDM_Show_special_symbols, True);
+    bar.Enabled (IDM_Undo, MDI_Child.Editor.Can_Undo);
+    bar.Enabled (IDM_Redo, MDI_Child.Editor.Can_Redo);
+    bar.Enabled (IDM_Save_File, MDI_Child.Editor.modified);
+    bar.Enabled (IDM_Save_All, MDI_Child.save_all_hint);
+    bar.Enabled (IDM_Cut, is_any_selection);
+    bar.Enabled (IDM_Copy, is_any_selection);
+    bar.Enabled (IDM_Paste, MDI_Child.Editor.Can_Paste);
+    bar.Enabled (IDM_Indent, True);
+    bar.Enabled (IDM_Unindent, True);
+    bar.Enabled (IDM_Comment, True);
+    bar.Enabled (IDM_Uncomment, True);
+    bar.Enabled (IDM_Find, True);
+    bar.Enabled (IDM_Show_special_symbols, True);
     --  if not MDI_Child.is_closing then
     --    null;  --  bar.Enabled(IDM_ADD_FILES, True);
     --  end if;
   end Update_tool_bar;
 
-  procedure Update_menus(MDI_Child : in out MDI_Child_Type) is
-    bool_to_state: constant array(Boolean) of State_Type := (Disabled, Enabled);
+  procedure Update_menus (MDI_Child : in out MDI_Child_Type) is
+    use LEA_Resource_GUI, GWindows.Menus;
+    bool_to_state: constant array (Boolean) of State_Type := (Disabled, Enabled);
     is_any_selection: constant Boolean :=
       MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
   begin
@@ -181,6 +188,7 @@ package body LEA_GWin.MDI_Child is
   ---------------
 
   procedure On_Create (MDI_Child : in out MDI_Child_Type) is
+    use GWindows.Base;
   begin
     MDI_Child.Small_Icon("LEA_Doc_Icon_Name");
 
@@ -268,42 +276,45 @@ package body LEA_GWin.MDI_Child is
   is
     written_name: GString_Unbounded:=
       To_GString_Unbounded(File_Name);
-    temp_ext: constant GString:= ".$$$";
-    backup_name: constant GString:= File_Name & ".bak";
+    temp_ext : constant GString := ".$$$";
+    backup_name : constant GString := File_Name & ".bak";
 
-    with_backup: constant Boolean:= MDI_Child.MDI_Parent.opt.backup = bak;
+    use LEA_Common.User_options;
+    with_backup : constant Boolean := MDI_Child.MDI_Parent.opt.backup = bak;
 
-    --  save_error,
-    backup_error_1, backup_error_2, backup_error_3: exception;
+    backup_error_1, backup_error_2, backup_error_3 : exception;
 
     use Ada.Directories;
 
   begin
     if with_backup then
-      written_name:= written_name & temp_ext;
+      written_name := written_name & temp_ext;
     end if;
-    MDI_Child.Editor.Save_text(GU2G(written_name));
+    --
+    MDI_Child.Editor.Save_text (GU2G (written_name));
+    --
     if with_backup then
       --  If there was an exception at writing,
       --  the original file is untouched.
       --
-      --  !!  !!  !! MESS with Ada.Directories, UTF, whatever -> use another tactic...
+      --  !! !! Special characters: MESS with Ada.Directories & UTF,
+      --        whatever -> use another tactic...
       --
       --  1/ delete old backup
-      if File_Exists(To_UTF_8(backup_name)) then
+      if File_Exists (To_UTF_8 (backup_name)) then
         begin
-          Delete_File(To_UTF_8(backup_name));
+          Delete_File (To_UTF_8 (backup_name));
         exception
           when others =>
             raise backup_error_1;
         end;
       end if;
       --  2/ file -> backup
-      if File_Exists(To_UTF_8(File_Name)) then
+      if File_Exists (To_UTF_8 (File_Name)) then
         begin
           Rename(
-            To_UTF_8(File_Name),
-            To_UTF_8(backup_name)
+            To_UTF_8 (File_Name),
+            To_UTF_8 (backup_name)
           );
         exception
           when others =>
@@ -313,8 +324,8 @@ package body LEA_GWin.MDI_Child is
       --  3/ new file -> file
       begin
         Rename(
-          To_UTF_8(GU2G(written_name)),
-          To_UTF_8(File_Name)
+          To_UTF_8 (GU2G(written_name)),
+          To_UTF_8 (File_Name)
         );
       exception
         when others =>
@@ -373,7 +384,7 @@ package body LEA_GWin.MDI_Child is
     else
       New_File_Name := MDI_Child.File_Name;  --  Tentative name is current file name.
     end if;
-    Save_File (
+    GWindows.Common_Dialogs.Save_File (
       MDI_Child, "Save file as...", New_File_Name, Text_files_filters,
       ".ada", File_Title,
       Success
@@ -400,8 +411,9 @@ package body LEA_GWin.MDI_Child is
     MDI_Child.Short_Name:= File_Title;
     MDI_Child.Update_Common_Menus(GU2G(New_File_Name), MDI_Child.Editor.Get_current_line);
     MDI_Child.Editor.syntax_kind :=
-      Guess_syntax (GU2G (MDI_Child.File_Name),
-                    GU2G (MDI_Child.MDI_Parent.opt.ada_files_filter)
+      LEA_Common.Syntax.Guess_syntax (
+        GU2G (MDI_Child.File_Name),
+        GU2G (MDI_Child.MDI_Parent.opt.ada_files_filter)
       );
     MDI_Child.Editor.Set_Scintilla_Syntax;
   end On_Save_As;
@@ -428,7 +440,7 @@ package body LEA_GWin.MDI_Child is
   end On_Save_All;
 
   procedure On_File_Drop (MDI_Child  : in out MDI_Child_Type;
-                          File_Names : in     Array_Of_File_Names)
+                          File_Names : in     GWindows.Windows.Array_Of_File_Names)
   is
     parent : MDI_Main_Access;
   begin
@@ -479,7 +491,8 @@ package body LEA_GWin.MDI_Child is
       repair          : Repair_kit     --  Can error be automatically repaired; if so, how ?
      )
     is
-    pragma Unreferenced (kind);
+      pragma Unreferenced (kind);
+      use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed;
       msg_up : String := message;
       extended_repair : LEA_GWin.Messages.Editor_repair_information;
     begin
@@ -604,6 +617,7 @@ package body LEA_GWin.MDI_Child is
         Item      : in     Integer
   )
   is
+    use LEA_Resource_GUI;
   begin
     case Item is
       when IDM_Save_File =>
@@ -638,12 +652,13 @@ package body LEA_GWin.MDI_Child is
       when IDM_Find_Next =>
         --  If F3 is pressed or "Find next" menu entry is selected
         --  while search box is focused, we need to update the drop-down list(s).
-        Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
+        Search_box.Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
         MDI_Child.Editor.Search (find_next);
       when IDM_Find_Previous =>
-        Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
-        MDI_Child.Editor.Search(find_previous);
-      when IDM_Go_to_line =>    Do_Go_to_Line (MDI_Child);
+        Search_box.Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
+        MDI_Child.Editor.Search (find_previous);
+      when IDM_Go_to_line =>
+        Modal_Dialogs.Do_Go_to_Line (MDI_Child);
       when IDM_Toggle_bookmark =>
         MDI_Child.Editor.Bookmark_toggle (MDI_Child.Editor.Get_current_line);
       when IDM_Next_bookmark =>
@@ -656,13 +671,13 @@ package body LEA_GWin.MDI_Child is
       when IDM_Build_and_run  =>  MDI_Child.Build_and_run;
       --
       when IDM_Show_special_symbols =>
-        Toggle_show_special(MDI_Child.MDI_Parent.opt);
+        LEA_Common.User_options.Toggle_show_special (MDI_Child.MDI_Parent.opt);
         MDI_Child.Editor.Apply_options;
       when IDM_Duplicate =>
         MDI_Child.Editor.Duplicate;
       when others =>
         --  Call parent method
-        On_Menu_Select (Window_Type (MDI_Child), Item);
+        GWindows.Windows.Window_Type (MDI_Child).On_Menu_Select (Item);
     end case;
   end On_Menu_Select;
 
@@ -673,7 +688,10 @@ package body LEA_GWin.MDI_Child is
   end On_Focus;
 
   overriding procedure On_Close (MDI_Child    : in out MDI_Child_Type;
-                      Can_Close :    out Boolean) is
+                      Can_Close :    out Boolean)
+  is
+    use LEA_Resource_GUI;
+    bar : MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
   begin
     Can_Close:= True;
     if Is_file_saved(MDI_Child) then
@@ -711,19 +729,19 @@ package body LEA_GWin.MDI_Child is
       --
       --  For the case there is no more child window, disable toolbar items.
       --  This action is reversed as soon as another child window is focused.
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Save_File, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Save_All, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Undo, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Redo, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Cut, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Copy, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Paste, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Comment, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Uncomment, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Indent, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Unindent, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Find, False);
-      MDI_Child.MDI_Parent.Tool_Bar.Enabled(IDM_Show_special_symbols, False);
+      bar.Enabled (IDM_Save_File, False);
+      bar.Enabled (IDM_Save_All, False);
+      bar.Enabled (IDM_Undo, False);
+      bar.Enabled (IDM_Redo, False);
+      bar.Enabled (IDM_Cut, False);
+      bar.Enabled (IDM_Copy, False);
+      bar.Enabled (IDM_Paste, False);
+      bar.Enabled (IDM_Comment, False);
+      bar.Enabled (IDM_Uncomment, False);
+      bar.Enabled (IDM_Indent, False);
+      bar.Enabled (IDM_Unindent, False);
+      bar.Enabled (IDM_Find, False);
+      bar.Enabled (IDM_Show_special_symbols, False);
       MDI_Child.is_closing:= True;
     end if;
   end On_Close;
