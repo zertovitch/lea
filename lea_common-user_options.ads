@@ -27,6 +27,7 @@ package LEA_Common.User_options is
     tab_width    : Integer                    := 2;
     right_margin : Integer                    := 100;  --  also called "vertical edge"
     show_special : Show_special_symbol_mode   := none;
+    show_indent  : Boolean                    := False;
     toolset      : Toolset_mode_type          := HAC_mode;
     --  Horizontal portion of the window for the tree, when view_mode = Studio
     tree_portion : Float := 0.25;  --  !! will disappear

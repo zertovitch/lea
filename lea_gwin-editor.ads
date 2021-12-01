@@ -14,6 +14,8 @@ package LEA_GWin.Editor is
     --  Direct access to the window owning the editor widget.
     --  This is needed to reach the options (color theme, etc.).
     mdi_parent           : GWindows.Base.Pointer_To_Base_Window_Class;
+    document_kind        : LEA_Common.Document_kind_type
+                                       := LEA_Common.editable_text;
     modified             : Boolean     := False;  --  Is the doc modified from load or last save ?
     pos_last_update_UI   : Position    := INVALID_POSITION;
     sel_a_last_update_UI : Position    := INVALID_POSITION;

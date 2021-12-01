@@ -95,7 +95,8 @@ Menu_MDI_Child MENU
     }
     POPUP "&View"
     {
-        MENUITEM "Show special symbols", IDM_Show_special_symbols
+        MENUITEM "Show special symbols",   IDM_Show_special_symbols
+        MENUITEM "Show indentation lines", IDM_Show_indentation_lines
         MENUITEM SEPARATOR
         MENUITEM "&Notepad view", IDM_Notepad_view
         MENUITEM "&Studio view", IDM_Studio_view, INACTIVE

@@ -35,7 +35,7 @@ package body LEA_GWin.Help is
         declare
           one_child: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
         begin
-          if one_child.Document_kind = help_main then
+          if one_child.Editor.document_kind = help_main then
             one_child.Focus;
             already_open := True;
           end if;
@@ -67,7 +67,7 @@ package body LEA_GWin.Help is
     begin
       New_Window := new MDI_Child_Type;
       if Is_Help then
-        New_Window.Document_kind := help_main;
+        New_Window.Editor.document_kind := help_main;
       end if;
       New_Window.Short_Name:= G2GU (S2G (Short_Name));
       Main_Window.User_maximize_restore:= False;

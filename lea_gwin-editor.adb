@@ -89,7 +89,6 @@ package body LEA_GWin.Editor is
     Editor.Set_Additional_Selection_Typing;
     Editor.Set_Virtual_Space_Options (SCVS_RECTANGULARSELECTION);
     --
-    --  Editor.SetIndentationGuides (True);
 
     Editor.Set_Scintilla_Syntax;
 
@@ -341,55 +340,66 @@ package body LEA_GWin.Editor is
           )
       );
     --
-    parent   : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
-    mdi_root : MDI_Main_Type renames parent.MDI_Parent.all;
-    theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
+    parent    : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    mdi_root  : MDI_Main_Type renames parent.MDI_Parent.all;
+    theme     : Color_Theme_Type renames mdi_root.opt.color_theme;
+    Edit_Zone : constant := SCE_ADA_DEFAULT;
   begin
+    --  General style
+    --  Font color of the line numbers in the left margin:
+    Editor.Style_Set_Fore (STYLE_DEFAULT, Gray);
+    Editor.Style_Set_Back (STYLE_DEFAULT, theme_color (theme, background));
+    Editor.Style_Set_Size (STYLE_DEFAULT, App_default_font_size);
+    Editor.Style_Set_Font (STYLE_DEFAULT, App_default_font);
+    Editor.Set_Sel_Fore (True, theme_color (theme, selection_foreground));
+    Editor.Set_Sel_Back (True, theme_color (theme, selection_background));
+    Editor.Style_Clear_All;
+    --  Font color of the editor zone (not related to Ada, and works
+    --  only *after* Style_Clear_All, for some reason):
+    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, theme_color (theme, foreground));
+    Editor.Set_Caret_Fore (theme_color (theme, caret));
+
+    if Editor.document_kind /= editable_text then
+      Editor.Set_Edge_Mode (EDGE_NONE);
+      return;
+    end if;
+
     Editor.Set_Tab_Width (mdi_root.opt.tab_width);
     Editor.Set_Edge_Column (mdi_root.opt.right_margin);
 
-    --  Default style
-    Editor.Style_Set_Fore (STYLE_DEFAULT, Gray);  --  For the line numbers
-    Editor.Style_Set_Back (STYLE_DEFAULT, theme_color(theme, background));
-    Editor.Style_Set_Size (STYLE_DEFAULT, App_default_font_size);
-    Editor.Style_Set_Font (STYLE_DEFAULT, App_default_font);
-    Editor.Style_Clear_All;
-
-    --  Parentheses coloring
+    --  Style: parentheses coloring
     --    For matched parentheses:
-    Editor.Style_Set_Fore (STYLE_BRACELIGHT, theme_color(theme, matched_parenthesis));
-    Editor.Style_Set_Back (STYLE_BRACELIGHT, theme_color(theme, parenthesis_background));
+    Editor.Style_Set_Fore (STYLE_BRACELIGHT, theme_color (theme, matched_parenthesis));
+    Editor.Style_Set_Back (STYLE_BRACELIGHT, theme_color (theme, parenthesis_background));
     --    For unmatched parentheses:
-    Editor.Style_Set_Fore (STYLE_BRACEBAD, theme_color(theme, unmatched_parenthesis));
-    Editor.Style_Set_Back (STYLE_BRACEBAD, theme_color(theme, parenthesis_background));
+    Editor.Style_Set_Fore (STYLE_BRACEBAD, theme_color (theme, unmatched_parenthesis));
+    Editor.Style_Set_Back (STYLE_BRACEBAD, theme_color (theme, parenthesis_background));
 
-    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, theme_color(theme, foreground));
-    Editor.Style_Set_Back (SCE_ADA_DEFAULT, theme_color(theme, background));
-    Editor.Set_Sel_Fore (True, theme_color(theme, selection_foreground));
-    Editor.Set_Sel_Back (True, theme_color(theme, selection_background));
+    --  Style: Ada-specific coloring
+    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, theme_color (theme, foreground));
+    Editor.Style_Set_Back (SCE_ADA_DEFAULT, theme_color (theme, background));
     Editor.Style_Set_Size (SCE_ADA_DEFAULT, App_default_font_size);
     Editor.Style_Set_Font (SCE_ADA_DEFAULT, App_default_font);
-
-    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, theme_color(theme, comment));
-    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      theme_color(theme, number));
-    Editor.Style_Set_Fore (SCE_ADA_WORD,        theme_color(theme, keyword));
-    Editor.Style_Set_Fore (SCE_ADA_STRING,      theme_color(theme, string));
-    Editor.Style_Set_Fore (SCE_ADA_CHARACTER,   theme_color(theme, character));
-    Editor.Style_Set_Fore (SCE_ADA_IDENTIFIER,  theme_color(theme, foreground));
-
+    --
+    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, theme_color (theme, comment));
+    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      theme_color (theme, number));
+    Editor.Style_Set_Fore (SCE_ADA_WORD,        theme_color (theme, keyword));
+    Editor.Style_Set_Fore (SCE_ADA_STRING,      theme_color (theme, string));
+    Editor.Style_Set_Fore (SCE_ADA_CHARACTER,   theme_color (theme, character));
+    Editor.Style_Set_Fore (SCE_ADA_IDENTIFIER,  theme_color (theme, foreground));
+    --
     --  Cases where the text is obviously wrong
     --  (unfinished character or string, illegal identifier)
-    Editor.Style_Set_Fore (SCE_ADA_CHARACTEREOL, theme_color(theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_CHARACTEREOL, theme_color(theme, error_background));
-    Editor.Style_Set_Fore (SCE_ADA_STRINGEOL, theme_color(theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_STRINGEOL, theme_color(theme, error_background));
-    Editor.Style_Set_Fore (SCE_ADA_ILLEGAL, theme_color(theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_ILLEGAL, theme_color(theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_CHARACTEREOL, theme_color (theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_CHARACTEREOL, theme_color (theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_STRINGEOL, theme_color (theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_STRINGEOL, theme_color (theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_ILLEGAL, theme_color (theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_ILLEGAL, theme_color (theme, error_background));
 
-    Editor.Set_Caret_Fore (theme_color(theme, caret));
     Editor.Indic_Set_Fore (
       word_highlighting_indicator_index,
-      theme_color(theme, matched_word_highlight)
+      theme_color (theme, matched_word_highlight)
     );
 
     case mdi_root.opt.show_special is
@@ -403,6 +413,7 @@ package body LEA_GWin.Editor is
         Editor.Set_View_WS (SCWS_VISIBLEALWAYS);
         Editor.Set_View_EOL (True);
     end case;
+    Editor.Set_Indentation_Guides (mdi_root.opt.show_indent);
 
   end Apply_options;
 

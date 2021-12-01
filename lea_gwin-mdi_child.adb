@@ -3,6 +3,7 @@ with LEA_Common.User_options;
 
 with LEA_GWin.Messages;
 with LEA_GWin.Modal_Dialogs;
+with LEA_GWin.Options;
 with LEA_GWin.Run_Windowed;
 with LEA_GWin.Search_box;
 
@@ -69,7 +70,7 @@ package body LEA_GWin.MDI_Child is
       MDI_Child.Status_Bar.Text("Folder selected", 0);
       return;
     else
-      case MDI_Child.Document_kind is
+      case MDI_Child.Editor.document_kind is
         when editable_text =>
           MDI_Child.Status_Bar.Text (
             LEA_Common.Syntax.File_type_image (MDI_Child.Editor.syntax_kind), 0
@@ -132,6 +133,7 @@ package body LEA_GWin.MDI_Child is
     bar.Enabled (IDM_Uncomment, True);
     bar.Enabled (IDM_Find, True);
     bar.Enabled (IDM_Show_special_symbols, True);
+    bar.Enabled (IDM_Show_indentation_lines, True);
     --  if not MDI_Child.is_closing then
     --    null;  --  bar.Enabled(IDM_ADD_FILES, True);
     --  end if;
@@ -676,7 +678,11 @@ package body LEA_GWin.MDI_Child is
       --
       when IDM_Show_special_symbols =>
         LEA_Common.User_options.Toggle_show_special (MDI_Child.MDI_Parent.opt);
-        MDI_Child.Editor.Apply_options;
+        Options.Apply_Main_Options (MDI_Child.MDI_Parent.all);
+      when IDM_Show_indentation_lines =>
+        MDI_Child.MDI_Parent.opt.show_indent :=
+          not MDI_Child.MDI_Parent.opt.show_indent;
+        Options.Apply_Main_Options (MDI_Child.MDI_Parent.all);
       when IDM_Duplicate =>
         MDI_Child.Editor.Duplicate;
       when others =>
@@ -746,6 +752,7 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Unindent, False);
       bar.Enabled (IDM_Find, False);
       bar.Enabled (IDM_Show_special_symbols, False);
+      bar.Enabled (IDM_Show_indentation_lines, False);
       MDI_Child.is_closing:= True;
     end if;
   end On_Close;

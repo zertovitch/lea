@@ -106,3 +106,4 @@
 #define Topic_box                               40103
 #define Label_HAC_topic                         40104
 #define Label_HAC_sample                        40105
+#define IDM_Show_indentation_lines              40106

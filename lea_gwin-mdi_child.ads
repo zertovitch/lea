@@ -69,7 +69,6 @@ package LEA_GWin.MDI_Child is
         Extra_first_doc  : Boolean := False;
         Menu             : LEA_Resource_GUI.Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
-        Document_kind    : LEA_Common.Document_kind_type := LEA_Common.editable_text;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
         Subprogram_Panel : Subprogram_Panel_Type;
         selected_path    : GString_Unbounded := Null_GString_Unbounded;

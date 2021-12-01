@@ -21,6 +21,7 @@ package body LEA_Common.User_options is
         indent, tab_width,
         edge,  --  right margin
         show_special,
+        show_indent,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
         tree_portion,  --  !! to be removed
@@ -62,6 +63,8 @@ package body LEA_Common.User_options is
                 opt.right_margin := Integer'Wide_Value (s);
               when show_special =>
                 opt.show_special := Show_special_symbol_mode'Wide_Value (s);
+              when show_indent =>
+                opt.show_indent := Boolean'Wide_Value (s);
               when win_left =>
                 opt.win_left := Integer'Wide_Value (s);
               when win_top =>
@@ -138,6 +141,8 @@ package body LEA_Common.User_options is
               R (Integer'Wide_Image (opt.right_margin));
             when show_special =>
               R (Show_special_symbol_mode'Wide_Image (opt.show_special));
+            when show_indent =>
+              R (Boolean'Wide_Image (opt.show_indent));
             when win_left =>
               R (Integer'Wide_Image (opt.win_left));
             when win_top =>

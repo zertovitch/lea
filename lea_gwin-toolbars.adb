@@ -104,6 +104,7 @@ package body LEA_GWin.Toolbars is
     Add_Button_with_Tip ( 3, IDM_Find);
     tb.Add_Separator (sep_width);
     Add_Button_with_Tip (12, IDM_Show_special_symbols);
+    Add_Button_with_Tip (16, IDM_Show_indentation_lines);
   end Init_Main_toolbar;
 
 end LEA_GWin.Toolbars;
