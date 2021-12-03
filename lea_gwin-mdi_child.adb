@@ -625,6 +625,12 @@ package body LEA_GWin.MDI_Child is
   is
     use LEA_Resource_GUI;
   begin
+    if MDI_Child.Editor.document_kind /= editable_text then
+      --  Call parent method
+      GWindows.Windows.Window_Type (MDI_Child).On_Menu_Select (Item);
+      return;
+    end if;
+    --
     case Item is
       when IDM_Save_File =>
         MDI_Child.On_Save;
