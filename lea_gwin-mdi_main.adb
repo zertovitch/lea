@@ -45,6 +45,7 @@ package body LEA_GWin.MDI_Main is
         begin
           if pw.File_Name = File_Name then
             is_open:= True;
+            pw.Set_Foreground_Window;
             pw.Focus;  --  Focus on document already open in our app.
             --  Scintilla lines are 0-based
             if Line > -1 then
@@ -174,7 +175,9 @@ package body LEA_GWin.MDI_Main is
       new_pos_z := New_Window.Editor.Get_Current_Pos + Col_z;
       New_Window.Editor.Set_Sel (new_pos_a, new_pos_z);
     end if;
-    if not file_loaded then
+    if file_loaded then
+      New_Window.Set_Foreground_Window;
+    else
       Message_Box (
         MDI_Main,
         "Error",
