@@ -711,6 +711,7 @@ package body LEA_GWin.MDI_Main is
       if MDI_Main.close_this_search_box then
         MDI_Main.close_this_search_box := False;
         if MDI_Main.Search_box.Visible then
+          MDI_Main.Set_Foreground_Window;
           MDI_Main.Focus;
           MDI_Main.Search_box.Hide;
         end if;

@@ -731,6 +731,9 @@ package body LEA_GWin.Editor is
           "     [" & repl_str & "]." & NL & NL &
           "Operation can be undone in one ""Undo"".");
         if MDI_Main.Search_box.Visible then
+          --  Without the following, some other application's window
+          --  comes to the foreground (typically Explorer), a major annoyance!
+          MDI_Main.Set_Foreground_Window;
           MDI_Main.Search_box.Focus;
         end if;
     end case;
