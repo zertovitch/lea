@@ -237,15 +237,6 @@ package body LEA_GWin.MDI_Main is
     );
   end Open_Child_Window_And_Load;
 
-  function Valid_Left_Top (Left, Top : Integer)
-    return Boolean
-  is
-    use GWindows.Application;
-  begin
-    return Left in -320 .. Desktop_Width  - 30 and
-           Top  in -320 .. Desktop_Height - 80;
-  end Valid_Left_Top;
-
   -----------------
   -- Persistence --
   -----------------
@@ -341,7 +332,7 @@ package body LEA_GWin.MDI_Main is
     end Replace_default;
     --
     start_line : Integer := -1;
-    use GWindows.Taskbar, LEA_Resource_GUI;
+    use GWindows.Application, GWindows.Taskbar, LEA_Resource_GUI;
   begin
     Windows_persistence.Load (MDI_Main.opt);  --  Load options from the registry
     LEA_GWin.Options.Apply_Main_Options (MDI_Main);
@@ -401,15 +392,15 @@ package body LEA_GWin.MDI_Main is
 
     --  ** Resize according to options:
 
-    if Valid_Left_Top(MDI_Main.opt.win_left, MDI_Main.opt.win_top) then
-      Left(MDI_Main, MDI_Main.opt.win_left);
-      Top( MDI_Main, MDI_Main.opt.win_top);
+    if Screen_Visibility ((MDI_Main.opt.win_left, MDI_Main.opt.win_top)) = Fair then
+      MDI_Main.Left (MDI_Main.opt.win_left);
+      MDI_Main.Top  (MDI_Main.opt.win_top);
     end if;
-    Size(MDI_Main,
-      Integer'Max(640, MDI_Main.opt.win_width),
-      Integer'Max(400, MDI_Main.opt.win_height)
+    MDI_Main.Size (
+      Integer'Max (640, MDI_Main.opt.win_width),
+      Integer'Max (400, MDI_Main.opt.win_height)
     );
-    Zoom(MDI_Main,MDI_Main.opt.MDI_main_maximized);
+    MDI_Main.Zoom (MDI_Main.opt.MDI_main_maximized);
 
     Change_View (MDI_Main, MDI_Main.opt.view_mode, force => True);
 
