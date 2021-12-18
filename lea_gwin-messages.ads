@@ -25,10 +25,16 @@ package LEA_GWin.Messages is
     Font            : GWindows.Drawing_Objects.Font_Type;
   end record;
 
-  procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean);
   overriding procedure On_Click (Control : in out Message_List_Type);
   overriding procedure On_Double_Click (Control : in out Message_List_Type);
+
+  ---------------------------------------------------------
+  --  Methods introduced in the Message_List_Type class  --
+  ---------------------------------------------------------
+
+  procedure Apply_Options (Control : in out Message_List_Type);
   procedure Copy_Messages (Control : in out Message_List_Type);
+  procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean);
 
   --  Width of broadest message column in pixels.
   --  Ideally, a function using something like mdi parent's Client_Area_Width

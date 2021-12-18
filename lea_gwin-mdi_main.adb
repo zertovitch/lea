@@ -335,7 +335,6 @@ package body LEA_GWin.MDI_Main is
     use GWindows.Application, GWindows.Taskbar, LEA_Resource_GUI;
   begin
     Windows_persistence.Load (MDI_Main.opt);  --  Load options from the registry
-    LEA_GWin.Options.Apply_Main_Options (MDI_Main);
     --
     Replace_default(MDI_Main.opt.win_left);
     Replace_default(MDI_Main.opt.win_width);
@@ -405,6 +404,7 @@ package body LEA_GWin.MDI_Main is
     Change_View (MDI_Main, MDI_Main.opt.view_mode, force => True);
 
     MDI_Main.Dock_Children;
+    LEA_GWin.Options.Apply_Main_Options (MDI_Main);
     MDI_Main.Show;
 
     if Argument_Count=0 then

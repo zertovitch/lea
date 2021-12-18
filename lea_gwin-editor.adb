@@ -1,15 +1,15 @@
 --  LEA_GWin.Editor is derived from: gnavi\gwindows\samples\scintilla
 
-with LEA_GWin.MDI_Child;
-with LEA_GWin.MDI_Main;
-with LEA_GWin.Messages;
+with LEA_GWin.MDI_Child,
+     LEA_GWin.MDI_Main,
+     LEA_GWin.Messages;
 
-with GWindows.Colors;
-with GWindows.Message_Boxes;
+with GWindows.Colors,
+     GWindows.Message_Boxes;
 
-with Ada.Streams.Stream_IO;
-with Ada.Strings.Wide_Fixed;
-with Ada.Integer_Wide_Text_IO;
+with Ada.Streams.Stream_IO,
+     Ada.Strings.Wide_Fixed,
+     Ada.Integer_Wide_Text_IO;
 
 package body LEA_GWin.Editor is
 
@@ -300,7 +300,7 @@ package body LEA_GWin.Editor is
       matched_word_highlight
     );
     --
-    theme_color: constant array(Color_Theme_Type, Color_topic) of Color_Type :=
+    theme_color : constant array (Color_Theme_Type, Color_topic) of Color_Type :=
       (
         Default =>
           (foreground             => Black,

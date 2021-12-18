@@ -1,9 +1,12 @@
-with LEA_GWin.MDI_Main;
-with LEA_GWin.Repair;
+with LEA_Common;
 
-with GWindows.Clipboard;
-with GWindows.Cursors;
-with GWindows.Windows;
+with LEA_GWin.MDI_Main,
+     LEA_GWin.Repair;
+
+with GWindows.Clipboard,
+     GWindows.Colors,
+     GWindows.Cursors,
+     GWindows.Windows;
 
 with Ada.Strings.Wide_Unbounded;
 
@@ -48,6 +51,38 @@ package body LEA_GWin.Messages is
   begin
     Control.Message_line_action (True);
   end On_Double_Click;
+
+  procedure Apply_Options (Control : in out Message_List_Type) is
+    use LEA_Common, GWindows.Colors;
+    --
+    type Color_topic is (
+      foreground,
+      background,
+      control_background
+    );
+    --
+    theme_color : constant array (Color_Theme_Type, Color_topic) of Color_Type :=
+      (
+        Default =>
+          (foreground         => Black,
+           background         => White,
+           control_background => White
+          ),
+        Dark_side   =>
+          (foreground         => Light_Gray,
+           background         => 16#181716#,
+           control_background => 16#141312#
+          )
+      );
+    --
+    use MDI_Main;
+    mdi_root : MDI_Main_Type renames MDI_Main_Type (Control.mdi_main_parent.all);
+    theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
+  begin
+    Control.Text_Color (theme_color (theme, foreground));
+    Control.Back_Color (theme_color (theme, background));
+    Control.Control_Back_Color (theme_color (theme, control_background));
+  end Apply_Options;
 
   procedure Copy_Messages (Control : in out Message_List_Type) is
     cols : Natural := 0;
