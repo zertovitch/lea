@@ -55,7 +55,7 @@ package body LEA_GWin.Options is
           (Window, "Invalid data", "Incomplete reading of your changes", OK_Box, Error_Icon);
     end Get_Data;
     --
-    has_changes: Boolean;
+    has_changes, icons_redrawing: Boolean;
     --
   begin
     box.Create_Full_Dialog(main);
@@ -67,12 +67,13 @@ package body LEA_GWin.Options is
       when GWindows.Constants.IDOK =>
         has_changes := main.opt /= candidate;
         if has_changes then
-          if main.opt.color_theme /= candidate.color_theme then
-            main.Message_Panel.Message_List.Clear;
-            --  Some details like the wrench are theme-dependent.
-          end if;
+          icons_redrawing := main.opt.color_theme /= candidate.color_theme;
           main.opt:= candidate;
           Apply_Main_Options (main);
+          if icons_redrawing then
+            main.Message_Panel.Message_List.Redraw_Icons;
+            --  Some details like the wrench are theme-dependent.
+          end if;
         end if;
       when others   =>
         null;  --  Contains the IDCANCEL case

@@ -23,9 +23,12 @@ package LEA_GWin.Messages is
   procedure Apply_Options (Control : in out Message_List_Type);
   procedure Copy_Messages (Control : in out Message_List_Type);
   procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean);
+  procedure Redraw_Icons (Control : in out Message_List_Type);
 
   --  Width of broadest message column in pixels.
   --  Ideally, a function using something like mdi parent's Client_Area_Width
   large_message_width : constant := 1000;
+
+  function Wrench_Icon (is_reparable, has_dark_background : Boolean) return Natural;
 
 end LEA_GWin.Messages;

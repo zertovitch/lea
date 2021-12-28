@@ -672,7 +672,7 @@ package body LEA_GWin.Editor is
             count,
             new HAC_Sys.Defs.Diagnostic_Kit'(
               file_name   => To_Unbounded_String (G2S (GU2G (MDI_Child.File_Name))),
-              line        => line,
+              line        => line + 1,  --  Lines in Diagnostic_Kit are 1-based.
               column_a    => col,
               column_z    => col + find_str'Length,
               others      => <>

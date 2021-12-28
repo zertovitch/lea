@@ -127,4 +127,23 @@ package body LEA_GWin.Messages is
       (GWindows.Windows.Window_Access (Control.mdi_main_parent).all, res);
   end Copy_Messages;
 
+  procedure Redraw_Icons (Control : in out Message_List_Type) is
+    use HAC_Sys.Defs, LEA_Common, LEA_LV_Ex;
+    has_dark_background : constant Boolean :=
+      MDI_Main.MDI_Main_Type (Control.mdi_main_parent.all).opt.color_theme = Dark_side;
+  begin
+    for i in 0 .. Control.Item_Count - 1 loop
+      if Control.Item_Data (i) /= null
+        and then Control.Item_Data (i).repair_kind /= none
+      then
+        Control.Set_Item (Control.Text (i, 0), i, Wrench_Icon (True, has_dark_background));
+      end if;
+    end loop;
+  end Redraw_Icons;
+
+  function Wrench_Icon (is_reparable, has_dark_background : Boolean) return Natural is
+  begin
+    return Boolean'Pos (is_reparable) * (2 - Boolean'Pos (has_dark_background));
+  end Wrench_Icon;
+
 end LEA_GWin.Messages;

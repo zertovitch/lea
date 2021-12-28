@@ -482,21 +482,21 @@ package body LEA_GWin.MDI_Child is
   end On_Size;
 
   procedure Build_as_Main (MDI_Child : in out MDI_Child_Type) is
+    use HAC_Sys.Defs, LEA_GWin.Messages;
     MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
-    ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
+    ml : Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     count, err_count : Natural := 0;
-    use HAC_Sys.Defs;
     --
     procedure LEA_HAC_Build_Error_Feedback (diagnostic : Diagnostic_Kit) is
       use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed;
       msg_up : String := To_String (diagnostic.message);
-      dark_background : constant Boolean := MDI_Main.opt.color_theme = Dark_side;
+      has_dark_background : constant Boolean := MDI_Main.opt.color_theme = Dark_side;
     begin
       msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
       ml.Insert_Item (
         Trim (Integer'Wide_Image (diagnostic.line), Left),
         count,
-        Icon => Boolean'Pos (diagnostic.repair_kind /= none) * (2 - Boolean'Pos (dark_background))
+        Icon => Wrench_Icon (diagnostic.repair_kind /= none, has_dark_background)
       );
       --  Here we set a payload in order to get the source file and position
       --  when selecting a row in the error / warnings message list.
