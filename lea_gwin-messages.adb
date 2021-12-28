@@ -8,13 +8,14 @@ with GWindows.Clipboard,
      GWindows.Cursors,
      GWindows.Windows;
 
-with Ada.Strings.Wide_Unbounded;
+with Ada.Strings.Unbounded,
+     Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.Messages is
 
   procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean) is
     pl : LEA_LV_Ex.Data_Access;
-    use HAC_Sys.Defs, LEA_LV_Ex, LEA_GWin.MDI_Main;
+    use HAC_Sys.Defs, LEA_LV_Ex, LEA_GWin.MDI_Main, Ada.Strings.Unbounded;
     mm : MDI_Main_Access;
   begin
     for i in 0 .. Control.Item_Count loop
@@ -22,14 +23,19 @@ package body LEA_GWin.Messages is
         pl := Control.Item_Data (i);
         if pl /= null then
           mm := MDI_Main_Access (Control.mdi_main_parent);
-          mm.Open_Child_Window_And_Load (pl.file, pl.line, pl.col_a, pl.col_a);
+          mm.Open_Child_Window_And_Load (
+            G2GU(S2G(To_String (pl.file_name))),
+            pl.line - 1,  --  Scintilla's lines are 0-based
+            pl.column_a,
+            pl.column_a
+          );
           --  At this point focus is on the editor window.
-          if pl.kind /= none
+          if pl.repair_kind /= none
             and then real_click
             and then Control.Point_To_Client (GWindows.Cursors.Get_Cursor_Position).X < 16
           then
             LEA_GWin.Repair.Do_Repair (mm.all, pl.all);
-            if pl.kind = none then
+            if pl.repair_kind = none then
               --  Remove tool icon:
               Control.Set_Item (Control.Text(Item => i, SubItem => 0), i, Icon => 0);
             end if;

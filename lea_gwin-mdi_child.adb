@@ -487,39 +487,22 @@ package body LEA_GWin.MDI_Child is
     count, err_count : Natural := 0;
     use HAC_Sys.Defs;
     --
-    procedure LEA_HAC_Build_Error_Feedback (
-      message         : String;
-      file_name       : String;
-      line            : Natural;
-      column_a        : Natural;       --  Before first selected character, can be 0.
-      column_z        : Natural;
-      kind            : Message_kind;  --  Error, or warning, or ? ...
-      repair          : Repair_kit     --  Can error be automatically repaired; if so, how ?
-     )
-    is
-      pragma Unreferenced (kind);
+    procedure LEA_HAC_Build_Error_Feedback (diagnostic : Diagnostic_Kit) is
       use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed;
-      msg_up : String := message;
-      extended_repair : LEA_GWin.Messages.Editor_repair_information;
+      msg_up : String := To_String (diagnostic.message);
       dark_background : constant Boolean := MDI_Main.opt.color_theme = Dark_side;
     begin
-      Repair_kit (extended_repair) := repair;
-      extended_repair.file  := G2GU (S2G (file_name));
-      extended_repair.line  := line - 1;  --  Scintilla's lines are 0-based
-      extended_repair.col_a := column_a;
-      extended_repair.col_z := column_z;
-      --
       msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
       ml.Insert_Item (
-        Trim (Integer'Wide_Image (line), Left),
+        Trim (Integer'Wide_Image (diagnostic.line), Left),
         count,
-        Icon => Boolean'Pos (repair.kind /= none) * (2 - Boolean'Pos (dark_background))
+        Icon => Boolean'Pos (diagnostic.repair_kind /= none) * (2 - Boolean'Pos (dark_background))
       );
       --  Here we set a payload in order to get the source file and position
       --  when selecting a row in the error / warnings message list.
       ml.Item_Data (
         count,
-        new LEA_GWin.Messages.Editor_repair_information'(extended_repair)
+        new Diagnostic_Kit'(diagnostic)  --  Copy diagnostic into a new heap allocated object.
       );
       ml.Set_Sub_Item (S2G (msg_up), count, 1);
       count := count + 1;

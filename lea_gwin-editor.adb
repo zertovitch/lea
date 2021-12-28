@@ -4,12 +4,15 @@ with LEA_GWin.MDI_Child,
      LEA_GWin.MDI_Main,
      LEA_GWin.Messages;
 
+with HAC_Sys.Defs;
+
 with GWindows.Colors,
      GWindows.Message_Boxes;
 
-with Ada.Streams.Stream_IO,
+with Ada.Integer_Wide_Text_IO,
+     Ada.Streams.Stream_IO,
      Ada.Strings.Wide_Fixed,
-     Ada.Integer_Wide_Text_IO;
+     Ada.Strings.Unbounded;
 
 package body LEA_GWin.Editor is
 
@@ -590,7 +593,7 @@ package body LEA_GWin.Editor is
       Ada.Integer_Wide_Text_IO.Put (s, column);
       return s;
     end Right_aligned_column_number;
-    use LEA_GWin.Messages;
+    use LEA_GWin.Messages, Ada.Strings.Unbounded;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -667,11 +670,11 @@ package body LEA_GWin.Editor is
           ml.Insert_Item (Right_aligned_line_number (line + 1), count);
           ml.Item_Data(
             count,
-            new Editor_repair_information'(
-              file        => MDI_Child.File_Name,
+            new HAC_Sys.Defs.Diagnostic_Kit'(
+              file_name   => To_Unbounded_String (G2S (GU2G (MDI_Child.File_Name))),
               line        => line,
-              col_a       => col,
-              col_z       => col + find_str'Length,
+              column_a    => col,
+              column_z    => col + find_str'Length,
               others      => <>
             )
           );

@@ -3,7 +3,10 @@ with LEA_GWin.MDI_Main;
 with LEA_GWin.Messages.IO_Pipe;
 with LEA_Resource_GUI;
 
-with HAC_Sys.PCode.Interpreter, HAL;
+with HAC_Sys.Defs,
+     HAC_Sys.PCode.Interpreter;
+
+with HAL;
 
 with GWindows.Application,
      GWindows.Base,
@@ -11,7 +14,8 @@ with GWindows.Application,
      GWindows.Message_Boxes;
 
 with Ada.Calendar;
-with Ada.Strings.Wide_Fixed;
+with Ada.Strings.Unbounded,
+     Ada.Strings.Wide_Fixed;
 
 procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
 
@@ -44,7 +48,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
   MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
   ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
 
-  use LEA_Common, HAC_Sys.PCode.Interpreter;
+  use LEA_Common, HAC_Sys.PCode.Interpreter, Ada.Strings.Unbounded;
 
   post_mortem : Post_Mortem_Data;
 
@@ -58,13 +62,11 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
       Line_Number : Positive
     )
     is
-      extended_repair : LEA_GWin.Messages.Editor_repair_information;
-      use Ada.Strings, Ada.Strings.Wide_Fixed;
+      use HAC_Sys.Defs, Ada.Strings, Ada.Strings.Wide_Fixed;
+      diagnostic : Diagnostic_Kit;
     begin
-      extended_repair.file  := G2GU (S2G (File_Name));
-      extended_repair.line  := Line_Number - 1;  --  Scintilla's lines are 0-based
-      extended_repair.col_a := 0;
-      extended_repair.col_z := 0;
+      diagnostic.file_name := To_Unbounded_String (File_Name);
+      diagnostic.line      := Line_Number;
       ml.Insert_Item (
         Trim (Integer'Wide_Image (Line_Number), Left),
         count
@@ -73,7 +75,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
       --  when selecting a row in the error / warnings message list.
       ml.Item_Data(
         count,
-        new LEA_GWin.Messages.Editor_repair_information'(extended_repair)
+        new Diagnostic_Kit'(diagnostic)  --  Copy diagnostic into a new heap allocated object.
       );
       ml.Set_Sub_Item (S2G (Block_Name), count, 1);
       count := count + 1;
