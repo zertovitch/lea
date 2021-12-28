@@ -109,10 +109,6 @@ package LEA_GWin.MDI_Main is
      (MDI_Main : in out MDI_Main_Type;
       Canvas   : in out GWindows.Drawing.Canvas_Type;
       Area     : in     GWindows.Types.Rectangle_Type) is null;
-  overriding procedure On_Paint
-     (MDI_Main : in out MDI_Main_Type;
-      Canvas   : in out GWindows.Drawing.Canvas_Type;
-      Area     : in     GWindows.Types.Rectangle_Type) is null;
 
   procedure Redraw_all (MDI_Main: in out MDI_Main_Type);
 

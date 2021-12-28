@@ -92,7 +92,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     );
     ml.Clear;
     ml.Set_Column ("Line", 0, 60);
-    ml.Set_Column ("Trace-back location (approximate)", 1, 800);
+    ml.Set_Column ("Trace-back: approximate location", 1, 800);
     ML_Trace_Back (post_mortem.Unhandled);
   end Show_Error;
 

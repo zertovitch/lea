@@ -130,7 +130,6 @@ pragma Eliminate (GWindows.Windows, Create, Source_Location => "gwindows-windows
 pragma Eliminate (GWindows.Windows, Create_Child, Source_Location => "gwindows-windows.ads:78");
 pragma Eliminate (GWindows.Windows, Create_As_Dialog, Source_Location => "gwindows-windows.ads:110");
 pragma Eliminate (GWindows.Windows, Create_As_Tool_Window, Source_Location => "gwindows-windows.ads:125");
-pragma Eliminate (GWindows.Windows, Background_Color, Source_Location => "gwindows-windows.ads:208");
 pragma Eliminate (GWindows.Windows, Background_Color, Source_Location => "gwindows-windows.ads:210");
 pragma Eliminate (GWindows.Windows, Iconic, Source_Location => "gwindows-windows.ads:219");
 pragma Eliminate (GWindows.Windows, Large_Icon, Source_Location => "gwindows-windows.ads:226");

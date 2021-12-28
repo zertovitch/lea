@@ -482,12 +482,12 @@ package body LEA_GWin.MDI_Child is
   end On_Size;
 
   procedure Build_as_Main (MDI_Child : in out MDI_Child_Type) is
-    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
+    MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     count, err_count : Natural := 0;
     use HAC_Sys.Defs;
     --
-    procedure LEA_HAC_Error_Feedback (
+    procedure LEA_HAC_Build_Error_Feedback (
       message         : String;
       file_name       : String;
       line            : Natural;
@@ -501,6 +501,7 @@ package body LEA_GWin.MDI_Child is
       use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed;
       msg_up : String := message;
       extended_repair : LEA_GWin.Messages.Editor_repair_information;
+      dark_background : constant Boolean := MDI_Main.opt.color_theme = Dark_side;
     begin
       Repair_kit (extended_repair) := repair;
       extended_repair.file  := G2GU (S2G (file_name));
@@ -512,7 +513,7 @@ package body LEA_GWin.MDI_Child is
       ml.Insert_Item (
         Trim (Integer'Wide_Image (line), Left),
         count,
-        Icon => Boolean'Pos (repair.kind /= none)
+        Icon => Boolean'Pos (repair.kind /= none) * (2 - Boolean'Pos (dark_background))
       );
       --  Here we set a payload in order to get the source file and position
       --  when selecting a row in the error / warnings message list.
@@ -523,14 +524,14 @@ package body LEA_GWin.MDI_Child is
       ml.Set_Sub_Item (S2G (msg_up), count, 1);
       count := count + 1;
       err_count := err_count + 1;
-    end LEA_HAC_Error_Feedback;
+    end LEA_HAC_Build_Error_Feedback;
     --
-    procedure LEA_HAC_Compilation_Feedback (message : String) is
+    procedure LEA_HAC_Build_Feedback (message : String) is
     begin
       ml.Insert_Item ("----", count);
       ml.Set_Sub_Item (S2G (message), count, 1);
       count := count + 1;
-    end LEA_HAC_Compilation_Feedback;
+    end LEA_HAC_Build_Feedback;
     --
     use_editor_stream : constant Boolean := True;
     --  ^ So far we don't set a main file name elsewhere, so we
@@ -570,8 +571,8 @@ package body LEA_GWin.MDI_Child is
         ml.Set_Column ("Message",  1, 800);
         Set_Message_Feedbacks (
           MDI_Child.BD,
-          LEA_HAC_Error_Feedback'Unrestricted_Access,
-          LEA_HAC_Compilation_Feedback'Unrestricted_Access
+          LEA_HAC_Build_Error_Feedback'Unrestricted_Access,
+          LEA_HAC_Build_Feedback'Unrestricted_Access
         );
         Build_Main (MDI_Child.BD);
         if not use_editor_stream then

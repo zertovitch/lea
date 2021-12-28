@@ -67,6 +67,10 @@ package body LEA_GWin.Options is
       when GWindows.Constants.IDOK =>
         has_changes := main.opt /= candidate;
         if has_changes then
+          if main.opt.color_theme /= candidate.color_theme then
+            main.Message_Panel.Message_List.Clear;
+            --  Some details like the wrench are theme-dependent.
+          end if;
           main.opt:= candidate;
           Apply_Main_Options (main);
         end if;

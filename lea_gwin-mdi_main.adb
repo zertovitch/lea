@@ -332,7 +332,7 @@ package body LEA_GWin.MDI_Main is
     end Replace_default;
     --
     start_line : Integer := -1;
-    use GWindows.Application, GWindows.Taskbar, LEA_Resource_GUI;
+    use GWindows.Application, GWindows.Taskbar, GWindows.Image_Lists, LEA_Resource_GUI;
   begin
     Windows_persistence.Load (MDI_Main.opt);  --  Load options from the registry
     --
@@ -356,7 +356,7 @@ package body LEA_GWin.MDI_Main is
       );
 
     --  ** Other resources
-    MDI_Main.Folders_Images.Create (Num_resource(Folders_BMP), 16);
+    MDI_Main.Folders_Images.Create (Num_resource(Folders_BMP), 16, Color_Option => Copy_From_Resource);
 
     --  ** Main tool bar (New / Open / Save / ...) at top left of the main window:
     LEA_GWin.Toolbars.Init_Main_toolbar(MDI_Main.Tool_Bar, MDI_Main.Toolbar_Images, MDI_Main);

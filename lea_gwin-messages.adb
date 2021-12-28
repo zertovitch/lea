@@ -82,6 +82,7 @@ package body LEA_GWin.Messages is
     Control.Text_Color (theme_color (theme, foreground));
     Control.Back_Color (theme_color (theme, background));
     Control.Control_Back_Color (theme_color (theme, control_background));
+    mdi_root.Message_Panel.Background_Color (theme_color (theme, control_background));
   end Apply_Options;
 
   procedure Copy_Messages (Control : in out Message_List_Type) is
