@@ -1,9 +1,10 @@
-with LEA_Common;
-
-with LEA_GWin.Editor;
-with LEA_GWin.MDI_Main;
+with LEA_GWin.Editor,
+     LEA_GWin.MDI_Main,
+     LEA_GWin.Sliding_Panels;
 
 with LEA_Resource_GUI;
+
+with LEA_Common;
 
 with HAC_Sys.Builder;
 
@@ -53,11 +54,6 @@ package LEA_GWin.MDI_Child is
       Canvas    : in out GWindows.Drawing.Canvas_Type;
       Area      : in     GWindows.Types.Rectangle_Type) is null;
 
-  type Subprogram_Panel_Type is new GWindows.Panels.Panel_Type with record
-    Subprogram_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter        : LEA_GWin.MDI_Main.LEA_splitter;
-  end record;
-
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
       record
@@ -70,7 +66,7 @@ package LEA_GWin.MDI_Child is
         Menu             : LEA_Resource_GUI.Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
-        Subprogram_Panel : Subprogram_Panel_Type;
+        Subprogram_Panel : Sliding_Panels.Subprogram_Panel_Type;
         selected_path    : GString_Unbounded := Null_GString_Unbounded;
         --  opt              : Option_Pack_Type;  --  No per-child-window option in this app
         Status_Bar       : MDI_Child_Status_Bar_Type;

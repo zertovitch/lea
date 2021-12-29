@@ -1,13 +1,15 @@
-with LEA_Common.User_options;
-with LEA_GWin.Editor;
-with LEA_GWin.Messages;
-with LEA_GWin.Search_box;
+with LEA_GWin.Editor,
+     LEA_GWin.Messages,
+     LEA_GWin.Search_box,
+     LEA_GWin.Sliding_Panels;
+
 with LEA_Resource_GUI;
+
+with LEA_Common.User_options;
 
 with GWindows.Common_Controls;
 with GWindows.Drawing;
 with GWindows.Image_Lists;
-with GWindows.Panels;
 with GWindows.Taskbar;
 with GWindows.Types;
 with GWindows.Windows.MDI;
@@ -27,26 +29,6 @@ package LEA_GWin.MDI_Main is
 
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
 
-  type MDI_Main_Type;
-
-  type MDI_Main_Access is access all MDI_Main_Type;
-
-  type LEA_splitter is new GWin_Util.Splitter_with_dashes with record
-    MDI_Main: MDI_Main_Access;
-  end record;
-
-  overriding procedure On_Bar_Moved (Splitter : in out LEA_splitter);
-
-  type Project_Panel_Type is new GWindows.Panels.Panel_Type with record
-    Project_Tree : GWindows.Common_Controls.Tree_View_Control_Type;
-    Splitter     : LEA_splitter;
-  end record;
-
-  type Message_Panel_Type is new GWindows.Panels.Panel_Type with record
-    Message_List : LEA_GWin.Messages.Message_List_Type;
-    Splitter     : LEA_splitter;
-  end record;
-
   type MDI_Main_Type is
     new GWindows.Windows.MDI.MDI_Main_Window_Type with
       record
@@ -60,8 +42,8 @@ package LEA_GWin.MDI_Main is
         Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         --
-        Project_Panel          : Project_Panel_Type;
-        Message_Panel          : Message_Panel_Type;
+        Project_Panel          : Sliding_Panels.Project_Panel_Type;
+        Message_Panel          : Sliding_Panels.Message_Panel_Type;
         --
         Menu                   : LEA_Resource_GUI.Menu_MDI_Main_Type;
         --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size
@@ -78,7 +60,7 @@ package LEA_GWin.MDI_Main is
         --
         is_closing             : Boolean:= False;  --  True only during and after On_Close
         --  Direct input stream from an editor window:
-        current_editor_stream  : aliased LEA_GWin.Editor.Editor_Stream_Type;
+        current_editor_stream  : aliased Editor.Editor_Stream_Type;
         build_successful       : Boolean := False;
         close_this_search_box  : Boolean := False;
         pragma Volatile (close_this_search_box);
@@ -87,6 +69,8 @@ package LEA_GWin.MDI_Main is
                                    (Initial_text_files_filters'Range):=
                                       Initial_text_files_filters;
       end record;
+
+  type MDI_Main_Access is access all MDI_Main_Type;
 
   overriding procedure On_Create (MDI_Main : in out MDI_Main_Type);
   --  Handles setting up icons, menus, etc.

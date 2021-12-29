@@ -198,13 +198,6 @@ package body LEA_GWin.MDI_Main is
     On_Menu_Select (Parent.all, Item);
   end On_Button_Select;
 
-  overriding procedure On_Bar_Moved (Splitter : in out LEA_splitter) is
-  begin
-    Splitter.MDI_Main.Memorize_Splitters;
-    --  Call parent method:
-    GWin_Util.Splitter_with_dashes (Splitter).On_Bar_Moved;
-  end On_Bar_Moved;
-
   function Shorten_file_name( s: GString ) return GString is
     max: constant:= 33;
     beg: constant:= 6;
@@ -365,29 +358,15 @@ package body LEA_GWin.MDI_Main is
     --
     --    1) Left panel, with project or file tree:
     --
-    MDI_Main.Project_Panel.Create (MDI_Main, 1,1,20,20);
-    MDI_Main.Project_Panel.Dock (At_Left);
-    MDI_Main.Project_Panel.Splitter.Create (MDI_Main.Project_Panel, At_Right);
     MDI_Main.Project_Panel.Splitter.MDI_Main := MDI_Main'Unrestricted_Access;
-    MDI_Main.Project_Panel.Project_Tree.Create (MDI_Main.Project_Panel, 1,1,20,20, Lines_At_Root => False);
-    MDI_Main.Project_Panel.Project_Tree.Dock (Fill);
+    MDI_Main.Project_Panel.Create (MDI_Main, 1,1,20,20);
     --
     --    2) Bottom panel, with messages:
     --
-    MDI_Main.Message_Panel.Create (MDI_Main, 1,1,20,80);
-    MDI_Main.Message_Panel.Dock (At_Bottom);
-    MDI_Main.Message_Panel.Splitter.Create (MDI_Main.Message_Panel, At_Top, Height => 5);
     MDI_Main.Message_Panel.Splitter.MDI_Main := MDI_Main'Unrestricted_Access;
-    MDI_Main.Message_Panel.Message_List.Font.Create_Font (App_default_font, 15);
-    MDI_Main.Message_Panel.Message_List.Create (MDI_Main.Message_Panel, 1,1,20,20, View => Report_View);
     MDI_Main.Message_Panel.Message_List.mdi_main_parent := MDI_Main'Unrestricted_Access;
-    MDI_Main.Message_Panel.Message_List.Set_Extended_Style (Full_Row_Select);
-    MDI_Main.Message_Panel.Message_List.Set_Font (MDI_Main.Message_Panel.Message_List.Font);
-    MDI_Main.Message_Panel.Message_List.Insert_Column ("", 0, 40);
-    MDI_Main.Message_Panel.Message_List.Insert_Column ("", 1, 35);
-    MDI_Main.Message_Panel.Message_List.Insert_Column ("", 2, 1000);
+    MDI_Main.Message_Panel.Create (MDI_Main, 1,1,20,80);
     MDI_Main.Message_Panel.Message_List.Set_Image_List (Small, MDI_Main.Folders_Images);
-    MDI_Main.Message_Panel.Message_List.Dock (Fill);
 
     --  ** Resize according to options:
 

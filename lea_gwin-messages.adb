@@ -46,6 +46,17 @@ package body LEA_GWin.Messages is
     end loop;
   end Message_line_action;
 
+  overriding procedure On_Create (Control : in out Message_List_Type) is
+  begin
+    Control.Font.Create_Font (App_default_font, 15);
+    Control.Set_Font (Control.Font);
+    Control.Set_Extended_Style (GWindows.Common_Controls.Full_Row_Select);
+    Control.Insert_Column ("", 0, 40);
+    Control.Insert_Column ("", 1, 35);
+    Control.Insert_Column ("", 2, 1000);
+    Control.Dock (GWindows.Base.Fill);
+  end On_Create;
+
   overriding procedure On_Click (Control : in out Message_List_Type) is
   begin
     Control.Message_line_action (True);
