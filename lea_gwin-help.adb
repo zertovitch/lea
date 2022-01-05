@@ -63,7 +63,7 @@ package body LEA_GWin.Help is
         unpacked;
     end if;
     declare
-      unpacked_str: constant String := To_String (unpacked);  --  visible to dbg
+      unpacked_str: constant String := HAL.To_String (unpacked);  --  visible to dbg
     begin
       New_Window := new MDI_Child_Type;
       if Is_Help then

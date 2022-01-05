@@ -42,7 +42,8 @@ package LEA_Common.HAC_Samples is
       (Script,    +"file_read.adb",   +"Reads a text file (itself) and displays it on the console"),
       (Script,    +"timing.adb",      +"Demo for types Time & Duration"),
       --
-      (Template,  +"hello.adb",     +"Tiny program (Hello World)"),
+      (Template,  +"hello.adb",      +"Tiny program (Hello World)"),
+      (Template,  +"hello_big.adb",  +"Larger ""Hello World"""),
       --
       (Compatibility, +"hal.ads",              +"Package specification of HAL for use with a full Ada system"),
       (Compatibility, +"hal.adb",              +"Package body of HAL for use with a full Ada system"),
