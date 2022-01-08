@@ -964,10 +964,20 @@ package body LEA_GWin.Editor is
   --  Output of the editor's text is used as an input stream  --
   --------------------------------------------------------------
 
-  procedure Reset (Stream : in out Editor_Stream_Type; using : in out LEA_Scintilla_Type'Class) is
+  procedure Reset
+    (Stream         : in out Editor_Stream_Type;
+     using          : in out LEA_Scintilla_Type'Class;
+     shebang_offset :    out Natural)
+  is
   begin
-    Stream.index  := 0;
-    Stream.editor := using'Unchecked_Access;
+    Stream.index   := 0;
+    Stream.editor  := using'Unchecked_Access;
+    shebang_offset := 0;
+    if using.Get_Length > 2 and then using.Get_Text_Range (0, 2) = "#!" then
+      --  Start from the second line (Scintilla is 0-based):
+      Stream.index := Ada.Streams.Stream_Element_Offset (using.Position_From_Line (1));
+      shebang_offset := 1;
+    end if;
   end Reset;
 
   overriding

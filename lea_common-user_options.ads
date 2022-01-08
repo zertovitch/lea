@@ -46,7 +46,7 @@ package LEA_Common.User_options is
     MDI_main_maximized    : Boolean := True;
     mru                   : MRU_List;
     ada_files_filter      : Unbounded_Wide_String :=
-                              To_Unbounded_Wide_String ("*.ads;*.adb;*.ada");
+                              To_Unbounded_Wide_String ("*.ads;*.adb;*.ada;*.hac");
   end record;
 
   procedure Toggle_show_special (o : in out Option_Pack_Type);

@@ -370,7 +370,7 @@ package body LEA_GWin.MDI_Main is
 
     --  ** Resize according to options:
 
-    if Screen_Visibility ((MDI_Main.opt.win_left, MDI_Main.opt.win_top)) = Fair then
+    if Screen_Visibility ((MDI_Main.opt.win_left, MDI_Main.opt.win_top)) = Good then
       MDI_Main.Left (MDI_Main.opt.win_left);
       MDI_Main.Top  (MDI_Main.opt.win_top);
     end if;

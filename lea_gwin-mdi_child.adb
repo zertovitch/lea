@@ -1,30 +1,31 @@
-with LEA_Common.Syntax;
-with LEA_Common.User_options;
+with LEA_Common.Syntax,
+     LEA_Common.User_options;
 
-with LEA_GWin.Messages;
-with LEA_GWin.Modal_Dialogs;
-with LEA_GWin.Options;
-with LEA_GWin.Run_Windowed;
-with LEA_GWin.Search_box;
+with LEA_GWin.Messages,
+     LEA_GWin.Modal_Dialogs,
+     LEA_GWin.Options,
+     LEA_GWin.Run_Windowed,
+     LEA_GWin.Search_box;
 
 with HAC_Sys.Defs;
 
-with GWindows.Base;
-with GWindows.Common_Dialogs;
-with GWindows.Cursors;
-with GWindows.Menus;
-with GWindows.Message_Boxes;
-with GWindows.Scintilla;
+with GWindows.Base,
+     GWindows.Common_Dialogs,
+     GWindows.Cursors,
+     GWindows.Menus,
+     GWindows.Message_Boxes,
+     GWindows.Scintilla;
 
-with Ada.Characters.Handling;
-with Ada.Directories;
-with Ada.Streams.Stream_IO;
-with Ada.Strings.Unbounded;
-with Ada.Strings.Wide_Fixed;
-with Ada.Strings.Wide_Unbounded;
+with Ada.Characters.Handling,
+     Ada.Directories,
+     Ada.Strings.Unbounded,
+     Ada.Strings.Wide_Fixed,
+     Ada.Strings.Wide_Unbounded,
+     Ada.Text_IO.Text_Streams;
 
 package body LEA_GWin.MDI_Child is
-  use LEA_Common, LEA_GWin.MDI_Main;
+
+  use LEA_Common, MDI_Main;
   use GWindows.Message_Boxes, GWindows.Scintilla;
   use Ada.Strings.Wide_Unbounded;
 
@@ -482,7 +483,7 @@ package body LEA_GWin.MDI_Child is
   end On_Size;
 
   procedure Build_as_Main (MDI_Child : in out MDI_Child_Type) is
-    use HAC_Sys.Defs, LEA_GWin.Messages;
+    use HAC_Sys.Defs, Messages;
     MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
     ml : Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     count, err_count : Natural := 0;
@@ -519,10 +520,11 @@ package body LEA_GWin.MDI_Child is
     use_editor_stream : constant Boolean := True;
     --  ^ So far we don't set a main file name elsewhere, so we
     --    can always use the editor data as a stream.
-    use HAC_Sys.Builder, Ada.Streams.Stream_IO;
-    f : File_Type;
+    use HAC_Sys.Builder, Ada.Text_IO;
+    f : Ada.Text_IO.File_Type;
     file_name  : constant String := G2S (GU2G (MDI_Child.File_Name));
     short_name : constant String := G2S (GU2G (MDI_Child.Short_Name));
+    shebang_offset : Natural;
     --
     function Best_Name return String is
     begin
@@ -538,16 +540,17 @@ package body LEA_GWin.MDI_Child is
       when HAC_mode =>
         if use_editor_stream then
           --  We connect the main editor input stream to this window's editor.
-          MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor);
+          MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor, shebang_offset);
           Set_Main_Source_Stream (
             MDI_Child.BD,
             MDI_Child.MDI_Parent.current_editor_stream'Access,
-            Best_Name);
+            Best_Name, shebang_offset);
         else
           --  In case the file is not open in an editor window in LEA,
           --  we use Stream_IO.
           Open (f, In_File, file_name);
-          Set_Main_Source_Stream (MDI_Child.BD, Stream (f), Best_Name);
+          Skip_Shebang (f, shebang_offset);
+          Set_Main_Source_Stream (MDI_Child.BD, Text_Streams.Stream (f), Best_Name, shebang_offset);
         end if;
         ml.Clear;
         ml.Set_Column ("Line",     0, 60);
@@ -598,7 +601,7 @@ package body LEA_GWin.MDI_Child is
   begin
     MDI_Child.Build;
     if MDI_Child.MDI_Parent.build_successful then
-      LEA_GWin.Run_Windowed (MDI_Child);
+      Run_Windowed (MDI_Child);
     end if;
   end Build_and_run;
 

@@ -103,7 +103,10 @@ package LEA_GWin.Editor is
     editor : access LEA_Scintilla_Type'Class;
   end record;
 
-  procedure Reset (Stream : in out Editor_Stream_Type; using : in out LEA_Scintilla_Type'Class);
+  procedure Reset
+    (Stream         : in out Editor_Stream_Type;
+     using          : in out LEA_Scintilla_Type'Class;
+     shebang_offset :    out Natural);
 
   overriding
   procedure Read
