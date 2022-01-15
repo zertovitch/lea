@@ -1,6 +1,6 @@
 with LEA_GWin.MDI_Child;
 
-with HAC_Sys.UErrors;
+with HAC_Sys.Errors;
 
 with HAL;
 
@@ -18,7 +18,7 @@ package body LEA_GWin.Repair is
   )
   is
     use LEA_GWin.MDI_Child, LEA_GWin.MDI_Main,
-        HAC_Sys.Defs, HAC_Sys.UErrors,
+        HAC_Sys.Defs, HAC_Sys.Errors,
         GWindows.Base,
         Ada.Strings.Unbounded, Ada.Strings.Wide_Unbounded;
     --
