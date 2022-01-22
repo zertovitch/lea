@@ -31,6 +31,7 @@ package LEA_Common.HAC_Samples is
       --
       (Mathematics, +"ackermann.adb",     +"Ackermann recursive function"),
       (Mathematics, +"covid_19_s.adb",    +"Model for simulating the Coronavirus (COVID-19) pandemic"),
+      (Mathematics, +"hofstadter.adb",    +"Hofstadter mutual recursive functions"),
       (Mathematics, +"mandelbrot.adb",    +"Mandelbrot set"),
       (Mathematics, +"random.adb",        +"Random generation: Rand (discrete) and Rnd (continuous)"),
       (Mathematics, +"series.adb",        +"Series (e.g. 1 + x + x^2 + ...) and partial sums demo"),
