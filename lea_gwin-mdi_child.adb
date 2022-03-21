@@ -7,7 +7,8 @@ with LEA_GWin.Messages,
      LEA_GWin.Run_Windowed,
      LEA_GWin.Search_box;
 
-with HAC_Sys.Defs;
+with HAC_Sys.Co_Defs,
+     HAC_Sys.Defs;
 
 with GWindows.Base,
      GWindows.Common_Dialogs,
@@ -512,7 +513,7 @@ package body LEA_GWin.MDI_Child is
     --
     procedure LEA_HAC_Build_Feedback (message : String) is
     begin
-      ml.Insert_Item ("----", count);
+      ml.Insert_Item ("    ", count);
       ml.Set_Sub_Item (S2G (message), count, 1);
       count := count + 1;
     end LEA_HAC_Build_Feedback;
@@ -520,7 +521,7 @@ package body LEA_GWin.MDI_Child is
     use_editor_stream : constant Boolean := True;
     --  ^ So far we don't set a main file name elsewhere, so we
     --    can always use the editor data as a stream.
-    use HAC_Sys.Builder, Ada.Text_IO;
+    use HAC_Sys.Builder, Ada.Directories, Ada.Text_IO;
     f : Ada.Text_IO.File_Type;
     file_name  : constant String := G2S (GU2G (MDI_Child.File_Name));
     short_name : constant String := G2S (GU2G (MDI_Child.Short_Name));
@@ -552,19 +553,29 @@ package body LEA_GWin.MDI_Child is
           Skip_Shebang (f, shebang_offset);
           Set_Main_Source_Stream (MDI_Child.BD, Text_Streams.Stream (f), Best_Name, shebang_offset);
         end if;
+        --
+        --  We switch the current directory in order to compile other units that
+        --  may reside in the same directory as main.
+        --  To do: support project files with source paths.
+        --
+        begin
+          Set_Directory (Containing_Directory (file_name));
+        exception
+          when Ada.Directories.Name_Error => null;  --  Could be a sample, an unsaved file, ...
+        end;
         ml.Clear;
         ml.Set_Column ("Line",     0, 60);
         ml.Set_Column ("Message",  1, 800);
-        Set_Message_Feedbacks (
-          MDI_Child.BD,
-          LEA_HAC_Build_Error_Feedback'Unrestricted_Access,
-          LEA_HAC_Build_Feedback'Unrestricted_Access
-        );
+        Set_Message_Feedbacks
+          (MDI_Child.BD,
+           (pipe         => LEA_HAC_Build_Error_Feedback'Unrestricted_Access,
+            progress     => LEA_HAC_Build_Feedback'Unrestricted_Access,
+            detail_level => 1));
         Build_Main (MDI_Child.BD);
         if not use_editor_stream then
           Close (f);
         end if;
-        Set_Message_Feedbacks (MDI_Child.BD, null, null);
+        Set_Message_Feedbacks (MDI_Child.BD, HAC_Sys.Co_Defs.default_trace);
         --  Here we have a single-unit build, from the current child window:
         MDI_Main.build_successful := Build_Successful (MDI_Child.BD);
         if err_count = 0 then
