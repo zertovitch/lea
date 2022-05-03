@@ -5,15 +5,15 @@ echo Option "%1"
 set target=_MinGW
 if (%1)==() set target=
 
-if not exist _lea_data.zip call pack_data
+if not exist _lea_data.zip sample_catalogue.exe
 
 del lea.exe
-gprbuild -p -P lea -XBuild_Mode=Debug%target%
+gprbuild -P lea         -XBuild_Mode=Debug%target%
 copy /B lea.exe + _lea_data.zip lea_debug%target%.exe
 copy /B lea.exe lea_debug_without_data.exe
 
 del lea.exe
-gprbuild -p -P lea -XBuild_Mode=Fast%target%
+gprbuild -P lea lea.adb -XBuild_Mode=Fast%target%
 copy /B lea.exe + _lea_data.zip "lea (ver)%target%.exe"
 copy /B lea.exe lea_fast_without_data.exe
 

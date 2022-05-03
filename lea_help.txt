@@ -100,13 +100,14 @@ Press F9 for build and run - that's it!
   HAC's Scope
   ===========
   The available Ada language subset supported by HAC is so far, roughly,
-  the "Pascal subset", plus tasking, less pointers.
-  So, you already have custom types, nested subprograms, recursion,
-  ... to play with in your programs.
+  the "Pascal subset", plus tasking, plus packages, less pointers.
+  From a different perspective, HAC supports Ada 83, less pointers, less generics,
+  less unconstrained types, plus a few items from Ada 95 and 2005.
+  Recursion and nested subprograms are supported.
 
   HAL
   ===
-  Currently, the only package available for HAC is called HAL.
+  HAC has a general-purpose built-in package called HAL (HAC Ada Library).
   HAL contains useful types and subprograms for text I/O,
   string manipulation, timing, system (calls, arguments, environment variables, ...),
   and some mathematical functions.

@@ -521,7 +521,8 @@ package body LEA_GWin.MDI_Child is
     use_editor_stream : constant Boolean := True;
     --  ^ So far we don't set a main file name elsewhere, so we
     --    can always use the editor data as a stream.
-    use HAC_Sys.Builder, Ada.Directories, Ada.Text_IO;
+    use HAC_Sys.Builder,
+        Ada.Directories, Ada.Strings, Ada.Strings.Wide_Fixed, Ada.Text_IO;
     f : Ada.Text_IO.File_Type;
     file_name  : constant String := G2S (GU2G (MDI_Child.File_Name));
     short_name : constant String := G2S (GU2G (MDI_Child.Short_Name));
@@ -583,8 +584,13 @@ package body LEA_GWin.MDI_Child is
           ml.Set_Sub_Item ("No error, no warning", count, 1);
         else
           --  Jump on first error
-          ml.Selected (1, True);
-          ml.Message_line_action (real_click => False);
+          for Index in 0 .. ml.Item_Count - 1 loop
+            if Trim (ml.Text (Index, 0), Both) /= "" then
+              ml.Selected (Index, True);
+              ml.Message_line_action (real_click => False);
+              exit;
+            end if;
+          end loop;
         end if;
       when GNAT_mode =>
         null;
