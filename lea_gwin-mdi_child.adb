@@ -18,6 +18,7 @@ with GWindows.Base,
      GWindows.Scintilla;
 
 with Ada.Characters.Handling,
+     Ada.Calendar,
      Ada.Directories,
      Ada.Strings.Unbounded,
      Ada.Strings.Wide_Fixed,
@@ -522,11 +523,12 @@ package body LEA_GWin.MDI_Child is
     --  ^ So far we don't set a main file name elsewhere, so we
     --    can always use the editor data as a stream.
     use HAC_Sys.Builder,
-        Ada.Directories, Ada.Strings, Ada.Strings.Wide_Fixed, Ada.Text_IO;
+        Ada.Calendar, Ada.Directories, Ada.Strings, Ada.Strings.Wide_Fixed, Ada.Text_IO;
     f : Ada.Text_IO.File_Type;
     file_name  : constant String := G2S (GU2G (MDI_Child.File_Name));
     short_name : constant String := G2S (GU2G (MDI_Child.Short_Name));
     shebang_offset : Natural;
+    t1, t2 : Time;
     --
     function Best_Name return String is
     begin
@@ -572,7 +574,9 @@ package body LEA_GWin.MDI_Child is
            (pipe         => LEA_HAC_Build_Error_Feedback'Unrestricted_Access,
             progress     => LEA_HAC_Build_Feedback'Unrestricted_Access,
             detail_level => 1));
+        t1 := Clock;
         Build_Main (MDI_Child.BD);
+        t2 := Clock;
         if not use_editor_stream then
           Close (f);
         end if;
@@ -581,7 +585,9 @@ package body LEA_GWin.MDI_Child is
         MDI_Main.build_successful := Build_Successful (MDI_Child.BD);
         if err_count = 0 then
           ml.Insert_Item ("", count);
-          ml.Set_Sub_Item ("No error, no warning", count, 1);
+          ml.Set_Sub_Item
+            ("Build finished in" & Duration'Wide_Image (t2 - t1) &
+             " seconds. No error, no warning", count, 1);
         else
           --  Jump on first error
           for Index in 0 .. ml.Item_Count - 1 loop
