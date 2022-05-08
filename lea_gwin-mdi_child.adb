@@ -488,7 +488,7 @@ package body LEA_GWin.MDI_Child is
     use HAC_Sys.Defs, Messages;
     MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
     ml : Message_List_Type renames MDI_Main.Message_Panel.Message_List;
-    count, err_count : Natural := 0;
+    message_count, err_count : Natural := 0;
     --
     procedure LEA_HAC_Build_Error_Feedback (diagnostic : Diagnostic_Kit) is
       use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed;
@@ -498,25 +498,25 @@ package body LEA_GWin.MDI_Child is
       msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
       ml.Insert_Item (
         Trim (Integer'Wide_Image (diagnostic.line), Left),
-        count,
+        message_count,
         Icon => Wrench_Icon (diagnostic.repair_kind /= none, has_dark_background)
       );
       --  Here we set a payload in order to get the source file and position
       --  when selecting a row in the error / warnings message list.
       ml.Item_Data (
-        count,
+        message_count,
         new Diagnostic_Kit'(diagnostic)  --  Copy diagnostic into a new heap allocated object.
       );
-      ml.Set_Sub_Item (S2G (msg_up), count, 1);
-      count := count + 1;
+      ml.Set_Sub_Item (S2G (msg_up), message_count, 1);
+      message_count := message_count + 1;
       err_count := err_count + 1;
     end LEA_HAC_Build_Error_Feedback;
     --
     procedure LEA_HAC_Build_Feedback (message : String) is
     begin
-      ml.Insert_Item ("    ", count);
-      ml.Set_Sub_Item (S2G (message), count, 1);
-      count := count + 1;
+      ml.Insert_Item ("    ", message_count);
+      ml.Set_Sub_Item (S2G (message), message_count, 1);
+      message_count := message_count + 1;
     end LEA_HAC_Build_Feedback;
     --
     use_editor_stream : constant Boolean := True;
@@ -584,10 +584,14 @@ package body LEA_GWin.MDI_Child is
         --  Here we have a single-unit build, from the current child window:
         MDI_Main.build_successful := Build_Successful (MDI_Child.BD);
         if err_count = 0 then
-          ml.Insert_Item ("", count);
+          ml.Insert_Item ("", message_count);
           ml.Set_Sub_Item
-            ("Build finished in" & Duration'Wide_Image (t2 - t1) &
-             " seconds. No error, no warning", count, 1);
+            ("Build finished in" &
+             Duration'Wide_Image (t2 - t1) &
+             " seconds." &
+             Integer'Wide_Image (MDI_Child.BD.Total_Compiled_Lines) &
+             " lines compiled. No error, no warning",
+             message_count, 1);
         else
           --  Jump on first error
           for Index in 0 .. ml.Item_Count - 1 loop
