@@ -44,6 +44,7 @@ Menu_MDI_Child MENU
             MENUITEM "mru_8", IDM_MRU_8
             MENUITEM "mru_9", IDM_MRU_9
         }
+        MENUITEM "Open containing &folder", IDM_Open_Containing_Folder
         MENUITEM "Save\tCtrl+S", IDM_Save_File
         MENUITEM "Save &as...\tF12", IDM_Save_As
         MENUITEM "Sav&e all modified", IDM_Save_All
@@ -95,7 +96,7 @@ Menu_MDI_Child MENU
     }
     POPUP "&View"
     {
-        MENUITEM "Show special symbols",   IDM_Show_special_symbols
+        MENUITEM "Show special symbols", IDM_Show_special_symbols
         MENUITEM "Show indentation lines", IDM_Show_indentation_lines
         MENUITEM SEPARATOR
         MENUITEM "&Notepad view", IDM_Notepad_view
@@ -133,8 +134,7 @@ Menu_MDI_Main MENU
     {
         MENUITEM "&New\tCtrl+N", IDM_New_File
         MENUITEM "&Open...\tCtrl+O", IDM_Open_File
-        MENUITEM SEPARATOR
-        POPUP "&Recent"
+        POPUP "Open &recent"
         {
             MENUITEM "mru_1", IDM_MRU_1
             MENUITEM "mru_2", IDM_MRU_2

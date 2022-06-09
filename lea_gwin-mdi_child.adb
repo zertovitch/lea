@@ -17,6 +17,8 @@ with GWindows.Base,
      GWindows.Message_Boxes,
      GWindows.Scintilla;
 
+with GWin_Util;
+
 with Ada.Characters.Handling,
      Ada.Calendar,
      Ada.Directories,
@@ -646,6 +648,10 @@ package body LEA_GWin.MDI_Child is
     end if;
     --
     case Item is
+      when IDM_Open_Containing_Folder =>
+        if MDI_Child.File_Name /= "" then
+          GWin_Util.Start (Ada.Directories.Containing_Directory (G2S (GU2G (MDI_Child.File_Name))));
+        end if;
       when IDM_Save_File =>
         MDI_Child.On_Save;
       when IDM_Save_As =>

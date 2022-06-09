@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2022/05/14  13:10:11
+--  Transcription time: 2022/06/09  22:02:04
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -44,13 +44,13 @@ package LEA_Resource_GUI is
     Popup_0009 : Menu_Type;   --  Popup level: 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 124
+  --  Menu at line 125
   procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Child_Type);
 
   type Menu_MDI_Main_Type is tagged record
     Main: Menu_Type;  --  Root of the whole menu tree
     Popup_0001 : Menu_Type;   --  Popup level: 1; title: "&File"
-    Popup_0002 : Menu_Type;   --  Popup level: 2; title: "&Recent"
+    Popup_0002 : Menu_Type;   --  Popup level: 2; title: "Open &recent"
     Popup_0003 : Menu_Type;   --  Popup level: 1; title: "&Edit"
     Popup_0004 : Menu_Type;   --  Popup level: 1; title: "&Actions"
     Popup_0005 : Menu_Type;   --  Popup level: 1; title: "&View"
@@ -493,6 +493,7 @@ package LEA_Resource_GUI is
   Label_HAC_topic             : constant:=  40104;
   Label_HAC_sample            : constant:=  40105;
   IDM_Show_indentation_lines  : constant:=  40106;
+  IDM_Open_Containing_Folder  : constant:=  40107;
 
   --  ** Some helper utilities (spec).
 

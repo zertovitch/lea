@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2022/05/14  13:10:11
+--  Transcription time: 2022/06/09  22:02:04
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -43,6 +43,7 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0002, "mru_7", IDM_MRU_7);
     Append_Item (New_Menu.Popup_0002, "mru_8", IDM_MRU_8);
     Append_Item (New_Menu.Popup_0002, "mru_9", IDM_MRU_9);
+    Append_Item (New_Menu.Popup_0001, "Open containing &folder", IDM_Open_Containing_Folder);
     Append_Item (New_Menu.Popup_0001, "Save" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+S", IDM_Save_File);
     Append_Item (New_Menu.Popup_0001, "Save &as..." & To_GString_From_String((1=>ASCII.HT)) & "F12", IDM_Save_As);
     Append_Item (New_Menu.Popup_0001, "Sav&e all modified", IDM_Save_All);
@@ -118,7 +119,7 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  For type: Menu_MDI_Child_Type
 
-  --  Menu at line 130
+  --  Menu at line 131
   procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Main_Type)
   is
   begin
@@ -127,9 +128,8 @@ package body LEA_Resource_GUI is
     Append_Menu (New_Menu.Main, "&File", New_Menu.Popup_0001);
     Append_Item (New_Menu.Popup_0001, "&New" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_New_File);
     Append_Item (New_Menu.Popup_0001, "&Open..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_Open_File);
-    Append_Separator (New_Menu.Popup_0001);
     New_Menu.Popup_0002 := Create_Popup;
-    Append_Menu (New_Menu.Popup_0001, "&Recent", New_Menu.Popup_0002);
+    Append_Menu (New_Menu.Popup_0001, "Open &recent", New_Menu.Popup_0002);
     Append_Item (New_Menu.Popup_0002, "mru_1", IDM_MRU_1);
     Append_Item (New_Menu.Popup_0002, "mru_2", IDM_MRU_2);
     Append_Item (New_Menu.Popup_0002, "mru_3", IDM_MRU_3);
