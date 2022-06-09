@@ -1129,7 +1129,6 @@ pragma Eliminate (UnZip.Streams, Open, Source_Location => "unzip-streams.ads:68"
 pragma Eliminate (UnZip.Streams, Open, Source_Location => "unzip-streams.ads:78");
 pragma Eliminate (UnZip.Streams, Stream, Source_Location => "unzip-streams.ads:111");
 pragma Eliminate (Zip.Headers, Intel_bf, Source_Location => "zip-headers.adb:70");
-pragma Eliminate (Zip.Headers, Intel_bf, Source_Location => "zip-headers.adb:71");
 pragma Eliminate (Zip.Headers, PK_signature, Source_Location => "zip-headers.adb:83");
 pragma Eliminate (Zip.Headers, Write, Source_Location => "zip-headers.ads:198");
 pragma Eliminate (Zip.Headers, Write, Source_Location => "zip-headers.ads:159");
