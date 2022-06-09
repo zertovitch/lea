@@ -137,10 +137,9 @@ package LEA_GWin.MDI_Child is
      toolbar_and_menu -- update enable/disable of toolbar items and menu items
     );
 
-  procedure Update_display (
-    MDI_Child : in out MDI_Child_Type;
-    need      :        Update_need
-  );
+  procedure Update_Display
+    (MDI_Child : in out MDI_Child_Type;
+     need      :        Update_need);
 
   --  This will update File menu of parent, itself, and all brothers and sisters
   procedure Update_Common_Menus (MDI_Child : MDI_Child_Type;

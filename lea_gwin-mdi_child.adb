@@ -65,106 +65,107 @@ package body LEA_GWin.MDI_Child is
       --  !! MDI_Child.Focus = MDI_Child.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
-  procedure Update_status_bar (MDI_Child : in out MDI_Child_Type) is
-    pos, sel_a, sel_z : Scintilla.Position;
-  begin
-    if MDI_Child.File_Name = Null_GString_Unbounded then
-      MDI_Child.Status_Bar.Text("No file", 0);
-    end if;
-    if Folder_Focus(MDI_Child) then
-      MDI_Child.Status_Bar.Text("Folder selected", 0);
-      return;
-    else
-      case MDI_Child.Editor.document_kind is
-        when editable_text =>
-          MDI_Child.Status_Bar.Text (
-            LEA_Common.Syntax.File_type_image (MDI_Child.Editor.syntax_kind), 0
-          );
-        when help_main =>
-          MDI_Child.Status_Bar.Text ("Help", 0);
-      end case;
-    end if;
-    MDI_Child.Status_Bar.Text(
-      "Length:" & Int'Wide_Image(MDI_Child.Editor.Get_Length) &
-      "     Lines:" & Integer'Wide_Image(MDI_Child.Editor.Get_Line_Count),
-      1);
-    pos   := MDI_Child.Editor.Get_Current_Pos;
-    sel_a := MDI_Child.Editor.Get_Selection_Start;
-    sel_z := MDI_Child.Editor.Get_Selection_End;
-    MDI_Child.Status_Bar.Text(
-      "Line:"  & Integer'Wide_Image(1 + MDI_Child.Editor.Line_From_Position(pos)) &
-      " Col:" & Integer'Wide_Image(1 + MDI_Child.Editor.Get_Column(pos)),
-      2);
-    MDI_Child.Status_Bar.Text("Sel:" & Scintilla.Position'Wide_Image(sel_z - sel_a) &
-      " (ln:" & Integer'Wide_Image(
-         1 +
-         MDI_Child.Editor.Line_From_Position(sel_z) -
-         MDI_Child.Editor.Line_From_Position(sel_a)
-      ) & ')',
-      3);
-    case MDI_Child.Editor.Get_EOL_Mode is
-      when SC_EOL_CR =>
-        MDI_Child.Status_Bar.Text("EOL: Mac (CR)",        4);
-      when SC_EOL_CRLF =>
-        MDI_Child.Status_Bar.Text("EOL: Windows (CR LF)", 4);
-      when SC_EOL_LF =>
-        MDI_Child.Status_Bar.Text("EOL: Unix (LF)",       4);
-      when others =>
-        null;
-    end case;
-    if MDI_Child.Editor.Get_Overtype then
-      MDI_Child.Status_Bar.Text("OVR", 6);
-    else
-      MDI_Child.Status_Bar.Text("INS", 6);
-    end if;
-  end Update_status_bar;
-
-  procedure Update_tool_bar (MDI_Child : in out MDI_Child_Type) is
-    bar : MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
-    is_any_selection: constant Boolean :=
-      MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
-    use LEA_Resource_GUI;
-  begin
-    bar.Enabled (IDM_Undo, MDI_Child.Editor.Can_Undo);
-    bar.Enabled (IDM_Redo, MDI_Child.Editor.Can_Redo);
-    bar.Enabled (IDM_Save_File, MDI_Child.Editor.modified);
-    bar.Enabled (IDM_Save_All, MDI_Child.save_all_hint);
-    bar.Enabled (IDM_Cut, is_any_selection);
-    bar.Enabled (IDM_Copy, is_any_selection);
-    bar.Enabled (IDM_Paste, MDI_Child.Editor.Can_Paste);
-    bar.Enabled (IDM_Indent, True);
-    bar.Enabled (IDM_Unindent, True);
-    bar.Enabled (IDM_Comment, True);
-    bar.Enabled (IDM_Uncomment, True);
-    bar.Enabled (IDM_Find, True);
-    bar.Enabled (IDM_Show_special_symbols, True);
-    bar.Enabled (IDM_Show_indentation_lines, True);
-    --  if not MDI_Child.is_closing then
-    --    null;  --  bar.Enabled(IDM_ADD_FILES, True);
-    --  end if;
-  end Update_tool_bar;
-
-  procedure Update_menus (MDI_Child : in out MDI_Child_Type) is
-    use LEA_Resource_GUI, GWindows.Menus;
-    bool_to_state: constant array (Boolean) of State_Type := (Disabled, Enabled);
-    is_any_selection: constant Boolean :=
-      MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
-  begin
-    State (MDI_Child.Menu.Main, Command, IDM_Cut,       bool_to_state (is_any_selection));
-    State (MDI_Child.Menu.Main, Command, IDM_Copy,      bool_to_state (is_any_selection));
-    State (MDI_Child.Menu.Main, Command, IDM_Paste,     bool_to_state (MDI_Child.Editor.Can_Paste));
-    State (MDI_Child.Menu.Main, Command, IDM_Undo,      bool_to_state (MDI_Child.Editor.Can_Undo));
-    State (MDI_Child.Menu.Main, Command, IDM_Redo,      bool_to_state (MDI_Child.Editor.Can_Redo));
-    State (MDI_Child.Menu.Main, Command, IDM_Save_File, bool_to_state (MDI_Child.Editor.modified));
-    State (MDI_Child.Menu.Main, Command, IDM_Save_All,  bool_to_state (MDI_Child.save_all_hint));
-  end Update_menus;
-
-  procedure Update_display(
-    MDI_Child : in out MDI_Child_Type;
-    need   :        Update_need
-  )
+  procedure Update_Display
+    (MDI_Child : in out MDI_Child_Type;
+     need      :        Update_need)
   is
   pragma Unreferenced (need);
+
+    procedure Update_Status_Bar is
+      pos, sel_a, sel_z : Scintilla.Position;
+    begin
+      if MDI_Child.File_Name = Null_GString_Unbounded then
+        MDI_Child.Status_Bar.Text("No file", 0);
+      end if;
+      if Folder_Focus(MDI_Child) then
+        MDI_Child.Status_Bar.Text("Folder selected", 0);
+        return;
+      else
+        case MDI_Child.Editor.document_kind is
+          when editable_text =>
+            MDI_Child.Status_Bar.Text (
+              LEA_Common.Syntax.File_type_image (MDI_Child.Editor.syntax_kind), 0
+            );
+          when help_main =>
+            MDI_Child.Status_Bar.Text ("Help", 0);
+        end case;
+      end if;
+      MDI_Child.Status_Bar.Text(
+        "Length:" & Int'Wide_Image(MDI_Child.Editor.Get_Length) &
+        "     Lines:" & Integer'Wide_Image(MDI_Child.Editor.Get_Line_Count),
+        1);
+      pos   := MDI_Child.Editor.Get_Current_Pos;
+      sel_a := MDI_Child.Editor.Get_Selection_Start;
+      sel_z := MDI_Child.Editor.Get_Selection_End;
+      MDI_Child.Status_Bar.Text(
+        "Line:"  & Integer'Wide_Image(1 + MDI_Child.Editor.Line_From_Position(pos)) &
+        " Col:" & Integer'Wide_Image(1 + MDI_Child.Editor.Get_Column(pos)),
+        2);
+      MDI_Child.Status_Bar.Text("Sel:" & Scintilla.Position'Wide_Image(sel_z - sel_a) &
+        " (ln:" & Integer'Wide_Image(
+           1 +
+           MDI_Child.Editor.Line_From_Position(sel_z) -
+           MDI_Child.Editor.Line_From_Position(sel_a)
+        ) & ')',
+        3);
+      case MDI_Child.Editor.Get_EOL_Mode is
+        when SC_EOL_CR =>
+          MDI_Child.Status_Bar.Text("EOL: Mac (CR)",        4);
+        when SC_EOL_CRLF =>
+          MDI_Child.Status_Bar.Text("EOL: Windows (CR LF)", 4);
+        when SC_EOL_LF =>
+          MDI_Child.Status_Bar.Text("EOL: Unix (LF)",       4);
+        when others =>
+          null;
+      end case;
+      if MDI_Child.Editor.Get_Overtype then
+        MDI_Child.Status_Bar.Text("OVR", 6);
+      else
+        MDI_Child.Status_Bar.Text("INS", 6);
+      end if;
+    end Update_Status_Bar;
+
+    procedure Update_Tool_Bar is
+      bar : MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
+      is_any_selection: constant Boolean :=
+        MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
+      use LEA_Resource_GUI;
+    begin
+      bar.Enabled (IDM_Undo, MDI_Child.Editor.Can_Undo);
+      bar.Enabled (IDM_Redo, MDI_Child.Editor.Can_Redo);
+      bar.Enabled (IDM_Save_File, MDI_Child.Editor.modified);
+      bar.Enabled (IDM_Save_All, MDI_Child.save_all_hint);
+      bar.Enabled (IDM_Cut, is_any_selection);
+      bar.Enabled (IDM_Copy, is_any_selection);
+      bar.Enabled (IDM_Paste, MDI_Child.Editor.Can_Paste);
+      bar.Enabled (IDM_Indent, True);
+      bar.Enabled (IDM_Unindent, True);
+      bar.Enabled (IDM_Comment, True);
+      bar.Enabled (IDM_Uncomment, True);
+      bar.Enabled (IDM_Find, True);
+      bar.Enabled (IDM_Show_special_symbols, True);
+      bar.Enabled (IDM_Show_indentation_lines, True);
+      --  if not MDI_Child.is_closing then
+      --    null;  --  bar.Enabled(IDM_ADD_FILES, True);
+      --  end if;
+    end Update_Tool_Bar;
+
+    procedure Update_Menus is
+      use LEA_Resource_GUI, GWindows.Menus;
+      bool_to_state: constant array (Boolean) of State_Type := (Disabled, Enabled);
+      is_any_selection: constant Boolean :=
+        MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
+    begin
+      State (MDI_Child.Menu.Main, Command, IDM_Cut,                    bool_to_state (is_any_selection));
+      State (MDI_Child.Menu.Main, Command, IDM_Copy,                   bool_to_state (is_any_selection));
+      State (MDI_Child.Menu.Main, Command, IDM_Paste,                  bool_to_state (MDI_Child.Editor.Can_Paste));
+      State (MDI_Child.Menu.Main, Command, IDM_Undo,                   bool_to_state (MDI_Child.Editor.Can_Undo));
+      State (MDI_Child.Menu.Main, Command, IDM_Redo,                   bool_to_state (MDI_Child.Editor.Can_Redo));
+      State (MDI_Child.Menu.Main, Command, IDM_Open_Containing_Folder, bool_to_state (Length (MDI_Child.File_Name) > 0));
+      State (MDI_Child.Menu.Main, Command, IDM_Save_File,              bool_to_state (MDI_Child.Editor.modified));
+      State (MDI_Child.Menu.Main, Command, IDM_Save_All,               bool_to_state (MDI_Child.save_all_hint));
+    end Update_Menus;
+
     any_modified: Boolean:= False;
     --
     procedure Check_any_modified (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -185,10 +186,10 @@ package body LEA_GWin.MDI_Child is
     else
       MDI_Child.Text(GU2G(MDI_Child.Short_Name));
     end if;
-    Update_status_bar(MDI_Child);
-    Update_tool_bar(MDI_Child);
-    Update_menus(MDI_Child);
-  end Update_display;
+    Update_Status_Bar;
+    Update_Tool_Bar;
+    Update_Menus;
+  end Update_Display;
 
   ---------------
   -- On_Create --
@@ -262,7 +263,7 @@ package body LEA_GWin.MDI_Child is
         MDI_Child.MDI_Parent.Tool_Bar.Redraw;
       end if;
     end;
-    MDI_Child.Update_display(first_display);
+    MDI_Child.Update_Display (first_display);
     MDI_Child.Accept_File_Drag_And_Drop;
     Ada.Numerics.Float_Random.Reset(MDI_Child.temp_name_gen);
   end On_Create;
@@ -662,10 +663,10 @@ package body LEA_GWin.MDI_Child is
         MDI_Child.Close;
       when IDM_Undo =>
         MDI_Child.Editor.Undo;
-        MDI_Child.Update_display(toolbar_and_menu);  --  Eventually disable Undo if no more available
+        MDI_Child.Update_Display (toolbar_and_menu);  --  Eventually disable Undo if no more available
       when IDM_Redo =>
         MDI_Child.Editor.Redo;
-        MDI_Child.Update_display(toolbar_and_menu);  --  Eventually disable Redo if no more available
+        MDI_Child.Update_Display (toolbar_and_menu);  --  Eventually disable Redo if no more available
       when IDM_Cut =>           MDI_Child.Editor.Cut;
       when IDM_Copy =>          MDI_Child.Editor.Copy;
       when IDM_Paste =>         MDI_Child.Editor.Paste;
@@ -719,7 +720,7 @@ package body LEA_GWin.MDI_Child is
 
   overriding procedure On_Focus (MDI_Child : in out MDI_Child_Type) is
   begin
-    Update_display(MDI_Child, toolbar_and_menu);
+    Update_Display (MDI_Child, toolbar_and_menu);
     MDI_Child.Editor.Focus;
   end On_Focus;
 

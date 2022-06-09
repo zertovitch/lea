@@ -147,7 +147,7 @@ package body LEA_GWin.Editor is
     Scintilla_Type(Editor).On_Message(message, wParam, lParam, Return_Value);
     --
     if status_refresh_needed then
-      parent.Update_display(status_bar);
+      parent.Update_Display(status_bar);
     end if;
   end On_Message;
 
@@ -157,7 +157,7 @@ package body LEA_GWin.Editor is
   begin
     --  We have had enough Undo's to make the document unmodified again.
     Editor.modified:= False;
-    parent.Update_display(toolbar_and_menu);
+    parent.Update_Display(toolbar_and_menu);
   end On_Save_Point_Reached;
 
   overriding
@@ -166,7 +166,7 @@ package body LEA_GWin.Editor is
   begin
     --  Either new changes after last saved state, or Undo's from last saved state.
     Editor.modified:= True;
-    parent.Update_display(toolbar_and_menu);
+    parent.Update_Display(toolbar_and_menu);
   end On_Save_Point_Left;
 
   word_highlighting_indicator_index: constant := 0;
@@ -243,7 +243,7 @@ package body LEA_GWin.Editor is
       return;
     end if;
     Editor.pos_last_update_UI := pos;
-    parent.Update_display(status_bar);
+    parent.Update_Display(status_bar);
     --  Highlight instances of selected word
     sel_a:= Editor.Get_Selection_Start;
     sel_z:= Editor.Get_Selection_End;
