@@ -5,8 +5,8 @@ with HAL, LEA_Common.HAC_Samples;
 procedure Sample_catalogue is
   use HAL, LEA_Common.HAC_Samples;
   --
-  from, to, samples : VString;
-  sep : constant Character := HAL.Directory_Separator;
+  from, to, from_subdir, samples : VString;
+  sep : constant Character := Directory_Separator;
   hac_project_dir : constant VString := +".." & sep & "hac";
   hac_samples_dir : constant VString := +"hac_samples";
 begin
@@ -17,11 +17,11 @@ begin
   --
   for i in standard_sample'Range loop
     if standard_sample (i).topic = Compatibility then
-      samples := +"src";
+      from_subdir := +"src";
     else
-      samples := +"exm";
+      from_subdir := +"exm";
     end if;
-    from := hac_project_dir & sep & samples & sep & standard_sample (i).name;
+    from := hac_project_dir & sep & from_subdir & sep & standard_sample (i).name;
     to   := hac_samples_dir & sep &
               directory (standard_sample (i).topic) & sep & standard_sample (i).name;
     HAL.Copy_File (from, to);
