@@ -9,7 +9,8 @@ with HAC_Sys.Defs;
 with GWindows.Colors,
      GWindows.Message_Boxes;
 
-with Ada.Integer_Wide_Text_IO,
+with Ada.Wide_Characters.Handling,
+     Ada.Integer_Wide_Text_IO,
      Ada.Streams.Stream_IO,
      Ada.Strings.Wide_Fixed,
      Ada.Strings.Unbounded;
@@ -459,37 +460,60 @@ package body LEA_GWin.Editor is
 
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type) is
     --
-    blank_line_code: constant:= -1;
+    blank_line_code : constant := -1;
     --
-    function Get_visible_indentation(s: GString) return Integer is
+    procedure Get_visible_indentation
+      (s: in GString; ind : out Integer; favorable : out Boolean) is
+      use Ada.Wide_Characters.Handling;
     begin
       for i in s'Range loop
-        case s(i) is
+        case s (i) is
           when ' ' | GWindows.GCharacter'Val (8) =>
             null;  --  only white space
           when GWindows.GCharacter'Val (13) | GWindows.GCharacter'Val (10) =>
-            return blank_line_code;
+            ind := blank_line_code;
+            favorable := False;
+            return;
           when others =>
-            return i - s'First;
+            ind := i - s'First;
+            if s (i) = '-' and then i < s'Last and then s (i + 1) = '-' then
+              --  A comment
+              favorable := True;
+            else
+              if i + 4 <= s'Last and then To_Upper (s (i .. i + 4)) = "BEGIN" then
+                --  Not a good idea to take the indentation from that line...
+                favorable := False;
+              else
+                favorable := True;
+              end if;
+            end if;
+            return;
         end case;
       end loop;
-      return blank_line_code;
+      ind := blank_line_code;
+      favorable := False;
     end Get_visible_indentation;
     --
-    function Get_visible_indentation (line: Integer) return Integer is
+    procedure Get_visible_indentation
+      (line: Integer; ind : out Integer; favorable : out Boolean)
+    is
       pos, pos_next: Position;
     begin
       pos     := Editor.Position_From_Line (line);
       pos_next:= Editor.Position_From_Line (line+1);
       if pos = pos_next then
-        return blank_line_code;  --  Empty document case
+        ind := blank_line_code;  --  Empty document case
+        favorable := False;
+        return;
       end if;
-      return Get_visible_indentation
-               (Editor.Get_Text_Range (pos, pos_next));  --  analyse whole line
+      --  Analyse whole line:
+      Get_visible_indentation
+        (Editor.Get_Text_Range (pos, pos_next), ind, favorable);
     end Get_visible_indentation;
     --
     pos, sel_a, sel_z: Position;
     ind, ind_prev_line, ind_min, lin_a, lin_z: Integer;
+    favorable : Boolean;
   begin
     Get_Reduced_Selection (Editor, sel_a, sel_z);
     lin_a:= Editor.Line_From_Position(sel_a);
@@ -497,20 +521,25 @@ package body LEA_GWin.Editor is
     --  Look for indentation *before* the selected block.
     ind_prev_line:= 0;
     for l in reverse 1 .. lin_a - 1 loop
-      ind:= Get_visible_indentation(l);
+      Get_visible_indentation (l, ind, favorable);
       if ind > blank_line_code then
-        ind_prev_line:= ind;
+        if favorable then
+          ind_prev_line := ind;
+        else
+          --  Fall-back: indentation of first line of the block.
+          Get_visible_indentation (lin_a, ind_prev_line, favorable);
+        end if;
         exit;
       end if;
     end loop;
     --  Look for the block's minimal indentation (but ignore blank lines for that).
     ind_min:= Integer'Last;
     for l in lin_a .. lin_z loop
-      ind:= Get_visible_indentation(l);
+      Get_visible_indentation (l, ind, favorable);
       if ind = blank_line_code then
         null;  --  Ignore blank lines for minimal indentation calculation
       else
-        ind_min:= Integer'Min(ind_min, ind);
+        ind_min := Integer'Min (ind_min, ind);
       end if;
     end loop;
     if ind_min = Integer'Last then
