@@ -638,21 +638,32 @@ package body LEA_GWin.Editor is
           if action = find_next then
             Editor.Set_Target_Start (Position'Max (Editor.Get_Current_Pos, Editor.Get_Anchor));
             Editor.Set_Target_End (Editor.Get_Length);
-          else
+          else  --  action = find_previous
             Editor.Set_Target_Start (Position'Min (Editor.Get_Current_Pos, Editor.Get_Anchor));
             Editor.Set_Target_End (0);
           end if;
           pos := Editor.Search_In_Target (find_str);
           if pos >= 0 then  --  Found
+            --  First, we go off a few lines in order to have a good focus.
+            Editor.Go_To_Pos (Editor.Get_Target_Start);
+            if action = find_next then
+              Editor.Go_To_Line (Editor.Get_current_line + 10);
+            else
+              Editor.Go_To_Line (Editor.Get_current_line - 5);
+            end if;
+            --  Now we select the found text.
             Editor.Set_Sel (Editor.Get_Target_Start, Editor.Get_Target_End);
             exit;
           elsif attempt = 1 then  --  Not found: wrap around and try again.
             if action = find_next then
-              Editor.Set_Sel (0, 0);  --  Will search the entire document from the top on 2nd attempt.
+              --  Make search from the top of document on 2nd attempt:
+              Editor.Set_Sel (0, 0);
             else
-              Editor.Set_Sel (Editor.Get_Length , Editor.Get_Length);  --  Same, but from the bottom.
+              --  Make search from the bottom of document on 2nd attempt:
+              Editor.Set_Sel (Editor.Get_Length , Editor.Get_Length);
             end if;
-          else  --  Not found *after* the wrap around: find_str is really nowhere!
+          else
+            --  Not found, even *after* the wrap around: find_str is really nowhere!
             --  Restore initial selection
             Editor.Set_Sel (sel_a, sel_z);
             Message_Box (MDI_Child.MDI_Parent.Search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
@@ -663,8 +674,11 @@ package body LEA_GWin.Editor is
         end loop;
       when replace_and_find_next =>
         --  Selection must be identical to the text to be found.
+        --  Otherwise, it is just a random, possibly manual, selection.
         --  But wait: we cannot just compare strings: the options (match case, ...) must
-        --  be taken into account as well. Solution: we do a search *within* the selection.
+        --  must be taken into account as well.
+        --  Solution: we search the string *within* the selection, which normally
+        --  contains the string itself, from a previous "Find" operation.
         Editor.Set_Target_Start (sel_a);
         Editor.Set_Target_End (sel_z);
         pos := Editor.Search_In_Target (find_str);
