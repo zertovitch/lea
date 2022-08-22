@@ -1,6 +1,6 @@
 --  List of HAC samples with their description.
 
-with HAL;
+with HAT;
 
 package LEA_Common.HAC_Samples is
 
@@ -12,7 +12,7 @@ package LEA_Common.HAC_Samples is
     --
     Compatibility);
 
-  use HAL;
+  use HAT;
 
   type Sample_Item is record
     topic       : Sample_Topic;

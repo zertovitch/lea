@@ -1,7 +1,7 @@
 with LEA_Common.Syntax;
 with LEA_GWin.MDI_Child;
 
-with HAL;
+with HAT;
 
 with Zip, UnZip.Streams, Zip_Streams;
 
@@ -20,12 +20,12 @@ package body LEA_GWin.Help is
   )
   is
     use LEA_Common, LEA_Common.Syntax, LEA_GWin.MDI_Child,
-        HAL,
+        HAT,
         GWindows.Message_Boxes, Zip_Streams;
     lea_exe : constant String := Ada.Command_Line.Command_Name;
     zi : Zip.Zip_info;
     mem_stream_unpacked : aliased Memory_Zipstream;
-    unpacked : HAL.VString;
+    unpacked : HAT.VString;
     already_open: Boolean := False;
     --
     procedure Check_help_doc (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -63,7 +63,7 @@ package body LEA_GWin.Help is
         unpacked;
     end if;
     declare
-      unpacked_str: constant String := HAL.To_String (unpacked);  --  visible to dbg
+      unpacked_str: constant String := HAT.To_String (unpacked);  --  visible to dbg
     begin
       New_Window := new MDI_Child_Type;
       if Is_Help then

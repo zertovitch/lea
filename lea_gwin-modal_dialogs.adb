@@ -8,7 +8,7 @@ with LEA_Resource_GUI;
 
 with HAC_Sys, Zip;
 
-with HAL;
+with HAT;
 
 with GWindows.Application,
      GWindows.Base,
@@ -90,7 +90,7 @@ package body LEA_GWin.Modal_Dialogs is
     box : HAC_example_box_Type;
     --
     row : Natural := 0;
-    fn, dir : array (standard_sample'Range) of HAL.VString;
+    fn, dir : array (standard_sample'Range) of HAT.VString;
     --
     sel_topic : Sample_Topic := Template;
     --

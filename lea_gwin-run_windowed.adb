@@ -6,7 +6,7 @@ with LEA_Resource_GUI;
 with HAC_Sys.Defs,
      HAC_Sys.PCode.Interpreter;
 
-with HAL;
+with HAT;
 
 with GWindows.Application,
      GWindows.Base,
@@ -39,10 +39,10 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     Result := -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
   end Fake_Shell_Execute;
 
-  procedure Fake_Shell_Execute_Output (Command : String; Result : out Integer; Output : out HAL.VString) is
+  procedure Fake_Shell_Execute_Output (Command : String; Result : out Integer; Output : out HAT.VString) is
   begin
     Result := -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
-    Output := HAL.Null_VString;
+    Output := HAT.Null_VString;
   end Fake_Shell_Execute_Output;
 
   MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
@@ -157,7 +157,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
         HAC_Command_Name,
         Fake_Shell_Execute,
         Fake_Shell_Execute_Output,
-        HAL.Directory_Separator
+        HAT.Directory_Separator
       );
 
   procedure Windowed_interpret is new

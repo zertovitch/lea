@@ -2,7 +2,7 @@ with LEA_GWin.MDI_Child;
 
 with HAC_Sys.Errors;
 
-with HAL;
+with HAT;
 
 with GWindows.Base,
      GWindows.Scintilla;
@@ -58,7 +58,7 @@ package body LEA_GWin.Repair is
                 pw.Editor.Clear;
             end case;
             pw.Editor.Insert_Text (pw.Editor.Get_Current_Pos,
-              S2G (HAL.VStr_Pkg.To_String (repair.insert_or_replace)) & Optional_EOL);
+              S2G (HAT.VStr_Pkg.To_String (repair.insert_or_replace)) & Optional_EOL);
             --
             pw.Editor.End_Undo_Action;
           end if;
