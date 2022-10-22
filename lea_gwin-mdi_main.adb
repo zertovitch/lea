@@ -43,7 +43,10 @@ package body LEA_GWin.MDI_Main is
           pw: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
           new_pos_a, new_pos_z : GWindows.Scintilla.Position;
         begin
-          if pw.File_Name = File_Name then
+          if pw.File_Name = File_Name
+            --  Catch a new editor that was never written as a file:
+            or else (pw.File_Name = "" and then pw.Short_Name = File_Name)
+          then
             is_open:= True;
             pw.Set_Foreground_Window;
             pw.Focus;  --  Focus on document already open in our app.
