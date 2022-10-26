@@ -26,6 +26,7 @@ with Ada.Characters.Handling,
      Ada.Strings.Wide_Fixed,
      Ada.Strings.Wide_Unbounded,
      Ada.Text_IO.Text_Streams;
+with HAC_Sys.Librarian;
 
 package body LEA_GWin.MDI_Child is
 
@@ -386,11 +387,26 @@ package body LEA_GWin.MDI_Child is
     New_File_Name : GWindows.GString_Unbounded;
     File_Title    : GWindows.GString_Unbounded;
     Success       : Boolean;
+    use HAC_Sys.Defs;
+    use type Alfa;
   begin
     if MDI_Child.File_Name = "" then
-      New_File_Name := MDI_Child.Short_Name;  --  Try with short name (window title).
+      --  No file yet for this window.
+      if MDI_Child.BD.CD.Main_Program_ID_with_case /= Empty_Alfa then
+        --  Suggest the Ada main's name of last tentative build.
+        New_File_Name :=
+          G2GU
+            (S2G
+              (HAC_Sys.Librarian.GNAT_Naming
+                (A2S (MDI_Child.BD.CD.Main_Program_ID_with_case)))) &
+          ".adb";
+      else
+        --  Suggest the short window name (window title).
+        New_File_Name := MDI_Child.Short_Name;
+      end if;
     else
-      New_File_Name := MDI_Child.File_Name;  --  Tentative name is current file name.
+      --  Tentative name is current file name.
+      New_File_Name := MDI_Child.File_Name;
     end if;
     GWindows.Common_Dialogs.Save_File (
       MDI_Child,
