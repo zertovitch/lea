@@ -408,8 +408,8 @@ LEA_Icon           ICON           "ico_bmp/lea.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     0,8,2,0
-    PRODUCTVERSION  0,8,2,0
+    FILEVERSION     0,8,3,0
+    PRODUCTVERSION  0,8,3,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -422,7 +422,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.82"
+            VALUE "FileVersion", "0.83"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2022"
             VALUE "ProductName", "LEA"
         }
