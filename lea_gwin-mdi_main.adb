@@ -743,7 +743,7 @@ package body LEA_GWin.MDI_Main is
     up_name: GString:= name;
     mem_line: Natural := 0;
   begin
-    --  Add name to the list in task bar or elsewhere
+    --  Add name to the list in task bar or
     --  elsewhere in Windows Explorer or Desktop.
     GWindows.Application.Add_To_Recent_Documents (name);
 
