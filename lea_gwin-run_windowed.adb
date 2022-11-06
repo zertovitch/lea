@@ -1,6 +1,8 @@
 with LEA_Common;
+
 with LEA_GWin.MDI_Main;
 with LEA_GWin.Messages.IO_Pipe;
+
 with LEA_Resource_GUI;
 
 with HAC_Sys.Defs,
@@ -13,11 +15,11 @@ with GWindows.Application,
      GWindows.Common_Controls,
      GWindows.Message_Boxes;
 
-with Ada.Calendar;
-with Ada.Strings.Unbounded,
+with Ada.Calendar,
+     Ada.Strings.Unbounded,
      Ada.Strings.Wide_Fixed;
 
-procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
+procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
   function Fake_Argument_Count return Natural is
   begin
@@ -31,7 +33,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
 
   function HAC_Command_Name return String is
   begin
-    return G2S (GU2G (MDI_Child.File_Name));
+    return G2S (GU2G (Window.File_Name));
   end HAC_Command_Name;
 
   procedure Fake_Shell_Execute (Command : String; Result : out Integer) is
@@ -45,7 +47,7 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
     Output := HAT.Null_VString;
   end Fake_Shell_Execute_Output;
 
-  MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
+  MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames Window.MDI_Parent.all;
   ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
 
   use LEA_Common, HAC_Sys.PCode.Interpreter, Ada.Strings.Unbounded;
@@ -171,14 +173,14 @@ procedure LEA_GWin.Run_Windowed (MDI_Child : in out MDI_Child_Type) is
 
 begin
   LEA_GWin.Messages.IO_Pipe.is_aborted_flag := False;
-  case MDI_Child.MDI_Parent.opt.toolset is
+  case Window.MDI_Parent.opt.toolset is
     when HAC_mode =>
       --  !!  Check if anything compiled ?
       ml.Clear;
       ml.Set_Column ("Console", 0, 800);
-      LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (MDI_Child.MDI_Parent.Message_Panel.Message_List);
+      LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (Window.MDI_Parent.Message_Panel.Message_List);
       tick:= Clock - 5.0;  --  Ensure refresh code in Boxed_Feedback is executed soon
-      progress_box.Create_Full_Dialog (MDI_Child);
+      progress_box.Create_Full_Dialog (Window);
       progress_box.Stack_Bar.Position (0);
       progress_box.Stop_VM_Button.Hide;
       progress_box.Stop_VM_Button_permanent.Show;
@@ -186,12 +188,12 @@ begin
       progress_box.Center;
       progress_box.Redraw;
       progress_box.Show;
-      MDI_Child.MDI_Parent.Disable;
-      Windowed_interpret (MDI_Child.BD, post_mortem);  --  Running the HAC program happens here.
+      Window.MDI_Parent.Disable;
+      Windowed_interpret (Window.BD, post_mortem);  --  Running the HAC program happens here.
       --  Scroll to last output line:
       ml.Ensure_Visible (Integer'Max (0, ml.Item_Count - 1), Full);
-      MDI_Child.MDI_Parent.Enable;
-      MDI_Child.MDI_Parent.Focus;
+      Window.MDI_Parent.Enable;
+      Window.MDI_Parent.Focus;
       if Is_Exception_Raised (post_mortem.Unhandled) then
         Show_Error;
       end if;

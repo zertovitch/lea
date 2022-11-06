@@ -1,13 +1,14 @@
 with LEA_Common.User_options;
+
 with LEA_GWin.MDI_Child;
+
 with LEA_Resource_GUI;
 
-with GWindows;
-with GWindows.Application;
-with GWindows.Base;
-with GWindows.Buttons;
-with GWindows.Constants;
-with GWindows.Message_Boxes;
+with GWindows.Application,
+     GWindows.Base,
+     GWindows.Buttons,
+     GWindows.Constants,
+     GWindows.Message_Boxes;
 
 with GWin_Util;
 

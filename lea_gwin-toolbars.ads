@@ -1,6 +1,7 @@
 with LEA_GWin.MDI_Main;
 
-with GWindows.Common_Controls, GWindows.Image_Lists;
+with GWindows.Common_Controls,
+     GWindows.Image_Lists;
 
 package LEA_GWin.Toolbars is
 

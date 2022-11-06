@@ -1,7 +1,7 @@
 with LEA_Resource_GUI;
 
-with GWindows.Base;
-with GWindows.Menus;
+with GWindows.Base,
+     GWindows.Menus;
 
 with Interfaces.C;
 

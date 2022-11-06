@@ -1,4 +1,4 @@
-with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
+with Ada.Strings.Wide_Fixed;
 
 package body LEA_Common.User_options is
 
@@ -39,6 +39,7 @@ package body LEA_Common.User_options is
     procedure Load (opt : out Option_Pack_Type) is
       mru_idx : Positive;
       sep_pos_1 : Natural;
+      use Ada.Strings.Wide_Fixed;
     begin
       for k in Key loop
         begin

@@ -1,8 +1,9 @@
-with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
+with Ada.Wide_Characters.Handling;
 
 package body LEA_Common.Syntax is
 
   function Guess_syntax (file_name, custom_filter : UTF_16_String) return Syntax_type is
+    use Ada.Wide_Characters.Handling;
     u_name : constant UTF_16_String := To_Upper (file_name);
     u_filt : constant UTF_16_String := To_Upper (custom_filter);
   begin

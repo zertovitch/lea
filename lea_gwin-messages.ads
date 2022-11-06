@@ -1,8 +1,8 @@
 with HAC_Sys.Defs;
 
-with GWindows.Base;
-with GWindows.Common_Controls.Ex_List_View;
-with GWindows.Drawing_Objects;
+with GWindows.Base,
+     GWindows.Common_Controls.Ex_List_View,
+     GWindows.Drawing_Objects;
 
 package LEA_GWin.Messages is
 

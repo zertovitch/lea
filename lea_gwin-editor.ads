@@ -1,14 +1,17 @@
-with LEA_Common;                        use LEA_Common;
-with LEA_Common.Syntax;                 use LEA_Common.Syntax;
+with LEA_Common.Syntax;
 
-with GWindows.Base;
-with GWindows.Scintilla;                use GWindows.Scintilla;
-with GWindows.Windows;
-with GWindows.Types;
+with GWindows.Base,
+     GWindows.Scintilla,
+     GWindows.Types,
+     GWindows.Windows;
 
-with Ada.Streams, Interfaces.C;
+with Ada.Streams;
+
+with Interfaces.C;
 
 package LEA_GWin.Editor is
+
+  use GWindows.Scintilla;
 
   type LEA_Scintilla_Type is new Scintilla_Type with record
     --  Direct access to the window owning the editor widget.
@@ -20,7 +23,7 @@ package LEA_GWin.Editor is
     pos_last_update_UI   : Position    := INVALID_POSITION;
     sel_a_last_update_UI : Position    := INVALID_POSITION;
     sel_z_last_update_UI : Position    := INVALID_POSITION;
-    syntax_kind          : Syntax_type := Undefined;
+    syntax_kind          : LEA_Common.Syntax.Syntax_type := LEA_Common.Syntax.Undefined;
   end record;
 
   overriding

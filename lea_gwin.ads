@@ -1,5 +1,5 @@
-with GWindows.Common_Dialogs;
-with GWindows.GStrings;
+with GWindows.Common_Dialogs,
+     GWindows.GStrings;
 
 package LEA_GWin is
 

@@ -1,4 +1,4 @@
-with LEA_GWin.Input_Boxes;              use LEA_GWin.Input_Boxes;
+with LEA_GWin.Input_Boxes;
 
 with GWindows.Application,
      GWindows.Message_Boxes;
@@ -79,7 +79,8 @@ package body LEA_GWin.Messages.IO_Pipe is
     if current_IO_pipe = null then
       raise Program_Error with "IO pipe undefined";
     end if;
-    String_Input (current_IO_pipe.mdi_main_parent.all, Title, User_Input, Result);
+    Input_Boxes.String_Input
+      (current_IO_pipe.mdi_main_parent.all, Title, User_Input, Result);
     if Result = Cancel then
       is_aborted_flag := True;
     end if;
@@ -159,14 +160,13 @@ package body LEA_GWin.Messages.IO_Pipe is
     if current_IO_pipe = null then
       raise Program_Error with "IO pipe undefined";
     end if;
-    Skip_Line (
-      current_IO_pipe.mdi_main_parent.all,
-      "Press Return key or click OK." & NL & NL &
-      "---" & NL &
-      "Press Esc key or click Cancel" & NL &
-      "for aborting the program.",
-      Result
-    );
+      Input_Boxes.Skip_Line
+        (current_IO_pipe.mdi_main_parent.all,
+         "Press Return key or click OK." & NL & NL &
+         "---" & NL &
+         "Press Esc key or click Cancel" & NL &
+         "for aborting the program.",
+         Result);
     New_Line_Console;  --  Reflect the new line on the "console".
     if Result = Cancel then
       is_aborted_flag := True;

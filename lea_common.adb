@@ -1,10 +1,6 @@
---  with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
-with Ada.Strings;                       use Ada.Strings;
-with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
-
-with Ada.Streams.Stream_IO;             use Ada.Streams.Stream_IO;
-with Ada.Strings.UTF_Encoding.Conversions;
---  with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
+with Ada.Streams.Stream_IO,
+     Ada.Strings.Fixed,
+     Ada.Strings.UTF_Encoding.Conversions;
 
 package body LEA_Common is
 
@@ -20,6 +16,7 @@ package body LEA_Common is
   end To_UTF_8;
 
   function File_Exists (s : UTF_8_String) return Boolean is
+    use Ada.Streams.Stream_IO, Ada.Strings.Fixed;
     f : File_Type;
   begin
     if Index (s, "*") > 0 then

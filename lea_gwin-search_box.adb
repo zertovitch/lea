@@ -1,9 +1,10 @@
 with LEA_Common;
+
 with LEA_GWin.MDI_Main;
 
-with GWindows.Buttons;
-with GWindows.Key_States;
-with GWindows.Scintilla;
+with GWindows.Buttons,
+     GWindows.Key_States,
+     GWindows.Scintilla;
 
 package body LEA_GWin.Search_box is
   use LEA_Common, LEA_GWin.MDI_Main, GWindows.Key_States;
@@ -35,6 +36,7 @@ package body LEA_GWin.Search_box is
     action : Search_action
   )
   is
+    use GWindows.Base;
     Parent: constant Pointer_To_Base_Window_Class := Window.Parent;
   begin
     if Parent /= null and then Parent.all in LEA_search_box_type'Class then  --  Should be always the case.
@@ -93,7 +95,8 @@ package body LEA_GWin.Search_box is
         do_find_next := True;
       end if;
     end if;
-    Drop_Down_Combo_Box_Type (FRB).On_Message (message, wParam, lParam, Return_Value);
+    GWindows.Combo_Boxes.Drop_Down_Combo_Box_Type
+      (FRB).On_Message (message, wParam, lParam, Return_Value);
     if do_find_next then
       Update_drop_downs (FRB.parent_SB.all);
       MDI_Main_Type (FRB.parent_SB.The_real_MDI_parent.all).Perform_Search (find_next);
@@ -113,7 +116,7 @@ package body LEA_GWin.Search_box is
       --  SB.Hide works, but LEA window's focus is lost!
       MDI_Main_Type(SB.The_real_MDI_parent.all).close_this_search_box := True;
     end if;
-    Search_box_Type (SB).On_Message (message, wParam, lParam, Return_Value);
+    LEA_Resource_GUI.Search_box_Type (SB).On_Message (message, wParam, lParam, Return_Value);
   end On_Message;
 
   procedure On_Close (SB        : in out LEA_search_box_type;
@@ -138,7 +141,7 @@ package body LEA_GWin.Search_box is
     SB.Find_box.Create (SB, "",
        SB.Model_find_box.Left, SB.Model_find_box.Top,
        SB.Model_find_box.Width, SB.Model_find_box.Height,
-       False, ID => Model_find_box);
+       False, ID => LEA_Resource_GUI.Model_find_box);
     --  Find_box is identical to Model_find_box, but with new methods.
     SB.Model_find_box.Hide;
     SB.Find_box.parent_SB := SB'Unrestricted_Access;
@@ -146,7 +149,7 @@ package body LEA_GWin.Search_box is
     SB.Replace_box.Create (SB, "",
        SB.Model_replace_box.Left, SB.Model_replace_box.Top,
        SB.Model_replace_box.Width, SB.Model_replace_box.Height,
-       False, ID => Model_replace_box);
+       False, ID => LEA_Resource_GUI.Model_replace_box);
     --  Replace_box is identical to Model_replace_box, but with new methods.
     SB.Model_replace_box.Hide;
     SB.Replace_box.parent_SB := SB'Unrestricted_Access;

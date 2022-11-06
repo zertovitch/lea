@@ -17,6 +17,7 @@ with Ada.Wide_Characters.Handling,
 
 package body LEA_GWin.Editor is
 
+  use LEA_Common;
   use LEA_GWin.MDI_Main, LEA_GWin.MDI_Child;
   use Ada.Strings, Ada.Strings.Wide_Fixed;
   use GWindows.Message_Boxes;
@@ -44,6 +45,7 @@ package body LEA_GWin.Editor is
     Pos      :          Position;
     CR       : constant GCharacter := GCharacter'Val (13);
     LF       : constant GCharacter := GCharacter'Val (10);
+    use LEA_Common.Syntax;
   begin
     --  This works on Windows (CR, LF) and Unix (LF); we ignore the old Macs (CR).
     if Value = LF and Line > 0 then
@@ -987,6 +989,7 @@ package body LEA_GWin.Editor is
   end Save_text;
 
   procedure Set_Scintilla_Syntax (Editor : in out LEA_Scintilla_Type) is
+    use LEA_Common.Syntax;
   begin
     case Editor.syntax_kind is
       when Undefined =>

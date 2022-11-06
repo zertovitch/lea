@@ -63,11 +63,11 @@ package body LEA_GWin.MDI_Child is
   begin
     return
       MDI_Child.MDI_Parent.opt.view_mode = Studio; --  !!  and then
-      --  !! MDI_Child.Focus = MDI_Child.Folder_Tree'Unrestricted_Access;
+      --  !! Window.Focus = Window.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
   procedure Update_Display
-    (MDI_Child : in out MDI_Child_Type;
+    (Window : in out MDI_Child_Type;
      need      :        Update_need)
   is
   pragma Unreferenced (need);
@@ -75,70 +75,70 @@ package body LEA_GWin.MDI_Child is
     procedure Update_Status_Bar is
       pos, sel_a, sel_z : Scintilla.Position;
     begin
-      if MDI_Child.File_Name = Null_GString_Unbounded then
-        MDI_Child.Status_Bar.Text("No file", 0);
+      if Window.File_Name = Null_GString_Unbounded then
+        Window.Status_Bar.Text("No file", 0);
       end if;
-      if Folder_Focus(MDI_Child) then
-        MDI_Child.Status_Bar.Text("Folder selected", 0);
+      if Folder_Focus(Window) then
+        Window.Status_Bar.Text("Folder selected", 0);
         return;
       else
-        case MDI_Child.Editor.document_kind is
+        case Window.Editor.document_kind is
           when editable_text =>
-            MDI_Child.Status_Bar.Text (
-              LEA_Common.Syntax.File_type_image (MDI_Child.Editor.syntax_kind), 0
+            Window.Status_Bar.Text (
+              LEA_Common.Syntax.File_type_image (Window.Editor.syntax_kind), 0
             );
           when help_main =>
-            MDI_Child.Status_Bar.Text ("Help", 0);
+            Window.Status_Bar.Text ("Help", 0);
         end case;
       end if;
-      MDI_Child.Status_Bar.Text(
-        "Length:" & Int'Wide_Image(MDI_Child.Editor.Get_Length) &
-        "     Lines:" & Integer'Wide_Image(MDI_Child.Editor.Get_Line_Count),
+      Window.Status_Bar.Text(
+        "Length:" & Int'Wide_Image(Window.Editor.Get_Length) &
+        "     Lines:" & Integer'Wide_Image(Window.Editor.Get_Line_Count),
         1);
-      pos   := MDI_Child.Editor.Get_Current_Pos;
-      sel_a := MDI_Child.Editor.Get_Selection_Start;
-      sel_z := MDI_Child.Editor.Get_Selection_End;
-      MDI_Child.Status_Bar.Text(
-        "Line:"  & Integer'Wide_Image(1 + MDI_Child.Editor.Line_From_Position(pos)) &
-        " Col:" & Integer'Wide_Image(1 + MDI_Child.Editor.Get_Column(pos)),
+      pos   := Window.Editor.Get_Current_Pos;
+      sel_a := Window.Editor.Get_Selection_Start;
+      sel_z := Window.Editor.Get_Selection_End;
+      Window.Status_Bar.Text(
+        "Line:"  & Integer'Wide_Image(1 + Window.Editor.Line_From_Position(pos)) &
+        " Col:" & Integer'Wide_Image(1 + Window.Editor.Get_Column(pos)),
         2);
-      MDI_Child.Status_Bar.Text("Sel:" & Scintilla.Position'Wide_Image(sel_z - sel_a) &
+      Window.Status_Bar.Text("Sel:" & Scintilla.Position'Wide_Image(sel_z - sel_a) &
         " (ln:" & Integer'Wide_Image(
            1 +
-           MDI_Child.Editor.Line_From_Position(sel_z) -
-           MDI_Child.Editor.Line_From_Position(sel_a)
+           Window.Editor.Line_From_Position(sel_z) -
+           Window.Editor.Line_From_Position(sel_a)
         ) & ')',
         3);
-      case MDI_Child.Editor.Get_EOL_Mode is
+      case Window.Editor.Get_EOL_Mode is
         when SC_EOL_CR =>
-          MDI_Child.Status_Bar.Text("EOL: Mac (CR)",        4);
+          Window.Status_Bar.Text("EOL: Mac (CR)",        4);
         when SC_EOL_CRLF =>
-          MDI_Child.Status_Bar.Text("EOL: Windows (CR LF)", 4);
+          Window.Status_Bar.Text("EOL: Windows (CR LF)", 4);
         when SC_EOL_LF =>
-          MDI_Child.Status_Bar.Text("EOL: Unix (LF)",       4);
+          Window.Status_Bar.Text("EOL: Unix (LF)",       4);
         when others =>
           null;
       end case;
-      if MDI_Child.Editor.Get_Overtype then
-        MDI_Child.Status_Bar.Text("OVR", 6);
+      if Window.Editor.Get_Overtype then
+        Window.Status_Bar.Text("OVR", 6);
       else
-        MDI_Child.Status_Bar.Text("INS", 6);
+        Window.Status_Bar.Text("INS", 6);
       end if;
     end Update_Status_Bar;
 
     procedure Update_Tool_Bar is
-      bar : MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
+      bar : MDI_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
       is_any_selection: constant Boolean :=
-        MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
+        Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
       use LEA_Resource_GUI;
     begin
-      bar.Enabled (IDM_Undo, MDI_Child.Editor.Can_Undo);
-      bar.Enabled (IDM_Redo, MDI_Child.Editor.Can_Redo);
-      bar.Enabled (IDM_Save_File, MDI_Child.Editor.modified);
-      bar.Enabled (IDM_Save_All, MDI_Child.save_all_hint);
+      bar.Enabled (IDM_Undo, Window.Editor.Can_Undo);
+      bar.Enabled (IDM_Redo, Window.Editor.Can_Redo);
+      bar.Enabled (IDM_Save_File, Window.Editor.modified);
+      bar.Enabled (IDM_Save_All, Window.save_all_hint);
       bar.Enabled (IDM_Cut, is_any_selection);
       bar.Enabled (IDM_Copy, is_any_selection);
-      bar.Enabled (IDM_Paste, MDI_Child.Editor.Can_Paste);
+      bar.Enabled (IDM_Paste, Window.Editor.Can_Paste);
       bar.Enabled (IDM_Indent, True);
       bar.Enabled (IDM_Unindent, True);
       bar.Enabled (IDM_Comment, True);
@@ -146,7 +146,7 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Find, True);
       bar.Enabled (IDM_Show_special_symbols, True);
       bar.Enabled (IDM_Show_indentation_lines, True);
-      --  if not MDI_Child.is_closing then
+      --  if not Window.is_closing then
       --    null;  --  bar.Enabled(IDM_ADD_FILES, True);
       --  end if;
     end Update_Tool_Bar;
@@ -155,16 +155,16 @@ package body LEA_GWin.MDI_Child is
       use LEA_Resource_GUI, GWindows.Menus;
       bool_to_state: constant array (Boolean) of State_Type := (Disabled, Enabled);
       is_any_selection: constant Boolean :=
-        MDI_Child.Editor.Get_Selection_Start < MDI_Child.Editor.Get_Selection_End;
+        Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
     begin
-      State (MDI_Child.Menu.Main, Command, IDM_Cut,                    bool_to_state (is_any_selection));
-      State (MDI_Child.Menu.Main, Command, IDM_Copy,                   bool_to_state (is_any_selection));
-      State (MDI_Child.Menu.Main, Command, IDM_Paste,                  bool_to_state (MDI_Child.Editor.Can_Paste));
-      State (MDI_Child.Menu.Main, Command, IDM_Undo,                   bool_to_state (MDI_Child.Editor.Can_Undo));
-      State (MDI_Child.Menu.Main, Command, IDM_Redo,                   bool_to_state (MDI_Child.Editor.Can_Redo));
-      State (MDI_Child.Menu.Main, Command, IDM_Open_Containing_Folder, bool_to_state (Length (MDI_Child.File_Name) > 0));
-      State (MDI_Child.Menu.Main, Command, IDM_Save_File,              bool_to_state (MDI_Child.Editor.modified));
-      State (MDI_Child.Menu.Main, Command, IDM_Save_All,               bool_to_state (MDI_Child.save_all_hint));
+      State (Window.Menu.Main, Command, IDM_Cut,                    bool_to_state (is_any_selection));
+      State (Window.Menu.Main, Command, IDM_Copy,                   bool_to_state (is_any_selection));
+      State (Window.Menu.Main, Command, IDM_Paste,                  bool_to_state (Window.Editor.Can_Paste));
+      State (Window.Menu.Main, Command, IDM_Undo,                   bool_to_state (Window.Editor.Can_Undo));
+      State (Window.Menu.Main, Command, IDM_Redo,                   bool_to_state (Window.Editor.Can_Redo));
+      State (Window.Menu.Main, Command, IDM_Open_Containing_Folder, bool_to_state (Length (Window.File_Name) > 0));
+      State (Window.Menu.Main, Command, IDM_Save_File,              bool_to_state (Window.Editor.modified));
+      State (Window.Menu.Main, Command, IDM_Save_All,               bool_to_state (Window.save_all_hint));
     end Update_Menus;
 
     any_modified: Boolean:= False;
@@ -179,13 +179,13 @@ package body LEA_GWin.MDI_Child is
     end Check_any_modified;
 
   begin
-    GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Child.MDI_Parent.all).all,
+    GWindows.Base.Enumerate_Children (MDI_Client_Window (Window.MDI_Parent.all).all,
                                       Check_any_modified'Unrestricted_Access);
-    MDI_Child.save_all_hint := any_modified;
-    if MDI_Child.Editor.modified then
-      MDI_Child.Text("* " & GU2G(MDI_Child.Short_Name));
+    Window.save_all_hint := any_modified;
+    if Window.Editor.modified then
+      Window.Text("* " & GU2G(Window.Short_Name));
     else
-      MDI_Child.Text(GU2G(MDI_Child.Short_Name));
+      Window.Text(GU2G(Window.Short_Name));
     end if;
     Update_Status_Bar;
     Update_Tool_Bar;
@@ -196,20 +196,20 @@ package body LEA_GWin.MDI_Child is
   -- On_Create --
   ---------------
 
-  procedure On_Create (MDI_Child : in out MDI_Child_Type) is
+  procedure On_Create (Window : in out MDI_Child_Type) is
     use GWindows.Base;
   begin
-    MDI_Child.Small_Icon("LEA_Doc_Icon_Name");
+    Window.Small_Icon("LEA_Doc_Icon_Name");
 
     --  Filial feelings:
-    MDI_Child.MDI_Parent:= MDI_Main_Access(Controlling_Parent(MDI_Child));
+    Window.MDI_Parent:= MDI_Main_Access(Controlling_Parent(Window));
     --  No per-child-window option in this app
     --
     --  --  We copy options to child level:
-    --  MDI_Child.opt:= MDI_Child.MDI_Parent.opt;
+    --  Window.opt:= Window.MDI_Parent.opt;
 
-    --  MDI_Child.Tree_Bar_and_List.Create(MDI_Child, Direction => Horizontal);
-    --  MDI_Child.Tree_Bar_and_List.Dock(At_Top);
+    --  Window.Tree_Bar_and_List.Create(Window, Direction => Horizontal);
+    --  Window.Tree_Bar_and_List.Dock(At_Top);
     --
     --    Right panel, with subprogram tree:
     --
@@ -217,20 +217,20 @@ package body LEA_GWin.MDI_Child is
     --
     --  *** This will be activated with the Subprogram Tree feature ***
     --
-    --  MDI_Child.Subprogram_Panel.Create (MDI_Child, 1,1,20,20);
-    --  MDI_Child.Subprogram_Panel.Dock (At_Right);
-    --  MDI_Child.Subprogram_Panel.Splitter.Create (MDI_Child.Subprogram_Panel, At_Left);
-    --  MDI_Child.Subprogram_Panel.Splitter.MDI_Main := MDI_Child.MDI_Parent;
-    --  MDI_Child.Subprogram_Panel.Subprogram_Tree.Create (MDI_Child.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
-    --  MDI_Child.Subprogram_Panel.Subprogram_Tree.Dock (Fill);
+    --  Window.Subprogram_Panel.Create (Window, 1,1,20,20);
+    --  Window.Subprogram_Panel.Dock (At_Right);
+    --  Window.Subprogram_Panel.Splitter.Create (Window.Subprogram_Panel, At_Left);
+    --  Window.Subprogram_Panel.Splitter.MDI_Main := Window.MDI_Parent;
+    --  Window.Subprogram_Panel.Subprogram_Tree.Create (Window.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
+    --  Window.Subprogram_Panel.Subprogram_Tree.Dock (Fill);
 
-    MDI_Child.Editor.mdi_parent := MDI_Child'Unrestricted_Access;
-    MDI_Child.Editor.Create (MDI_Child, 50, 1, 20, 20);  --  Widget starts as a small square...
-    MDI_Child.Editor.Dock (Fill);                        --  ...expands into MDI child window.
-    MDI_Child.Editor.Set_EOL_Mode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
+    Window.Editor.mdi_parent := Window'Unrestricted_Access;
+    Window.Editor.Create (Window, 50, 1, 20, 20);  --  Widget starts as a small square...
+    Window.Editor.Dock (Fill);                        --  ...expands into MDI child window.
+    Window.Editor.Set_EOL_Mode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
 
-    MDI_Child.Status_Bar.Create (MDI_Child, "No file");
-    MDI_Child.Status_Bar.Parts (
+    Window.Status_Bar.Create (Window, "No file");
+    Window.Status_Bar.Parts (
         (0 => Status_bar_parts.general_info,      --  General info ("Ada file", ...)
          1 => Status_bar_parts.length_and_lines,  --  Length & lines
          2 => Status_bar_parts.line_and_col,      --  Line / Col
@@ -240,41 +240,41 @@ package body LEA_GWin.MDI_Child is
          6 => Status_bar_parts.ins_ovr            --  Ins / Ovr
        )
     );
-    MDI_Child.Status_Bar.Dock (At_Bottom);
-    MDI_Child.Dock_Children;
+    Window.Status_Bar.Dock (At_Bottom);
+    Window.Dock_Children;
 
-    LEA_Resource_GUI.Create_Full_Menu(MDI_Child.Menu);
+    LEA_Resource_GUI.Create_Full_Menu(Window.Menu);
     --  The list of MDI open children will appear below
     --  the menu indicated with Window_Menu (should be the one with Cascade/Tile/...).
-    MDI_Child.MDI_Menu(MDI_Child.Menu.Main, Window_Menu => 7);
+    Window.MDI_Menu(Window.Menu.Main, Window_Menu => 7);
 
     --  Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
       memo_unmaximized_children: constant Boolean:=
-        not MDI_Child.MDI_Parent.opt.MDI_childen_maximized;
+        not Window.MDI_Parent.opt.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
-        MDI_Child.MDI_Parent.Freeze;
-        MDI_Child.Zoom;
+        Window.MDI_Parent.Freeze;
+        Window.Zoom;
       end if;
-      On_Size(MDI_Child,Width(MDI_Child),Height(MDI_Child));
+      On_Size(Window,Width(Window),Height(Window));
       if memo_unmaximized_children then
-        MDI_Child.MDI_Parent.Thaw;  --  Before Zoom, otherwise drawinf is uncomplete.
-        MDI_Child.Zoom (False);
-        MDI_Child.MDI_Parent.Tool_Bar.Redraw;
+        Window.MDI_Parent.Thaw;  --  Before Zoom, otherwise drawinf is uncomplete.
+        Window.Zoom (False);
+        Window.MDI_Parent.Tool_Bar.Redraw;
       end if;
     end;
-    MDI_Child.Update_Display (first_display);
-    MDI_Child.Accept_File_Drag_And_Drop;
-    Ada.Numerics.Float_Random.Reset(MDI_Child.temp_name_gen);
+    Window.Update_Display (first_display);
+    Window.Accept_File_Drag_And_Drop;
+    Ada.Numerics.Float_Random.Reset(Window.temp_name_gen);
   end On_Create;
 
-  procedure Finish_subwindow_opening (MDI_Child : in out MDI_Child_Type) is
-    MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
+  procedure Finish_subwindow_opening (Window : in out MDI_Child_Type) is
+    MDI_Main : MDI_Main_Type renames Window.MDI_Parent.all;
   begin
     MDI_Main.User_maximize_restore:= True;
     if MDI_Main.opt.MDI_childen_maximized then
-      MDI_Child.Zoom;
+      Window.Zoom;
       MDI_Main.Redraw_all;
     end if;
     --  Show things in the main status bar - effective only after Thaw!
@@ -359,30 +359,30 @@ package body LEA_GWin.MDI_Child is
       Message_Box (MDI_Child, "Save", "Cannot save" & NL & "-> " & File_Name, OK_Box, Exclamation_Icon);
   end Save;
 
-  procedure On_Save (MDI_Child : in out MDI_Child_Type) is
-    File_Name : constant GWindows.GString := GU2G (MDI_Child.File_Name);
+  procedure On_Save (Window : in out MDI_Child_Type) is
+    File_Name : constant GWindows.GString := GU2G (Window.File_Name);
   begin
-    if File_Name = "" or else MDI_Child.Editor.Get_Read_Only then
-      MDI_Child.Focus;
-      if MDI_Child.Editor.Get_Read_Only then
-        Message_Box (MDI_Child, "Save", "This document is read-only" & NL & "You need to save it under another name");
+    if File_Name = "" or else Window.Editor.Get_Read_Only then
+      Window.Focus;
+      if Window.Editor.Get_Read_Only then
+        Message_Box (Window, "Save", "This document is read-only" & NL & "You need to save it under another name");
       end if;
-      MDI_Child.On_Save_As;
+      Window.On_Save_As;
     else
-      Save (MDI_Child, File_Name);
+      Save (Window, File_Name);
     end if;
   end On_Save;
 
-  function Is_file_saved (MDI_Child : in MDI_Child_Type) return Boolean is
+  function Is_file_saved (Window : in MDI_Child_Type) return Boolean is
   begin
-    return not MDI_Child.Editor.modified;
+    return not Window.Editor.modified;
   end Is_file_saved;
 
   ----------------
   -- On_Save_As --
   ----------------
 
-  procedure On_Save_As (MDI_Child : in out MDI_Child_Type)
+  procedure On_Save_As (Window : in out MDI_Child_Type)
   is
     New_File_Name : GWindows.GString_Unbounded;
     File_Title    : GWindows.GString_Unbounded;
@@ -390,29 +390,29 @@ package body LEA_GWin.MDI_Child is
     use HAC_Sys.Defs;
     use type Alfa;
   begin
-    if MDI_Child.File_Name = "" then
+    if Window.File_Name = "" then
       --  No file yet for this window.
-      if MDI_Child.BD.CD.Main_Program_ID_with_case /= Empty_Alfa then
+      if Window.BD.CD.Main_Program_ID_with_case /= Empty_Alfa then
         --  Suggest the Ada main's name of last tentative build.
         New_File_Name :=
           G2GU
             (S2G
               (HAC_Sys.Librarian.GNAT_Naming
-                (A2S (MDI_Child.BD.CD.Main_Program_ID_with_case)))) &
+                (A2S (Window.BD.CD.Main_Program_ID_with_case)))) &
           ".adb";
       else
         --  Suggest the short window name (window title).
-        New_File_Name := MDI_Child.Short_Name;
+        New_File_Name := Window.Short_Name;
       end if;
     else
       --  Tentative name is current file name.
-      New_File_Name := MDI_Child.File_Name;
+      New_File_Name := Window.File_Name;
     end if;
     GWindows.Common_Dialogs.Save_File (
-      MDI_Child,
+      Window,
       "Save file as...",
       New_File_Name,
-      MDI_Child.MDI_Parent.text_files_filters,
+      Window.MDI_Parent.text_files_filters,
       ".ada",
       File_Title,
       Success
@@ -422,7 +422,7 @@ package body LEA_GWin.MDI_Child is
     end if;
     if File_Exists(To_UTF_8(GU2G(New_File_Name))) then
       if Message_Box (
-        MDI_Child,
+        Window,
         "Save as",
         "The file " & GU2G (New_File_Name) & " already exists. Replace ?",
         Yes_No_Box,
@@ -433,20 +433,20 @@ package body LEA_GWin.MDI_Child is
       end if;
     end if;
 
-    Save (MDI_Child, GU2G(New_File_Name));
-    MDI_Child.File_Name := New_File_Name;
-    MDI_Child.Text(GU2G(File_Title));
-    MDI_Child.Short_Name:= File_Title;
-    MDI_Child.Update_Common_Menus(GU2G(New_File_Name), MDI_Child.Editor.Get_current_line);
-    MDI_Child.Editor.syntax_kind :=
+    Save (Window, GU2G(New_File_Name));
+    Window.File_Name := New_File_Name;
+    Window.Text(GU2G(File_Title));
+    Window.Short_Name:= File_Title;
+    Window.Update_Common_Menus(GU2G(New_File_Name), Window.Editor.Get_current_line);
+    Window.Editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
-        GU2G (MDI_Child.File_Name),
-        GU2G (MDI_Child.MDI_Parent.opt.ada_files_filter)
+        GU2G (Window.File_Name),
+        GU2G (Window.MDI_Parent.opt.ada_files_filter)
       );
-    MDI_Child.Editor.Set_Scintilla_Syntax;
+    Window.Editor.Set_Scintilla_Syntax;
   end On_Save_As;
 
-  procedure On_Save_All (MDI_Child : in out MDI_Child_Type) is
+  procedure On_Save_All (Window : in out MDI_Child_Type) is
     --
     procedure Save_any_modified (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
@@ -463,49 +463,49 @@ package body LEA_GWin.MDI_Child is
     end Save_any_modified;
     --
   begin
-    GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Child.MDI_Parent.all).all,
+    GWindows.Base.Enumerate_Children (MDI_Client_Window (Window.MDI_Parent.all).all,
                                       Save_any_modified'Unrestricted_Access);
   end On_Save_All;
 
-  procedure On_File_Drop (MDI_Child  : in out MDI_Child_Type;
+  procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     GWindows.Windows.Array_Of_File_Names)
   is
     parent : MDI_Main_Access;
   begin
-    MDI_Child.Focus;
-    --  We save the parent access since this MDI_Child may be already closed
-    --  when i > File_Names'First if MDI_Child is was temporary MS-Office-like
+    Window.Focus;
+    --  We save the parent access since this Window may be already closed
+    --  when i > File_Names'First if Window is was temporary MS-Office-like
     --  blank window - See procedure Close_extra_first_child.
-    parent:= MDI_Child.MDI_Parent;
+    parent:= Window.MDI_Parent;
     for i in File_Names'Range loop
       Open_Child_Window_And_Load(parent.all, File_Names(i));
     end loop;
   end On_File_Drop;
 
   --  This will update File menu of parent, itself, and all brothers and sisters
-  procedure Update_Common_Menus(MDI_Child : MDI_Child_Type;
+  procedure Update_Common_Menus(Window : MDI_Child_Type;
     top_entry_name : GString := "";
     top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
   )
   is
   begin
-    Update_Common_Menus( MDI_Child.MDI_Parent.all, top_entry_name, top_entry_line );
+    Update_Common_Menus( Window.MDI_Parent.all, top_entry_name, top_entry_line );
   end Update_Common_Menus;
 
-  procedure On_Size (MDI_Child : in out MDI_Child_Type;
+  procedure On_Size (Window : in out MDI_Child_Type;
                      Width  : in     Integer;
                      Height : in     Integer)
   is
   begin
-    if MDI_Child.MDI_Parent.User_maximize_restore then
-      MDI_Child.MDI_Parent.opt.MDI_childen_maximized := Zoom (MDI_Child);
+    if Window.MDI_Parent.User_maximize_restore then
+      Window.MDI_Parent.opt.MDI_childen_maximized := Zoom (Window);
     end if;
-    Dock_Children (MDI_Child);
+    Dock_Children (Window);
   end On_Size;
 
-  procedure Build_as_Main (MDI_Child : in out MDI_Child_Type) is
+  procedure Build_as_Main (Window : in out MDI_Child_Type) is
     use HAC_Sys.Defs, Messages;
-    MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Parent.all;
+    MDI_Main : MDI_Main_Type renames Window.MDI_Parent.all;
     ml : Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     message_count, err_count : Natural := 0;
     --
@@ -544,8 +544,8 @@ package body LEA_GWin.MDI_Child is
     use HAC_Sys.Builder,
         Ada.Calendar, Ada.Directories, Ada.Strings, Ada.Strings.Wide_Fixed, Ada.Text_IO;
     f : Ada.Text_IO.File_Type;
-    file_name  : constant String := G2S (GU2G (MDI_Child.File_Name));
-    short_name : constant String := G2S (GU2G (MDI_Child.Short_Name));
+    file_name  : constant String := G2S (GU2G (Window.File_Name));
+    short_name : constant String := G2S (GU2G (Window.Short_Name));
     shebang_offset : Natural;
     t1, t2 : Time;
     --
@@ -559,21 +559,21 @@ package body LEA_GWin.MDI_Child is
     end Best_Name;
     --
   begin
-    case MDI_Child.MDI_Parent.opt.toolset is
+    case Window.MDI_Parent.opt.toolset is
       when HAC_mode =>
         if use_editor_stream then
           --  We connect the main editor input stream to this window's editor.
-          MDI_Child.MDI_Parent.current_editor_stream.Reset (MDI_Child.Editor, shebang_offset);
+          Window.MDI_Parent.current_editor_stream.Reset (Window.Editor, shebang_offset);
           Set_Main_Source_Stream (
-            MDI_Child.BD,
-            MDI_Child.MDI_Parent.current_editor_stream'Access,
+            Window.BD,
+            Window.MDI_Parent.current_editor_stream'Access,
             Best_Name, shebang_offset);
         else
           --  In case the file is not open in an editor window in LEA,
           --  we use Stream_IO.
           Open (f, In_File, file_name);
           Skip_Shebang (f, shebang_offset);
-          Set_Main_Source_Stream (MDI_Child.BD, Text_Streams.Stream (f), Best_Name, shebang_offset);
+          Set_Main_Source_Stream (Window.BD, Text_Streams.Stream (f), Best_Name, shebang_offset);
         end if;
         --
         --  We switch the current directory in order to compile other units that
@@ -589,26 +589,26 @@ package body LEA_GWin.MDI_Child is
         ml.Set_Column ("Line",     0, 60);
         ml.Set_Column ("Message",  1, 800);
         Set_Message_Feedbacks
-          (MDI_Child.BD,
+          (Window.BD,
            (pipe         => LEA_HAC_Build_Error_Feedback'Unrestricted_Access,
             progress     => LEA_HAC_Build_Feedback'Unrestricted_Access,
             detail_level => 1));
         t1 := Clock;
-        Build_Main (MDI_Child.BD);
+        Build_Main (Window.BD);
         t2 := Clock;
         if not use_editor_stream then
           Close (f);
         end if;
-        Set_Message_Feedbacks (MDI_Child.BD, HAC_Sys.Co_Defs.default_trace);
+        Set_Message_Feedbacks (Window.BD, HAC_Sys.Co_Defs.default_trace);
         --  Here we have a single-unit build, from the current child window:
-        MDI_Main.build_successful := Build_Successful (MDI_Child.BD);
+        MDI_Main.build_successful := Build_Successful (Window.BD);
         if err_count = 0 then
           ml.Insert_Item ("", message_count);
           ml.Set_Sub_Item
             ("Build finished in" &
              Duration'Wide_Image (t2 - t1) &
              " seconds." &
-             Integer'Wide_Image (MDI_Child.BD.Total_Compiled_Lines) &
+             Integer'Wide_Image (Window.BD.Total_Compiled_Lines) &
              " lines compiled. No error, no warning",
              message_count, 1);
         else
@@ -626,13 +626,13 @@ package body LEA_GWin.MDI_Child is
     end case;
   end Build_as_Main;
 
-  procedure Build (MDI_Child : in out MDI_Child_Type) is
+  procedure Build (Window : in out MDI_Child_Type) is
   begin
-    case MDI_Child.MDI_Parent.opt.toolset is
+    case Window.MDI_Parent.opt.toolset is
       when HAC_mode =>
-        case MDI_Child.MDI_Parent.opt.view_mode is
+        case Window.MDI_Parent.opt.view_mode is
           when Notepad =>
-            MDI_Child.Build_as_Main;
+            Window.Build_as_Main;
           when Studio =>
             null;
             --  !!  In project/studio mode, we will build
@@ -643,126 +643,126 @@ package body LEA_GWin.MDI_Child is
     end case;
   end Build;
 
-  procedure Build_and_run (MDI_Child : in out MDI_Child_Type) is
+  procedure Build_and_run (Window : in out MDI_Child_Type) is
   begin
-    MDI_Child.Build;
-    if MDI_Child.MDI_Parent.build_successful then
-      Run_Windowed (MDI_Child);
+    Window.Build;
+    if Window.MDI_Parent.build_successful then
+      Run_Windowed (Window);
     end if;
   end Build_and_run;
 
   procedure On_Menu_Select (
-        MDI_Child : in out MDI_Child_Type;
+        Window : in out MDI_Child_Type;
         Item      : in     Integer
   )
   is
     use LEA_Resource_GUI;
   begin
-    if MDI_Child.Editor.document_kind /= editable_text then
+    if Window.Editor.document_kind /= editable_text then
       --  Call parent method
-      GWindows.Windows.Window_Type (MDI_Child).On_Menu_Select (Item);
+      GWindows.Windows.Window_Type (Window).On_Menu_Select (Item);
       return;
     end if;
     --
     case Item is
       when IDM_Open_Containing_Folder =>
-        if MDI_Child.File_Name /= "" then
-          GWin_Util.Start (Ada.Directories.Containing_Directory (G2S (GU2G (MDI_Child.File_Name))));
+        if Window.File_Name /= "" then
+          GWin_Util.Start (Ada.Directories.Containing_Directory (G2S (GU2G (Window.File_Name))));
         end if;
       when IDM_Save_File =>
-        MDI_Child.On_Save;
+        Window.On_Save;
       when IDM_Save_As =>
-        MDI_Child.On_Save_As;
+        Window.On_Save_As;
       when IDM_Save_All =>
-        MDI_Child.On_Save_All;
+        Window.On_Save_All;
       when IDM_Close =>
-        MDI_Child.Close;
+        Window.Close;
       when IDM_Undo =>
-        MDI_Child.Editor.Undo;
-        MDI_Child.Update_Display (toolbar_and_menu);  --  Eventually disable Undo if no more available
+        Window.Editor.Undo;
+        Window.Update_Display (toolbar_and_menu);  --  Eventually disable Undo if no more available
       when IDM_Redo =>
-        MDI_Child.Editor.Redo;
-        MDI_Child.Update_Display (toolbar_and_menu);  --  Eventually disable Redo if no more available
-      when IDM_Cut =>           MDI_Child.Editor.Cut;
-      when IDM_Copy =>          MDI_Child.Editor.Copy;
-      when IDM_Paste =>         MDI_Child.Editor.Paste;
-      when IDM_Select_all =>    MDI_Child.Editor.Select_All;
+        Window.Editor.Redo;
+        Window.Update_Display (toolbar_and_menu);  --  Eventually disable Redo if no more available
+      when IDM_Cut =>           Window.Editor.Cut;
+      when IDM_Copy =>          Window.Editor.Copy;
+      when IDM_Paste =>         Window.Editor.Paste;
+      when IDM_Select_all =>    Window.Editor.Select_All;
       when IDM_Indent =>
-        MDI_Child.Editor.Set_Tab_Width (MDI_Child.MDI_Parent.opt.indentation);
-        MDI_Child.Editor.Tab;
-        MDI_Child.Editor.Set_Tab_Width (MDI_Child.MDI_Parent.opt.tab_width);
+        Window.Editor.Set_Tab_Width (Window.MDI_Parent.opt.indentation);
+        Window.Editor.Tab;
+        Window.Editor.Set_Tab_Width (Window.MDI_Parent.opt.tab_width);
       when IDM_Unindent =>
-        MDI_Child.Editor.Set_Tab_Width (MDI_Child.MDI_Parent.opt.indentation);
-        MDI_Child.Editor.Back_Tab;
-        MDI_Child.Editor.Set_Tab_Width (MDI_Child.MDI_Parent.opt.tab_width);
-      when IDM_Comment =>       MDI_Child.Editor.Selection_comment;
-      when IDM_Uncomment =>     MDI_Child.Editor.Selection_uncomment;
-      when IDM_Find =>          MDI_Child.Show_Search_Box;
+        Window.Editor.Set_Tab_Width (Window.MDI_Parent.opt.indentation);
+        Window.Editor.Back_Tab;
+        Window.Editor.Set_Tab_Width (Window.MDI_Parent.opt.tab_width);
+      when IDM_Comment =>       Window.Editor.Selection_comment;
+      when IDM_Uncomment =>     Window.Editor.Selection_uncomment;
+      when IDM_Find =>          Window.Show_Search_Box;
       when IDM_Find_Next =>
         --  If F3 is pressed or "Find next" menu entry is selected
         --  while search box is focused, we need to update the drop-down list(s).
-        Search_box.Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
-        MDI_Child.Editor.Search (find_next);
+        Search_box.Update_drop_downs (Window.MDI_Parent.Search_box);
+        Window.Editor.Search (find_next);
       when IDM_Find_Previous =>
-        Search_box.Update_drop_downs (MDI_Child.MDI_Parent.Search_box);
-        MDI_Child.Editor.Search (find_previous);
+        Search_box.Update_drop_downs (Window.MDI_Parent.Search_box);
+        Window.Editor.Search (find_previous);
       when IDM_Go_to_line =>
-        Modal_Dialogs.Do_Go_to_Line (MDI_Child);
+        Modal_Dialogs.Do_Go_to_Line (Window);
       when IDM_Toggle_bookmark =>
-        MDI_Child.Editor.Bookmark_toggle (MDI_Child.Editor.Get_current_line);
+        Window.Editor.Bookmark_toggle (Window.Editor.Get_current_line);
       when IDM_Next_bookmark =>
-        MDI_Child.Editor.Bookmark_next;
+        Window.Editor.Bookmark_next;
       when IDM_Previous_bookmark =>
-        MDI_Child.Editor.Bookmark_previous;
+        Window.Editor.Bookmark_previous;
       --  Compile / Build actions
-      when IDM_Compile_single =>  MDI_Child.Build_as_Main;
-      when IDM_Build          =>  MDI_Child.Build;
-      when IDM_Build_and_run  =>  MDI_Child.Build_and_run;
+      when IDM_Compile_single =>  Window.Build_as_Main;
+      when IDM_Build          =>  Window.Build;
+      when IDM_Build_and_run  =>  Window.Build_and_run;
       --
       when IDM_Show_special_symbols =>
-        LEA_Common.User_options.Toggle_show_special (MDI_Child.MDI_Parent.opt);
-        Options.Apply_Main_Options (MDI_Child.MDI_Parent.all);
+        LEA_Common.User_options.Toggle_show_special (Window.MDI_Parent.opt);
+        Options.Apply_Main_Options (Window.MDI_Parent.all);
       when IDM_Show_indentation_lines =>
-        MDI_Child.MDI_Parent.opt.show_indent :=
-          not MDI_Child.MDI_Parent.opt.show_indent;
-        Options.Apply_Main_Options (MDI_Child.MDI_Parent.all);
+        Window.MDI_Parent.opt.show_indent :=
+          not Window.MDI_Parent.opt.show_indent;
+        Options.Apply_Main_Options (Window.MDI_Parent.all);
       when IDM_Duplicate =>
-        MDI_Child.Editor.Duplicate;
+        Window.Editor.Duplicate;
       when others =>
         --  Call parent method
-        GWindows.Windows.Window_Type (MDI_Child).On_Menu_Select (Item);
+        GWindows.Windows.Window_Type (Window).On_Menu_Select (Item);
     end case;
   end On_Menu_Select;
 
-  overriding procedure On_Focus (MDI_Child : in out MDI_Child_Type) is
+  overriding procedure On_Focus (Window : in out MDI_Child_Type) is
   begin
-    Update_Display (MDI_Child, toolbar_and_menu);
-    MDI_Child.Editor.Focus;
+    Update_Display (Window, toolbar_and_menu);
+    Window.Editor.Focus;
   end On_Focus;
 
-  overriding procedure On_Close (MDI_Child    : in out MDI_Child_Type;
+  overriding procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean)
   is
     use LEA_Resource_GUI;
-    bar : MDI_Toolbar_Type renames MDI_Child.MDI_Parent.Tool_Bar;
+    bar : MDI_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
   begin
     Can_Close:= True;
-    if Is_file_saved(MDI_Child) then
-      MDI_Child.Update_Common_Menus(GU2G(MDI_Child.File_Name), MDI_Child.Editor.Get_current_line);
+    if Is_file_saved(Window) then
+      Window.Update_Common_Menus(GU2G(Window.File_Name), Window.Editor.Get_current_line);
     else -- This happens only for documents that may stay in an unsaved state.
       loop
         case Message_Box
-               (MDI_Child,
+               (Window,
                 "Close file", -- sheet, picture, ...
                 "Do you want to save the changes you made to """ &
-                GU2G(MDI_Child.Short_Name) & """ ?",
+                GU2G(Window.Short_Name) & """ ?",
                 Yes_No_Cancel_Box,
                 Question_Icon)
         is
-          when Yes    => On_Save(MDI_Child);
-                         exit when Is_file_saved(MDI_Child);
+          when Yes    => On_Save(Window);
+                         exit when Is_file_saved(Window);
           when No     => exit;
-          when Cancel => MDI_Child.MDI_Parent.Success_in_enumerated_close:= False;
+          when Cancel => Window.MDI_Parent.Success_in_enumerated_close:= False;
                          Can_Close:= False;
                          exit;
           when others => null;
@@ -775,10 +775,10 @@ package body LEA_GWin.MDI_Child is
       --  No per-child-window option in this app
       --  -- Pass view mode and the tree width portion to parent,
       --  -- this will memorize choice of last closed window.
-      --  MDI_Child.MDI_Parent.opt.view_mode:= MDI_Child.opt.view_mode;
+      --  Window.MDI_Parent.opt.view_mode:= Window.opt.view_mode;
       --
-      --  !!  Memorize_splitter(MDI_Child);
-      --  MDI_Child.MDI_Parent.opt.tree_portion:= MDI_Child.opt.tree_portion;
+      --  !!  Memorize_splitter(Window);
+      --  Window.MDI_Parent.opt.tree_portion:= Window.opt.tree_portion;
       --
       --  For the case there is no more child window, disable toolbar items.
       --  This action is reversed as soon as another child window is focused.
@@ -796,21 +796,21 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Find, False);
       bar.Enabled (IDM_Show_special_symbols, False);
       bar.Enabled (IDM_Show_indentation_lines, False);
-      MDI_Child.is_closing:= True;
+      Window.is_closing:= True;
     end if;
   end On_Close;
 
-  procedure Show_Search_Box (MDI_Child : in out MDI_Child_Type) is
+  procedure Show_Search_Box (Window : in out MDI_Child_Type) is
     sel_a, sel_z : Scintilla.Position;
   begin
-    sel_a := MDI_Child.Editor.Get_Selection_Start;
-    sel_z := MDI_Child.Editor.Get_Selection_End;
+    sel_a := Window.Editor.Get_Selection_Start;
+    sel_z := Window.Editor.Get_Selection_End;
     if sel_z > sel_a then
       --  Goodie: put the selected text into the "find" box.
-      MDI_Child.MDI_Parent.Search_box.Find_box.Text (MDI_Child.Editor.Get_Text_Range (sel_a, sel_z));
+      Window.MDI_Parent.Search_box.Find_box.Text (Window.Editor.Get_Text_Range (sel_a, sel_z));
     end if;
-    MDI_Child.MDI_Parent.Search_box.Show;
-    MDI_Child.MDI_Parent.Search_box.Find_box.Focus;
+    Window.MDI_Parent.Search_box.Show;
+    Window.MDI_Parent.Search_box.Find_box.Focus;
   end Show_Search_Box;
 
 end LEA_GWin.MDI_Child;

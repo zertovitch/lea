@@ -1,24 +1,24 @@
 with LEA_Common.Syntax;
 
-with LEA_GWin.Help;
-with LEA_GWin.MDI_Child;
-with LEA_GWin.Modal_Dialogs;
-with LEA_GWin.Options;
-with LEA_GWin.Toolbars;
+with LEA_GWin.Help,
+     LEA_GWin.MDI_Child,
+     LEA_GWin.Modal_Dialogs,
+     LEA_GWin.Options,
+     LEA_GWin.Toolbars;
 
-with GWindows.Application;
-with GWindows.Base;
-with GWindows.Common_Dialogs;
-with GWindows.Constants;
-with GWindows.Menus;
-with GWindows.Message_Boxes;
-with GWindows.Registry;
-with GWindows.Scintilla;
+with GWindows.Application,
+     GWindows.Base,
+     GWindows.Common_Dialogs,
+     GWindows.Constants,
+     GWindows.Menus,
+     GWindows.Message_Boxes,
+     GWindows.Registry,
+     GWindows.Scintilla;
 
-with Ada.Command_Line;
-with Ada.Strings.Fixed;
-with Ada.Text_IO;
-with Ada.Unchecked_Deallocation;
+with Ada.Command_Line,
+     Ada.Strings.Fixed,
+     Ada.Text_IO,
+     Ada.Unchecked_Deallocation;
 
 with Windows_Timers;
 
@@ -81,11 +81,11 @@ package body LEA_GWin.MDI_Main is
     end if;
   end Redraw_Child;
 
-  procedure Redraw_all (MDI_Main: in out MDI_Main_Type) is
+  procedure Redraw_all (Window: in out MDI_Main_Type) is
   begin
-    MDI_Main.Redraw;
-    --  Redraw(MDI_Main.Tool_bar);
-    Enumerate_Children(MDI_Client_Window (MDI_Main).all, Redraw_Child'Access);
+    Window.Redraw;
+    --  Redraw(Window.Tool_bar);
+    Enumerate_Children(MDI_Client_Window (Window).all, Redraw_Child'Access);
   end Redraw_all;
 
   procedure Close_extra_first_child (MDI_Main: in out MDI_Main_Type) is
@@ -216,7 +216,7 @@ package body LEA_GWin.MDI_Main is
   end Shorten_file_name;
 
   procedure Open_Child_Window_And_Load (
-    MDI_Main     : in out MDI_Main_Type;
+    Window       : in out MDI_Main_Type;
     File_Name    :        GWindows.GString_Unbounded;
     Line         :        Integer := -1;
     Col_a, Col_z :        Integer := -1
@@ -224,7 +224,7 @@ package body LEA_GWin.MDI_Main is
   is
   begin
     Open_Child_Window_And_Load(
-      MDI_Main,
+      Window,
       File_Name,
       G2GU(Shorten_file_name(GU2G(File_Name))),
       Line,
@@ -315,7 +315,7 @@ package body LEA_GWin.MDI_Main is
   -- On_Create --
   ---------------
 
-  procedure On_Create ( MDI_Main : in out MDI_Main_Type ) is
+  procedure On_Create ( Window : in out MDI_Main_Type ) is
     use GWindows.Common_Controls, Ada.Command_Line;
     --
     --  Replace LEA default values by system-dependent ones (here those of GWindows)
@@ -330,67 +330,67 @@ package body LEA_GWin.MDI_Main is
     start_line : Integer := -1;
     use GWindows.Application, GWindows.Taskbar, GWindows.Image_Lists, LEA_Resource_GUI;
   begin
-    Windows_persistence.Load (MDI_Main.opt);  --  Load options from the registry
+    Windows_persistence.Load (Window.opt);  --  Load options from the registry
     --
-    Replace_default(MDI_Main.opt.win_left);
-    Replace_default(MDI_Main.opt.win_width);
-    Replace_default(MDI_Main.opt.win_top);
-    Replace_default(MDI_Main.opt.win_height);
+    Replace_default(Window.opt.win_left);
+    Replace_default(Window.opt.win_width);
+    Replace_default(Window.opt.win_top);
+    Replace_default(Window.opt.win_height);
 
-    Small_Icon (MDI_Main, "LEA_Icon_Small");
-    Large_Icon (MDI_Main, "AAA_Main_Icon");
+    Small_Icon (Window, "LEA_Icon_Small");
+    Large_Icon (Window, "AAA_Main_Icon");
 
     --  ** Menus and accelerators:
     --
-    LEA_Resource_GUI.Create_Full_Menu(MDI_Main.Menu);
-    MDI_Menu (MDI_Main, MDI_Main.Menu.Main, Window_Menu => 5);
-    Accelerator_Table (MDI_Main, "Main_Menu");
-    MDI_Main.IDM_MRU:=
+    LEA_Resource_GUI.Create_Full_Menu(Window.Menu);
+    MDI_Menu (Window, Window.Menu.Main, Window_Menu => 5);
+    Accelerator_Table (Window, "Main_Menu");
+    Window.IDM_MRU:=
       (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
        IDM_MRU_5,       IDM_MRU_6,       IDM_MRU_7,       IDM_MRU_8,
        IDM_MRU_9
       );
 
     --  ** Other resources
-    MDI_Main.Folders_Images.Create (Num_resource(Folders_BMP), 16, Color_Option => Copy_From_Resource);
+    Window.Folders_Images.Create (Num_resource(Folders_BMP), 16, Color_Option => Copy_From_Resource);
 
     --  ** Main tool bar (New / Open / Save / ...) at top left of the main window:
-    LEA_GWin.Toolbars.Init_Main_toolbar(MDI_Main.Tool_Bar, MDI_Main.Toolbar_Images, MDI_Main);
+    LEA_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Toolbar_Images, Window);
 
     --  ** Sizeable panels. For a sketch, see the "Layout" sheet in lea_work.xls.
     --
     --    1) Left panel, with project or file tree:
     --
-    MDI_Main.Project_Panel.Splitter.MDI_Main := MDI_Main'Unrestricted_Access;
-    MDI_Main.Project_Panel.Create (MDI_Main, 1,1,20,20);
+    Window.Project_Panel.Splitter.MDI_Main := Window'Unrestricted_Access;
+    Window.Project_Panel.Create (Window, 1,1,20,20);
     --
     --    2) Bottom panel, with messages:
     --
-    MDI_Main.Message_Panel.Splitter.MDI_Main := MDI_Main'Unrestricted_Access;
-    MDI_Main.Message_Panel.Message_List.mdi_main_parent := MDI_Main'Unrestricted_Access;
-    MDI_Main.Message_Panel.Create (MDI_Main, 1,1,20,80);
-    MDI_Main.Message_Panel.Message_List.Set_Image_List (Small, MDI_Main.Folders_Images);
+    Window.Message_Panel.Splitter.MDI_Main := Window'Unrestricted_Access;
+    Window.Message_Panel.Message_List.mdi_main_parent := Window'Unrestricted_Access;
+    Window.Message_Panel.Create (Window, 1,1,20,80);
+    Window.Message_Panel.Message_List.Set_Image_List (Small, Window.Folders_Images);
 
     --  ** Resize according to options:
 
-    if Screen_Visibility ((MDI_Main.opt.win_left, MDI_Main.opt.win_top)) = Good then
-      MDI_Main.Left (MDI_Main.opt.win_left);
-      MDI_Main.Top  (MDI_Main.opt.win_top);
+    if Screen_Visibility ((Window.opt.win_left, Window.opt.win_top)) = Good then
+      Window.Left (Window.opt.win_left);
+      Window.Top  (Window.opt.win_top);
     end if;
-    MDI_Main.Size (
-      Integer'Max (640, MDI_Main.opt.win_width),
-      Integer'Max (400, MDI_Main.opt.win_height)
+    Window.Size (
+      Integer'Max (640, Window.opt.win_width),
+      Integer'Max (400, Window.opt.win_height)
     );
-    MDI_Main.Zoom (MDI_Main.opt.MDI_main_maximized);
+    Window.Zoom (Window.opt.MDI_main_maximized);
 
-    Change_View (MDI_Main, MDI_Main.opt.view_mode, force => True);
+    Change_View (Window, Window.opt.view_mode, force => True);
 
-    MDI_Main.Dock_Children;
-    LEA_GWin.Options.Apply_Main_Options (MDI_Main);
-    MDI_Main.Show;
+    Window.Dock_Children;
+    LEA_GWin.Options.Apply_Main_Options (Window);
+    Window.Show;
 
     if Argument_Count=0 then
-      On_File_New (MDI_Main, extra_first_doc => True);
+      On_File_New (Window, extra_first_doc => True);
       --  ^ The MS Office-like first, empty document
     end if;
     --  !! This works on 1st instance only:
@@ -410,7 +410,7 @@ package body LEA_GWin.MDI_Main is
           end loop;
         else
           Open_Child_Window_And_Load(
-            MDI_Main,
+            Window,
             G2GU(To_UTF_16(a)),
             start_line - 1  --  NB: Scintilla lines are 0-based
           );
@@ -419,18 +419,18 @@ package body LEA_GWin.MDI_Main is
       end;
     end loop;
     --  Dropping files on the MDI background will trigger opening a document:
-    MDI_Main.Accept_File_Drag_And_Drop;
-    MDI_Main.record_dimensions:= True;
+    Window.Accept_File_Drag_And_Drop;
+    Window.record_dimensions:= True;
     --
     begin
-      MDI_Main.Task_bar_gadget.Set_Progress_State (MDI_Main, No_Progress);
-      MDI_Main.Task_bar_gadget_ok := True;
+      Window.Task_bar_gadget.Set_Progress_State (Window, No_Progress);
+      Window.Task_bar_gadget_ok := True;
     exception
       when Taskbar_Interface_Not_Supported =>
-        MDI_Main.Task_bar_gadget_ok := False;
+        Window.Task_bar_gadget_ok := False;
     end;
-    MDI_Main.Search_box.Create_as_search_box(MDI_Main);
-    Windows_Timers.Set_Timer(MDI_Main, timer_id, 100);
+    Window.Search_box.Create_as_search_box(Window);
+    Windows_Timers.Set_Timer(Window, timer_id, 100);
   end On_Create;
 
   function Minimized(MDI_Main: GWindows.Base.Base_Window_Type'Class)
@@ -440,51 +440,51 @@ package body LEA_GWin.MDI_Main is
     return GWindows.Base.Left(MDI_Main) <= -32000;
   end Minimized;
 
-  procedure On_Move (MDI_Main : in out MDI_Main_Type;
-                     Left     : in     Integer;
-                     Top      : in     Integer) is
+  procedure On_Move (Window : in out MDI_Main_Type;
+                     Left   : in     Integer;
+                     Top    : in     Integer) is
   begin
-    if MDI_Main.record_dimensions and
-       not (Zoom(MDI_Main) or Minimized(MDI_Main))
+    if Window.record_dimensions and
+       not (Zoom(Window) or Minimized(Window))
     then
       --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
-      MDI_Main.opt.win_left  := Left;
-      MDI_Main.opt.win_top   := Top;
+      Window.opt.win_left  := Left;
+      Window.opt.win_top   := Top;
       --  Will remember position if moved, maximized and closed
     end if;
   end On_Move;
 
-  procedure On_Size (MDI_Main : in out MDI_Main_Type;
-                     Width    : in     Integer;
-                     Height   : in     Integer)
+  procedure On_Size (Window : in out MDI_Main_Type;
+                     Width  : in     Integer;
+                     Height : in     Integer)
   is
-    w   : constant Natural := MDI_Main.Client_Area_Width;
-    tbh : constant Natural := MDI_Main.Tool_Bar.Height;
-    h   : constant Natural := Integer'Max(2, MDI_Main.Client_Area_Height - tbh);
-    tree_w : constant Integer := Integer (MDI_Main.opt.project_tree_portion * Float(w));
-    list_h : constant Integer := Integer (MDI_Main.opt.message_list_portion * Float(h));
+    w   : constant Natural := Window.Client_Area_Width;
+    tbh : constant Natural := Window.Tool_Bar.Height;
+    h   : constant Natural := Integer'Max(2, Window.Client_Area_Height - tbh);
+    tree_w : constant Integer := Integer (Window.opt.project_tree_portion * Float(w));
+    list_h : constant Integer := Integer (Window.opt.message_list_portion * Float(h));
     use GWindows.Types;
   begin
     --  Resize project tree and message list panels using the recorded proportions
     --  This operation is reciprocal to Memorize_Splitters.
     --
     --  Adapt project tree size:
-    case MDI_Main.opt.view_mode is
+    case Window.opt.view_mode is
       when Notepad =>
         --  Do nothing about project tree splitter: the panel is invisible and not used
         null;
       when Studio =>
-        MDI_Main.Project_Panel.Location (Rectangle_Type'(0, 0, tree_w, h));
+        Window.Project_Panel.Location (Rectangle_Type'(0, 0, tree_w, h));
     end case;
-    MDI_Main.Message_Panel.Location (Rectangle_Type'(0, h + tbh - list_h, w, h + tbh));
+    Window.Message_Panel.Location (Rectangle_Type'(0, h + tbh - list_h, w, h + tbh));
     --  Call Dock_Children for the finishing touch...
-    MDI_Main.Dock_Children;
-    if MDI_Main.record_dimensions and not (MDI_Main.Zoom or Minimized (MDI_Main)) then
+    Window.Dock_Children;
+    if Window.record_dimensions and not (Window.Zoom or Minimized (Window)) then
       --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
-      MDI_Main.opt.win_width := Width;
-      MDI_Main.opt.win_height:= Height;
+      Window.opt.win_width := Width;
+      Window.opt.win_height:= Height;
       --  Will remember position if sized, maximized and closed
     end if;
   end On_Size;
@@ -536,10 +536,10 @@ package body LEA_GWin.MDI_Main is
     New_Window.Editor.Focus;
   end On_File_New;
 
-  procedure On_File_New (MDI_Main : in out MDI_Main_Type; extra_first_doc: Boolean) is
+  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean) is
     New_Window : constant MDI_Child_Access := new MDI_Child_Type;
   begin
-    On_File_New(MDI_Main, extra_first_doc, New_Window);
+    On_File_New(Window, extra_first_doc, New_Window);
   end On_File_New;
 
   ------------------
@@ -573,12 +573,12 @@ package body LEA_GWin.MDI_Main is
     end if;
   end On_File_Open;
 
-  procedure On_File_Drop (MDI_Main   : in out MDI_Main_Type;
+  procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     GWindows.Windows.Array_Of_File_Names) is
   begin
-    MDI_Main.Focus;
+    Window.Focus;
     for File_Name of File_Names loop
-      Open_Child_Window_And_Load ( MDI_Main, File_Name );
+      Open_Child_Window_And_Load ( Window, File_Name );
     end loop;
   end On_File_Drop;
 
@@ -609,63 +609,63 @@ package body LEA_GWin.MDI_Main is
   --------------------
 
   procedure On_Menu_Select (
-        MDI_Main : in out MDI_Main_Type;
-        Item     : in     Integer        )
+        Window : in out MDI_Main_Type;
+        Item   : in     Integer        )
   is
     procedure Call_Parent_Method is
     begin
-      GWindows.Windows.Window_Type (MDI_Main).On_Menu_Select (Item);
+      GWindows.Windows.Window_Type (Window).On_Menu_Select (Item);
     end Call_Parent_Method;
     use LEA_Resource_GUI;
   begin
     case Item is
       when IDM_New_File=>
-        On_File_New (MDI_Main, extra_first_doc => False);
+        On_File_New (Window, extra_first_doc => False);
       when IDM_Open_File =>
-        On_File_Open (MDI_Main);
+        On_File_Open (Window);
       when IDM_Web =>
         GWin_Util.Start(LEA_web_page);
       when IDM_QUIT  =>
-        Close (MDI_Main);
+        Close (Window);
       when IDM_Close =>
-        if MDI_Main.Count_MDI_Children = 0 then
-          Close (MDI_Main);  --  Ctrl-W when no subwindow is open.
+        if Window.Count_MDI_Children = 0 then
+          Close (Window);  --  Ctrl-W when no subwindow is open.
         else
           Call_Parent_Method;
         end if;
       when IDM_Copy_Messages =>
-        MDI_Main.Message_Panel.Message_List.Copy_Messages;
+        Window.Message_Panel.Message_List.Copy_Messages;
       when IDM_WINDOW_CASCADE   =>
-        MDI_Cascade (MDI_Main);
+        MDI_Cascade (Window);
       when IDM_WINDOW_TILE_HORIZONTAL =>
-        MDI_Tile_Horizontal (MDI_Main);
+        MDI_Tile_Horizontal (Window);
       when IDM_WINDOW_TILE_VERTICAL =>
-        MDI_Tile_Vertical (MDI_Main);
+        MDI_Tile_Vertical (Window);
       when IDM_WINDOW_CLOSE_ALL =>
-        My_MDI_Close_All(MDI_Main);
+        My_MDI_Close_All(Window);
       when IDM_General_options =>
-        Options.On_General_Options(MDI_Main);
+        Options.On_General_Options(Window);
       when IDM_ABOUT =>
-        Modal_Dialogs.Show_About_Box (MDI_Main);
+        Modal_Dialogs.Show_About_Box (Window);
       when IDM_Quick_Help =>
-        Help.Show_help (MDI_Main);
+        Help.Show_help (Window);
       when IDM_Ada_Sample =>
-        Modal_Dialogs.Browse_and_Get_Code_Sample (MDI_Main);
+        Modal_Dialogs.Browse_and_Get_Code_Sample (Window);
       when IDM_Notepad_view =>
-        Change_View (MDI_Main, Notepad, force => False);
+        Change_View (Window, Notepad, force => False);
       when IDM_Studio_view =>
-        Change_View (MDI_Main, Studio, force => False);
+        Change_View (Window, Studio, force => False);
       when IDM_HAC_Mode =>
-        Change_Mode (MDI_Main, HAC_mode);
+        Change_Mode (Window, HAC_mode);
       when IDM_GNAT_Mode =>
-        Change_Mode (MDI_Main, GNAT_mode);
+        Change_Mode (Window, GNAT_mode);
       when others =>
         --  We have perhaps a MRU (most rectly used) file entry.
-        for i_mru in MDI_Main.IDM_MRU'Range loop
-          if Item = MDI_Main.IDM_MRU (i_mru) then
+        for i_mru in Window.IDM_MRU'Range loop
+          if Item = Window.IDM_MRU (i_mru) then
             Open_Child_Window_And_Load(
-              MDI_Main,
-              MDI_Main.opt.mru ( i_mru ).name
+              Window,
+              Window.opt.mru ( i_mru ).name
             );
             exit;
           end if;
@@ -674,7 +674,7 @@ package body LEA_GWin.MDI_Main is
     end case;
   end On_Menu_Select;
 
-  procedure On_Message (MDI_Main : in out MDI_Main_Type;
+  procedure On_Message (Window       : in out MDI_Main_Type;
                         message      : in     Interfaces.C.unsigned;
                         wParam       : in     GWindows.Types.Wparam;
                         lParam       : in     GWindows.Types.Lparam;
@@ -684,17 +684,17 @@ package body LEA_GWin.MDI_Main is
 
   begin
     if message = Windows_Timers.WM_TIMER then
-      if MDI_Main.close_this_search_box then
-        MDI_Main.close_this_search_box := False;
-        if MDI_Main.Search_box.Visible then
-          MDI_Main.Set_Foreground_Window;
-          MDI_Main.Focus;
-          MDI_Main.Search_box.Hide;
+      if Window.close_this_search_box then
+        Window.close_this_search_box := False;
+        if Window.Search_box.Visible then
+          Window.Set_Foreground_Window;
+          Window.Focus;
+          Window.Search_box.Hide;
         end if;
       end if;
     end if;
     --  Call parent method
-    GWindows.Windows.MDI.MDI_Main_Window_Type (MDI_Main).On_Message (
+    GWindows.Windows.MDI.MDI_Main_Window_Type (Window).On_Message (
       message,
       wParam,
       lParam,
@@ -705,32 +705,32 @@ package body LEA_GWin.MDI_Main is
   -------------
 
   procedure On_Close (
-        MDI_Main  : in out MDI_Main_Type;
+        Window    : in out MDI_Main_Type;
         Can_Close :    out Boolean        ) is
   begin
-    MDI_Main.opt.MDI_main_maximized:= Zoom(MDI_Main);
-    if not (MDI_Main.opt.MDI_main_maximized or Minimized(MDI_Main)) then
-      MDI_Main.opt.win_left  := Left(MDI_Main);
-      MDI_Main.opt.win_top   := Top(MDI_Main);
-      MDI_Main.opt.win_width := Width(MDI_Main);
-      MDI_Main.opt.win_height:= Height(MDI_Main);
+    Window.opt.MDI_main_maximized:= Zoom(Window);
+    if not (Window.opt.MDI_main_maximized or Minimized(Window)) then
+      Window.opt.win_left  := Left(Window);
+      Window.opt.win_top   := Top(Window);
+      Window.opt.win_width := Width(Window);
+      Window.opt.win_height:= Height(Window);
     end if;
 
     --  TC.GWin.Options.Save;
 
-    My_MDI_Close_All(MDI_Main);
+    My_MDI_Close_All(Window);
     --  ^ Don't forget to save unsaved files !
     --  Operation can be cancelled by user for one unsaved picture.
-    Can_Close:= MDI_Main.Success_in_enumerated_close;
+    Can_Close:= Window.Success_in_enumerated_close;
     --
     if Can_Close then
-      Windows_persistence.Save(MDI_Main.opt);
+      Windows_persistence.Save(Window.opt);
       --  !! Trick to remove a strange crash on Destroy_Children
       --  !! on certain Windows platforms - 29-Jun-2012
       GWindows.Base.On_Exception_Handler (Handler => null);
       --
-      Windows_Timers.Kill_Timer(MDI_Main, timer_id);
-      MDI_Main.is_closing := True;
+      Windows_Timers.Kill_Timer(Window, timer_id);
+      Window.is_closing := True;
     end if;
   end On_Close;
 
@@ -836,70 +836,70 @@ package body LEA_GWin.MDI_Main is
   end Update_Common_Menus_Child;
 
   procedure Update_Common_Menus(
-    MDI_Main       : in out MDI_Main_Type;
-    top_entry_name : GString := "";
-    top_entry_line : Integer := -1    --  When unknown, -1; otherwise: last visited line
+    Window         : in out MDI_Main_Type;
+    top_entry_name :        GString := "";
+    top_entry_line :        Integer := -1    --  When unknown, -1; otherwise: last visited line
   )
   is
   begin
     if top_entry_name /= "" then
-      Add_MRU (MDI_Main, top_entry_name, top_entry_line);
+      Add_MRU (Window, top_entry_name, top_entry_line);
     end if;
-    Update_MRU_Menu(MDI_Main, MDI_Main.Menu.Popup_0001);
-    Update_View_Menu(MDI_Main.Menu.Main, MDI_Main.opt);
-    --  Update_Toolbar_Menu(MDI_Main.View_menu, MDI_Main.Floating_toolbars);
+    Update_MRU_Menu(Window, Window.Menu.Popup_0001);
+    Update_View_Menu(Window.Menu.Main, Window.opt);
+    --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
     GWindows.Base.Enumerate_Children(
-      MDI_Client_Window (MDI_Main).all,
+      MDI_Client_Window (Window).all,
       Update_Common_Menus_Child'Access
     );
   end Update_Common_Menus;
 
-  procedure Update_Title (MDI_Main : in out MDI_Main_Type) is
+  procedure Update_Title (Window : in out MDI_Main_Type) is
   begin
-    if MDI_Main.Project_File_Name = "" then
-      MDI_Main.Text("LEA - [Projectless]");
+    if Window.Project_File_Name = "" then
+      Window.Text("LEA - [Projectless]");
     else
-      MDI_Main.Text("LEA - [" & GU2G(MDI_Main.Project_Short_Name) & ']');
+      Window.Text("LEA - [" & GU2G(Window.Project_Short_Name) & ']');
     end if;
   end Update_Title;
 
-  procedure Perform_Search (MDI_Main : MDI_Main_Type; action : LEA_Common.Search_action) is
+  procedure Perform_Search (Window : MDI_Main_Type; action : LEA_Common.Search_action) is
     procedure Search_on_focused_editor (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class) is
     begin
       if Any_Window /= null
         and then Any_Window.all in MDI_Child_Type'Class
-        and then MDI_Main.Focus = Any_Window
+        and then Window.Focus = Any_Window
       then
         MDI_Child_Type(Any_Window.all).Editor.Search(action);
       end if;
     end Search_on_focused_editor;
   begin
     Enumerate_Children(
-      MDI_Client_Window (MDI_Main).all,
+      MDI_Client_Window (Window).all,
       Search_on_focused_editor'Unrestricted_Access
     );
   end Perform_Search;
 
   --  The operation reciprocal to Memorize_Splitters is done in On_Size.
   --
-  procedure Memorize_Splitters (MDI_Main : in out MDI_Main_Type) is
+  procedure Memorize_Splitters (Window : in out MDI_Main_Type) is
     p : Float;
   begin
-    case MDI_Main.opt.view_mode is
+    case Window.opt.view_mode is
       when Notepad =>
         --  Do nothing about project tree splitter: the panel is invisible and not used
         null;
       when Studio =>
-        MDI_Main.opt.project_tree_portion :=
-          Float (MDI_Main.Project_Panel.Width) /
-          Float (MDI_Main.Client_Area_Width);
+        Window.opt.project_tree_portion :=
+          Float (Window.Project_Panel.Width) /
+          Float (Window.Client_Area_Width);
     end case;
     p :=
-      Float (MDI_Main.Message_Panel.Height) /
-      Float (MDI_Main.Client_Area_Height - MDI_Main.Tool_Bar.Height);
+      Float (Window.Message_Panel.Height) /
+      Float (Window.Client_Area_Height - Window.Tool_Bar.Height);
     p := Float'Max (0.1, p);  --  Avoid complete disappearance
     p := Float'Min (0.9, p);  --  Avoid eating up whole window
-    MDI_Main.opt.message_list_portion := p;
+    Window.opt.message_list_portion := p;
     --
     --  NB: the splitter for subprogram tree is part of child window and
     --  memorized at child level.

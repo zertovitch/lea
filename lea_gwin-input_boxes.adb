@@ -1,7 +1,7 @@
 with LEA_Resource_GUI;
 
-with GWindows.Application;
-with GWindows.Constants;
+with GWindows.Application,
+     GWindows.Constants;
 
 package body LEA_GWin.Input_Boxes is
 

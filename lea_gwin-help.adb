@@ -1,12 +1,13 @@
 with LEA_Common.Syntax;
+
 with LEA_GWin.MDI_Child;
 
 with HAT;
 
 with Zip, UnZip.Streams, Zip_Streams;
 
-with GWindows.Base;
-with GWindows.Message_Boxes;
+with GWindows.Base,
+     GWindows.Message_Boxes;
 
 with Ada.Command_Line;
 
