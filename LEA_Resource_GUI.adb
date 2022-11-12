@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2022/10/29  12:08:02
+--  Transcription time: 2022/11/12  11:19:49
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
