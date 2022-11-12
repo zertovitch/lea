@@ -16,11 +16,14 @@ begin
   end loop;
   --
   for i in standard_sample'Range loop
-    if standard_sample (i).topic = Compatibility then
-      from_subdir := +"src";
-    else
-      from_subdir := +"exm";
-    end if;
+    case standard_sample (i).topic is
+      when Compatibility =>
+        from_subdir := +"src";
+      when Tasking =>
+        from_subdir := +"exm/tasking";
+      when others =>
+        from_subdir := +"exm";
+    end case;
     from := hac_project_dir & sep & from_subdir & sep & standard_sample (i).name;
     to   := hac_samples_dir & sep &
               directory (standard_sample (i).topic) & sep & standard_sample (i).name;

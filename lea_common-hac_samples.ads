@@ -8,6 +8,7 @@ package LEA_Common.HAC_Samples is
    (Algorithm,
     Mathematics,
     Script,
+    Tasking,
     Template,
     --
     Compatibility);
@@ -44,6 +45,9 @@ package LEA_Common.HAC_Samples is
       (Script,    +"file_read.adb",   +"Reads a text file (itself) and displays it on the console"),
       (Script,    +"timing.adb",      +"Demo for types Time & Duration"),
       --
+      (Tasking, +"tasks_01.adb", +"Simplest example of tasking"),
+      (Tasking, +"tasks_02.adb", +"Example with passing of data between tasks"),
+      --
       (Template,  +"hello.adb",      +"Tiny program (Hello World)"),
       (Template,  +"hello_big.adb",  +"Larger ""Hello World"""),
       --
@@ -56,6 +60,7 @@ package LEA_Common.HAC_Samples is
      (Algorithm     => +"algorithms",
       Mathematics   => +"mathematics",
       Script        => +"scripts",
+      Tasking       => +"tasking",
       Template      => +"templates",
       Compatibility => +"compatibility"
     );
