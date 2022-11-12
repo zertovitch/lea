@@ -53,9 +53,25 @@ package body LEA_GWin.Messages is
     Control.Set_Extended_Style (GWindows.Common_Controls.Full_Row_Select);
     Control.Insert_Column ("", 0, 40);
     Control.Insert_Column ("", 1, 35);
-    Control.Insert_Column ("", 2, 1000);
+    Control.Insert_Column ("", 2, 10);
     Control.Dock (GWindows.Base.Fill);
   end On_Create;
+
+  overriding procedure Clear (Control : in out Message_List_Type) is
+  begin
+    --
+    --  Before clearing, we set the columns' widths to a minimal
+    --  value, in order to force a horizontal scrolling to the leftmost
+    --  position. Otherwise the next messages (build, run, find all, ...)
+    --  won't be visible until the user shifts the scroll bar to the left.
+    --
+    for c in 0 .. Control.Column_Count - 1 loop
+      --  GWindows.Message_Boxes.Message_Box
+      --    (Control, "Clear", Control.Column_Width (c)'Wide_Image);
+      Control.Set_Column_Width (c, 1);
+    end loop;
+    LEA_LV_Ex.Ex_List_View_Control_Type (Control).Clear;  --  Call parent method
+  end Clear;
 
   overriding procedure On_Click (Control : in out Message_List_Type) is
   begin

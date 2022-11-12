@@ -14,6 +14,8 @@ package LEA_GWin.Messages is
   end record;
 
   overriding procedure On_Create (Control : in out Message_List_Type);
+  --
+  overriding procedure Clear (Control : in out Message_List_Type);
   overriding procedure On_Click (Control : in out Message_List_Type);
   overriding procedure On_Double_Click (Control : in out Message_List_Type);
 
