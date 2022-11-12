@@ -144,6 +144,7 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Comment, True);
       bar.Enabled (IDM_Uncomment, True);
       bar.Enabled (IDM_Find, True);
+      bar.Enabled (IDM_Build_and_run, True);
       bar.Enabled (IDM_Show_special_symbols, True);
       bar.Enabled (IDM_Show_indentation_lines, True);
       --  if not Window.is_closing then
@@ -390,20 +391,18 @@ package body LEA_GWin.MDI_Child is
     use HAC_Sys.Defs;
     use type Alfa;
   begin
-    if Window.File_Name = "" then
-      --  No file yet for this window.
-      if Window.BD.CD.Main_Program_ID_with_case /= Empty_Alfa then
-        --  Suggest the Ada main's name of last tentative build.
-        New_File_Name :=
-          G2GU
-            (S2G
-              (HAC_Sys.Librarian.GNAT_Naming
+    if Window.BD.CD.Main_Program_ID_with_case /= Empty_Alfa then
+      --  Suggest the Ada main's name of last tentative build.
+      New_File_Name :=
+        G2GU
+          (S2G
+             (HAC_Sys.Librarian.GNAT_Naming
                 (A2S (Window.BD.CD.Main_Program_ID_with_case)))) &
-          ".adb";
-      else
-        --  Suggest the short window name (window title).
-        New_File_Name := Window.Short_Name;
-      end if;
+        ".adb";
+    elsif Window.File_Name = "" then
+      --  No file yet for this window.
+      --  Suggest the short window name (window title).
+      New_File_Name := Window.Short_Name;
     else
       --  Tentative name is current file name.
       New_File_Name := Window.File_Name;
@@ -794,6 +793,7 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Indent, False);
       bar.Enabled (IDM_Unindent, False);
       bar.Enabled (IDM_Find, False);
+      bar.Enabled (IDM_Build_and_run, False);
       bar.Enabled (IDM_Show_special_symbols, False);
       bar.Enabled (IDM_Show_indentation_lines, False);
       Window.is_closing:= True;
