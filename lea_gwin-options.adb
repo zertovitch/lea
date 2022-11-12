@@ -94,6 +94,7 @@ package body LEA_GWin.Options is
     main.text_files_filters (main.text_files_filters'First).Filter := main.opt.ada_files_filter;
     main.Message_Panel.Message_List.Apply_Options;
     main.Message_Panel.Redraw;
+    main.Update_Common_Menus;
     MDI_Client_Window (main).Enumerate_Children (Apply_changes_to_child'Unrestricted_Access);
   end Apply_Main_Options;
 

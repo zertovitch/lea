@@ -819,6 +819,8 @@ package body LEA_GWin.MDI_Main is
         Check (m, Command, IDM_HAC_Mode, False);
         Check (m, Command, IDM_GNAT_Mode, True);
     end case;
+    Check (m, Command, IDM_Show_special_symbols, not (o.show_special = none));
+    Check (m, Command, IDM_Show_indentation_lines, o.show_indent);
   end Update_View_Menu;
 
   procedure Update_Common_Menus_Child (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
