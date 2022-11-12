@@ -88,12 +88,20 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     use GWindows.Message_Boxes;
 
   begin
-    Message_Box (MDI_Main,
-      "Unhandled exception - run-time error",
-      S2G ("HAC Virtual Machine: raised " & Image (post_mortem.Unhandled)) & NL & NL &
-      S2G (Message (post_mortem.Unhandled)),
-      Icon => Exclamation_Icon
-    );
+    if Is_User_Abort (post_mortem.Unhandled) then
+      Message_Box
+        (MDI_Main,
+         "User abort",
+         S2G ("HAC Virtual Machine stopped by user"),
+         Icon => Information_Icon);
+    else
+      Message_Box
+        (MDI_Main,
+         "Unhandled exception - run-time error",
+         S2G ("HAC Virtual Machine: raised " & Image (post_mortem.Unhandled)) & NL & NL &
+         S2G (Message (post_mortem.Unhandled)),
+         Icon => Exclamation_Icon);
+    end if;
     ml.Clear;
     ml.Set_Column ("Line", 0, 60);
     ml.Set_Column ("Trace-back: approximate location", 1, 800);
