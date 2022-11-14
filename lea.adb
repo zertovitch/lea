@@ -57,29 +57,12 @@ begin
   --    GWindows.Scintilla.Int'Size'Wide_Image & " bits");
 
   if GWindows.Scintilla.SCI_Lexer_DLL_Successfully_Loaded then
-    LEA_start;
+    --  The file scilexer.dll was found and has been loaded.
+    null;
   else
-    begin
-      LEA_GWin.Installer.Unpack_DLL;
-      GWindows.Scintilla.Try_Loading_Lexer_DLL;
-      if GWindows.Scintilla.SCI_Lexer_DLL_Successfully_Loaded then
-        LEA_start;
-      else
-        Message_Box
-          ("LEA startup",
-           "Installation error: file ""scilexer.dll"" is needed beside ""lea.exe""." & NL &
-           "Either the file ""scilexer.dll"" doesn't exist, or there is a 32 vs. 64 bit mismatch." & NL &
-           "This program is a" &
-           GWindows.GStrings.To_GString_From_String (Integer'Image (GWindows.Types.Wparam'Size)) &
-           " bit application." & NL &
-           "Path = " & S2G (Ada.Command_Line.Command_Name),
-           OK_Box,
-           Error_Icon
-          );
-      end if;
-    exception
-      when others =>
-        null;
-    end;
+    --  Unpack scilexer.dll as memory stream and into
+    --  a string. Load it to the Windows system from there.
+    LEA_GWin.Installer.Load_Scintilla_DLL_from_Memory;
   end if;
+  LEA_start;
 end LEA;

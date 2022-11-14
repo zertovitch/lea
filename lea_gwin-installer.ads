@@ -1,13 +1,15 @@
 --  This package deals with:
 --
---    - Unpacking missing SciLexer.dll for current session
---    - Unpacking SciLexer.dll and spawn lea.exe into a target directory (either
+--    - Loading SciLexer.dll from Zip file attached to lea.exe, for current session.
+--
+--    - Spawning lea.exe into a target directory (either all-user program
 --      all-user program directory, or current user's program directory).
+--      See AZip http://azip.sf.net for an example.
 
 package LEA_GWin.Installer is
 
-  procedure Unpack_DLL (target : String := "");
+  procedure Load_Scintilla_DLL_from_Memory;
 
-  --  TBD: Unpacking SciLexer.dll and spawn lea.exe into a target directory
+  --  TBD: Spawn lea.exe into a target directory.
 
 end LEA_GWin.Installer;

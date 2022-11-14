@@ -1,34 +1,39 @@
 with GWindows.Message_Boxes;
-with UnZip;
-with Ada.Command_Line;
+
+with UnZip.Streams;
+with Zip;
+with Zip_Streams;
+
+with Ada.Command_Line,
+     Ada.Strings.Unbounded;
+with Interfaces.C;
+with System;
 
 package body LEA_GWin.Installer is
+  pragma Linker_Options ("..\..\MemoryModule.o");
 
-  procedure Unpack_DLL (target : String := "") is
-    use Ada.Command_Line, GWindows.Message_Boxes, UnZip;
+  use Ada.Strings.Unbounded;
+
+  procedure Memory_Load_Library (pointer : System.Address; size : Interfaces.C.size_t);
+  pragma Import (C, Memory_Load_Library, "MemoryLoadLibrary");
+
+  procedure Load_Scintilla_DLL_from_Memory is
+    use Ada.Command_Line, GWindows.Message_Boxes;
     lea_exe       : constant String := Command_Name;
     scintilla_dll : constant String := "SciLexer.dll";
-    bs : Integer;
+    z : Zip.Zip_info;
+    m : Zip_Streams.Memory_Zipstream;
+    b : Unbounded_String;
+    p : String_Access;
   begin
-    for i in reverse lea_exe'Range loop
-      if lea_exe (i) = '\' then
-        bs := i;
-        exit;
-      end if;
-    end loop;
-    if target = "" then
-      Extract (
-        from   => lea_exe,
-        what   => scintilla_dll,
-        rename => lea_exe (lea_exe'First .. bs) & scintilla_dll
-      );
-    else
-      Extract (
-        from   => lea_exe,
-        what   => scintilla_dll,
-        rename => target & scintilla_dll
-      );
-    end if;
+    Zip.Load (z, lea_exe);
+    UnZip.Streams.Extract (m, z, scintilla_dll);
+    Zip_Streams.Get (m, b);
+    --  For pointer p, the memory is heap-allocated until
+    --  the termination of lea.exe:
+    p := new String (1 .. Length (b));
+    p.all := To_String (b);
+    Memory_Load_Library (p (1)'Address, p.all'Length);
   exception
     when others =>
       Message_Box
@@ -40,6 +45,6 @@ package body LEA_GWin.Installer is
           Error_Icon
         );
       raise;
-  end Unpack_DLL;
+  end Load_Scintilla_DLL_from_Memory;
 
 end LEA_GWin.Installer;
