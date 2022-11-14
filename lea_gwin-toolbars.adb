@@ -3,44 +3,13 @@ with LEA_Resource_GUI;
 with GWindows.Base,
      GWindows.Menus;
 
+with GWin_Util;
+
 with Interfaces.C;
 
 package body LEA_GWin.Toolbars is
 
   use GWindows.Image_Lists, Interfaces.C;
-
-  --  Filter & and \t
-  --  Not having TTS_NO_PREFIX in tool_tip creation would do it as well.
-  function Filter(s: GString) return GString is
-    use type GString_Unbounded;
-    u: GString_Unbounded;
-  begin
-    for i in s'Range loop
-      case s(i) is
-        when GCharacter'Val(0) =>
-          null;
-        when '&' =>
-          if i < s'Last and then s(i+1)= '&' then
-            u:= u & "&&&";  --  "&&" is translated as "&&&" in order to be displayed as a '&' !...
-          else
-            null;  --  Skip
-          end if;
-        when GCharacter'Val(9) => -- Tab
-          exit;
-        when '\' =>
-          exit when i < s'Last and then s(i+1)= 't';
-        when others =>
-          u:= u & s(i);
-      end case;
-    end loop;
-    return To_GString_From_Unbounded (u);
-  end Filter;
-
-  function Num_resource(id: Natural) return GString is
-    img : constant String := Integer'Image (id);
-  begin
-    return To_GString_From_String ('#' & img(img'First+1..img'Last));
-  end Num_resource;
 
   procedure Init_Main_toolbar (
     tb     : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
@@ -59,7 +28,8 @@ package body LEA_GWin.Toolbars is
     is
       use GWindows.Menus;
       --  The tool tip's text is a copy of the menu's text.
-      label : constant GString := Filter(Text(Fake_Menu.Main, Command, Command_ID));
+      label : constant GString :=
+        GWin_Util.Menu_Entry_Title_to_Toolbar_Label(Text(Fake_Menu.Main, Command, Command_ID));
     begin
       tb.Add_String (label);
       tb.Add_Button (Image_Index, Command_ID, string_count);
