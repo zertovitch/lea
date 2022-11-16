@@ -23,12 +23,11 @@ package body LEA_GWin.Messages is
         pl := Control.Item_Data (i);
         if pl /= null then
           mm := MDI_Main_Access (Control.mdi_main_parent);
-          mm.Open_Child_Window_And_Load (
-            G2GU(S2G(To_String (pl.file_name))),
-            pl.line - 1,  --  Scintilla's lines are 0-based
-            pl.column_a,
-            pl.column_a
-          );
+          mm.Open_Child_Window_And_Load
+            (S2G(To_String (pl.file_name)),
+             pl.line - 1,  --  Scintilla's lines are 0-based
+             pl.column_a,
+             pl.column_a);
           --  At this point focus is on the editor window.
           if pl.repair_kind /= none
             and then real_click

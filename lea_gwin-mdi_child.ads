@@ -59,9 +59,8 @@ package LEA_GWin.MDI_Child is
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
       record
-        File_Name        : GString_Unbounded;
-        --  Window title = Short_Name & {""|" *"}
-        Short_Name       : GString_Unbounded;
+        ID               : ID_Type;
+        --  Window title = ID.Short_Name & {""|" *"}
         MDI_Parent       : LEA_GWin.MDI_Main.MDI_Main_Access; -- -> access to the containing window
         --  new file closed if kept virgin when opening another one (like blank Excel sheet).
         Extra_first_doc  : Boolean := False;

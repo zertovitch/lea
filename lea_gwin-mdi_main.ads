@@ -23,9 +23,23 @@ package LEA_GWin.MDI_Main is
   type MDI_Toolbar_Type is
     new GWindows.Common_Controls.Toolbar_Control_Type with null record;
 
-  procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
-                              Item    : in     Integer);
-  --  Handle click on toolbar
+  --  Handle clicks on toolbar:
+  overriding procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
+                                         Item    : in     Integer);
+
+  type MDI_Main_Type;
+  type MDI_Main_Access is access all MDI_Main_Type;
+
+  type MDI_Tab_Bar_Type is
+    new GWindows.Common_Controls.Tab_Control_Type with
+      record
+        MDI_Parent : MDI_Main_Access;  --  -> access to the containing window
+        ID         : ID_Vectors.Vector;
+      end record;
+
+  overriding procedure On_Change (Control : in out MDI_Tab_Bar_Type);
+
+  function Tab_Index (Control : in out MDI_Tab_Bar_Type; ID : ID_Type) return Integer;
 
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
 
@@ -41,6 +55,8 @@ package LEA_GWin.MDI_Main is
         Tool_Bar               : MDI_Toolbar_Type;
         Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
+        --
+        Tab_Bar                : MDI_Tab_Bar_Type;
         --
         Project_Panel          : Sliding_Panels.Project_Panel_Type;
         Message_Panel          : Sliding_Panels.Message_Panel_Type;
@@ -70,8 +86,6 @@ package LEA_GWin.MDI_Main is
                                       Initial_text_files_filters;
       end record;
 
-  type MDI_Main_Access is access all MDI_Main_Type;
-
   overriding procedure On_Create (Window : in out MDI_Main_Type);
   --  Handles setting up icons, menus, etc.
 
@@ -96,16 +110,15 @@ package LEA_GWin.MDI_Main is
 
   procedure Redraw_all (Window: in out MDI_Main_Type);
 
-  procedure Open_Child_Window_And_Load (
-    Window       : in out MDI_Main_Type;
-    File_Name    :        GWindows.GString_Unbounded;
-    Line         :        Integer := -1;
-    Col_a, Col_z :        Integer := -1
-  );
+  procedure Open_Child_Window_And_Load
+    (Window       : in out MDI_Main_Type;
+     File_Name    :        GString;
+     Line         :        Integer := -1;
+     Col_a, Col_z :        Integer := -1);
 
-  overriding procedure On_Menu_Select (
-        Window : in out MDI_Main_Type;
-        Item   : in     Integer        );
+  overriding procedure On_Menu_Select
+    (Window : in out MDI_Main_Type;
+     Item   : in     Integer);
 
   overriding
   procedure On_Message (Window       : in out MDI_Main_Type;

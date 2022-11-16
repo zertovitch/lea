@@ -716,7 +716,7 @@ package body LEA_GWin.Editor is
           ml.Item_Data(
             count,
             new HAC_Sys.Defs.Diagnostic_Kit'(
-              file_name   => To_Unbounded_String (G2S (GU2G (MDI_Child.File_Name))),
+              file_name   => To_Unbounded_String (G2S (GU2G (MDI_Child.ID.File_Name))),
               line        => line + 1,  --  Lines in Diagnostic_Kit are 1-based.
               column_a    => col,
               column_z    => col + find_str'Length,
@@ -940,9 +940,9 @@ package body LEA_GWin.Editor is
   procedure Load_text (Editor : in out LEA_Scintilla_Type) is
     use Ada.Streams.Stream_IO;
     f : File_Type;
-    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
   begin
-    Open (f, In_File, To_UTF_8 (GU2G (parent.File_Name)), Form_For_IO_Open_and_Create);
+    Open (f, In_File, To_UTF_8 (GU2G (parent.ID.File_Name)), Form_For_IO_Open_and_Create);
     declare
       l : constant Ada.Streams.Stream_IO.Count := Size (f);
       s : String (1 .. Integer (l));

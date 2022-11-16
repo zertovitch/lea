@@ -22,7 +22,7 @@ package body LEA_GWin.Repair is
         GWindows.Base,
         Ada.Strings.Unbounded, Ada.Strings.Wide_Unbounded;
     --
-    file_name : constant GString_Unbounded := G2GU (S2G (To_String (repair.file_name)));
+    file_name : constant GString := S2G (To_String (repair.file_name));
     --
     procedure Repair_in_editor (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
@@ -41,7 +41,7 @@ package body LEA_GWin.Repair is
             end if;
           end Optional_EOL;
         begin
-          if pw.File_Name = file_name then
+          if pw.ID.File_Name = file_name then
             pw.Focus;  --  Focus on document already open in our app.
             pw.Editor.Begin_Undo_Action;
             --

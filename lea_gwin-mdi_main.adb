@@ -24,29 +24,26 @@ with Windows_Timers;
 
 package body LEA_GWin.MDI_Main is
 
-  use type GString_Unbounded, Scintilla.Position;
+  use type Scintilla.Position;
   use LEA_Common, LEA_GWin.MDI_Child;
   use GWindows.Base, GWindows.Menus;
 
-  procedure Focus_an_already_opened_window(
-    MDI_Main     :     MDI_Main_Type;
-    File_Name    :     GString_Unbounded;
-    Line         :     Integer            := -1;
-    Col_a, Col_z :     Scintilla.Position := -1;
-    is_open      : out Boolean )
+  procedure Focus_an_already_opened_window
+    (MDI_Main     : in out MDI_Main_Type;
+     ID           :        ID_Type;
+     Line         :        Integer            := -1;
+     Col_a, Col_z :        Scintilla.Position := -1;
+     is_open      :    out Boolean)
   is
     procedure Identify (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
     begin
       if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
         declare
-          pw: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
+          pw : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
           new_pos_a, new_pos_z : GWindows.Scintilla.Position;
         begin
-          if pw.File_Name = File_Name
-            --  Catch a new editor that was never written as a file:
-            or else (pw.File_Name = "" and then pw.Short_Name = File_Name)
-          then
+          if Equivalent (pw.ID, ID) then
             is_open:= True;
             pw.Set_Foreground_Window;
             pw.Focus;  --  Focus on document already open in our app.
@@ -65,11 +62,10 @@ package body LEA_GWin.MDI_Main is
     end Identify;
 
   begin
-    is_open:= False;
-    Enumerate_Children(
-      MDI_Client_Window (MDI_Main).all,
-      Identify'Unrestricted_Access
-    );
+    is_open := False;
+    Enumerate_Children
+      (MDI_Client_Window (MDI_Main).all,
+       Identify'Unrestricted_Access);
   end Focus_an_already_opened_window;
 
   procedure Redraw_Child (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -81,11 +77,11 @@ package body LEA_GWin.MDI_Main is
     end if;
   end Redraw_Child;
 
-  procedure Redraw_all (Window: in out MDI_Main_Type) is
+  procedure Redraw_all (Window : in out MDI_Main_Type) is
   begin
     Window.Redraw;
     --  Redraw(Window.Tool_bar);
-    Enumerate_Children(MDI_Client_Window (Window).all, Redraw_Child'Access);
+    Enumerate_Children (MDI_Client_Window (Window).all, Redraw_Child'Access);
   end Redraw_all;
 
   procedure Close_extra_first_child (MDI_Main: in out MDI_Main_Type) is
@@ -113,47 +109,60 @@ package body LEA_GWin.MDI_Main is
     );
   end Close_extra_first_child;
 
-  procedure Open_Child_Window_And_Load (
-    MDI_Main     : in out MDI_Main_Type;
-    File_Name,
-    File_Title   :        GWindows.GString_Unbounded;
-    Line         :        Integer            := -1;
-    Col_a, Col_z :        Scintilla.Position := -1
-  )
+  procedure Append_Tab (Window : in out MDI_Main_Type; New_Child : MDI_Child_Type) is
+    title : constant GString := GU2G (New_Child.ID.Short_Name);
+    start : Natural := title'First;
+  begin
+    for i in reverse title'Range loop
+      if title (i) = '\' then
+        start := i + 1;
+        exit;
+      end if;
+    end loop;
+    Window.Tab_Bar.Insert_Tab (Window.Tab_Bar.Tab_Count, title (start .. title'Last));
+    Window.Tab_Bar.Selected_Tab (Window.Tab_Bar.Tab_Count - 1);
+    Window.Tab_Bar.ID.Append (New_Child.ID);
+  end Append_Tab;
+
+  procedure Open_Child_Window_And_Load
+    (Window       : in out MDI_Main_Type;
+     File_Name,
+     File_Title   :        GString;
+     Line         :        Integer            := -1;
+     Col_a, Col_z :        Scintilla.Position := -1)
   is
     is_open, file_loaded : Boolean;
     mru_line : Integer := -1;
     new_pos_a, new_pos_z : GWindows.Scintilla.Position;
+    New_ID : ID_Type;
     New_Window : MDI_Child_Access;
     use GWindows.Message_Boxes;
+    use type GString_Unbounded;
   begin
-    Focus_an_already_opened_window ( MDI_Main, File_Name, Line, Col_a, Col_z, is_open );
+    New_ID := (G2GU (File_Name), G2GU (File_Title));
+    Focus_an_already_opened_window (Window, New_ID, Line, Col_a, Col_z, is_open);
     if is_open then
       return;        -- nothing to do, document already in a window
     end if;
     New_Window := new MDI_Child_Type;
     --  We do here like Excel or Word: close the unused blank window
-    Close_extra_first_child (MDI_Main);
+    Close_extra_first_child (Window);
     --
-    MDI_Main.User_maximize_restore:= False;
-    New_Window.File_Name:= File_Name;
-    Create_MDI_Child (New_Window.all,
-      MDI_Main,
-      GU2G (File_Title),
-      Is_Dynamic => True
-    );
-    New_Window.Short_Name:= File_Title;
-    MDI_Active_Window (MDI_Main, New_Window.all);
+    Window.User_maximize_restore:= False;
+    New_Window.ID := New_ID;
+    Create_MDI_Child (New_Window.all, Window, File_Title, Is_Dynamic => True);
+    MDI_Active_Window (Window, New_Window.all);
+    Append_Tab (Window, New_Window.all);
     begin
       New_Window.Editor.Load_text;
       file_loaded := True;
-      for m of MDI_Main.opt.mru loop
-        if m.name = New_Window.File_Name then
+      for m of Window.opt.mru loop
+        if m.name = File_Name then
           mru_line := m.line;  --  This will put MRU item on top.
           exit;
         end if;
       end loop;
-      Update_Common_Menus (MDI_Main, GU2G(New_Window.File_Name), mru_line);
+      Update_Common_Menus (Window, File_Name, mru_line);
     exception
       when Ada.Text_IO.Name_Error =>
         file_loaded := False;
@@ -161,8 +170,8 @@ package body LEA_GWin.MDI_Main is
     New_Window.Finish_subwindow_opening;
     New_Window.Editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
-        GU2G (New_Window.File_Name),
-        GU2G (MDI_Main.opt.ada_files_filter)
+        GU2G (New_Window.ID.File_Name),
+        GU2G (Window.opt.ada_files_filter)
       );
     New_Window.Editor.Set_Scintilla_Syntax;
     New_Window.Editor.Focus;
@@ -181,19 +190,15 @@ package body LEA_GWin.MDI_Main is
     if file_loaded then
       New_Window.Set_Foreground_Window;
     else
-      Message_Box (
-        MDI_Main,
-        "Error",
-        "File " & GU2G (File_Name) & " not found",
-        Icon => Exclamation_Icon
-      );
+      Message_Box
+        (Window, "Error", "File " & File_Name & " not found", Icon => Exclamation_Icon);
       --  Prevent MRU name addition:
-      New_Window.File_Name := Null_GString_Unbounded;
+      New_Window.ID.File_Name := Null_GString_Unbounded;
       New_Window.Close;
     end if;
   end Open_Child_Window_And_Load;
 
-  procedure On_Button_Select (
+  overriding procedure On_Button_Select (
         Control : in out MDI_Toolbar_Type;
         Item    : in     Integer           ) is
     Parent : constant MDI_Main_Access := MDI_Main_Access (Controlling_Parent (Control));
@@ -201,8 +206,26 @@ package body LEA_GWin.MDI_Main is
     On_Menu_Select (Parent.all, Item);
   end On_Button_Select;
 
-  function Shorten_file_name( s: GString ) return GString is
-    max: constant:= 33;
+  overriding procedure On_Change (Control : in out MDI_Tab_Bar_Type) is
+    dummy : Boolean;
+  begin
+    Focus_an_already_opened_window
+      (Control.MDI_Parent.all,
+       Control.ID.Element (Control.Selected_Tab),
+       is_open => dummy);
+  end On_Change;
+
+  function Tab_Index (Control : in out MDI_Tab_Bar_Type; ID : ID_Type) return Integer is
+  begin
+    for index in 0 .. Control.Tab_Count - 1 loop
+      if Equivalent (ID, Control.ID.Element (index)) then
+        return index;
+      end if;
+    end loop;
+    return -1;
+  end Tab_Index;
+
+  function Shorten_File_Name (s : GString; max : Positive) return GString is
     beg: constant:= 6;
   begin
     if s'Length < max then
@@ -213,24 +236,22 @@ package body LEA_GWin.MDI_Main is
         "..." &                               -- 3
         s(s'Last - max + beg + 1 .. s'Last);  -- max - beg - 3
     end if;
-  end Shorten_file_name;
+  end Shorten_File_Name;
 
-  procedure Open_Child_Window_And_Load (
-    Window       : in out MDI_Main_Type;
-    File_Name    :        GWindows.GString_Unbounded;
-    Line         :        Integer := -1;
-    Col_a, Col_z :        Integer := -1
-  )
+  procedure Open_Child_Window_And_Load
+    (Window       : in out MDI_Main_Type;
+     File_Name    :        GString;
+     Line         :        Integer := -1;
+     Col_a, Col_z :        Integer := -1)
   is
   begin
-    Open_Child_Window_And_Load(
-      Window,
-      File_Name,
-      G2GU(Shorten_file_name(GU2G(File_Name))),
-      Line,
-      Scintilla.Position (Col_a),
-      Scintilla.Position (Col_z)
-    );
+    Open_Child_Window_And_Load
+      (Window,
+       File_Name,
+       Shorten_File_Name (File_Name, 50),
+       Line,
+       Scintilla.Position (Col_a),
+       Scintilla.Position (Col_z));
   end Open_Child_Window_And_Load;
 
   -----------------
@@ -342,7 +363,7 @@ package body LEA_GWin.MDI_Main is
 
     --  ** Menus and accelerators:
     --
-    LEA_Resource_GUI.Create_Full_Menu(Window.Menu);
+    LEA_Resource_GUI.Create_Full_Menu (Window.Menu);
     MDI_Menu (Window, Window.Menu.Main, Window_Menu => 5);
     Accelerator_Table (Window, "Main_Menu");
     Window.IDM_MRU:=
@@ -352,10 +373,16 @@ package body LEA_GWin.MDI_Main is
       );
 
     --  ** Other resources
-    Window.Folders_Images.Create (Num_resource(Folders_BMP), 16, Color_Option => Copy_From_Resource);
+    Window.Folders_Images.Create
+      (Num_resource (Folders_BMP), 16, Color_Option => Copy_From_Resource);
 
     --  ** Main tool bar (New / Open / Save / ...) at top left of the main window:
-    LEA_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Toolbar_Images, Window);
+    LEA_GWin.Toolbars.Init_Main_toolbar (Window.Tool_Bar, Window.Toolbar_Images, Window);
+    --  ** Main's tab bar:
+    Window.Tab_Bar.MDI_Parent := Window'Unrestricted_Access;
+    Window.Tab_Bar.Create (Window, 0, 30, 10, 25);
+    Window.Tab_Bar.Dock (GWindows.Base.At_Top);
+    GWin_Util.Use_GUI_Font (Window.Tab_Bar);
 
     --  ** Sizeable panels. For a sketch, see the "Layout" sheet in lea_work.xls.
     --
@@ -404,23 +431,22 @@ package body LEA_GWin.MDI_Main is
             if a(j) in '0' .. '9' then
               start_line := start_line * 10 + (Character'Pos(a(j)) - Character'Pos('0'));
             else
-              start_line := -1;  -- Invalid number
+              start_line := -1;  --  Invalid number
               exit;
             end if;
           end loop;
         else
-          Open_Child_Window_And_Load(
-            Window,
-            G2GU(To_UTF_16(a)),
-            start_line - 1  --  NB: Scintilla lines are 0-based
-          );
+          Open_Child_Window_And_Load
+            (Window,
+             To_UTF_16(a),
+             start_line - 1);  --  NB: Scintilla lines are 0-based
           start_line := -1;
         end if;
       end;
     end loop;
     --  Dropping files on the MDI background will trigger opening a document:
     Window.Accept_File_Drag_And_Drop;
-    Window.record_dimensions:= True;
+    Window.record_dimensions := True;
     --
     begin
       Window.Task_bar_gadget.Set_Progress_State (Window, No_Progress);
@@ -429,28 +455,28 @@ package body LEA_GWin.MDI_Main is
       when Taskbar_Interface_Not_Supported =>
         Window.Task_bar_gadget_ok := False;
     end;
-    Window.Search_box.Create_as_search_box(Window);
-    Windows_Timers.Set_Timer(Window, timer_id, 100);
+    Window.Search_box.Create_as_search_box (Window);
+    Windows_Timers.Set_Timer (Window, timer_id, 100);
   end On_Create;
 
-  function Minimized(MDI_Main: GWindows.Base.Base_Window_Type'Class)
+  function Is_Minimized (MDI_Main: GWindows.Base.Base_Window_Type'Class)
     return Boolean
   is
   begin
-    return GWindows.Base.Left(MDI_Main) <= -32000;
-  end Minimized;
+    return GWindows.Base.Left (MDI_Main) <= -32000;
+  end Is_Minimized;
 
   procedure On_Move (Window : in out MDI_Main_Type;
                      Left   : in     Integer;
                      Top    : in     Integer) is
   begin
     if Window.record_dimensions and
-       not (Zoom(Window) or Minimized(Window))
+       not (Zoom (Window) or Is_Minimized (Window))
     then
       --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
-      Window.opt.win_left  := Left;
-      Window.opt.win_top   := Top;
+      Window.opt.win_left := Left;
+      Window.opt.win_top  := Top;
       --  Will remember position if moved, maximized and closed
     end if;
   end On_Move;
@@ -480,7 +506,7 @@ package body LEA_GWin.MDI_Main is
     Window.Message_Panel.Location (Rectangle_Type'(0, h + tbh - list_h, w, h + tbh));
     --  Call Dock_Children for the finishing touch...
     Window.Dock_Children;
-    if Window.record_dimensions and not (Window.Zoom or Minimized (Window)) then
+    if Window.record_dimensions and not (Window.Zoom or Is_Minimized (Window)) then
       --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
       Window.opt.win_width := Width;
@@ -495,12 +521,7 @@ package body LEA_GWin.MDI_Main is
 
   New_MDI_window_counter : Natural := 0;
 
-  procedure On_File_New (
-    MDI_Main        : in out MDI_Main_Type;
-    extra_first_doc : Boolean;
-    New_Window      : in     MDI_Child_Access
-  )
-  is
+  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean) is
 
     function Suffix return GWindows.GString is
     begin
@@ -511,14 +532,16 @@ package body LEA_GWin.MDI_Main is
       end if;
     end Suffix;
 
-    File_Title: constant GString:= "Untitled" & Suffix;
+    New_Window : constant MDI_Child_Access := new MDI_Child_Type;
+    Untitled_N : constant GString := "Untitled" & Suffix;
 
   begin
-    New_Window.Extra_first_doc:= extra_first_doc;
-    MDI_Main.User_maximize_restore:= False;
-    Create_MDI_Child (New_Window.all, MDI_Main, File_Title, Is_Dynamic => True);
-    New_Window.Short_Name:= G2GU(File_Title);
-    MDI_Active_Window (MDI_Main, New_Window.all);
+    New_Window.Extra_first_doc := extra_first_doc;
+    Window.User_maximize_restore := False;
+    Create_MDI_Child (New_Window.all, Window, Untitled_N, Is_Dynamic => True);
+    New_Window.ID.Short_Name := G2GU (Untitled_N);
+    Append_Tab (Window, New_Window.all);
+    MDI_Active_Window (Window, New_Window.all);
 
     --  Transfer user-defined default options:
     --  New_Window.xxx.Opt:= Gen_Opt.Options_For_New;
@@ -530,16 +553,10 @@ package body LEA_GWin.MDI_Main is
     New_MDI_window_counter := New_MDI_window_counter + 1;
 
     --  This is just to set the MRUs in the new window's menu:
-    MDI_Main.Update_Common_Menus;
+    Window.Update_Common_Menus;
     --
     New_Window.Finish_subwindow_opening;
     New_Window.Editor.Focus;
-  end On_File_New;
-
-  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean) is
-    New_Window : constant MDI_Child_Access := new MDI_Child_Type;
-  begin
-    On_File_New(Window, extra_first_doc, New_Window);
   end On_File_New;
 
   ------------------
@@ -567,7 +584,7 @@ package body LEA_GWin.MDI_Main is
     );
     if Success then
       for File_Name of File_Names.all loop
-        Open_Child_Window_And_Load( MDI_Main, File_Name );
+        Open_Child_Window_And_Load (MDI_Main, GU2G (File_Name));
       end loop;
       Dispose(File_Names);
     end if;
@@ -578,7 +595,7 @@ package body LEA_GWin.MDI_Main is
   begin
     Window.Focus;
     for File_Name of File_Names loop
-      Open_Child_Window_And_Load ( Window, File_Name );
+      Open_Child_Window_And_Load (Window, GU2G (File_Name));
     end loop;
   end On_File_Drop;
 
@@ -663,10 +680,9 @@ package body LEA_GWin.MDI_Main is
         --  We have perhaps a MRU (most rectly used) file entry.
         for i_mru in Window.IDM_MRU'Range loop
           if Item = Window.IDM_MRU (i_mru) then
-            Open_Child_Window_And_Load(
-              Window,
-              Window.opt.mru ( i_mru ).name
-            );
+            Open_Child_Window_And_Load
+              (Window,
+               GU2G (Window.opt.mru ( i_mru ).name));
             exit;
           end if;
         end loop;
@@ -709,7 +725,7 @@ package body LEA_GWin.MDI_Main is
         Can_Close :    out Boolean        ) is
   begin
     Window.opt.MDI_main_maximized:= Zoom(Window);
-    if not (Window.opt.MDI_main_maximized or Minimized(Window)) then
+    if not (Window.opt.MDI_main_maximized or Is_Minimized(Window)) then
       Window.opt.win_left  := Left(Window);
       Window.opt.win_top   := Top(Window);
       Window.opt.win_width := Width(Window);
@@ -791,9 +807,9 @@ package body LEA_GWin.MDI_Main is
       Text(
         m, Command, MDI_Main.IDM_MRU(i),
          '&' &
-         S2G(Ada.Strings.Fixed.Trim(Integer'Image(i),Ada.Strings.Left)) &
+         S2G (Ada.Strings.Fixed.Trim (Integer'Image (i), Ada.Strings.Left)) &
          ' ' &
-         Shorten_file_name(GU2G(MDI_Main.opt.mru(i).name))
+         Shorten_File_Name (GU2G (MDI_Main.opt.mru (i).name), 30)
       );
     end loop;
   end Update_MRU_Menu;
@@ -857,6 +873,7 @@ package body LEA_GWin.MDI_Main is
   end Update_Common_Menus;
 
   procedure Update_Title (Window : in out MDI_Main_Type) is
+    use type GString_Unbounded;
   begin
     if Window.Project_File_Name = "" then
       Window.Text("LEA - [Projectless]");

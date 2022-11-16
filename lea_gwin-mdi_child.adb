@@ -75,7 +75,7 @@ package body LEA_GWin.MDI_Child is
     procedure Update_Status_Bar is
       pos, sel_a, sel_z : Scintilla.Position;
     begin
-      if Window.File_Name = Null_GString_Unbounded then
+      if Window.ID.File_Name = Null_GString_Unbounded then
         Window.Status_Bar.Text("No file", 0);
       end if;
       if Folder_Focus(Window) then
@@ -163,7 +163,7 @@ package body LEA_GWin.MDI_Child is
       State (Window.Menu.Main, Command, IDM_Paste,                  bool_to_state (Window.Editor.Can_Paste));
       State (Window.Menu.Main, Command, IDM_Undo,                   bool_to_state (Window.Editor.Can_Undo));
       State (Window.Menu.Main, Command, IDM_Redo,                   bool_to_state (Window.Editor.Can_Redo));
-      State (Window.Menu.Main, Command, IDM_Open_Containing_Folder, bool_to_state (Length (Window.File_Name) > 0));
+      State (Window.Menu.Main, Command, IDM_Open_Containing_Folder, bool_to_state (Length (Window.ID.File_Name) > 0));
       State (Window.Menu.Main, Command, IDM_Save_File,              bool_to_state (Window.Editor.modified));
       State (Window.Menu.Main, Command, IDM_Save_All,               bool_to_state (Window.save_all_hint));
     end Update_Menus;
@@ -184,9 +184,9 @@ package body LEA_GWin.MDI_Child is
                                       Check_any_modified'Unrestricted_Access);
     Window.save_all_hint := any_modified;
     if Window.Editor.modified then
-      Window.Text("* " & GU2G(Window.Short_Name));
+      Window.Text ("* " & GU2G (Window.ID.Short_Name));
     else
-      Window.Text(GU2G(Window.Short_Name));
+      Window.Text (GU2G (Window.ID.Short_Name));
     end if;
     Update_Status_Bar;
     Update_Tool_Bar;
@@ -361,7 +361,7 @@ package body LEA_GWin.MDI_Child is
   end Save;
 
   procedure On_Save (Window : in out MDI_Child_Type) is
-    File_Name : constant GWindows.GString := GU2G (Window.File_Name);
+    File_Name : constant GWindows.GString := GU2G (Window.ID.File_Name);
   begin
     if File_Name = "" or else Window.Editor.Get_Read_Only then
       Window.Focus;
@@ -399,13 +399,13 @@ package body LEA_GWin.MDI_Child is
              (HAC_Sys.Librarian.GNAT_Naming
                 (A2S (Window.BD.CD.Main_Program_ID_with_case)))) &
         ".adb";
-    elsif Window.File_Name = "" then
+    elsif Window.ID.File_Name = "" then
       --  No file yet for this window.
       --  Suggest the short window name (window title).
-      New_File_Name := Window.Short_Name;
+      New_File_Name := Window.ID.Short_Name;
     else
       --  Tentative name is current file name.
-      New_File_Name := Window.File_Name;
+      New_File_Name := Window.ID.File_Name;
     end if;
     GWindows.Common_Dialogs.Save_File (
       Window,
@@ -419,7 +419,7 @@ package body LEA_GWin.MDI_Child is
     if not Success then
       return;
     end if;
-    if File_Exists(To_UTF_8(GU2G(New_File_Name))) then
+    if File_Exists (To_UTF_8 (GU2G (New_File_Name))) then
       if Message_Box (
         Window,
         "Save as",
@@ -432,14 +432,14 @@ package body LEA_GWin.MDI_Child is
       end if;
     end if;
 
-    Save (Window, GU2G(New_File_Name));
-    Window.File_Name := New_File_Name;
-    Window.Text(GU2G(File_Title));
-    Window.Short_Name:= File_Title;
-    Window.Update_Common_Menus(GU2G(New_File_Name), Window.Editor.Get_current_line);
+    Save (Window, GU2G (New_File_Name));
+    Window.ID.File_Name := New_File_Name;
+    Window.Text (GU2G (File_Title));
+    Window.ID.Short_Name := File_Title;
+    Window.Update_Common_Menus (GU2G (New_File_Name), Window.Editor.Get_current_line);
     Window.Editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
-        GU2G (Window.File_Name),
+        GU2G (Window.ID.File_Name),
         GU2G (Window.MDI_Parent.opt.ada_files_filter)
       );
     Window.Editor.Set_Scintilla_Syntax;
@@ -475,9 +475,9 @@ package body LEA_GWin.MDI_Child is
     --  We save the parent access since this Window may be already closed
     --  when i > File_Names'First if Window is was temporary MS-Office-like
     --  blank window - See procedure Close_extra_first_child.
-    parent:= Window.MDI_Parent;
-    for i in File_Names'Range loop
-      Open_Child_Window_And_Load(parent.all, File_Names(i));
+    parent := Window.MDI_Parent;
+    for File_Name of File_Names loop
+      Open_Child_Window_And_Load (parent.all, GU2G (File_Name));
     end loop;
   end On_File_Drop;
 
@@ -543,8 +543,8 @@ package body LEA_GWin.MDI_Child is
     use HAC_Sys.Builder,
         Ada.Calendar, Ada.Directories, Ada.Strings, Ada.Strings.Wide_Fixed, Ada.Text_IO;
     f : Ada.Text_IO.File_Type;
-    file_name  : constant String := G2S (GU2G (Window.File_Name));
-    short_name : constant String := G2S (GU2G (Window.Short_Name));
+    file_name  : constant String := G2S (GU2G (Window.ID.File_Name));
+    short_name : constant String := G2S (GU2G (Window.ID.Short_Name));
     shebang_offset : Natural;
     t1, t2 : Time;
     --
@@ -665,8 +665,8 @@ package body LEA_GWin.MDI_Child is
     --
     case Item is
       when IDM_Open_Containing_Folder =>
-        if Window.File_Name /= "" then
-          GWin_Util.Start (Ada.Directories.Containing_Directory (G2S (GU2G (Window.File_Name))));
+        if Window.ID.File_Name /= "" then
+          GWin_Util.Start (Ada.Directories.Containing_Directory (G2S (GU2G (Window.ID.File_Name))));
         end if;
       when IDM_Save_File =>
         Window.On_Save;
@@ -734,27 +734,35 @@ package body LEA_GWin.MDI_Child is
   end On_Menu_Select;
 
   overriding procedure On_Focus (Window : in out MDI_Child_Type) is
+    tab_bar : MDI_Tab_Bar_Type renames Window.MDI_Parent.Tab_Bar;
+    tab_index : Integer;
   begin
     Update_Display (Window, toolbar_and_menu);
     Window.Editor.Focus;
+    tab_index := tab_bar.Tab_Index (Window.ID);
+    if tab_index >= 0 then
+      tab_bar.Selected_Tab (tab_index);
+    end if;
   end On_Focus;
 
   overriding procedure On_Close (Window    : in out MDI_Child_Type;
-                      Can_Close :    out Boolean)
+                                 Can_Close :    out Boolean)
   is
     use LEA_Resource_GUI;
-    bar : MDI_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
+    bar     : MDI_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
+    tab_bar : MDI_Tab_Bar_Type renames Window.MDI_Parent.Tab_Bar;
+    tab_index : Integer;
   begin
     Can_Close:= True;
     if Is_file_saved(Window) then
-      Window.Update_Common_Menus(GU2G(Window.File_Name), Window.Editor.Get_current_line);
+      Window.Update_Common_Menus (GU2G (Window.ID.File_Name), Window.Editor.Get_current_line);
     else -- This happens only for documents that may stay in an unsaved state.
       loop
         case Message_Box
                (Window,
                 "Close file", -- sheet, picture, ...
                 "Do you want to save the changes you made to """ &
-                GU2G(Window.Short_Name) & """ ?",
+                GU2G(Window.ID.Short_Name) & """ ?",
                 Yes_No_Cancel_Box,
                 Question_Icon)
         is
@@ -796,7 +804,12 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Build_and_run, False);
       bar.Enabled (IDM_Show_special_symbols, False);
       bar.Enabled (IDM_Show_indentation_lines, False);
-      Window.is_closing:= True;
+      tab_index := tab_bar.Tab_Index (Window.ID);
+      if tab_index >= 0 then
+        Window.MDI_Parent.Tab_Bar.Delete_Tab (tab_index);
+        Window.MDI_Parent.Tab_Bar.ID.Delete (tab_index);
+      end if;
+      Window.is_closing := True;
     end if;
   end On_Close;
 

@@ -70,13 +70,13 @@ package body LEA_GWin.Help is
       if Is_Help then
         New_Window.Editor.document_kind := help_main;
       end if;
-      New_Window.Short_Name:= G2GU (S2G (Short_Name));
+      New_Window.ID.Short_Name:= G2GU (S2G (Short_Name));
       Main_Window.User_maximize_restore:= False;
-      Create_MDI_Child (New_Window.all,
-        Main_Window,
-        GU2G (New_Window.Short_Name),
-        Is_Dynamic => True
-      );
+      Create_MDI_Child
+        (New_Window.all,
+         Main_Window,
+         GU2G (New_Window.ID.Short_Name),
+         Is_Dynamic => True);
       Main_Window.MDI_Active_Window (New_Window.all);
       New_Window.Editor.Load_text (contents => unpacked_str);
       if Is_Help then
