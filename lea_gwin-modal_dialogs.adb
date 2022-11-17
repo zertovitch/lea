@@ -2,7 +2,7 @@
 
 with LEA_Common.HAC_Samples;
 
-with LEA_GWin.Help;
+with LEA_GWin.Embedded_Texts;
 
 with LEA_Resource_GUI;
 
@@ -193,7 +193,7 @@ package body LEA_GWin.Modal_Dialogs is
     case Show_Dialog (box, Main_Window) is
       when IDOK   =>
         if sel > 0 then
-          LEA_GWin.Help.Show_sample (Main_Window, To_String (dir (sel)), To_String (fn (sel)));
+          LEA_GWin.Embedded_Texts.Show_Sample (Main_Window, To_String (dir (sel)), To_String (fn (sel)));
         end if;
       when others =>
         null;  --  Contains the IDCANCEL case

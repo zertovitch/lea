@@ -11,7 +11,7 @@ with GWindows.Base,
 
 with Ada.Command_Line;
 
-package body LEA_GWin.Help is
+package body LEA_GWin.Embedded_Texts is
 
   procedure Show_embedded (
     Main_Window : in out MDI_Main.MDI_Main_Type;
@@ -46,7 +46,7 @@ package body LEA_GWin.Help is
     --
     New_Window : MDI_Child_Access;
   begin
-    if Is_Help then  --  We want only one copy of the help file displayed
+    if Is_Help then  --  We want only one copy of the Embedded_Texts file displayed
       GWindows.Base.Enumerate_Children (Main_Window.MDI_Client_Window.all,
                                         Check_help_doc'Unrestricted_Access);
       if already_open then
@@ -64,21 +64,21 @@ package body LEA_GWin.Help is
         unpacked;
     end if;
     declare
-      unpacked_str: constant String := HAT.To_String (unpacked);  --  visible to dbg
+      unpacked_str : constant String := HAT.To_String (unpacked);  --  visible to dbg
     begin
       New_Window := new MDI_Child_Type;
       if Is_Help then
         New_Window.Editor.document_kind := help_main;
       end if;
       New_Window.ID.Short_Name:= G2GU (S2G (Short_Name));
-      Main_Window.User_maximize_restore:= False;
+      Main_Window.User_maximize_restore := False;
       Create_MDI_Child
         (New_Window.all,
          Main_Window,
          GU2G (New_Window.ID.Short_Name),
          Is_Dynamic => True);
       Main_Window.MDI_Active_Window (New_Window.all);
-      New_Window.Editor.Load_text (contents => unpacked_str);
+      New_Window.Editor.Load_Text (contents => unpacked_str);
       if Is_Help then
         New_Window.Editor.Set_Read_Only (True);
       else
@@ -96,14 +96,15 @@ package body LEA_GWin.Help is
       Message_Box (Main_Window, "Embedded file", "Could not unpack file from " & S2G (lea_exe));
   end Show_embedded;
 
-  procedure Show_help (Main_Window : in out MDI_Main.MDI_Main_Type) is
+  procedure Show_Help (Main_Window : in out MDI_Main.MDI_Main_Type) is
   begin
     Show_embedded (Main_Window, "lea_help.txt", "Help", Is_Help => True);
-  end Show_help;
+  end Show_Help;
 
-  procedure Show_sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, File_Name : String) is
+  procedure Show_Sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, File_Name : String) is
   begin
-    Show_embedded (Main_Window, "hac_samples/" & Dir & '/' & File_Name, File_Name, Is_Help => False);
-  end Show_sample;
+    Show_embedded
+      (Main_Window, "hac_samples/" & Dir & '/' & File_Name, File_Name, Is_Help => False);
+  end Show_Sample;
 
-end LEA_GWin.Help;
+end LEA_GWin.Embedded_Texts;

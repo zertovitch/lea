@@ -1,6 +1,6 @@
 with LEA_Common.Syntax;
 
-with LEA_GWin.Help,
+with LEA_GWin.Embedded_Texts,
      LEA_GWin.MDI_Child,
      LEA_GWin.Modal_Dialogs,
      LEA_GWin.Options,
@@ -665,7 +665,7 @@ package body LEA_GWin.MDI_Main is
       when IDM_ABOUT =>
         Modal_Dialogs.Show_About_Box (Window);
       when IDM_Quick_Help =>
-        Help.Show_help (Window);
+        Embedded_Texts.Show_Help (Window);
       when IDM_Ada_Sample =>
         Modal_Dialogs.Browse_and_Get_Code_Sample (Window);
       when IDM_Notepad_view =>

@@ -914,7 +914,7 @@ package body LEA_GWin.Editor is
     end if;
   end Duplicate;
 
-  procedure Load_text (Editor : in out LEA_Scintilla_Type; contents : String) is
+  procedure Load_Text (Editor : in out LEA_Scintilla_Type; contents : String) is
     p : Character := ' ';
   begin
     Editor.Set_EOL_Mode (SC_EOL_CRLF);
@@ -935,7 +935,7 @@ package body LEA_GWin.Editor is
     Editor.Empty_Undo_Buffer;
     Editor.Set_Save_Point;
     Editor.modified:= False;
-  end Load_text;
+  end Load_Text;
 
   procedure Load_text (Editor : in out LEA_Scintilla_Type) is
     use Ada.Streams.Stream_IO;
@@ -948,7 +948,7 @@ package body LEA_GWin.Editor is
       s : String (1 .. Integer (l));
     begin
       String'Read (Stream(f), s);
-      Editor.Load_text (contents => s);
+      Editor.Load_Text (contents => s);
     end;
     Close(f);
   end Load_text;
