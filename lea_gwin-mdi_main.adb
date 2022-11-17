@@ -181,14 +181,14 @@ package body LEA_GWin.MDI_Main is
   end Open_Child_Window_And_Load;
 
   overriding procedure On_Button_Select (
-        Control : in out MDI_Toolbar_Type;
+        Control : in out LEA_Toolbar_Type;
         Item    : in     Integer           ) is
     Parent : constant MDI_Main_Access := MDI_Main_Access (Controlling_Parent (Control));
   begin
     On_Menu_Select (Parent.all, Item);
   end On_Button_Select;
 
-  overriding procedure On_Change (Control : in out MDI_Tab_Bar_Type) is
+  overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type) is
     dummy : Boolean;
   begin
     Focus_an_already_opened_window
@@ -197,7 +197,7 @@ package body LEA_GWin.MDI_Main is
        is_open => dummy);
   end On_Change;
 
-  function Tab_Index (Control : in out MDI_Tab_Bar_Type; ID : ID_Type) return Integer is
+  function Tab_Index (Control : in out LEA_Tab_Bar_Type; ID : ID_Type) return Integer is
   begin
     for index in 0 .. Control.Tab_Count - 1 loop
       if Equivalent (ID, Control.ID.Element (index)) then

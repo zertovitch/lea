@@ -20,26 +20,27 @@ with Interfaces.C;
 
 package LEA_GWin.MDI_Main is
 
-  type MDI_Toolbar_Type is
+  type LEA_Toolbar_Type is
     new GWindows.Common_Controls.Toolbar_Control_Type with null record;
 
   --  Handle clicks on toolbar:
-  overriding procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
-                                         Item    : in     Integer);
+  overriding procedure On_Button_Select
+    (Control : in out LEA_Toolbar_Type;
+     Item    : in     Integer);
 
   type MDI_Main_Type;
   type MDI_Main_Access is access all MDI_Main_Type;
 
-  type MDI_Tab_Bar_Type is
+  type LEA_Tab_Bar_Type is
     new GWindows.Common_Controls.Tab_Control_Type with
       record
-        MDI_Parent : MDI_Main_Access;  --  -> access to the containing window
-        ID         : ID_Vectors.Vector;
+        MDI_Parent : MDI_Main_Access;    --  Access to the containing main window
+        ID         : ID_Vectors.Vector;  --  File & Short Names corresponding to tabs
       end record;
 
-  overriding procedure On_Change (Control : in out MDI_Tab_Bar_Type);
+  overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type);
 
-  function Tab_Index (Control : in out MDI_Tab_Bar_Type; ID : ID_Type) return Integer;
+  function Tab_Index (Control : in out LEA_Tab_Bar_Type; ID : ID_Type) return Integer;
 
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
 
@@ -52,11 +53,11 @@ package LEA_GWin.MDI_Main is
         --  MRU (Most recently used) files names:
         --  Menu ID's stored into a handy array
         IDM_MRU                : IDM_MRU_List;
-        Tool_Bar               : MDI_Toolbar_Type;
+        Tool_Bar               : LEA_Toolbar_Type;
         Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         --
-        Tab_Bar                : MDI_Tab_Bar_Type;
+        Tab_Bar                : LEA_Tab_Bar_Type;
         --
         Project_Panel          : Sliding_Panels.Project_Panel_Type;
         Message_Panel          : Sliding_Panels.Message_Panel_Type;

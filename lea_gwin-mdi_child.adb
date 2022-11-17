@@ -127,7 +127,7 @@ package body LEA_GWin.MDI_Child is
     end Update_Status_Bar;
 
     procedure Update_Tool_Bar is
-      bar : MDI_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
+      bar : LEA_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
       is_any_selection: constant Boolean :=
         Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
       use LEA_Resource_GUI;
@@ -760,7 +760,7 @@ package body LEA_GWin.MDI_Child is
   end On_Menu_Select;
 
   overriding procedure On_Focus (Window : in out MDI_Child_Type) is
-    tab_bar : MDI_Tab_Bar_Type renames Window.MDI_Parent.Tab_Bar;
+    tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Parent.Tab_Bar;
     tab_index : Integer;
   begin
     Update_Display (Window, toolbar_and_menu);
@@ -775,8 +775,8 @@ package body LEA_GWin.MDI_Child is
                                  Can_Close :    out Boolean)
   is
     use LEA_Resource_GUI;
-    bar     : MDI_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
-    tab_bar : MDI_Tab_Bar_Type renames Window.MDI_Parent.Tab_Bar;
+    bar     : LEA_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
+    tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Parent.Tab_Bar;
     tab_index : Integer;
   begin
     Can_Close:= True;
