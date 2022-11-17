@@ -8,6 +8,6 @@ package LEA_GWin.Embedded_Texts is
 
   procedure Show_Help (Main_Window : in out MDI_Main.MDI_Main_Type);
 
-  procedure Show_Sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, File_Name : String);
+  procedure Show_Sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, Sample_Name : String);
 
 end LEA_GWin.Embedded_Texts;

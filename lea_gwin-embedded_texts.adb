@@ -27,31 +27,43 @@ package body LEA_GWin.Embedded_Texts is
     zi : Zip.Zip_info;
     mem_stream_unpacked : aliased Memory_Zipstream;
     unpacked : HAT.VString;
-    already_open: Boolean := False;
+    already_open : Boolean := False;
+    New_ID : constant ID_Type :=
+      (File_Name  => Null_GString_Unbounded,  --  No file until first "Save".
+       Short_Name => G2GU (S2G (Short_Name)));
     --
-    procedure Check_help_doc (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
+    procedure Check_Duplicate_Embedded_Doc
+      (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
     begin
+      if already_open then
+        --  Duplicate already found.
+        return;
+      end if;
       if Any_Window.all in MDI_Child_Type'Class then
         declare
-          one_child: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
+          one_child : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
         begin
-          if one_child.Editor.document_kind = help_main then
+          if Is_Help then
+            already_open := one_child.Editor.document_kind = help_main;
+          else
+            already_open := Equivalent (one_child.ID, New_ID);
+          end if;
+          if already_open then
             one_child.Focus;
-            already_open := True;
           end if;
         end;
       end if;
-    end Check_help_doc;
+    end Check_Duplicate_Embedded_Doc;
     --
     New_Window : MDI_Child_Access;
   begin
-    if Is_Help then  --  We want only one copy of the Embedded_Texts file displayed
-      GWindows.Base.Enumerate_Children (Main_Window.MDI_Client_Window.all,
-                                        Check_help_doc'Unrestricted_Access);
-      if already_open then
-        return;
-      end if;
+    --  We want only one copy of the help of any sample document displayed.
+    GWindows.Base.Enumerate_Children
+      (Main_Window.MDI_Client_Window.all,
+       Check_Duplicate_Embedded_Doc'Unrestricted_Access);
+    if already_open then
+      return;
     end if;
     Zip.Load (zi, lea_exe);
     UnZip.Streams.Extract (mem_stream_unpacked, zi, File_Name);
@@ -70,14 +82,11 @@ package body LEA_GWin.Embedded_Texts is
       if Is_Help then
         New_Window.Editor.document_kind := help_main;
       end if;
-      New_Window.ID.Short_Name:= G2GU (S2G (Short_Name));
       Main_Window.User_maximize_restore := False;
-      Create_MDI_Child
-        (New_Window.all,
-         Main_Window,
-         GU2G (New_Window.ID.Short_Name),
-         Is_Dynamic => True);
-      Main_Window.MDI_Active_Window (New_Window.all);
+      New_Window.Create_LEA_MDI_Child
+        (Main_Window,
+         (File_Name  => Null_GString_Unbounded,  --  No file until first "Save".
+          Short_Name => G2GU (S2G (Short_Name))));
       New_Window.Editor.Load_Text (contents => unpacked_str);
       if Is_Help then
         New_Window.Editor.Set_Read_Only (True);
@@ -101,10 +110,10 @@ package body LEA_GWin.Embedded_Texts is
     Show_embedded (Main_Window, "lea_help.txt", "Help", Is_Help => True);
   end Show_Help;
 
-  procedure Show_Sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, File_Name : String) is
+  procedure Show_Sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, Sample_Name : String) is
   begin
     Show_embedded
-      (Main_Window, "hac_samples/" & Dir & '/' & File_Name, File_Name, Is_Help => False);
+      (Main_Window, "hac_samples/" & Dir & '/' & Sample_Name, Sample_Name, Is_Help => False);
   end Show_Sample;
 
 end LEA_GWin.Embedded_Texts;

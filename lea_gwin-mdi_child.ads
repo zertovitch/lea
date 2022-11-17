@@ -88,6 +88,11 @@ package LEA_GWin.MDI_Child is
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);
 
+  procedure Create_LEA_MDI_Child
+    (Window : in out MDI_Child_Type;
+     Parent : in out MDI_Main.MDI_Main_Type;
+     ID     : in     ID_Type);
+
   procedure Finish_subwindow_opening (Window : in out MDI_Child_Type);
 
   procedure On_Save (Window : in out MDI_Child_Type);

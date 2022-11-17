@@ -203,7 +203,7 @@ package body LEA_GWin.MDI_Child is
     Window.Small_Icon("LEA_Doc_Icon_Name");
 
     --  Filial feelings:
-    Window.MDI_Parent:= MDI_Main_Access(Controlling_Parent(Window));
+    Window.MDI_Parent := MDI_Main_Access (Controlling_Parent (Window));
     --  No per-child-window option in this app
     --
     --  --  We copy options to child level:
@@ -258,7 +258,7 @@ package body LEA_GWin.MDI_Child is
         Window.MDI_Parent.Freeze;
         Window.Zoom;
       end if;
-      On_Size(Window,Width(Window),Height(Window));
+      On_Size (Window, Width(Window), Height(Window));
       if memo_unmaximized_children then
         Window.MDI_Parent.Thaw;  --  Before Zoom, otherwise drawinf is uncomplete.
         Window.Zoom (False);
@@ -267,8 +267,34 @@ package body LEA_GWin.MDI_Child is
     end;
     Window.Update_Display (first_display);
     Window.Accept_File_Drag_And_Drop;
-    Ada.Numerics.Float_Random.Reset(Window.temp_name_gen);
+    Ada.Numerics.Float_Random.Reset (Window.temp_name_gen);
   end On_Create;
+
+  procedure Create_LEA_MDI_Child
+    (Window : in out MDI_Child_Type;
+     Parent : in out MDI_Main.MDI_Main_Type;
+     ID     : in     ID_Type)
+  is
+    procedure Append_Tab is
+      title : constant GString := GU2G (Window.ID.Short_Name);
+      start : Natural := title'First;
+    begin
+      for i in reverse title'Range loop
+        if title (i) = '\' then
+          start := i + 1;
+          exit;
+        end if;
+      end loop;
+      Parent.Tab_Bar.Insert_Tab (Parent.Tab_Bar.Tab_Count, title (start .. title'Last));
+      Parent.Tab_Bar.Selected_Tab (Parent.Tab_Bar.Tab_Count - 1);
+      Parent.Tab_Bar.ID.Append (Window.ID);
+    end Append_Tab;
+  begin
+    Window.ID := ID;
+    Create_MDI_Child (Window, Parent, GU2G (ID.Short_Name), Is_Dynamic => True);
+    MDI_Active_Window (Parent, Window);
+    Append_Tab;
+  end Create_LEA_MDI_Child;
 
   procedure Finish_subwindow_opening (Window : in out MDI_Child_Type) is
     MDI_Main : MDI_Main_Type renames Window.MDI_Parent.all;

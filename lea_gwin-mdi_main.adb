@@ -109,21 +109,6 @@ package body LEA_GWin.MDI_Main is
     );
   end Close_extra_first_child;
 
-  procedure Append_Tab (Window : in out MDI_Main_Type; New_Child : MDI_Child_Type) is
-    title : constant GString := GU2G (New_Child.ID.Short_Name);
-    start : Natural := title'First;
-  begin
-    for i in reverse title'Range loop
-      if title (i) = '\' then
-        start := i + 1;
-        exit;
-      end if;
-    end loop;
-    Window.Tab_Bar.Insert_Tab (Window.Tab_Bar.Tab_Count, title (start .. title'Last));
-    Window.Tab_Bar.Selected_Tab (Window.Tab_Bar.Tab_Count - 1);
-    Window.Tab_Bar.ID.Append (New_Child.ID);
-  end Append_Tab;
-
   procedure Open_Child_Window_And_Load
     (Window       : in out MDI_Main_Type;
      File_Name,
@@ -149,10 +134,7 @@ package body LEA_GWin.MDI_Main is
     Close_extra_first_child (Window);
     --
     Window.User_maximize_restore:= False;
-    New_Window.ID := New_ID;
-    Create_MDI_Child (New_Window.all, Window, File_Title, Is_Dynamic => True);
-    MDI_Active_Window (Window, New_Window.all);
-    Append_Tab (Window, New_Window.all);
+    New_Window.Create_LEA_MDI_Child (Window, New_ID);
     begin
       New_Window.Editor.Load_text;
       file_loaded := True;
@@ -538,10 +520,10 @@ package body LEA_GWin.MDI_Main is
   begin
     New_Window.Extra_first_doc := extra_first_doc;
     Window.User_maximize_restore := False;
-    Create_MDI_Child (New_Window.all, Window, Untitled_N, Is_Dynamic => True);
-    New_Window.ID.Short_Name := G2GU (Untitled_N);
-    Append_Tab (Window, New_Window.all);
-    MDI_Active_Window (Window, New_Window.all);
+    New_Window.Create_LEA_MDI_Child
+      (Window,
+       (File_Name  => Null_GString_Unbounded,  --  No file until first "Save".
+        Short_Name => G2GU (Untitled_N)));
 
     --  Transfer user-defined default options:
     --  New_Window.xxx.Opt:= Gen_Opt.Options_For_New;
