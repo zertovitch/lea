@@ -368,9 +368,9 @@ package body LEA_GWin.MDI_Child is
           raise backup_error_3;
       end;
     end if;
-    --  The eventual startup extra new window is now saved.
-    --  So, in any case, we won't close it now on next window open.
-    MDI_Child.Extra_first_doc:= False;
+    --  The eventual startup extra new document is now saved as a file.
+    --  So, in any case, we won't close it now on next window opening.
+    MDI_Child.Extra_First_Doc := False;
     MDI_Child.Update_Common_Menus (File_Name, MDI_Child.Editor.Get_current_line);
     MDI_Child.Editor.Set_Save_Point;
     MDI_Child.Editor.modified:= False;
@@ -400,10 +400,10 @@ package body LEA_GWin.MDI_Child is
     end if;
   end On_Save;
 
-  function Is_file_saved (Window : in MDI_Child_Type) return Boolean is
+  overriding function Is_Document_Modified (Window : in MDI_Child_Type) return Boolean is
   begin
-    return not Window.Editor.modified;
-  end Is_file_saved;
+    return Window.Editor.modified;
+  end Is_Document_Modified;
 
   ----------------
   -- On_Save_As --
@@ -478,9 +478,9 @@ package body LEA_GWin.MDI_Child is
     begin
       if Any_Window.all in MDI_Child_Type'Class then
         declare
-          one_child: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
+          one_child : MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
         begin
-          if not one_child.Is_file_saved then
+          if one_child.Is_Document_Modified then
             one_child.On_Save;
           end if;
         end;
@@ -780,9 +780,8 @@ package body LEA_GWin.MDI_Child is
     tab_index : Integer;
   begin
     Can_Close:= True;
-    if Is_file_saved(Window) then
-      Window.Update_Common_Menus (GU2G (Window.ID.File_Name), Window.Editor.Get_current_line);
-    else -- This happens only for documents that may stay in an unsaved state.
+    if Window.Is_Document_Modified then
+      --  This happens only for documents that may stay in an unsaved state.
       loop
         case Message_Box
                (Window,
@@ -792,15 +791,24 @@ package body LEA_GWin.MDI_Child is
                 Yes_No_Cancel_Box,
                 Question_Icon)
         is
-          when Yes    => On_Save(Window);
-                         exit when Is_file_saved(Window);
-          when No     => exit;
-          when Cancel => Window.MDI_Parent.Success_in_enumerated_close:= False;
-                         Can_Close:= False;
-                         exit;
+          when Yes =>
+            Window.On_Save;
+            exit when not Window.Is_Document_Modified;
+          when No =>
+            exit;
+          when Cancel =>
+            Window.MDI_Parent.Success_in_enumerated_close := False;
+            Can_Close := False;
+            exit;
           when others => null;
         end case;
+        --  We continue in the loop as long as "Yes" was chosen
+        --  and the saving was unsuccessful.
       end loop;
+    else
+      --  We can safely close this document.
+      Window.Update_Common_Menus
+        (GU2G (Window.ID.File_Name), Window.Editor.Get_current_line);
     end if;
     if Can_Close then
       --  !! Empty the editor's memory if needed

@@ -8,6 +8,8 @@ with LEA_Common;
 
 with HAC_Sys.Builder;
 
+with Office_Applications;
+
 with GWindows.Common_Controls;
 with GWindows.Drawing;
 with GWindows.Packing_Boxes;
@@ -57,13 +59,11 @@ package LEA_GWin.MDI_Child is
       Area   : in     GWindows.Types.Rectangle_Type) is null;
 
   type MDI_Child_Type is
-    new GWindows.Windows.MDI.MDI_Child_Window_Type with
+    new Office_Applications.Classic_Document_Window_Type with
       record
         ID               : ID_Type;
         --  Window title = ID.Short_Name & {""|" *"}
         MDI_Parent       : LEA_GWin.MDI_Main.MDI_Main_Access; -- -> access to the containing window
-        --  new file closed if kept virgin when opening another one (like blank Excel sheet).
-        Extra_first_doc  : Boolean := False;
         Menu             : LEA_Resource_GUI.Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;
@@ -96,10 +96,8 @@ package LEA_GWin.MDI_Child is
   procedure Finish_subwindow_opening (Window : in out MDI_Child_Type);
 
   procedure On_Save (Window : in out MDI_Child_Type);
-  --  This would be abstract in a 'generic' Office framework.
 
-  function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
-  --  This would be abstract in a 'generic' Office framework.
+  overriding function Is_Document_Modified (Window : in MDI_Child_Type) return Boolean;
 
   procedure On_Save_As (Window : in out MDI_Child_Type);
 

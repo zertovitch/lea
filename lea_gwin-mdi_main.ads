@@ -7,6 +7,8 @@ with LEA_Resource_GUI;
 
 with LEA_Common.User_options;
 
+with Office_Applications;
+
 with GWindows.Common_Controls;
 with GWindows.Drawing;
 with GWindows.Image_Lists;
@@ -45,7 +47,7 @@ package LEA_GWin.MDI_Main is
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
 
   type MDI_Main_Type is
-    new GWindows.Windows.MDI.MDI_Main_Window_Type with
+    new Office_Applications.Classic_Main_Window_Type with
       record
         Project_File_Name      : GString_Unbounded;
         Project_Short_Name     : GString_Unbounded;

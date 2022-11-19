@@ -81,12 +81,11 @@ package body LEA_GWin.Embedded_Texts is
       New_Window := new MDI_Child_Type;
       if Is_Help then
         New_Window.Editor.document_kind := help_main;
+      else
+        Main_Window.Close_Initial_Document;
       end if;
       Main_Window.User_maximize_restore := False;
-      New_Window.Create_LEA_MDI_Child
-        (Main_Window,
-         (File_Name  => Null_GString_Unbounded,  --  No file until first "Save".
-          Short_Name => G2GU (S2G (Short_Name))));
+      New_Window.Create_LEA_MDI_Child (Main_Window, New_ID);
       New_Window.Editor.Load_Text (contents => unpacked_str);
       if Is_Help then
         New_Window.Editor.Set_Read_Only (True);

@@ -84,31 +84,6 @@ package body LEA_GWin.MDI_Main is
     Enumerate_Children (MDI_Client_Window (Window).all, Redraw_Child'Access);
   end Redraw_all;
 
-  procedure Close_extra_first_child (MDI_Main: in out MDI_Main_Type) is
-    --
-    procedure Close_extra_first_document (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
-    is
-    begin
-      if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
-        declare
-          w: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
-        begin
-          if w.Extra_first_doc and Is_file_saved (w) then
-            --  This situation happens only if the blank startup editor is at its initial state;
-            --  the text is either untouched, or with all modifications undone.
-            Any_Window.Close;
-          end if;
-        end;
-      end if;
-    end Close_extra_first_document;
-    --
-  begin
-    Enumerate_Children (
-      MDI_Client_Window (MDI_Main).all,
-      Close_extra_first_document'Unrestricted_Access
-    );
-  end Close_extra_first_child;
-
   procedure Open_Child_Window_And_Load
     (Window       : in out MDI_Main_Type;
      File_Name,
@@ -131,7 +106,7 @@ package body LEA_GWin.MDI_Main is
     end if;
     New_Window := new MDI_Child_Type;
     --  We do here like Excel or Word: close the unused blank window
-    Close_extra_first_child (Window);
+    Window.Close_Initial_Document;
     --
     Window.User_maximize_restore:= False;
     New_Window.Create_LEA_MDI_Child (Window, New_ID);
@@ -518,7 +493,7 @@ package body LEA_GWin.MDI_Main is
     Untitled_N : constant GString := "Untitled" & Suffix;
 
   begin
-    New_Window.Extra_first_doc := extra_first_doc;
+    New_Window.Extra_First_Doc := extra_first_doc;
     Window.User_maximize_restore := False;
     New_Window.Create_LEA_MDI_Child
       (Window,
