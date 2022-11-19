@@ -10,6 +10,12 @@ with Interfaces.C;
 with System;
 
 package body LEA_GWin.Installer is
+
+  --  "MemoryModule is a library that can be used to load a DLL
+  --   completely from memory - without storing on the disk first."
+  --
+  --  https://github.com/fancycode/MemoryModule
+  --
   pragma Linker_Options ("..\..\MemoryModule.o");
 
   use Ada.Strings.Unbounded;

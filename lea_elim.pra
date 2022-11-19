@@ -358,7 +358,6 @@ pragma Eliminate (GWindows.Common_Controls, Get_Count, Source_Location => "gwind
 pragma Eliminate (GWindows.Common_Controls, SendMessageA, Source_Location => "gwindows-common_controls.adb:3063");
 pragma Eliminate (GWindows.Common_Controls, SendMessageW, Source_Location => "gwindows-common_controls.adb:3071");
 pragma Eliminate (GWindows.Common_Controls, Set_Image_List, Source_Location => "gwindows-common_controls.ads:1017");
-pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:3101");
 pragma Eliminate (GWindows.Common_Controls, Set_Image, Source_Location => "gwindows-common_controls.ads:1021");
 pragma Eliminate (GWindows.Common_Controls, On_Selection_Change_Handler, Source_Location => "gwindows-common_controls.ads:1033");
 pragma Eliminate (GWindows.Common_Controls, Create, Source_Location => "gwindows-common_controls.ads:648");
