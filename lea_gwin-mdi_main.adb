@@ -149,6 +149,9 @@ package body LEA_GWin.MDI_Main is
     else
       Message_Box
         (Window, "Error", "File " & File_Name & " not found", Icon => Exclamation_Icon);
+      --  Remove tab (would be done by On_Close if ID.File_Name was
+      --  not erased before closing the subwindow).
+      Window.Tab_Bar.Delete_Tab (Window.Tab_Bar.Tab_Index (New_Window.ID));
       --  Prevent MRU name addition:
       New_Window.ID.File_Name := Null_GString_Unbounded;
       New_Window.Close;
@@ -171,6 +174,14 @@ package body LEA_GWin.MDI_Main is
        Control.ID.Element (Control.Selected_Tab),
        is_open => dummy);
   end On_Change;
+
+  overriding procedure Delete_Tab (Control : in out LEA_Tab_Bar_Type; Where : in Integer) is
+  begin
+    if Where >= 0 then
+      GWindows.Common_Controls.Tab_Control_Type (Control).Delete_Tab (Where);  --  Call parent method
+      Control.ID.Delete (Where);
+    end if;
+  end Delete_Tab;
 
   function Tab_Index (Control : in out LEA_Tab_Bar_Type; ID : ID_Type) return Integer is
   begin

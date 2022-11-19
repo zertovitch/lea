@@ -270,6 +270,18 @@ package body LEA_GWin.MDI_Child is
     Ada.Numerics.Float_Random.Reset (Window.temp_name_gen);
   end On_Create;
 
+  function Simple_Name (path : GString) return GString is
+    start : Natural := path'First;
+  begin
+    for i in reverse path'Range loop
+      if path (i) = '\' then
+        start := i + 1;
+        exit;
+      end if;
+    end loop;
+    return path (start .. path'Last);
+  end Simple_Name;
+
   procedure Create_LEA_MDI_Child
     (Window : in out MDI_Child_Type;
      Parent : in out MDI_Main.MDI_Main_Type;
@@ -277,15 +289,8 @@ package body LEA_GWin.MDI_Child is
   is
     procedure Append_Tab is
       title : constant GString := GU2G (Window.ID.Short_Name);
-      start : Natural := title'First;
     begin
-      for i in reverse title'Range loop
-        if title (i) = '\' then
-          start := i + 1;
-          exit;
-        end if;
-      end loop;
-      Parent.Tab_Bar.Insert_Tab (Parent.Tab_Bar.Tab_Count, title (start .. title'Last));
+      Parent.Tab_Bar.Insert_Tab (Parent.Tab_Bar.Tab_Count, Simple_Name (title));
       Parent.Tab_Bar.Selected_Tab (Parent.Tab_Bar.Tab_Count - 1);
       Parent.Tab_Bar.ID.Append (Window.ID);
     end Append_Tab;
@@ -414,6 +419,8 @@ package body LEA_GWin.MDI_Child is
     New_File_Name : GWindows.GString_Unbounded;
     File_Title    : GWindows.GString_Unbounded;
     Success       : Boolean;
+    New_ID : ID_Type;
+    tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Parent.Tab_Bar;
     use HAC_Sys.Defs;
     use type Alfa;
   begin
@@ -457,11 +464,20 @@ package body LEA_GWin.MDI_Child is
         return;
       end if;
     end if;
+    --  !!  Address what happens if another open document has the new file name!
 
     Save (Window, GU2G (New_File_Name));
-    Window.ID.File_Name := New_File_Name;
     Window.Text (GU2G (File_Title));
-    Window.ID.Short_Name := File_Title;
+    New_ID := (File_Name => New_File_Name, Short_Name => File_Title);
+    --  Change title in the tab bar.
+    for index in 0 .. tab_bar.Tab_Count - 1 loop
+      if tab_bar.ID (index) = Window.ID then
+        tab_bar.ID (index) := New_ID;
+        tab_bar.Text (index, Simple_Name (GU2G (New_File_Name)));
+        exit;
+      end if;
+    end loop;
+    Window.ID := New_ID;
     Window.Update_Common_Menus (GU2G (New_File_Name), Window.Editor.Get_current_line);
     Window.Editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
@@ -777,7 +793,6 @@ package body LEA_GWin.MDI_Child is
     use LEA_Resource_GUI;
     bar     : LEA_Toolbar_Type renames Window.MDI_Parent.Tool_Bar;
     tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Parent.Tab_Bar;
-    tab_index : Integer;
   begin
     Can_Close:= True;
     if Window.Is_Document_Modified then
@@ -838,11 +853,7 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Build_and_run, False);
       bar.Enabled (IDM_Show_special_symbols, False);
       bar.Enabled (IDM_Show_indentation_lines, False);
-      tab_index := tab_bar.Tab_Index (Window.ID);
-      if tab_index >= 0 then
-        Window.MDI_Parent.Tab_Bar.Delete_Tab (tab_index);
-        Window.MDI_Parent.Tab_Bar.ID.Delete (tab_index);
-      end if;
+      tab_bar.Delete_Tab (tab_bar.Tab_Index (Window.ID));
       Window.is_closing := True;
     end if;
   end On_Close;

@@ -42,6 +42,8 @@ package LEA_GWin.MDI_Main is
 
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type);
 
+  overriding procedure Delete_Tab (Control : in out LEA_Tab_Bar_Type; Where : in Integer);
+
   function Tab_Index (Control : in out LEA_Tab_Bar_Type; ID : ID_Type) return Integer;
 
   type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
