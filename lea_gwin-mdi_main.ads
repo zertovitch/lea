@@ -46,7 +46,7 @@ package LEA_GWin.MDI_Main is
 
   function Tab_Index (Control : in out LEA_Tab_Bar_Type; ID : ID_Type) return Integer;
 
-  type IDM_MRU_List is array(LEA_Common.User_options.MRU_List'Range) of Natural;
+  type IDM_MRU_List is array (LEA_Common.User_options.MRU_List'Range) of Natural;
 
   type MDI_Main_Type is
     new Office_Applications.Classic_Main_Window_Type with
@@ -78,8 +78,6 @@ package LEA_GWin.MDI_Main is
         Task_bar_gadget        : GWindows.Taskbar.Taskbar_List;
         --
         Search_box             : LEA_GWin.Search_box.LEA_search_box_type;
-        --
-        is_closing             : Boolean:= False;  --  True only during and after On_Close
         --  Direct input stream from an editor window:
         current_editor_stream  : aliased Editor.Editor_Stream_Type;
         build_successful       : Boolean := False;

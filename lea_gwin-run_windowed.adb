@@ -47,7 +47,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     Output := HAT.Null_VString;
   end Fake_Shell_Execute_Output;
 
-  MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames Window.MDI_Parent.all;
+  MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames Window.MDI_Root.all;
   ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
 
   use LEA_Common, HAC_Sys.PCode.Interpreter, Ada.Strings.Unbounded;
@@ -181,12 +181,12 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
 begin
   LEA_GWin.Messages.IO_Pipe.is_aborted_flag := False;
-  case Window.MDI_Parent.opt.toolset is
+  case Window.MDI_Root.opt.toolset is
     when HAC_mode =>
       --  !!  Check if anything compiled ?
       ml.Clear;
       ml.Set_Column ("Console", 0, 800);
-      LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (Window.MDI_Parent.Message_Panel.Message_List);
+      LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (Window.MDI_Root.Message_Panel.Message_List);
       tick:= Clock - 5.0;  --  Ensure refresh code in Boxed_Feedback is executed soon
       progress_box.Create_Full_Dialog (Window);
       progress_box.Stack_Bar.Position (0);
@@ -196,12 +196,12 @@ begin
       progress_box.Center;
       progress_box.Redraw;
       progress_box.Show;
-      Window.MDI_Parent.Disable;
+      Window.MDI_Root.Disable;
       Windowed_interpret (Window.BD, post_mortem);  --  Running the HAC program happens here.
       --  Scroll to last output line:
       ml.Ensure_Visible (Integer'Max (0, ml.Item_Count - 1), Full);
-      Window.MDI_Parent.Enable;
-      Window.MDI_Parent.Focus;
+      Window.MDI_Root.Enable;
+      Window.MDI_Root.Focus;
       if Is_Exception_Raised (post_mortem.Unhandled) then
         Show_Error;
       end if;

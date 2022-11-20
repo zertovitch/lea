@@ -24,7 +24,7 @@ package body LEA_GWin.Editor is
 
   overriding
   procedure On_Change (Editor : in out LEA_Scintilla_Type) is
-    --  parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    --  parent: MDI_Child_Type renames MDI_Child_Type(Editor.MDI_Root.all);
   begin
     --  NB: Status bar display and other changes (menus / icons) is done @ On_Update_UI
     --      Here, it causes a flood of updates on multiline edit.
@@ -65,7 +65,7 @@ package body LEA_GWin.Editor is
         then
           --  On a "Return" keypress right after "begin", "record" or "(",
           --  we add an extra indentation.
-          New_Ind := New_Ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Parent.opt.indentation;
+          New_Ind := New_Ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt.indentation;
         end if;
       end if;
       if New_Ind > 0 then
@@ -347,7 +347,7 @@ package body LEA_GWin.Editor is
       );
     --
     parent    : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
-    mdi_root  : MDI_Main_Type renames parent.MDI_Parent.all;
+    mdi_root  : MDI_Main_Type renames parent.MDI_Root.all;
     theme     : Color_Theme_Type renames mdi_root.opt.color_theme;
     Edit_Zone : constant := SCE_ADA_DEFAULT;
   begin
@@ -603,7 +603,7 @@ package body LEA_GWin.Editor is
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action)
   is
     MDI_Child : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
-    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Parent.all;
+    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
     find_str  : constant GString:= MDI_Main.Search_box.Find_box.Text;
     repl_str  : constant GString:= MDI_Main.Search_box.Replace_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
@@ -668,7 +668,7 @@ package body LEA_GWin.Editor is
             --  Not found, even *after* the wrap around: find_str is really nowhere!
             --  Restore initial selection
             Editor.Set_Sel (sel_a, sel_z);
-            Message_Box (MDI_Child.MDI_Parent.Search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
+            Message_Box (MDI_Child.MDI_Root.Search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
             if MDI_Main.Search_box.Visible then
               MDI_Main.Search_box.Focus;
             end if;
@@ -769,7 +769,7 @@ package body LEA_GWin.Editor is
           large_message_width
         );
         Message_Box (
-          MDI_Child.MDI_Parent.Search_box,
+          MDI_Child.MDI_Root.Search_box,
           "Replace all",
           "Replaced all (" &
           Trim (Integer'Wide_Image (count), Left) &

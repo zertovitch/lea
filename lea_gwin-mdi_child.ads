@@ -63,7 +63,7 @@ package LEA_GWin.MDI_Child is
       record
         ID               : ID_Type;
         --  Window title = ID.Short_Name & {""|" *"}
-        MDI_Parent       : LEA_GWin.MDI_Main.MDI_Main_Access; -- -> access to the containing window
+        MDI_Root         : LEA_GWin.MDI_Main.MDI_Main_Access; -- -> access to the containing window
         Menu             : LEA_Resource_GUI.Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Editor           : LEA_GWin.Editor.LEA_Scintilla_Type;

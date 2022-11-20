@@ -714,7 +714,6 @@ package body LEA_GWin.MDI_Main is
       GWindows.Base.On_Exception_Handler (Handler => null);
       --
       Windows_Timers.Kill_Timer(Window, timer_id);
-      Window.is_closing := True;
     end if;
   end On_Close;
 
@@ -814,9 +813,9 @@ package body LEA_GWin.MDI_Main is
       declare
         cw: MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
       begin
-        Update_MRU_Menu(cw.MDI_Parent.all, cw.Menu.Popup_0001);
-        Update_View_Menu(cw.Menu.Main, cw.MDI_Parent.opt);
-        --  Update_Toolbar_Menu(cw.View_menu, cw.MDI_Parent.Floating_toolbars);
+        Update_MRU_Menu(cw.MDI_Root.all, cw.Menu.Popup_0001);
+        Update_View_Menu(cw.Menu.Main, cw.MDI_Root.opt);
+        --  Update_Toolbar_Menu(cw.View_menu, cw.MDI_Root.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
