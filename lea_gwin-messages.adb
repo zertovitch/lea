@@ -13,7 +13,7 @@ with Ada.Strings.Unbounded,
 
 package body LEA_GWin.Messages is
 
-  procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean) is
+  procedure Message_Line_Action (Control : in out Message_List_Type; real_click : Boolean) is
     pl : LEA_LV_Ex.Data_Access;
     use HAC_Sys.Defs, LEA_LV_Ex, LEA_GWin.MDI_Main, Ada.Strings.Unbounded;
     mm : MDI_Main_Access;
@@ -24,7 +24,7 @@ package body LEA_GWin.Messages is
         if pl /= null then
           mm := MDI_Main_Access (Control.mdi_main_parent);
           mm.Open_Child_Window_And_Load
-            (S2G(To_String (pl.file_name)),
+            (S2G (To_String (pl.file_name)),
              pl.line - 1,  --  Scintilla's lines are 0-based
              pl.column_a,
              pl.column_a);
@@ -43,7 +43,7 @@ package body LEA_GWin.Messages is
         exit;  --  Found selected line, not worth to continue.
       end if;
     end loop;
-  end Message_line_action;
+  end Message_Line_Action;
 
   overriding procedure On_Create (Control : in out Message_List_Type) is
   begin
@@ -74,14 +74,14 @@ package body LEA_GWin.Messages is
 
   overriding procedure On_Click (Control : in out Message_List_Type) is
   begin
-    Control.Message_line_action (True);
+    Control.Message_Line_Action (True);
     --  Focus back on the message list (so the keyboard is also focused there)
     Control.Focus;
   end On_Click;
 
   overriding procedure On_Double_Click (Control : in out Message_List_Type) is
   begin
-    Control.Message_line_action (True);
+    Control.Message_Line_Action (True);
   end On_Double_Click;
 
   procedure Apply_Options (Control : in out Message_List_Type) is

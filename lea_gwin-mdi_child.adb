@@ -657,7 +657,7 @@ package body LEA_GWin.MDI_Child is
           for Index in 0 .. ml.Item_Count - 1 loop
             if Trim (ml.Text (Index, 0), Both) /= "" then
               ml.Selected (Index, True);
-              ml.Message_line_action (real_click => False);
+              ml.Message_Line_Action (real_click => False);
               exit;
             end if;
           end loop;

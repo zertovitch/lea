@@ -25,7 +25,7 @@ package LEA_GWin.Messages is
 
   procedure Apply_Options (Control : in out Message_List_Type);
   procedure Copy_Messages (Control : in out Message_List_Type);
-  procedure Message_line_action (Control : in out Message_List_Type; real_click : Boolean);
+  procedure Message_Line_Action (Control : in out Message_List_Type; real_click : Boolean);
   procedure Redraw_Icons (Control : in out Message_List_Type);
 
   --  Width of broadest message column in pixels.
