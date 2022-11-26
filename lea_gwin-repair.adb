@@ -57,8 +57,9 @@ package body LEA_GWin.Repair is
                 pw.Editor.Set_Sel (start_pos, end_pos);
                 pw.Editor.Clear;
             end case;
-            pw.Editor.Insert_Text (pw.Editor.Get_Current_Pos,
-              S2G (HAT.VStr_Pkg.To_String (repair.insert_or_replace)) & Optional_EOL);
+            pw.Editor.Insert_Text
+              (pw.Editor.Get_Current_Pos,
+               S2G (HAT.VStr_Pkg.To_String (repair.alternative)) & Optional_EOL);
             --
             pw.Editor.End_Undo_Action;
           end if;

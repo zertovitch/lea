@@ -17,8 +17,6 @@ package body LEA_GWin is
       Put_Line ("S1 = [" & G2S (S1) & ']');
       Put_Line ("S2 = [" & G2S (S2) & ']');
     end if;
-    To_Upper (F1);
-    To_Upper (F2);
     if F1 = "" or else F2 = "" then
       --  The "or" condition lets a chance
       --  for the case where an assumed file is searched,
@@ -30,6 +28,8 @@ package body LEA_GWin is
       To_Upper (S2);
       result := S1 = S2;
     else
+      To_Upper (F1);
+      To_Upper (F2);
       result := F1 = F2;
     end if;
     if trace then
