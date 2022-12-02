@@ -429,7 +429,7 @@ package body LEA_GWin.MDI_Child is
       New_File_Name :=
         G2GU
           (S2G
-             (HAC_Sys.Librarian.GNAT_Naming
+             (HAC_Sys.Librarian.GNAT_File_Naming
                 (A2S (Window.BD.CD.Main_Program_ID_with_case)))) &
         ".adb";
     elsif Window.ID.File_Name = "" then
