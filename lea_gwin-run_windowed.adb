@@ -77,7 +77,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
       --  when selecting a row in the error / warnings message list.
       ml.Item_Data(
         count,
-        new Diagnostic_Kit'(diagnostic)  --  Copy diagnostic into a new heap allocated object.
+        new Diagnostic_Kit'(diagnostic)  --  Copy `diagnostic` into a new heap allocated object.
       );
       ml.Set_Sub_Item (S2G (Block_Name), count, 1);
       count := count + 1;
@@ -103,9 +103,17 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
          Icon => Exclamation_Icon);
     end if;
     ml.Clear;
-    ml.Set_Column ("Line", 0, 60);
+    ml.Set_Column ("Line", 0, 100);
     ml.Set_Column ("Trace-back: approximate location", 1, 800);
+    --
     ML_Trace_Back (post_mortem.Unhandled);
+    --
+    ml.Insert_Item ("-------", count);
+    ml.Set_Sub_Item ("----- Exception information -----", count, 1);
+    ml.Insert_Item ("Name", count + 1);
+    ml.Set_Sub_Item (S2G (Image (post_mortem.Unhandled)), count + 1, 1);
+    ml.Insert_Item ("Message", count + 2);
+    ml.Set_Sub_Item (S2G (Message (post_mortem.Unhandled)), count + 2, 1);
   end Show_Error;
 
   --  The following is copied and adapted from AZip's progress bar.
