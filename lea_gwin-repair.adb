@@ -28,21 +28,53 @@ package body LEA_GWin.Repair is
     is
       use GWindows.Scintilla;
       line_pos, start_pos, end_pos : Position;
+      expanded : GString_Unbounded;
     begin
       if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
         declare
-          pw: MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
-          function Optional_EOL return GString is
+          pw : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
+
+          procedure Expand is
+            prev_is_backslash : Boolean := False;
+            alt : constant GString := S2G (HAT.VStr_Pkg.To_String (repair.alternative));
+            curr_ind : constant Integer := pw.Editor.Get_Line_Indentation (repair.line - 1);
           begin
-            if has_new_line (repair.repair_kind) then
-              return pw.Editor.EOL;
-            else
-              return "";
+            for c of alt loop
+              case c is
+                when 't' =>  --  Tab (\t), replaced by spaces matching indentation setting.
+                  if prev_is_backslash then
+                    expanded := expanded & (MDI_Main.opt.indentation) * ' ';
+                  else
+                    expanded := expanded & c;
+                  end if;
+                when 'n' =>  --  New line (\n), followed by current line's indentation.
+                  if prev_is_backslash then
+                    expanded := expanded & pw.Editor.EOL & curr_ind * ' ';
+                  else
+                    expanded := expanded & c;
+                  end if;
+                when '\' =>
+                  --  Delay the '\'.
+                  null;
+                when others =>
+                  if prev_is_backslash then
+                    --  Backslash has no effect on this value of c.
+                    expanded := expanded & '\' & c;
+                  else
+                    expanded := expanded & c;
+                  end if;
+              end case;
+              prev_is_backslash := c = '\';
+            end loop;
+            if prev_is_backslash then
+              expanded := expanded & '\';
             end if;
-          end Optional_EOL;
+          end Expand;
+
         begin
           if pw.ID.File_Name = file_name then
             pw.Focus;  --  Focus on document already open in our app.
+            --
             pw.Editor.Begin_Undo_Action;
             --
             line_pos := pw.Editor.Position_From_Line (repair.line - 1);  --  Scintilla's lines are 0-based
@@ -50,22 +82,25 @@ package body LEA_GWin.Repair is
             end_pos   := line_pos + Position (repair.column_z);
             case repair.repair_kind is
               when none =>
-                null;  --  We should not get here.
-              when insert | insert_line =>
+                --  We should not get here.
+                null;
+              when insert =>
+                --  Set the caret right at the insersion position:
                 pw.Editor.Set_Sel (start_pos, start_pos);
               when replace_token =>
+                --  Mark the string to be deleted and delete it:
                 pw.Editor.Set_Sel (start_pos, end_pos);
                 pw.Editor.Clear;
             end case;
-            pw.Editor.Insert_Text
-              (pw.Editor.Get_Current_Pos,
-               S2G (HAT.VStr_Pkg.To_String (repair.alternative)) & Optional_EOL);
+            Expand;
+            pw.Editor.Insert_Text (pw.Editor.Get_Current_Pos, GU2G (expanded));
             --
             pw.Editor.End_Undo_Action;
           end if;
         end;
       end if;
     end Repair_in_editor;
+
   begin
     if repair.repair_kind = none then
       return;
