@@ -627,8 +627,10 @@ package body LEA_GWin.MDI_Child is
           when Ada.Directories.Name_Error => null;  --  Could be a sample, an unsaved file, ...
         end;
         ml.Clear;
+        --  Hiding of column 2 is on purpose before setting width for 0 and 1.
+        ml.Set_Column ("", 2, 0);
         ml.Set_Column ("Line",     0, 60);
-        ml.Set_Column ("Message",  1, 800);
+        ml.Set_Column_Scroll_Left ("Message",  1, 800);
         Set_Message_Feedbacks
           (Window.BD,
            (pipe         => LEA_HAC_Build_Error_Feedback'Unrestricted_Access,

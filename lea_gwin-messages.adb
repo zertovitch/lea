@@ -56,22 +56,6 @@ package body LEA_GWin.Messages is
     Control.Dock (GWindows.Base.Fill);
   end On_Create;
 
-  overriding procedure Clear (Control : in out Message_List_Type) is
-  begin
-    --
-    --  Before clearing, we set the columns' widths to a minimal
-    --  value, in order to force a horizontal scrolling to the leftmost
-    --  position. Otherwise the next messages (build, run, find all, ...)
-    --  won't be visible until the user shifts the scroll bar to the left.
-    --
-    for c in 0 .. Control.Column_Count - 1 loop
-      --  GWindows.Message_Boxes.Message_Box
-      --    (Control, "Clear", Control.Column_Width (c)'Wide_Image);
-      Control.Set_Column_Width (c, 1);
-    end loop;
-    LEA_LV_Ex.Ex_List_View_Control_Type (Control).Clear;  --  Call parent method
-  end Clear;
-
   overriding procedure On_Click (Control : in out Message_List_Type) is
   begin
     Control.Message_Line_Action (True);
@@ -166,6 +150,20 @@ package body LEA_GWin.Messages is
       end if;
     end loop;
   end Redraw_Icons;
+
+  procedure Set_Column_Scroll_Left
+    (Control : in out Message_List_Type;
+     Text    : in     GString;
+     Index   : in     Integer;
+     Width   : in     Integer)
+  is
+  begin
+    --  Call parent method with a small width to force
+    --  a horizontal scroll to the left:
+    LEA_LV_Ex.Ex_List_View_Control_Type (Control).Set_Column (Text, Index, 20);
+    --  Call parent method with correct width:
+    LEA_LV_Ex.Ex_List_View_Control_Type (Control).Set_Column (Text, Index, Width);
+  end Set_Column_Scroll_Left;
 
   function Wrench_Icon (is_reparable, has_dark_background : Boolean) return Natural is
   begin

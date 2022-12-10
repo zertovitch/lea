@@ -15,7 +15,6 @@ package LEA_GWin.Messages is
 
   overriding procedure On_Create (Control : in out Message_List_Type);
   --
-  overriding procedure Clear (Control : in out Message_List_Type);
   overriding procedure On_Click (Control : in out Message_List_Type);
   overriding procedure On_Double_Click (Control : in out Message_List_Type);
 
@@ -27,6 +26,11 @@ package LEA_GWin.Messages is
   procedure Copy_Messages (Control : in out Message_List_Type);
   procedure Message_Line_Action (Control : in out Message_List_Type; real_click : Boolean);
   procedure Redraw_Icons (Control : in out Message_List_Type);
+  procedure Set_Column_Scroll_Left
+    (Control : in out Message_List_Type;
+     Text    : in     GString;
+     Index   : in     Integer;
+     Width   : in     Integer);
 
   --  Width of broadest message column in pixels.
   --  Ideally, a function using something like mdi parent's Client_Area_Width

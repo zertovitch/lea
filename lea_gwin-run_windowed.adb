@@ -105,6 +105,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     ml.Clear;
     ml.Set_Column ("Line", 0, 100);
     ml.Set_Column ("Trace-back: approximate location", 1, 800);
+    ml.Set_Column ("", 2, 0);
     --
     ML_Trace_Back (post_mortem.Unhandled);
     --
@@ -126,7 +127,9 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     --  Will propagate user_abort upon next Boxed_Feedback.
   end Abort_clicked;
   --
-  tick: Ada.Calendar.Time;
+  tick  : Ada.Calendar.Time;
+  start : constant Ada.Calendar.Time := Ada.Calendar.Clock;
+  hidden_progress_box : Boolean := True;
   --
   procedure Boxed_Feedback (
     Stack_Current, Stack_Total : in     Natural;
@@ -136,6 +139,14 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
   is
     use Ada.Calendar, GWindows.Application;
   begin
+    --  Don't show the progress box for programms running very shortly.
+    --  For those programs, the box would flash nastily without this delay.
+    if hidden_progress_box and then Wall_Clock - start > 1.0 then
+      progress_box.Redraw;
+      progress_box.Show;
+      hidden_progress_box := False;
+    end if;
+
     --  Display only at most every n-th/100 second.
     --  Otherwise Windows may be overflown by messages and it would
     --  slow down the interpreter.
@@ -193,19 +204,20 @@ begin
     when HAC_mode =>
       --  !!  Check if anything compiled ?
       ml.Clear;
-      ml.Set_Column ("Console", 0, 800);
+      ml.Set_Column ("Console - Running...", 0, 800);
+      ml.Set_Column ("", 1, 0);
+      ml.Set_Column ("", 2, 0);
       LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (Window.MDI_Root.Message_Panel.Message_List);
-      tick:= Clock - 5.0;  --  Ensure refresh code in Boxed_Feedback is executed soon
+      tick := Clock - 5.0;  --  Ensure refresh code in Boxed_Feedback is executed soon
       progress_box.Create_Full_Dialog (Window);
       progress_box.Stack_Bar.Position (0);
       progress_box.Stop_VM_Button.Hide;
       progress_box.Stop_VM_Button_permanent.Show;
       progress_box.Stop_VM_Button_permanent.On_Click_Handler (Abort_clicked'Unrestricted_Access);
       progress_box.Center;
-      progress_box.Redraw;
-      progress_box.Show;
       Window.MDI_Root.Disable;
       Windowed_interpret (Window.BD, post_mortem);  --  Running the HAC program happens here.
+      ml.Set_Column ("Console", 0, ml.Column_Width (0));
       --  Scroll to last output line:
       ml.Ensure_Visible (Integer'Max (0, ml.Item_Count - 1), Full);
       Window.MDI_Root.Enable;

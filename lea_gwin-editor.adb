@@ -730,9 +730,10 @@ package body LEA_GWin.Editor is
           Editor.Set_Target_Start (Editor.Get_Target_End);
           Editor.Set_Target_End (Editor.Get_Length);
         end loop;
-        ml.Set_Column ("Search for [" & find_str & "] (" &
-          Trim (Integer'Wide_Image (count), Left) & " items)", 2,
-          large_message_width - line_msg_col_width - col_msg_col_width);
+        ml.Set_Column_Scroll_Left
+          ("Search for [" & find_str & "] (" &
+           Trim (Integer'Wide_Image (count), Left) & " items)", 2,
+           large_message_width - line_msg_col_width - col_msg_col_width);
       when replace_all =>
         ml.Clear;
         ml.Set_Column (
