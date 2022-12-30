@@ -552,17 +552,17 @@ package body LEA_GWin.Editor is
     --
     for l in lin_a .. lin_z loop
       --  1) First, remove leading blanks up to ind_min column.
-      pos:= Position'Min(
+      pos := Position'Min(
         Editor.Position_From_Line(l) + Position (ind_min),
         --  A blank line (ignored by ind_min) may have less than ind_min columns:
         Editor.Get_Line_Indent_Position (l)
       );
-      Editor.Set_Current_Pos(pos);
+      Editor.Set_Current_Pos (pos);
       Editor.Del_Line_Left;
       --  2) Then, insert an indented "--  ", with a fixed indentation (ind_prev_line)
       --    which is using indentation of any non-blank line above the block.
-      pos:= Editor.Position_From_Line(l);
-      Editor.Insert_Text(pos, ind_prev_line * ' ' & "--  ");
+      pos := Editor.Position_From_Line (l);
+      Editor.Insert_Text (pos, ind_prev_line * ' ' & "--  ");
     end loop;
     --
     Editor.End_Undo_Action;
@@ -571,24 +571,24 @@ package body LEA_GWin.Editor is
   end Selection_comment;
 
   procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type) is
-    pos, sel_a, sel_z: Position;
-    lin_a, lin_z: Integer;
+    pos, sel_a, sel_z : Position;
+    lin_a, lin_z : Integer;
   begin
     Get_Reduced_Selection (Editor, sel_a, sel_z);
-    lin_a:= Editor.Line_From_Position(sel_a);
-    lin_z:= Editor.Line_From_Position(sel_z);
+    lin_a := Editor.Line_From_Position (sel_a);
+    lin_z := Editor.Line_From_Position (sel_z);
     --  The whole uncommenting can be undone and redone in a single "Undo" / Redo":
     Editor.Begin_Undo_Action;
     for l in lin_a .. lin_z loop
-      pos := Editor.Get_Line_Indent_Position(l);
-      if Editor.Get_Text_Range(pos, pos + 4) = "--  " then
-        Editor.Set_Sel(pos, pos + 4);
+      pos := Editor.Get_Line_Indent_Position (l);
+      if Editor.Get_Text_Range (pos, pos + 4) = "--  " then
+        Editor.Set_Sel (pos, pos + 4);
         Editor.Clear;
-      elsif Editor.Get_Text_Range(pos, pos + 3) = "-- " then
-        Editor.Set_Sel(pos, pos + 3);
+      elsif Editor.Get_Text_Range (pos, pos + 3) = "-- " then
+        Editor.Set_Sel (pos, pos + 3);
         Editor.Clear;
-      elsif Editor.Get_Text_Range(pos, pos + 2) = "--" then
-        Editor.Set_Sel(pos, pos + 2);
+      elsif Editor.Get_Text_Range (pos, pos + 2) = "--" then
+        Editor.Set_Sel (pos, pos + 2);
         Editor.Clear;
       end if;
     end loop;
@@ -604,22 +604,22 @@ package body LEA_GWin.Editor is
   is
     MDI_Child : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
-    find_str  : constant GString:= MDI_Main.Search_box.Find_box.Text;
-    repl_str  : constant GString:= MDI_Main.Search_box.Replace_box.Text;
+    find_str  : constant GString := MDI_Main.Search_box.Find_box.Text;
+    repl_str  : constant GString := MDI_Main.Search_box.Replace_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
-    pos, sel_a, sel_z: Position;
-    line, col, count : Integer;
+    pos, sel_a, sel_z : Position;
+    line, col, count  : Integer;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     line_msg_col_width : constant := 70;
     col_msg_col_width  : constant := 40;
     function Right_aligned_line_number (line: Positive) return Wide_String is
-      s: Wide_String := "12345";
+      s : Wide_String := "12345";
     begin
       Ada.Integer_Wide_Text_IO.Put (s, line);
       return s;
     end Right_aligned_line_number;
     function Right_aligned_column_number (column: Positive) return Wide_String is
-      s: Wide_String := "123";
+      s : Wide_String := "123";
     begin
       Ada.Integer_Wide_Text_IO.Put (s, column);
       return s;
@@ -692,8 +692,12 @@ package body LEA_GWin.Editor is
           Editor.Insert_Text (sel_a, repl_str);
           --
           Editor.End_Undo_Action;
+          --  Skip the text we just replaced, otherwise
+          --  we find always the same text if the replacement
+          --  text contains the search string.
+          Editor.Set_Current_Pos (sel_a + repl_str'Length);
         end if;
-        --  Find next - anyway.
+        --  Find next - in any case.
         Editor.Search (action => find_next);
       when find_all =>
         ml.Clear;
