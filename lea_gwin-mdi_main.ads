@@ -22,14 +22,6 @@ with Interfaces.C;
 
 package LEA_GWin.MDI_Main is
 
-  type LEA_Toolbar_Type is
-    new GWindows.Common_Controls.Toolbar_Control_Type with null record;
-
-  --  Handle clicks on toolbar:
-  overriding procedure On_Button_Select
-    (Control : in out LEA_Toolbar_Type;
-     Item    : in     Integer);
-
   type MDI_Main_Type;
   type MDI_Main_Access is access all MDI_Main_Type;
 
@@ -57,8 +49,6 @@ package LEA_GWin.MDI_Main is
         --  MRU (Most recently used) files names:
         --  Menu ID's stored into a handy array
         IDM_MRU                : IDM_MRU_List;
-        Tool_Bar               : LEA_Toolbar_Type;
-        Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         --
         Tab_Bar                : LEA_Tab_Bar_Type;

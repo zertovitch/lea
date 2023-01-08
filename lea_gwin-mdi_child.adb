@@ -26,6 +26,7 @@ with Ada.Characters.Handling,
      Ada.Strings.Wide_Fixed,
      Ada.Strings.Wide_Unbounded,
      Ada.Text_IO.Text_Streams;
+
 with HAC_Sys.Librarian;
 
 package body LEA_GWin.MDI_Child is
@@ -127,7 +128,8 @@ package body LEA_GWin.MDI_Child is
     end Update_Status_Bar;
 
     procedure Update_Tool_Bar is
-      bar : LEA_Toolbar_Type renames Window.MDI_Root.Tool_Bar;
+      bar : Office_Applications.Classic_Main_Tool_Bar_Type
+        renames Window.MDI_Root.Tool_Bar;
       is_any_selection: constant Boolean :=
         Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
       use LEA_Resource_GUI;
@@ -793,7 +795,8 @@ package body LEA_GWin.MDI_Child is
                                  Can_Close :    out Boolean)
   is
     use LEA_Resource_GUI;
-    bar     : LEA_Toolbar_Type renames Window.MDI_Root.Tool_Bar;
+    bar : Office_Applications.Classic_Main_Tool_Bar_Type
+      renames Window.MDI_Root.Tool_Bar;
     tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
   begin
     Can_Close:= True;

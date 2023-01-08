@@ -158,14 +158,6 @@ package body LEA_GWin.MDI_Main is
     end if;
   end Open_Child_Window_And_Load;
 
-  overriding procedure On_Button_Select (
-        Control : in out LEA_Toolbar_Type;
-        Item    : in     Integer           ) is
-    Parent : constant MDI_Main_Access := MDI_Main_Access (Controlling_Parent (Control));
-  begin
-    On_Menu_Select (Parent.all, Item);
-  end On_Button_Select;
-
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type) is
     dummy : Boolean;
   begin
@@ -345,7 +337,7 @@ package body LEA_GWin.MDI_Main is
       (Num_resource (Folders_BMP), 16, Color_Option => Copy_From_Resource);
 
     --  ** Main tool bar (New / Open / Save / ...) at top left of the main window:
-    LEA_GWin.Toolbars.Init_Main_toolbar (Window.Tool_Bar, Window.Toolbar_Images, Window);
+    LEA_GWin.Toolbars.Init_Main_Tool_Bar (Window.Tool_Bar, Window);
     --  ** Main's tab bar:
     Window.Tab_Bar.MDI_Parent := Window'Unrestricted_Access;
     Window.Tab_Bar.Create (Window, 0, 30, 10, 25);
