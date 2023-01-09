@@ -81,7 +81,7 @@ package LEA_GWin.MDI_Child is
         is_closing       : Boolean := False;  --  True only during and after On_Close
         last_op_comment_1: GString_Unbounded;
         last_op_comment_2: GString_Unbounded;
-        save_all_hint    : Boolean;  --  Used during Update_display only.
+        save_all_hint    : Boolean;  --  Used during Update_Information only.
         --
         BD               : HAC_Sys.Builder.Build_Data;
       end record;
@@ -142,9 +142,9 @@ package LEA_GWin.MDI_Child is
      toolbar_and_menu -- update enable/disable of toolbar items and menu items
     );
 
-  procedure Update_Display
+  procedure Update_Information
     (Window : in out MDI_Child_Type;
-     need      :        Update_need);
+     need   :        Update_need);
 
   --  This will update File menu of parent, itself, and all brothers and sisters
   procedure Update_Common_Menus (Window : MDI_Child_Type;

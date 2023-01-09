@@ -38,17 +38,12 @@ package LEA_GWin.MDI_Main is
 
   function Tab_Index (Control : in out LEA_Tab_Bar_Type; ID : ID_Type) return Integer;
 
-  type IDM_MRU_List is array (LEA_Common.User_options.MRU_List'Range) of Natural;
-
   type MDI_Main_Type is
     new Office_Applications.Classic_Main_Window_Type with
       record
         Project_File_Name      : GString_Unbounded;
         Project_Short_Name     : GString_Unbounded;
         Success_in_enumerated_close: Boolean;
-        --  MRU (Most recently used) files names:
-        --  Menu ID's stored into a handy array
-        IDM_MRU                : IDM_MRU_List;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         --
         Tab_Bar                : LEA_Tab_Bar_Type;

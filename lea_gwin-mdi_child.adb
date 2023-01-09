@@ -67,9 +67,9 @@ package body LEA_GWin.MDI_Child is
       --  !! Window.Focus = Window.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
-  procedure Update_Display
+  procedure Update_Information
     (Window : in out MDI_Child_Type;
-     need      :        Update_need)
+     need   :        Update_need)
   is
   pragma Unreferenced (need);
 
@@ -193,7 +193,7 @@ package body LEA_GWin.MDI_Child is
     Update_Status_Bar;
     Update_Tool_Bar;
     Update_Menus;
-  end Update_Display;
+  end Update_Information;
 
   ---------------
   -- On_Create --
@@ -267,7 +267,7 @@ package body LEA_GWin.MDI_Child is
         Window.MDI_Root.Tool_Bar.Redraw;
       end if;
     end;
-    Window.Update_Display (first_display);
+    Window.Update_Information (first_display);
     Window.Accept_File_Drag_And_Drop;
     Ada.Numerics.Float_Random.Reset (Window.temp_name_gen);
   end On_Create;
@@ -724,10 +724,10 @@ package body LEA_GWin.MDI_Child is
         Window.Close;
       when IDM_Undo =>
         Window.Editor.Undo;
-        Window.Update_Display (toolbar_and_menu);  --  Eventually disable Undo if no more available
+        Window.Update_Information (toolbar_and_menu);  --  Eventually disable Undo if no more available
       when IDM_Redo =>
         Window.Editor.Redo;
-        Window.Update_Display (toolbar_and_menu);  --  Eventually disable Redo if no more available
+        Window.Update_Information (toolbar_and_menu);  --  Eventually disable Redo if no more available
       when IDM_Cut =>           Window.Editor.Cut;
       when IDM_Copy =>          Window.Editor.Copy;
       when IDM_Paste =>         Window.Editor.Paste;
@@ -783,7 +783,7 @@ package body LEA_GWin.MDI_Child is
     tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
     tab_index : Integer;
   begin
-    Update_Display (Window, toolbar_and_menu);
+    Update_Information (Window, toolbar_and_menu);
     Window.Editor.Focus;
     tab_index := tab_bar.Tab_Index (Window.ID);
     if tab_index >= 0 then
