@@ -115,9 +115,9 @@ package LEA_GWin.MDI_Main is
                         lParam       : in     GWindows.Types.Lparam;
                         Return_Value : in out GWindows.Types.Lresult);
 
-  overriding procedure On_Close (
-        Window    : in out MDI_Main_Type;
-        Can_Close :    out Boolean        );
+  overriding procedure On_Close
+    (Window    : in out MDI_Main_Type;
+     Can_Close :    out Boolean);
 
   procedure Update_Common_Menus(
     Window         : in out MDI_Main_Type;

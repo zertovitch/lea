@@ -18,7 +18,8 @@ with GWindows.Application,
 with Ada.Command_Line,
      Ada.Strings.Fixed,
      Ada.Text_IO,
-     Ada.Unchecked_Deallocation;
+     Ada.Unchecked_Deallocation,
+     Ada.Wide_Characters.Handling;
 
 with Windows_Timers;
 
@@ -110,15 +111,19 @@ package body LEA_GWin.MDI_Main is
     --
     Window.User_maximize_restore:= False;
     New_Window.Create_LEA_MDI_Child (Window, New_ID);
+    declare
+      upper_name : GString := File_Name;
     begin
       New_Window.Editor.Load_text;
       file_loaded := True;
-      for m of Window.opt.mru loop
-        if m.name = File_Name then
-          mru_line := m.line;  --  This will put MRU item on top.
+      To_Upper (upper_name);
+      for m of Window.MRU.Item loop
+        if Ada.Wide_Characters.Handling.To_Upper (GU2G (m.Name)) = upper_name then
+          mru_line := m.Line;
           exit;
         end if;
       end loop;
+      --  This will put MRU item on top.
       Update_Common_Menus (Window, File_Name, mru_line);
     exception
       when Ada.Text_IO.Name_Error =>
@@ -185,19 +190,6 @@ package body LEA_GWin.MDI_Main is
     return -1;
   end Tab_Index;
 
-  function Shorten_File_Name (s : GString; max : Positive) return GString is
-    beg: constant:= 6;
-  begin
-    if s'Length < max then
-      return s;
-    else
-      return
-        s(s'First .. s'First + beg-1) &       -- beg
-        "..." &                               -- 3
-        s(s'Last - max + beg + 1 .. s'Last);  -- max - beg - 3
-    end if;
-  end Shorten_File_Name;
-
   procedure Open_Child_Window_And_Load
     (Window       : in out MDI_Main_Type;
      File_Name    :        GString;
@@ -208,7 +200,7 @@ package body LEA_GWin.MDI_Main is
     Open_Child_Window_And_Load
       (Window,
        File_Name,
-       Shorten_File_Name (File_Name, 50),
+       Office_Applications.Shorten_File_Name (File_Name, 50),
        Line,
        Scintilla.Position (Col_a),
        Scintilla.Position (Col_z));
@@ -312,6 +304,11 @@ package body LEA_GWin.MDI_Main is
     use GWindows.Application, GWindows.Taskbar, GWindows.Image_Lists, LEA_Resource_GUI;
   begin
     Windows_persistence.Load (Window.opt);  --  Load options from the registry
+    for m in Window.MRU.Item'Range loop
+      Window.MRU.Item (m) :=
+        (Name => Window.opt.mru (m).name,
+         Line => Window.opt.mru (m).line);
+    end loop;
     --
     Replace_default(Window.opt.win_left);
     Replace_default(Window.opt.win_width);
@@ -326,7 +323,7 @@ package body LEA_GWin.MDI_Main is
     LEA_Resource_GUI.Create_Full_Menu (Window.Menu);
     MDI_Menu (Window, Window.Menu.Main, Window_Menu => 5);
     Accelerator_Table (Window, "Main_Menu");
-    Window.IDM_MRU:=
+    Window.MRU.ID_Menu :=
       (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
        IDM_MRU_5,       IDM_MRU_6,       IDM_MRU_7,       IDM_MRU_8,
        IDM_MRU_9
@@ -637,12 +634,12 @@ package body LEA_GWin.MDI_Main is
       when IDM_GNAT_Mode =>
         Change_Mode (Window, GNAT_mode);
       when others =>
-        --  We have perhaps a MRU (most rectly used) file entry.
-        for i_mru in Window.IDM_MRU'Range loop
-          if Item = Window.IDM_MRU (i_mru) then
+        --  We have perhaps a MRU (most recently used) file entry.
+        for i_mru in Window.MRU.ID_Menu'Range loop
+          if Item = Window.MRU.ID_Menu (i_mru) then
             Open_Child_Window_And_Load
               (Window,
-               GU2G (Window.opt.mru ( i_mru ).name));
+               GU2G (Window.MRU.Item (i_mru).Name));
             exit;
           end if;
         end loop;
@@ -680,98 +677,38 @@ package body LEA_GWin.MDI_Main is
 
   -------------
 
-  procedure On_Close (
-        Window    : in out MDI_Main_Type;
-        Can_Close :    out Boolean        ) is
+  overriding procedure On_Close
+    (Window    : in out MDI_Main_Type;
+     Can_Close :    out Boolean)
+  is
   begin
-    Window.opt.MDI_main_maximized:= Zoom(Window);
-    if not (Window.opt.MDI_main_maximized or Is_Minimized(Window)) then
-      Window.opt.win_left  := Left(Window);
-      Window.opt.win_top   := Top(Window);
-      Window.opt.win_width := Width(Window);
-      Window.opt.win_height:= Height(Window);
+    Window.opt.MDI_main_maximized := Zoom (Window);
+    if not (Window.opt.MDI_main_maximized or Is_Minimized (Window)) then
+      Window.opt.win_left   := Left (Window);
+      Window.opt.win_top    := Top (Window);
+      Window.opt.win_width  := Width (Window);
+      Window.opt.win_height := Height (Window);
     end if;
 
-    --  TC.GWin.Options.Save;
-
-    My_MDI_Close_All(Window);
+    My_MDI_Close_All (Window);
     --  ^ Don't forget to save unsaved files !
     --  Operation can be cancelled by user for one unsaved picture.
-    Can_Close:= Window.Success_in_enumerated_close;
+    Can_Close := Window.Success_in_enumerated_close;
     --
     if Can_Close then
-      Windows_persistence.Save(Window.opt);
+      for m in Window.MRU.Item'Range loop
+        Window.opt.mru (m) :=
+          (name => Window.MRU.Item (m).Name,
+           line => Window.MRU.Item (m).Line);
+      end loop;
+      Windows_persistence.Save (Window.opt);
       --  !! Trick to remove a strange crash on Destroy_Children
       --  !! on certain Windows platforms - 29-Jun-2012
       GWindows.Base.On_Exception_Handler (Handler => null);
       --
-      Windows_Timers.Kill_Timer(Window, timer_id);
+      Windows_Timers.Kill_Timer (Window, timer_id);
     end if;
   end On_Close;
-
-  -------------
-  -- Add_MRU --
-  -------------
-
-  procedure Add_MRU (MDI_Main: in out MDI_Main_Type; name: GString; line: Integer) is
-    x: Integer:= MDI_Main.opt.mru'First-1;
-    up_name: GString:= name;
-    mem_line: Natural := 0;
-  begin
-    --  Add name to the list in task bar or
-    --  elsewhere in Windows Explorer or Desktop.
-    GWindows.Application.Add_To_Recent_Documents (name);
-
-    To_Upper(up_name);
-
-    --  Search for name in the list.
-    for m in MDI_Main.opt.mru'Range loop
-      declare
-        up_mru_m: GString:= GU2G(MDI_Main.opt.mru(m).name);
-      begin
-        To_Upper(up_mru_m);
-        if up_mru_m = up_name then -- case insensitive comparison (Jan-2007)
-          x:= m;
-          mem_line := MDI_Main.opt.mru(m).line;
-          exit;
-        end if;
-      end;
-    end loop;
-
-    --  Does item's name exist in list ?
-    if x /= 0 then
-      --  Roll up entries after the item, erasing it.
-      for i in x .. MDI_Main.opt.mru'Last-1 loop
-        MDI_Main.opt.mru(i):= MDI_Main.opt.mru(i+1);
-      end loop;
-      MDI_Main.opt.mru(MDI_Main.opt.mru'Last).name:= Null_GString_Unbounded;
-    end if;
-
-    --  Roll down the full list
-    for i in reverse MDI_Main.opt.mru'First .. MDI_Main.opt.mru'Last-1 loop
-      MDI_Main.opt.mru(i+1):= MDI_Main.opt.mru(i);
-    end loop;
-
-    if line > -1 then
-      mem_line := line;
-    end if;
-    --  At least now, name will exist in the list
-    MDI_Main.opt.mru(MDI_Main.opt.mru'First):= (G2GU(name), mem_line);
-
-  end Add_MRU;
-
-  procedure Update_MRU_Menu (MDI_Main: in out MDI_Main_Type; m: in Menu_Type) is
-  begin
-    for i in reverse MDI_Main.opt.mru'Range loop
-      Text(
-        m, Command, MDI_Main.IDM_MRU(i),
-         '&' &
-         S2G (Ada.Strings.Fixed.Trim (Integer'Image (i), Ada.Strings.Left)) &
-         ' ' &
-         Shorten_File_Name (GU2G (MDI_Main.opt.mru (i).name), 30)
-      );
-    end loop;
-  end Update_MRU_Menu;
 
   --  Menus of MDI main *and* all children need to have their "View" menu up-to-date.
   --
@@ -800,13 +737,14 @@ package body LEA_GWin.MDI_Main is
 
   procedure Update_Common_Menus_Child (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
   is
+    use Office_Applications;
   begin
     if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
       declare
         cw: MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
       begin
-        Update_MRU_Menu(cw.MDI_Root.all, cw.Menu.Popup_0001);
-        Update_View_Menu(cw.Menu.Main, cw.MDI_Root.opt);
+        Update_MRU_Menu (cw.MDI_Root.MRU, cw.Menu.Popup_0001);
+        Update_View_Menu (cw.Menu.Main, cw.MDI_Root.opt);
         --  Update_Toolbar_Menu(cw.View_menu, cw.MDI_Root.Floating_toolbars);
       end;
     end if;
@@ -818,17 +756,17 @@ package body LEA_GWin.MDI_Main is
     top_entry_line :        Integer := -1    --  When unknown, -1; otherwise: last visited line
   )
   is
+    use Office_Applications;
   begin
     if top_entry_name /= "" then
-      Add_MRU (Window, top_entry_name, top_entry_line);
+      Add_MRU (Window.MRU, top_entry_name, top_entry_line);
     end if;
-    Update_MRU_Menu(Window, Window.Menu.Popup_0001);
-    Update_View_Menu(Window.Menu.Main, Window.opt);
+    Update_MRU_Menu (Window.MRU, Window.Menu.Popup_0001);
+    Update_View_Menu (Window.Menu.Main, Window.opt);
     --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
-    GWindows.Base.Enumerate_Children(
-      MDI_Client_Window (Window).all,
-      Update_Common_Menus_Child'Access
-    );
+    GWindows.Base.Enumerate_Children
+      (MDI_Client_Window (Window).all,
+       Update_Common_Menus_Child'Access);
   end Update_Common_Menus;
 
   procedure Update_Title (Window : in out MDI_Main_Type) is

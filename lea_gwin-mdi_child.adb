@@ -516,9 +516,9 @@ package body LEA_GWin.MDI_Child is
     parent : MDI_Main_Access;
   begin
     Window.Focus;
-    --  We save the parent access since this Window may be already closed
-    --  when i > File_Names'First if Window is was temporary MS-Office-like
-    --  blank window - See procedure Close_extra_first_child.
+    --  We save the parent access because this Window may be already closed
+    --  since the second iteration of the loop below if Window is was a temporary
+    --  MS-Office-like blank window - See procedure Close_extra_first_child.
     parent := Window.MDI_Root;
     for File_Name of File_Names loop
       Open_Child_Window_And_Load (parent.all, GU2G (File_Name));
