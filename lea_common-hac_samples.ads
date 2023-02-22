@@ -32,6 +32,7 @@ package LEA_Common.HAC_Samples is
       --
       (Mathematics, +"ackermann.adb",     +"Ackermann recursive function"),
       (Mathematics, +"barnes.adb",        +"John Barnes' puzzle at Ada-Europe 2022 dinner"),
+      (Mathematics, +"binomials.adb",     +"Binomial coefficient and factorial"),
       (Mathematics, +"covid_19_s.adb",    +"Model for simulating the Coronavirus (COVID-19) pandemic"),
       (Mathematics, +"hofstadter.adb",    +"Hofstadter mutual recursive functions"),
       (Mathematics, +"mandelbrot.adb",    +"Mandelbrot set"),
