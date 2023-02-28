@@ -26,10 +26,11 @@ package body LEA_GWin.Options is
       box.Indentation_edit_box.Text        (Integer'Wide_Image(candidate.indentation));
       box.Tab_width_edit_box.Text          (Integer'Wide_Image(candidate.tab_width));
       box.Right_margin_edit_box.Text       (Integer'Wide_Image(candidate.right_margin));
+      box.Auto_Insert_Check_Box.State (boolean_to_state (candidate.auto_insert));
       box.Ada_file_extension_edit_box.Text (GU2G (candidate.ada_files_filter));
       --
-      box.Backup_none_button.State (boolean_to_state(candidate.backup = none));
-      box.Backup_bak_button.State  (boolean_to_state(candidate.backup = bak));
+      box.Backup_none_button.State (boolean_to_state (candidate.backup = none));
+      box.Backup_bak_button.State  (boolean_to_state (candidate.backup = bak));
       --  Fill the drop-down list.
       for t in Color_Theme_Type loop
         box.Color_theme_list_box.Add(Nice_Image(t) );
@@ -43,13 +44,14 @@ package body LEA_GWin.Options is
       candidate.indentation      := Integer'Wide_Value(box.Indentation_edit_box.Text);
       candidate.tab_width        := Integer'Wide_Value(box.Tab_width_edit_box.Text);
       candidate.right_margin     := Integer'Wide_Value(box.Right_margin_edit_box.Text);
+      candidate.auto_insert      := box.Auto_Insert_Check_Box.State = Checked;
       candidate.ada_files_filter := G2GU (box.Ada_file_extension_edit_box.Text);
       if box.Backup_none_button.State = Checked then
         candidate.backup := none;
       elsif box.Backup_bak_button.State = Checked then
         candidate.backup := bak;
       end if;
-      candidate.color_theme:= Nice_Value(box.Color_theme_list_box.Text);
+      candidate.color_theme := Nice_Value(box.Color_theme_list_box.Text);
     exception
       when others =>
         Message_Box

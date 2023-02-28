@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/02/18  14:13:33
+--  Transcription time: 2023/02/28  21:30:38
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -204,9 +204,10 @@ package LEA_Resource_GUI is
     --  Label: 0
     Indentation_edit_box : Edit_Box_Type;
     --  Label: 0
-    Tab_width_edit_box : Edit_Box_Type;
-    --  Label: 0
     Right_margin_edit_box : Edit_Box_Type;
+    --  Label: 0
+    Tab_width_edit_box : Edit_Box_Type;
+    Auto_Insert_Check_Box : Check_Box_Type;
     --  Label: 0
     Ada_file_extension_edit_box : Edit_Box_Type;
     Group_color_theme : Group_Box_Type;
@@ -220,7 +221,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 276
+  --  Dialog at resource line 277
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -253,7 +254,7 @@ package LEA_Resource_GUI is
     Stop_VM_Button_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 290
+  --  Dialog at resource line 291
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -306,7 +307,7 @@ package LEA_Resource_GUI is
     Match_case : Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 313
+  --  Dialog at resource line 314
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -340,7 +341,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 327
+  --  Dialog at resource line 328
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -494,6 +495,7 @@ package LEA_Resource_GUI is
   Label_HAC_sample             : constant :=  40105;
   IDM_Show_indentation_lines   : constant :=  40106;
   IDM_Open_Containing_Folder   : constant :=  40107;
+  Auto_Insert_Check_Box        : constant :=  40108;
 
   --  ** Some helper utilities (spec).
 
@@ -505,6 +507,6 @@ package LEA_Resource_GUI is
 
   function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  --  Last line of resource script file: 435
+  --  Last line of resource script file: 436
 
 end LEA_Resource_GUI;

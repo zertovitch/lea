@@ -108,3 +108,4 @@
 #define Label_HAC_sample                        40105
 #define IDM_Show_indentation_lines              40106
 #define IDM_Open_Containing_Folder              40107
+#define Auto_Insert_Check_Box                   40108

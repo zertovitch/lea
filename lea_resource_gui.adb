@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/02/18  14:13:33
+--  Transcription time: 2023/02/28  21:30:38
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -515,7 +515,7 @@ package body LEA_Resource_GUI is
   is
     x, y, w, h : Integer;
   begin
-    Dlg_to_Scn (0, 0, 253, 168, x, y, w, h);
+    Dlg_to_Scn (0, 0, 316, 198, x, y, w, h);
     if Left   /= Use_Default then x := Left;   end if;
     if Top    /= Use_Default then y := Top;    end if;
     if Width  /= Use_Default then w := Width;  end if;
@@ -549,38 +549,40 @@ package body LEA_Resource_GUI is
     x, y, w, h : Integer;
   begin
     if resize then
-    Dlg_to_Scn (0, 0, 253, 168, x, y, w, h);
+    Dlg_to_Scn (0, 0, 316, 198, x, y, w, h);
       Move (Window, x, y);
       Client_Area_Size (Window, w, h);
     end if;
     Use_GUI_Font (Window);
     Dlg_to_Scn (7, 10, 50, 15, x, y, w, h);
     Create_Label (Window, "Indentation", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (49, 9, 16, 15, x, y, w, h);
+    Dlg_to_Scn (49, 9, 18, 15, x, y, w, h);
     Create (Window.Indentation_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Indentation_edit_box);
-    Dlg_to_Scn (7, 31, 110, 9, x, y, w, h);
-    Create_Label (Window, "Tab width (symbol AND keystroke)", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (121, 30, 16, 15, x, y, w, h);
-    Create (Window.Tab_width_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Tab_width_edit_box);
-    Dlg_to_Scn (159, 10, 52, 15, x, y, w, h);
+    Dlg_to_Scn (209, 10, 52, 15, x, y, w, h);
     Create_Label (Window, "Right margin", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (213, 9, 31, 15, x, y, w, h);
+    Dlg_to_Scn (263, 9, 34, 15, x, y, w, h);
     Create (Window.Right_margin_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Right_margin_edit_box);
-    Dlg_to_Scn (7, 52, 63, 9, x, y, w, h);
+    Dlg_to_Scn (7, 32, 110, 9, x, y, w, h);
+    Create_Label (Window, "Tab width (symbol AND keystroke)", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (121, 31, 18, 15, x, y, w, h);
+    Create (Window.Tab_width_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Tab_width_edit_box);
+    Dlg_to_Scn (7, 50, 177, 15, x, y, w, h);
+    Create (Window.Auto_Insert_Check_Box, Window, "Auto-insert for () and """"", x, y, w, h, ID => Auto_Insert_Check_Box);
+    Dlg_to_Scn (8, 76, 63, 9, x, y, w, h);
     Create_Label (Window, "Ada file extensions", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (83, 50, 162, 15, x, y, w, h);
+    Dlg_to_Scn (84, 74, 213, 15, x, y, w, h);
     Create (Window.Ada_file_extension_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Ada_file_extension_edit_box);
-    Dlg_to_Scn (5, 99, 240, 28, x, y, w, h);
+    Dlg_to_Scn (6, 127, 291, 28, x, y, w, h);
     Create (Window.Group_color_theme, Window, "Color theme", x, y, w, h);
-    Dlg_to_Scn (60, 110, 108, 20, x, y, w, h);
+    Dlg_to_Scn (61, 138, 152, 20, x, y, w, h);
     Create (Window.Color_theme_list_box, Window, x, y, w, h, False, ID => Color_theme_list_box);
-    Dlg_to_Scn (5, 68, 240, 28, x, y, w, h);
+    Dlg_to_Scn (6, 96, 291, 28, x, y, w, h);
     Create (Window.Group_Backup, Window, "Backup", x, y, w, h);
-    Dlg_to_Scn (79, 78, 91, 11, x, y, w, h);
+    Dlg_to_Scn (80, 106, 91, 11, x, y, w, h);
     Create (Window.Backup_bak_button, Window, "Simple (.bak)", x, y, w, h, ID => Backup_bak_button);
-    Dlg_to_Scn (14, 80, 43, 8, x, y, w, h);
+    Dlg_to_Scn (15, 108, 43, 8, x, y, w, h);
     Create (Window.Backup_none_button, Window, "None", x, y, w, h, ID => Backup_none_button);
-    Dlg_to_Scn (190, 140, 50, 19, x, y, w, h);
+    Dlg_to_Scn (247, 168, 50, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
@@ -591,7 +593,7 @@ package body LEA_Resource_GUI is
     else  --  Hide the closing button
       Hide (Window.IDCANCEL);
     end if;
-    Dlg_to_Scn (135, 140, 50, 19, x, y, w, h);
+    Dlg_to_Scn (192, 168, 50, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
@@ -604,7 +606,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 285
+  --  Dialog at resource line 286
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -693,7 +695,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 300
+  --  Dialog at resource line 301
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -829,7 +831,7 @@ package body LEA_Resource_GUI is
     Create (Window.Match_case, Window, "Match case", x, y, w, h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
-  --  Dialog at resource line 322
+  --  Dialog at resource line 323
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1036,6 +1038,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 435
+  --  Last line of resource script file: 436
 
 end LEA_Resource_GUI;

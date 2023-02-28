@@ -4,6 +4,8 @@ with LEA_GWin.MDI_Child,
      LEA_GWin.MDI_Main,
      LEA_GWin.Messages;
 
+with LEA_Common.User_options;
+
 with HAC_Sys.Defs;
 
 with GWindows.Colors,
@@ -18,7 +20,7 @@ with Ada.Wide_Characters.Handling,
 package body LEA_GWin.Editor is
 
   use LEA_Common;
-  use LEA_GWin.MDI_Main, LEA_GWin.MDI_Child;
+  use MDI_Main, MDI_Child;
   use Ada.Strings, Ada.Strings.Wide_Fixed;
   use GWindows.Message_Boxes;
 
@@ -30,6 +32,15 @@ package body LEA_GWin.Editor is
     --      Here, it causes a flood of updates on multiline edit.
     null;  --  parent.Update_Information(toolbar_and_menu);
   end On_Change;
+
+  function Matching (c : GCharacter) return GCharacter is
+  begin
+    case c is
+      when '(' => return ')';
+      when '"' => return '"';
+      when others => return ' ';
+    end case;
+  end Matching;
 
   overriding
   procedure On_Character_Added
@@ -45,33 +56,49 @@ package body LEA_GWin.Editor is
     Pos      :          Position;
     CR       : constant GCharacter := GCharacter'Val (13);
     LF       : constant GCharacter := GCharacter'Val (10);
+    opt : LEA_Common.User_options.Option_Pack_Type
+            renames MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt;
     use LEA_Common.Syntax;
   begin
     --  This works on Windows (CR, LF) and Unix (LF); we ignore the old Macs (CR).
-    if Value = LF and Line > 0 then
-      New_Ind := Prev_Ind;  --  We mimic previous line's indentation.
-      if Editor.syntax_kind = Ada_syntax then
-        --  Look for extra indentation when the line ends with some specific keywords.
-        Pos := Cur_Pos - 1;
-        if Editor.Get_Text_Range (Pos - 1, Pos) = (1 => CR) then
-          --  Skip the CR in Windows' CR & LF line end.
-          --  Reminder: Scintilla's Pos is the cursor's position, *between* characters. So,
-          --  (Pos - 1, Pos) wraps *one* character, not *two* like for a slice (Pos - 1 .. Pos).
-          Pos := Pos - 1;
+    case Value is
+      when LF =>
+        if Line > 0 then
+          New_Ind := Prev_Ind;  --  We mimic previous line's indentation.
+          if Editor.syntax_kind = Ada_syntax then
+            --  Look for extra indentation when the line ends with some specific keywords.
+            Pos := Cur_Pos - 1;
+            if Editor.Get_Text_Range (Pos - 1, Pos) = (1 => CR) then
+              --  Skip the CR in Windows' CR & LF line end.
+              --  Reminder: Scintilla's Pos is the cursor's position, *between* characters. So,
+              --  (Pos - 1, Pos) wraps *one* character, not *two* like for a slice (Pos - 1 .. Pos).
+              Pos := Pos - 1;
+            end if;
+            if Editor.Get_Text_Range (Pos - 5, Pos) = "begin"
+              or else Editor.Get_Text_Range (Pos - 6, Pos) = "record"
+              or else Editor.Get_Text_Range (Pos - 1, Pos) = "("
+            then
+              --  On a "Return" keypress right after "begin", "record" or "(",
+              --  we add an extra indentation.
+              New_Ind := New_Ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt.indentation;
+            end if;
+          end if;
+          if New_Ind > 0 then
+            Editor.Add_Text (New_Ind * ' ');
+          end if;
         end if;
-        if Editor.Get_Text_Range (Pos - 5, Pos) = "begin"
-          or else Editor.Get_Text_Range (Pos - 6, Pos) = "record"
-          or else Editor.Get_Text_Range (Pos - 1, Pos) = "("
-        then
-          --  On a "Return" keypress right after "begin", "record" or "(",
-          --  we add an extra indentation.
-          New_Ind := New_Ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt.indentation;
+      when '(' | '"' =>
+        if opt.auto_insert then
+          if Cur_Pos = Editor.Get_Text_Length
+            or else Editor.Get_Text_Range (Cur_Pos, Cur_Pos + 1) /= (1 => Value)
+          then
+            Editor.Add_Text ((1 => Matching (Value)));
+            Editor.Go_To_Pos (Cur_Pos);
+          end if;
         end if;
-      end if;
-      if New_Ind > 0 then
-        Editor.Add_Text (New_Ind * ' ');
-      end if;
-    end if;
+      when others =>
+        null;
+    end case;
   end On_Character_Added;
 
   margin_leftmost         : constant := 0;
