@@ -54,7 +54,7 @@ package body LEA_Common.User_options is
               when toolset_mode =>
                 opt.toolset := Toolset_mode_type'Wide_Value (s);
               when color_theme =>
-                opt.color_theme := Color_Theme_Type'Wide_Value (s);
+                opt.color_theme := Color_Themes.Color_Theme_Type'Wide_Value (s);
               when backup =>
                 opt.backup := Backup_mode'Wide_Value (s);
               when indent =>
@@ -134,7 +134,7 @@ package body LEA_Common.User_options is
             when toolset_mode =>
               R (Toolset_mode_type'Wide_Image (opt.toolset));
             when color_theme =>
-              R (Color_Theme_Type'Wide_Image (opt.color_theme));
+              R (Color_Themes.Color_Theme_Type'Wide_Image (opt.color_theme));
             when backup =>
               R (Backup_mode'Wide_Image (opt.backup));
             when indent =>

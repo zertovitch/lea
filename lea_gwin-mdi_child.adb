@@ -77,10 +77,10 @@ package body LEA_GWin.MDI_Child is
       pos, sel_a, sel_z : Scintilla.Position;
     begin
       if Window.ID.File_Name = Null_GString_Unbounded then
-        Window.Status_Bar.Text("No file", 0);
+        Window.Status_Bar.Text ("No file", 0);
       end if;
-      if Folder_Focus(Window) then
-        Window.Status_Bar.Text("Folder selected", 0);
+      if Folder_Focus (Window) then
+        Window.Status_Bar.Text ("Folder selected", 0);
         return;
       else
         case Window.Editor.document_kind is
@@ -92,45 +92,45 @@ package body LEA_GWin.MDI_Child is
             Window.Status_Bar.Text ("Help", 0);
         end case;
       end if;
-      Window.Status_Bar.Text(
-        "Length:" & Int'Wide_Image(Window.Editor.Get_Length) &
-        "     Lines:" & Integer'Wide_Image(Window.Editor.Get_Line_Count),
-        1);
+      Window.Status_Bar.Text
+        ("Length:" & Int'Wide_Image (Window.Editor.Get_Length) &
+         "     Lines:" & Integer'Wide_Image (Window.Editor.Get_Line_Count),
+         1);
       pos   := Window.Editor.Get_Current_Pos;
       sel_a := Window.Editor.Get_Selection_Start;
       sel_z := Window.Editor.Get_Selection_End;
-      Window.Status_Bar.Text(
-        "Line:"  & Integer'Wide_Image(1 + Window.Editor.Line_From_Position(pos)) &
-        " Col:" & Integer'Wide_Image(1 + Window.Editor.Get_Column(pos)),
-        2);
-      Window.Status_Bar.Text("Sel:" & Scintilla.Position'Wide_Image(sel_z - sel_a) &
-        " (ln:" & Integer'Wide_Image(
-           1 +
-           Window.Editor.Line_From_Position(sel_z) -
-           Window.Editor.Line_From_Position(sel_a)
-        ) & ')',
-        3);
+      Window.Status_Bar.Text
+        ("Line:"  & Integer'Wide_Image (1 + Window.Editor.Line_From_Position (pos)) &
+         " Col:" & Integer'Wide_Image (1 + Window.Editor.Get_Column (pos)),
+         2);
+      Window.Status_Bar.Text
+        ("Sel:" & Scintilla.Position'Wide_Image (sel_z - sel_a) &
+         " (ln:" & Integer'Wide_Image
+           (1 +
+            Window.Editor.Line_From_Position (sel_z) -
+            Window.Editor.Line_From_Position (sel_a)) & ')',
+         3);
       case Window.Editor.Get_EOL_Mode is
         when SC_EOL_CR =>
-          Window.Status_Bar.Text("EOL: Mac (CR)",        4);
+          Window.Status_Bar.Text ("EOL: Mac (CR)",        4);
         when SC_EOL_CRLF =>
-          Window.Status_Bar.Text("EOL: Windows (CR LF)", 4);
+          Window.Status_Bar.Text ("EOL: Windows (CR LF)", 4);
         when SC_EOL_LF =>
-          Window.Status_Bar.Text("EOL: Unix (LF)",       4);
+          Window.Status_Bar.Text ("EOL: Unix (LF)",       4);
         when others =>
           null;
       end case;
       if Window.Editor.Get_Overtype then
-        Window.Status_Bar.Text("OVR", 6);
+        Window.Status_Bar.Text ("OVR", 6);
       else
-        Window.Status_Bar.Text("INS", 6);
+        Window.Status_Bar.Text ("INS", 6);
       end if;
     end Update_Status_Bar;
 
     procedure Update_Tool_Bar is
       bar : Office_Applications.Classic_Main_Tool_Bar_Type
         renames Window.MDI_Root.Tool_Bar;
-      is_any_selection: constant Boolean :=
+      is_any_selection : constant Boolean :=
         Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
       use LEA_Resource_GUI;
     begin
@@ -156,8 +156,8 @@ package body LEA_GWin.MDI_Child is
 
     procedure Update_Menus is
       use LEA_Resource_GUI, GWindows.Menus;
-      bool_to_state: constant array (Boolean) of State_Type := (Disabled, Enabled);
-      is_any_selection: constant Boolean :=
+      bool_to_state : constant array (Boolean) of State_Type := (Disabled, Enabled);
+      is_any_selection : constant Boolean :=
         Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
     begin
       State (Window.Menu.Main, Command, IDM_Cut,                    bool_to_state (is_any_selection));
@@ -170,14 +170,14 @@ package body LEA_GWin.MDI_Child is
       State (Window.Menu.Main, Command, IDM_Save_All,               bool_to_state (Window.save_all_hint));
     end Update_Menus;
 
-    any_modified: Boolean:= False;
+    any_modified : Boolean := False;
     --
     procedure Check_any_modified (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     --  Enumeration call back to check if any MDI child window has a modified document
     is
     begin
       if Any_Window.all in MDI_Child_Type'Class then
-        any_modified := any_modified or MDI_Child_Type(Any_Window.all).Editor.modified;
+        any_modified := any_modified or MDI_Child_Type (Any_Window.all).Editor.modified;
       end if;
     end Check_any_modified;
 
@@ -202,7 +202,7 @@ package body LEA_GWin.MDI_Child is
   procedure On_Create (Window : in out MDI_Child_Type) is
     use GWindows.Base;
   begin
-    Window.Small_Icon("LEA_Doc_Icon_Name");
+    Window.Small_Icon ("LEA_Doc_Icon_Name");
 
     --  Filial feelings:
     Window.MDI_Root := MDI_Main_Access (Controlling_Parent (Window));
@@ -246,21 +246,21 @@ package body LEA_GWin.MDI_Child is
     Window.Status_Bar.Dock (At_Bottom);
     Window.Dock_Children;
 
-    LEA_Resource_GUI.Create_Full_Menu(Window.Menu);
+    LEA_Resource_GUI.Create_Full_Menu (Window.Menu);
     --  The list of MDI open children will appear below
     --  the menu indicated with Window_Menu (should be the one with Cascade/Tile/...).
-    Window.MDI_Menu(Window.Menu.Main, Window_Menu => 7);
+    Window.MDI_Menu (Window.Menu.Main, Window_Menu => 7);
 
     --  Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
-      memo_unmaximized_children: constant Boolean:=
+      memo_unmaximized_children : constant Boolean :=
         not Window.MDI_Root.opt.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
         Window.MDI_Root.Freeze;
         Window.Zoom;
       end if;
-      On_Size (Window, Width(Window), Height(Window));
+      On_Size (Window, Width (Window), Height (Window));
       if memo_unmaximized_children then
         Window.MDI_Root.Thaw;  --  Before Zoom, otherwise drawinf is uncomplete.
         Window.Zoom (False);
@@ -306,7 +306,7 @@ package body LEA_GWin.MDI_Child is
   procedure Finish_subwindow_opening (Window : in out MDI_Child_Type) is
     MDI_Main : MDI_Main_Type renames Window.MDI_Root.all;
   begin
-    MDI_Main.User_maximize_restore:= True;
+    MDI_Main.User_maximize_restore := True;
     if MDI_Main.opt.MDI_childen_maximized then
       Window.Zoom;
       MDI_Main.Redraw_all;
@@ -317,8 +317,8 @@ package body LEA_GWin.MDI_Child is
   procedure Save (MDI_Child    : in out MDI_Child_Type;
                   File_Name : in     GWindows.GString)
   is
-    written_name: GString_Unbounded:=
-      To_GString_Unbounded(File_Name);
+    written_name : GString_Unbounded :=
+      To_GString_Unbounded (File_Name);
     temp_ext : constant GString := ".$$$";
     backup_name : constant GString := File_Name & ".bak";
 
@@ -355,10 +355,7 @@ package body LEA_GWin.MDI_Child is
       --  2/ file -> backup
       if File_Exists (To_UTF_8 (File_Name)) then
         begin
-          Rename(
-            To_UTF_8 (File_Name),
-            To_UTF_8 (backup_name)
-          );
+          Rename (To_UTF_8 (File_Name), To_UTF_8 (backup_name));
         exception
           when others =>
             raise backup_error_2;
@@ -366,10 +363,7 @@ package body LEA_GWin.MDI_Child is
       end if;
       --  3/ new file -> file
       begin
-        Rename(
-          To_UTF_8 (GU2G(written_name)),
-          To_UTF_8 (File_Name)
-        );
+        Rename (To_UTF_8 (GU2G (written_name)), To_UTF_8 (File_Name));
       exception
         when others =>
           raise backup_error_3;
@@ -380,7 +374,7 @@ package body LEA_GWin.MDI_Child is
     MDI_Child.Extra_First_Doc := False;
     MDI_Child.Update_Common_Menus (File_Name, MDI_Child.Editor.Get_current_line);
     MDI_Child.Editor.Set_Save_Point;
-    MDI_Child.Editor.modified:= False;
+    MDI_Child.Editor.modified := False;
     MDI_Child.Editor.Set_Read_Only (False);
   exception
     when backup_error_1 =>
@@ -496,7 +490,7 @@ package body LEA_GWin.MDI_Child is
     begin
       if Any_Window.all in MDI_Child_Type'Class then
         declare
-          one_child : MDI_Child_Type renames MDI_Child_Type(Any_Window.all);
+          one_child : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
         begin
           if one_child.Is_Document_Modified then
             one_child.On_Save;
@@ -526,13 +520,13 @@ package body LEA_GWin.MDI_Child is
   end On_File_Drop;
 
   --  This will update File menu of parent, itself, and all brothers and sisters
-  procedure Update_Common_Menus(Window : MDI_Child_Type;
-    top_entry_name : GString := "";
-    top_entry_line : Natural := 0    --  When unknown, 0; otherwise: last visited line
-  )
+  procedure Update_Common_Menus
+    (Window : MDI_Child_Type;
+     top_entry_name : GString := "";
+     top_entry_line : Natural := 0)    --  When unknown, 0; otherwise: last visited line
   is
   begin
-    Update_Common_Menus( Window.MDI_Root.all, top_entry_name, top_entry_line );
+    Update_Common_Menus (Window.MDI_Root.all, top_entry_name, top_entry_line);
   end Update_Common_Menus;
 
   procedure On_Size (Window : in out MDI_Child_Type;
@@ -553,9 +547,9 @@ package body LEA_GWin.MDI_Child is
     message_count, err_count : Natural := 0;
     --
     procedure LEA_HAC_Build_Error_Feedback (diagnostic : Diagnostic_Kit) is
-      use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed;
+      use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed, LEA_Common.Color_Themes;
       msg_up : String := To_String (diagnostic.message);
-      has_dark_background : constant Boolean := MDI_Main.opt.color_theme = Dark_side;
+      has_dark_background : constant Boolean := dark_backgrounded (MDI_Main.opt.color_theme);
     begin
       msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
       ml.Insert_Item (
@@ -799,7 +793,7 @@ package body LEA_GWin.MDI_Child is
       renames Window.MDI_Root.Tool_Bar;
     tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
   begin
-    Can_Close:= True;
+    Can_Close := True;
     if Window.Is_Document_Modified then
       --  This happens only for documents that may stay in an unsaved state.
       loop
@@ -807,7 +801,7 @@ package body LEA_GWin.MDI_Child is
                (Window,
                 "Close file", -- sheet, picture, ...
                 "Do you want to save the changes you made to """ &
-                GU2G(Window.ID.Short_Name) & """ ?",
+                GU2G (Window.ID.Short_Name) & """ ?",
                 Yes_No_Cancel_Box,
                 Question_Icon)
         is

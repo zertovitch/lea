@@ -66,7 +66,7 @@ package LEA_GWin.Editor is
 
   procedure Apply_options (Editor : in out LEA_Scintilla_Type);
   function Get_current_line (Editor : LEA_Scintilla_Type) return Integer;
-  procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line: Integer);
+  procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line : Integer);
 
   --  Comment / uncomment
   procedure Selection_comment (Editor : in out LEA_Scintilla_Type);
@@ -89,9 +89,9 @@ package LEA_GWin.Editor is
   function EOL (Editor : LEA_Scintilla_Type) return GString;
 
   --  I/O
-  procedure Load_Text (Editor : in out LEA_Scintilla_Type; contents: String);
+  procedure Load_Text (Editor : in out LEA_Scintilla_Type; contents : String);
   procedure Load_text (Editor : in out LEA_Scintilla_Type);  --  Loads from File_Name
-  procedure Save_text (Editor : in out LEA_Scintilla_Type; under: GString);
+  procedure Save_text (Editor : in out LEA_Scintilla_Type; under : GString);
 
   --  Propagate the Editor.syntax_kind value to the corresponding
   --  visible behaviour in the Scintilla widget.

@@ -36,7 +36,7 @@ package body LEA_GWin.Messages is
             LEA_GWin.Repair.Do_Repair (mm.all, pl.all);
             if pl.repair_kind = none then
               --  Remove tool icon:
-              Control.Set_Item (Control.Text(Item => i, SubItem => 0), i, Icon => 0);
+              Control.Set_Item (Control.Text (Item => i, SubItem => 0), i, Icon => 0);
             end if;
           end if;
         end if;
@@ -69,36 +69,15 @@ package body LEA_GWin.Messages is
   end On_Double_Click;
 
   procedure Apply_Options (Control : in out Message_List_Type) is
-    use LEA_Common, GWindows.Colors;
+    use GWindows.Colors, LEA_Common, LEA_Common.Color_Themes, MDI_Main;
     --
-    type Color_topic is (
-      foreground,
-      background,
-      control_background
-    );
-    --
-    theme_color : constant array (Color_Theme_Type, Color_topic) of Color_Type :=
-      (
-        Default =>
-          (foreground         => Black,
-           background         => White,
-           control_background => White
-          ),
-        Dark_side   =>
-          (foreground         => Light_Gray,
-           background         => 16#181716#,
-           control_background => 16#141312#
-          )
-      );
-    --
-    use MDI_Main;
     mdi_root : MDI_Main_Type renames MDI_Main_Type (Control.mdi_main_parent.all);
     theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
   begin
-    Control.Text_Color (theme_color (theme, foreground));
-    Control.Back_Color (theme_color (theme, background));
-    Control.Control_Back_Color (theme_color (theme, control_background));
-    mdi_root.Message_Panel.Background_Color (theme_color (theme, control_background));
+    Control.Text_Color (GWindows_Color_Theme (theme, messages_foreground));
+    Control.Back_Color (GWindows_Color_Theme (theme, messages_background));
+    Control.Control_Back_Color (GWindows_Color_Theme (theme, messages_control_background));
+    mdi_root.Message_Panel.Background_Color (GWindows_Color_Theme (theme, messages_control_background));
   end Apply_Options;
 
   procedure Copy_Messages (Control : in out Message_List_Type) is
@@ -138,9 +117,9 @@ package body LEA_GWin.Messages is
   end Copy_Messages;
 
   procedure Redraw_Icons (Control : in out Message_List_Type) is
-    use HAC_Sys.Defs, LEA_Common, LEA_LV_Ex;
+    use HAC_Sys.Defs, LEA_Common.Color_Themes, LEA_LV_Ex;
     has_dark_background : constant Boolean :=
-      MDI_Main.MDI_Main_Type (Control.mdi_main_parent.all).opt.color_theme = Dark_side;
+      dark_backgrounded (MDI_Main.MDI_Main_Type (Control.mdi_main_parent.all).opt.color_theme);
   begin
     for i in 0 .. Control.Item_Count - 1 loop
       if Control.Item_Data (i) /= null

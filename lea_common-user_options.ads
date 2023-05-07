@@ -20,16 +20,16 @@ package LEA_Common.User_options is
   --  The GUI-agnostic part of user options are stored in this record
   --
   type Option_Pack_Type is record
-    view_mode    : View_Mode_Type             := Notepad;
-    color_theme  : Color_Theme_Type           := Default;
-    backup       : Backup_mode                := none;
-    indentation  : Integer                    := 2;
-    tab_width    : Integer                    := 2;
-    right_margin : Integer                    := 100;  --  also called "vertical edge"
-    show_special : Show_special_symbol_mode   := none;
-    show_indent  : Boolean                    := False;
-    auto_insert  : Boolean                    := True;
-    toolset      : Toolset_mode_type          := HAC_mode;
+    view_mode    : View_Mode_Type                := Notepad;
+    color_theme  : Color_Themes.Color_Theme_Type := Color_Themes.Default;
+    backup       : Backup_mode                   := none;
+    indentation  : Integer                       := 2;
+    tab_width    : Integer                       := 2;
+    right_margin : Integer                       := 100;  --  also called "vertical edge"
+    show_special : Show_special_symbol_mode      := none;
+    show_indent  : Boolean                       := False;
+    auto_insert  : Boolean                       := True;
+    toolset      : Toolset_mode_type             := HAC_mode;
     --  Horizontal portion of the window for the tree, when view_mode = Studio
     tree_portion : Float := 0.25;  --  !! will disappear
     --  Horizontal window portion of MDI *main*, active when view_mode = Studio

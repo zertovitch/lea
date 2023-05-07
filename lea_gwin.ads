@@ -1,4 +1,7 @@
-with GWindows.Common_Dialogs,
+with LEA_Common;
+
+with GWindows.Colors,
+     GWindows.Common_Dialogs,
      GWindows.GStrings;
 
 with Ada.Containers.Vectors;
@@ -23,8 +26,8 @@ package LEA_GWin is
      (G2GU ("All files (*.*)"),                          G2GU ("*.*")));
 
   Project_files_filters : constant GWindows.Common_Dialogs.Filter_Array :=
-    ((G2GU ("GNAT project files (*.gpr)"),      G2GU ("*.gpr" )),
-     (G2GU ("ObjectAda project files (*.prj)"), G2GU ("*.prj" )));
+    ((G2GU ("GNAT project files (*.gpr)"),      G2GU ("*.gpr")),
+     (G2GU ("ObjectAda project files (*.prj)"), G2GU ("*.prj")));
 
   App_default_font      : constant GString := "Courier New";
   App_default_font_size : constant := 10;
@@ -37,5 +40,12 @@ package LEA_GWin is
   function Equivalent (Id_1, Id_2 : ID_Type) return Boolean;
 
   package ID_Vectors is new Ada.Containers.Vectors (Natural, ID_Type);
+
+  function Color_Convert
+    (rgb : LEA_Common.Color_Themes.RGB_Type) return GWindows.Colors.Color_Type;
+
+  function GWindows_Color_Theme
+    (theme : LEA_Common.Color_Themes.Color_Theme_Type;
+     topic : LEA_Common.Color_Themes.Color_Topic) return GWindows.Colors.Color_Type;
 
 end LEA_GWin;

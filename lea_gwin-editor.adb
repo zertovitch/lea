@@ -164,8 +164,8 @@ package body LEA_GWin.Editor is
     WM_KEYDOWN                 : constant := 256;
     WM_LBUTTONDOWN             : constant := 513;
     WM_RBUTTONDOWN             : constant := 516;
-    status_refresh_needed: Boolean:= False;
-    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    status_refresh_needed : Boolean := False;
+    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
   begin
     case message is
       when WM_KEYDOWN | WM_LBUTTONDOWN | WM_RBUTTONDOWN =>
@@ -174,7 +174,7 @@ package body LEA_GWin.Editor is
         null;
     end case;
     --  Call parent method.
-    Scintilla_Type(Editor).On_Message(message, wParam, lParam, Return_Value);
+    Scintilla_Type (Editor).On_Message (message, wParam, lParam, Return_Value);
     --
     if status_refresh_needed then
       parent.Update_Information (status_bar);
@@ -183,23 +183,23 @@ package body LEA_GWin.Editor is
 
   overriding
   procedure On_Save_Point_Reached (Editor : in out LEA_Scintilla_Type) is
-    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
   begin
     --  We have had enough Undo's to make the document unmodified again.
-    Editor.modified:= False;
+    Editor.modified := False;
     parent.Update_Information (toolbar_and_menu);
   end On_Save_Point_Reached;
 
   overriding
   procedure On_Save_Point_Left (Editor : in out LEA_Scintilla_Type) is
-    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
   begin
     --  Either new changes after last saved state, or Undo's from last saved state.
-    Editor.modified:= True;
+    Editor.modified := True;
     parent.Update_Information (toolbar_and_menu);
   end On_Save_Point_Left;
 
-  word_highlighting_indicator_index: constant := 0;
+  word_highlighting_indicator_index : constant := 0;
 
   procedure Highlight_word
     (Editor   : in out LEA_Scintilla_Type;
@@ -223,17 +223,17 @@ package body LEA_GWin.Editor is
     if word = "" then
       return;
     end if;
-    sel_a:= Editor.Get_Selection_Start;
-    sel_z:= Editor.Get_Selection_End;
+    sel_a := Editor.Get_Selection_Start;
+    sel_z := Editor.Get_Selection_End;
     Editor.Indic_Set_Style (word_highlighting_indicator_index, INDIC_ROUNDBOX);
     if is_whole then
       flags := flags + SCFIND_WHOLEWORD;
     end if;
-    Editor.Set_Search_Flags(flags);
+    Editor.Set_Search_Flags (flags);
     while pos_a < pos_z loop
       Editor.Set_Target_Start (pos_a);
       Editor.Set_Target_End (pos_z);
-      pos := Editor.Search_In_Target(word);
+      pos := Editor.Search_In_Target (word);
       exit when pos < 0;
       --  Mark the found word
       found_a := Editor.Get_Target_Start;
@@ -250,13 +250,13 @@ package body LEA_GWin.Editor is
 
   overriding
   procedure On_Update_UI (Editor : in out LEA_Scintilla_Type) is
-    parent: MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     pos : constant Position := Editor.Get_Current_Pos;
     p1, p2 : Position := INVALID_POSITION;
     sel_a, sel_z : Position;
-    lin_a, lin_z: Integer;
+    lin_a, lin_z : Integer;
     --
-    function Is_parenthesis (s: GString) return Boolean is (s="(" or else s=")");
+    function Is_parenthesis (s : GString) return Boolean is (s = "(" or else s = ")");
     is_whole : Boolean;
     --
     function Get_character (pos : Position) return GCharacter is
@@ -265,8 +265,8 @@ package body LEA_GWin.Editor is
       return s (s'First);
     end Get_character;
     --
-    function Is_ident_char (c: GCharacter) return Boolean is
-      (c in 'a'..'z' or c in 'A'..'Z' or c in '0'..'9' or c = '_');
+    function Is_ident_char (c : GCharacter) return Boolean is
+      (c in 'a' .. 'z' or c in 'A' .. 'Z' or c in '0' .. '9' or c = '_');
   begin
     --  NB: On_Position_Changed is deprecated and inactive in SciLexer v.3.5.6
     if Editor.pos_last_update_UI = pos then  --  Any change ?
@@ -275,15 +275,15 @@ package body LEA_GWin.Editor is
     Editor.pos_last_update_UI := pos;
     parent.Update_Information (status_bar);
     --  Highlight instances of selected word
-    sel_a:= Editor.Get_Selection_Start;
-    sel_z:= Editor.Get_Selection_End;
+    sel_a := Editor.Get_Selection_Start;
+    sel_z := Editor.Get_Selection_End;
     if sel_a /= Editor.sel_a_last_update_UI
       or else sel_z /= Editor.sel_z_last_update_UI
     then  --  Any change ?
       Editor.sel_a_last_update_UI := sel_a;
       Editor.sel_z_last_update_UI := sel_z;
-      lin_a:= Editor.Line_From_Position (sel_a);
-      lin_z:= Editor.Line_From_Position (sel_z);
+      lin_a := Editor.Line_From_Position (sel_a);
+      lin_z := Editor.Line_From_Position (sel_z);
       if sel_z > sel_a and then lin_a = lin_z then  --  We consider only a selection on one line
         --  If selection is a whole word, we highlight only whole words:
         is_whole :=
@@ -318,79 +318,26 @@ package body LEA_GWin.Editor is
   end On_Update_UI;
 
   procedure Apply_options (Editor : in out LEA_Scintilla_Type) is
-    use GWindows.Colors;
+    use GWindows.Colors, LEA_Common.Color_Themes;
     --
-    type Color_topic is (
-      foreground, background,
-      keyword, number, comment, string, character,
-      error_foreground, error_background,
-      caret,
-      selection_foreground,
-      selection_background,
-      matched_parenthesis,
-      unmatched_parenthesis,
-      parenthesis_background,
-      matched_word_highlight
-    );
-    --
-    theme_color : constant array (Color_Theme_Type, Color_topic) of Color_Type :=
-      (
-        Default =>
-          (foreground             => Black,
-           background             => White,
-           keyword                => Blue,
-           number                 => Dark_Orange,
-           comment                => Dark_Green,
-           string                 => Dark_Gray,
-           character              => Dark_Gray,
-           error_foreground       => Black,
-           error_background       => Pink,
-           caret                  => Black,
-           selection_foreground   => Black,
-           selection_background   => Light_Gray,
-           matched_parenthesis    => Dark_Green,
-           unmatched_parenthesis  => Dark_Red,
-           parenthesis_background => 16#F5E7CB#,
-           matched_word_highlight => Dark_Green
-          ),
-        Dark_side   =>
-          (foreground             => Light_Gray,
-           background             => 16#242322#,
-           keyword                => Dark_Orange,
-           number                 => Red,
-           comment                => 16#CF9F72#,
-           string                 => Yellow,
-           character              => Yellow,
-           error_foreground       => White,
-           error_background       => Dark_Red,
-           caret                  => White,
-           selection_foreground   => White,
-           selection_background   => 16#D28022#,
-           matched_parenthesis    => Green,
-           unmatched_parenthesis  => Red,
-           parenthesis_background => 16#505050#,
-           matched_word_highlight => Green
-          )
-      );
-    --
-    parent    : MDI_Child_Type renames MDI_Child_Type(Editor.mdi_parent.all);
+    parent    : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     mdi_root  : MDI_Main_Type renames parent.MDI_Root.all;
     theme     : Color_Theme_Type renames mdi_root.opt.color_theme;
     Edit_Zone : constant := SCE_ADA_DEFAULT;
   begin
     --  General style
     --  Font color of the line numbers in the left margin:
-    Editor.Style_Set_Fore (STYLE_DEFAULT, Gray);
-    Editor.Style_Set_Back (STYLE_DEFAULT, theme_color (theme, background));
+    Editor.Style_Set_Fore (STYLE_DEFAULT, GWindows.Colors.Gray);
+    Editor.Style_Set_Back (STYLE_DEFAULT, GWindows_Color_Theme (theme, background));
     Editor.Style_Set_Size (STYLE_DEFAULT, App_default_font_size);
     Editor.Style_Set_Font (STYLE_DEFAULT, App_default_font);
-    Editor.Set_Sel_Fore (True, theme_color (theme, selection_foreground));
-    Editor.Set_Sel_Back (True, theme_color (theme, selection_background));
+    Editor.Set_Sel_Fore (True, GWindows_Color_Theme (theme, selection_foreground));
+    Editor.Set_Sel_Back (True, GWindows_Color_Theme (theme, selection_background));
     Editor.Style_Clear_All;
     --  Font color of the editor zone (not related to Ada, and works
     --  only *after* Style_Clear_All, for some reason):
-    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, theme_color (theme, foreground));
-    Editor.Set_Caret_Fore (theme_color (theme, caret));
+    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, GWindows_Color_Theme (theme, foreground));
+    Editor.Set_Caret_Fore (GWindows_Color_Theme (theme, caret));
 
     if Editor.document_kind /= editable_text then
       Editor.Set_Edge_Mode (EDGE_NONE);
@@ -402,37 +349,37 @@ package body LEA_GWin.Editor is
 
     --  Style: parentheses coloring
     --    For matched parentheses:
-    Editor.Style_Set_Fore (STYLE_BRACELIGHT, theme_color (theme, matched_parenthesis));
-    Editor.Style_Set_Back (STYLE_BRACELIGHT, theme_color (theme, parenthesis_background));
+    Editor.Style_Set_Fore (STYLE_BRACELIGHT, GWindows_Color_Theme (theme, matched_parenthesis));
+    Editor.Style_Set_Back (STYLE_BRACELIGHT, GWindows_Color_Theme (theme, parenthesis_background));
     --    For unmatched parentheses:
-    Editor.Style_Set_Fore (STYLE_BRACEBAD, theme_color (theme, unmatched_parenthesis));
-    Editor.Style_Set_Back (STYLE_BRACEBAD, theme_color (theme, parenthesis_background));
+    Editor.Style_Set_Fore (STYLE_BRACEBAD, GWindows_Color_Theme (theme, unmatched_parenthesis));
+    Editor.Style_Set_Back (STYLE_BRACEBAD, GWindows_Color_Theme (theme, parenthesis_background));
 
     --  Style: Ada-specific coloring
-    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, theme_color (theme, foreground));
-    Editor.Style_Set_Back (SCE_ADA_DEFAULT, theme_color (theme, background));
+    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, GWindows_Color_Theme (theme, foreground));
+    Editor.Style_Set_Back (SCE_ADA_DEFAULT, GWindows_Color_Theme (theme, background));
     Editor.Style_Set_Size (SCE_ADA_DEFAULT, App_default_font_size);
     Editor.Style_Set_Font (SCE_ADA_DEFAULT, App_default_font);
     --
-    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, theme_color (theme, comment));
-    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      theme_color (theme, number));
-    Editor.Style_Set_Fore (SCE_ADA_WORD,        theme_color (theme, keyword));
-    Editor.Style_Set_Fore (SCE_ADA_STRING,      theme_color (theme, string));
-    Editor.Style_Set_Fore (SCE_ADA_CHARACTER,   theme_color (theme, character));
-    Editor.Style_Set_Fore (SCE_ADA_IDENTIFIER,  theme_color (theme, foreground));
+    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, GWindows_Color_Theme (theme, comment));
+    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      GWindows_Color_Theme (theme, number));
+    Editor.Style_Set_Fore (SCE_ADA_WORD,        GWindows_Color_Theme (theme, keyword));
+    Editor.Style_Set_Fore (SCE_ADA_STRING,      GWindows_Color_Theme (theme, string_literal));
+    Editor.Style_Set_Fore (SCE_ADA_CHARACTER,   GWindows_Color_Theme (theme, character_literal));
+    Editor.Style_Set_Fore (SCE_ADA_IDENTIFIER,  GWindows_Color_Theme (theme, foreground));
     --
     --  Cases where the text is obviously wrong
     --  (unfinished character or string, illegal identifier)
-    Editor.Style_Set_Fore (SCE_ADA_CHARACTEREOL, theme_color (theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_CHARACTEREOL, theme_color (theme, error_background));
-    Editor.Style_Set_Fore (SCE_ADA_STRINGEOL, theme_color (theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_STRINGEOL, theme_color (theme, error_background));
-    Editor.Style_Set_Fore (SCE_ADA_ILLEGAL, theme_color (theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_ILLEGAL, theme_color (theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_CHARACTEREOL, GWindows_Color_Theme (theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_CHARACTEREOL, GWindows_Color_Theme (theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_STRINGEOL, GWindows_Color_Theme (theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_STRINGEOL, GWindows_Color_Theme (theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_ILLEGAL, GWindows_Color_Theme (theme, error_foreground));
+    Editor.Style_Set_Back (SCE_ADA_ILLEGAL, GWindows_Color_Theme (theme, error_background));
 
     Editor.Indic_Set_Fore (
       word_highlighting_indicator_index,
-      theme_color (theme, matched_word_highlight)
+      GWindows_Color_Theme (theme, matched_word_highlight)
     );
 
     case mdi_root.opt.show_special is
@@ -455,8 +402,8 @@ package body LEA_GWin.Editor is
     return Editor.Line_From_Position (Editor.Get_Current_Pos);
   end Get_current_line;
 
-  procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line: Integer) is
-    shake: constant:= 10;
+  procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line : Integer) is
+    shake : constant := 10;
   begin
     --  Tactic to show the desired line closer to the middle of the window,
     --  avoiding top or bottom if possible.
@@ -473,14 +420,14 @@ package body LEA_GWin.Editor is
 
   procedure Get_Reduced_Selection (Editor : LEA_Scintilla_Type; sel_a, sel_z : out Position) is
     sel_y : Position;
-    lin_y, lin_z: Integer;
+    lin_y, lin_z : Integer;
   begin
-    sel_a:= Editor.Get_Selection_Start;
-    sel_z:= Editor.Get_Selection_End;
+    sel_a := Editor.Get_Selection_Start;
+    sel_z := Editor.Get_Selection_End;
     if sel_z > sel_a then
       sel_y := sel_z - 1;
-      lin_y:= Editor.Line_From_Position(sel_y);
-      lin_z:= Editor.Line_From_Position(sel_z);
+      lin_y := Editor.Line_From_Position (sel_y);
+      lin_z := Editor.Line_From_Position (sel_z);
       if lin_y < lin_z then
         sel_z := sel_y;
       end if;
@@ -492,7 +439,7 @@ package body LEA_GWin.Editor is
     blank_line_code : constant := -1;
     --
     procedure Get_visible_indentation
-      (s: in GString; ind : out Integer; favorable : out Boolean) is
+      (s : in GString; ind : out Integer; favorable : out Boolean) is
       use Ada.Wide_Characters.Handling;
     begin
       for i in s'Range loop
@@ -524,12 +471,12 @@ package body LEA_GWin.Editor is
     end Get_visible_indentation;
     --
     procedure Get_visible_indentation
-      (line: Integer; ind : out Integer; favorable : out Boolean)
+      (line : Integer; ind : out Integer; favorable : out Boolean)
     is
-      pos, pos_next: Position;
+      pos, pos_next : Position;
     begin
-      pos     := Editor.Position_From_Line (line);
-      pos_next:= Editor.Position_From_Line (line+1);
+      pos      := Editor.Position_From_Line (line);
+      pos_next := Editor.Position_From_Line (line + 1);
       if pos = pos_next then
         ind := blank_line_code;  --  Empty document case
         favorable := False;
@@ -540,15 +487,15 @@ package body LEA_GWin.Editor is
         (Editor.Get_Text_Range (pos, pos_next), ind, favorable);
     end Get_visible_indentation;
     --
-    pos, sel_a, sel_z: Position;
-    ind, ind_prev_line, ind_min, lin_a, lin_z: Integer;
+    pos, sel_a, sel_z : Position;
+    ind, ind_prev_line, ind_min, lin_a, lin_z : Integer;
     favorable : Boolean;
   begin
     Get_Reduced_Selection (Editor, sel_a, sel_z);
-    lin_a:= Editor.Line_From_Position(sel_a);
-    lin_z:= Editor.Line_From_Position(sel_z);
+    lin_a := Editor.Line_From_Position (sel_a);
+    lin_z := Editor.Line_From_Position (sel_z);
     --  Look for indentation *before* the selected block.
-    ind_prev_line:= 0;
+    ind_prev_line := 0;
     for l in reverse 1 .. lin_a - 1 loop
       Get_visible_indentation (l, ind, favorable);
       if ind > blank_line_code then
@@ -562,7 +509,7 @@ package body LEA_GWin.Editor is
       end if;
     end loop;
     --  Look for the block's minimal indentation (but ignore blank lines for that).
-    ind_min:= Integer'Last;
+    ind_min := Integer'Last;
     for l in lin_a .. lin_z loop
       Get_visible_indentation (l, ind, favorable);
       if ind = blank_line_code then
@@ -579,11 +526,10 @@ package body LEA_GWin.Editor is
     --
     for l in lin_a .. lin_z loop
       --  1) First, remove leading blanks up to ind_min column.
-      pos := Position'Min(
-        Editor.Position_From_Line(l) + Position (ind_min),
-        --  A blank line (ignored by ind_min) may have less than ind_min columns:
-        Editor.Get_Line_Indent_Position (l)
-      );
+      pos := Position'Min
+        (Editor.Position_From_Line (l) + Position (ind_min),
+         --  A blank line (ignored by ind_min) may have less than ind_min columns:
+         Editor.Get_Line_Indent_Position (l));
       Editor.Set_Current_Pos (pos);
       Editor.Del_Line_Left;
       --  2) Then, insert an indented "--  ", with a fixed indentation (ind_prev_line)
@@ -594,7 +540,7 @@ package body LEA_GWin.Editor is
     --
     Editor.End_Undo_Action;
     --  Select the whole block of lines again.
-    Editor.Set_Sel (Editor.Position_From_Line(lin_a), Editor.Position_From_Line(lin_z + 1));
+    Editor.Set_Sel (Editor.Position_From_Line (lin_a), Editor.Position_From_Line (lin_z + 1));
   end Selection_comment;
 
   procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type) is
@@ -639,13 +585,13 @@ package body LEA_GWin.Editor is
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     line_msg_col_width : constant := 70;
     col_msg_col_width  : constant := 40;
-    function Right_aligned_line_number (line: Positive) return Wide_String is
+    function Right_aligned_line_number (line : Positive) return Wide_String is
       s : Wide_String := "12345";
     begin
       Ada.Integer_Wide_Text_IO.Put (s, line);
       return s;
     end Right_aligned_line_number;
-    function Right_aligned_column_number (column: Positive) return Wide_String is
+    function Right_aligned_column_number (column : Positive) return Wide_String is
       s : Wide_String := "123";
     begin
       Ada.Integer_Wide_Text_IO.Put (s, column);
@@ -689,7 +635,7 @@ package body LEA_GWin.Editor is
               Editor.Set_Sel (0, 0);
             else
               --  Make search from the bottom of document on 2nd attempt:
-              Editor.Set_Sel (Editor.Get_Length , Editor.Get_Length);
+              Editor.Set_Sel (Editor.Get_Length, Editor.Get_Length);
             end if;
           else
             --  Not found, even *after* the wrap around: find_str is really nowhere!
@@ -744,16 +690,14 @@ package body LEA_GWin.Editor is
           line := Editor.Line_From_Position (pos);
           col  := Editor.Get_Column (pos);
           ml.Insert_Item (Right_aligned_line_number (line + 1), count);
-          ml.Item_Data(
-            count,
-            new HAC_Sys.Defs.Diagnostic_Kit'(
-              file_name   => To_Unbounded_String (G2S (GU2G (MDI_Child.ID.File_Name))),
-              line        => line + 1,  --  Lines in Diagnostic_Kit are 1-based.
-              column_a    => col,
-              column_z    => col + find_str'Length,
-              others      => <>
-            )
-          );
+          ml.Item_Data
+            (count,
+             new HAC_Sys.Defs.Diagnostic_Kit'
+               (file_name   => To_Unbounded_String (G2S (GU2G (MDI_Child.ID.File_Name))),
+                line        => line + 1,  --  Lines in Diagnostic_Kit are 1-based.
+                column_a    => col,
+                column_z    => col + find_str'Length,
+                others      => <>));
           ml.Set_Sub_Item (Right_aligned_column_number (col + 1), count, 1);
           ml.Set_Sub_Item (Editor.Get_Line (line), count, 2);
           count := count + 1;
@@ -840,7 +784,7 @@ package body LEA_GWin.Editor is
   type U32 is mod 2**32;
 
   procedure Bookmark_toggle (Editor : in out LEA_Scintilla_Type; line : Integer) is
-    flags: U32;
+    flags : U32;
     dummy : Integer;
   begin
     flags := U32 (Editor.Marker_Get (line));
@@ -869,24 +813,24 @@ package body LEA_GWin.Editor is
     --  NB: the Duplicate feature is actually present in Scintilla
     --  v.3.5.6 and was "accidentally" reprogrammed in full here.
     --  At least, it gives the possibility to customize it...
-    pos, sel_a, sel_z, line_start, next_line_start: Position;
+    pos, sel_a, sel_z, line_start, next_line_start : Position;
     lin : Integer;
     selections : Positive;
   begin
-    sel_a:= Editor.Get_Selection_Start;
-    sel_z:= Editor.Get_Selection_End;
+    sel_a := Editor.Get_Selection_Start;
+    sel_z := Editor.Get_Selection_End;
     pos  := Editor.Get_Current_Pos;
     if sel_a = sel_z then  --  No selection: we duplicate the current line
-      lin := Editor.Line_From_Position(sel_a);
-      line_start      := Editor.Position_From_Line(lin);
-      next_line_start := Editor.Position_From_Line(lin+1);
+      lin := Editor.Line_From_Position (sel_a);
+      line_start      := Editor.Position_From_Line (lin);
+      next_line_start := Editor.Position_From_Line (lin + 1);
       if line_start < next_line_start then
-        if Editor.Line_From_Position(next_line_start) = lin then
+        if Editor.Line_From_Position (next_line_start) = lin then
           --  Special case: we are on last line. Actually, next_line_start is the
           --  end of current line - and of the whole document as well.
           --  We need to add an EOL first.
           Editor.Insert_Text (next_line_start,
-            EOL(Editor) & Editor.Get_Text_Range (line_start, next_line_start));
+            EOL (Editor) & Editor.Get_Text_Range (line_start, next_line_start));
         else
           Editor.Insert_Text (next_line_start,
                           Editor.Get_Text_Range (line_start, next_line_start));
@@ -895,7 +839,7 @@ package body LEA_GWin.Editor is
     else  --  There is a selection (or selections): we duplicate it (them).
       selections := Editor.Get_Selections;
       declare
-        sel_n_a, sel_n_z, caret_n : array (1..selections) of Position;
+        sel_n_a, sel_n_z, caret_n : array (1 .. selections) of Position;
         length : Position;
       begin
         for n in 1 .. selections loop
@@ -961,12 +905,12 @@ package body LEA_GWin.Editor is
           exit;
         end if;
       end if;
-      p:= c;
+      p := c;
     end loop;
-    Editor.Insert_Text(0, S2G(contents));  --  ASCII to Unicode (UTF-16) conversion
+    Editor.Insert_Text (0, S2G (contents));  --  ASCII to Unicode (UTF-16) conversion
     Editor.Empty_Undo_Buffer;
     Editor.Set_Save_Point;
-    Editor.modified:= False;
+    Editor.modified := False;
   end Load_Text;
 
   procedure Load_text (Editor : in out LEA_Scintilla_Type) is
@@ -979,27 +923,27 @@ package body LEA_GWin.Editor is
       l : constant Ada.Streams.Stream_IO.Count := Size (f);
       s : String (1 .. Integer (l));
     begin
-      String'Read (Stream(f), s);
+      String'Read (Stream (f), s);
       Editor.Load_Text (contents => s);
     end;
-    Close(f);
+    Close (f);
   end Load_text;
 
-  procedure Save_text (Editor : in out LEA_Scintilla_Type; under: GString) is
+  procedure Save_text (Editor : in out LEA_Scintilla_Type; under : GString) is
     use Ada.Streams.Stream_IO;
     f : File_Type;
     --  s : aliased Editor_Stream_Type;
     --  c : Character;
   begin
-    Create(f, Out_File, To_UTF_8 (under), Form_For_IO_Open_and_Create);
+    Create (f, Out_File, To_UTF_8 (under), Form_For_IO_Open_and_Create);
     if Editor.Get_Length > 0 then
       declare
         b : constant GString := Editor.Get_Text_Range (Min => 0, Max => Editor.Get_Length);
       begin
-        String'Write (Stream(f), G2S(b));
+        String'Write (Stream (f), G2S (b));
       end;
     end if;
-    Close(f);
+    Close (f);
     --  We do *not* change Editor.SetSavePoint and Editor.modified until
     --  all operations around backups are successful. This is managed by
     --  the parent window's method, MDI_Child_Type.Save.
@@ -1066,15 +1010,15 @@ package body LEA_GWin.Editor is
   is
     use Ada.Streams;
     --
-    procedure Copy_slice (amount: Ada.Streams.Stream_Element_Offset) is
-      slice: constant String :=
-        G2S (Stream.editor.Get_Text_Range(
-          Position (Stream.index),
-          Position (Stream.index + amount)));
-      ei: Stream_Element_Offset := Item'First;
+    procedure Copy_slice (amount : Ada.Streams.Stream_Element_Offset) is
+      slice : constant String :=
+        G2S (Stream.editor.Get_Text_Range
+          (Position (Stream.index),
+           Position (Stream.index + amount)));
+      ei : Stream_Element_Offset := Item'First;
     begin
       for s of slice loop
-        Item (ei) := Character'Pos(s);
+        Item (ei) := Character'Pos (s);
         ei := ei + 1;
       end loop;
       Stream.index := Stream.index + amount;
@@ -1084,7 +1028,7 @@ package body LEA_GWin.Editor is
       --  Zero transfer -> Last:= Item'First - 1, see RM 13.13.1(8)
       --  No End_Error here, T'Read will raise it: RM 13.13.2(37)
       if Item'First > Stream_Element_Offset'First then
-        Last:= Item'First - 1;
+        Last := Item'First - 1;
         return;
       else
         --  Well, we cannot return Item'First - 1...
@@ -1093,7 +1037,7 @@ package body LEA_GWin.Editor is
     end if;
     if Item'Length = 0 then
       --  Nothing to be read actually.
-      Last:= Item'Last;  --  Since Item'Length = 0, we have Item'Last < Item'First
+      Last := Item'Last;  --  Since Item'Length = 0, we have Item'Last < Item'First
       return;
     end if;
     --  From now on, we can assume Item'Length > 0.
@@ -1118,7 +1062,7 @@ package body LEA_GWin.Editor is
     (Stream : in out Editor_Stream_Type;
      Item   : in     Ada.Streams.Stream_Element_Array)
   is
-    write_is_not_supported: exception;
+    write_is_not_supported : exception;
   begin
     raise write_is_not_supported;
   end Write;

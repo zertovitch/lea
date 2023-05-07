@@ -38,4 +38,24 @@ package body LEA_GWin is
     return result;
   end Equivalent;
 
+  function Color_Convert
+    (rgb : LEA_Common.Color_Themes.RGB_Type) return GWindows.Colors.Color_Type is
+    use type LEA_Common.Color_Themes.RGB_Type;
+    use GWindows.Colors;
+  begin
+    return
+      To_Color
+        (Red   => Color_Range (rgb / 2**16),
+         Green => Color_Range ((rgb / 2**8) mod (2**8)),
+         Blue  => Color_Range (rgb mod (2**8)));
+  end Color_Convert;
+
+  function GWindows_Color_Theme
+    (theme : LEA_Common.Color_Themes.Color_Theme_Type;
+     topic : LEA_Common.Color_Themes.Color_Topic) return GWindows.Colors.Color_Type
+  is
+  begin
+    return Color_Convert (LEA_Common.Color_Themes.theme_color (theme, topic));
+  end GWindows_Color_Theme;
+
 end LEA_GWin;
