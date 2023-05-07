@@ -49,19 +49,28 @@ package LEA_Common.Color_Themes is
   Orange      : constant RGB_Type := 16#C8FF00#;
   Dark_Orange : constant RGB_Type := 16#8DF024#;
 
-  --  https://ethanschoonover.com/solarized/
-  --
-  --  Base tones, dark to light:
-  solarized_base02 : constant RGB_Type := 16#073642#;
-  solarized_base00 : constant RGB_Type := 16#657b83#;
-  solarized_base1  : constant RGB_Type := 16#93a1a1#;
-  solarized_base2  : constant RGB_Type := 16#eee8d5#;
-  solarized_base3  : constant RGB_Type := 16#fdf6e3#;
-  --  Colours:
-  solarized_orange : constant RGB_Type := 16#cb4b16#;
-  solarized_red    : constant RGB_Type := 16#dc322f#;
-  solarized_cyan   : constant RGB_Type := 16#2aa198#;
-  solarized_green  : constant RGB_Type := 16#859900#;
+  package Solarized is
+    --  https://ethanschoonover.com/solarized/#the-values
+    --  https://en.wikipedia.org/wiki/Solarized
+
+    --  Base tones, dark to light:
+    base02 : constant RGB_Type := 16#073642#;
+    base01 : constant RGB_Type := 16#586e75#;
+    base00 : constant RGB_Type := 16#657b83#;
+    base0  : constant RGB_Type := 16#839496#;
+    base1  : constant RGB_Type := 16#93a1a1#;
+    base2  : constant RGB_Type := 16#eee8d5#;
+    base3  : constant RGB_Type := 16#fdf6e3#;
+
+    --  Colours:
+    orange  : constant RGB_Type := 16#cb4b16#;
+    red     : constant RGB_Type := 16#dc322f#;
+    magenta : constant RGB_Type := 16#d33682#;
+    blue    : constant RGB_Type := 16#268bd2#;
+    cyan    : constant RGB_Type := 16#2aa198#;
+    green   : constant RGB_Type := 16#859900#;
+
+  end Solarized;
 
   theme_color : constant array (Color_Theme_Type, Color_Topic) of RGB_Type :=
     (Default =>
@@ -107,24 +116,24 @@ package LEA_Common.Color_Themes is
         messages_control_background => 16#141312#),
 
      Solarized_Light =>
-       (foreground                  => solarized_base00,
-        background                  => solarized_base3,
-        keyword                     => solarized_orange,
-        number                      => solarized_red,
-        comment                     => solarized_base1,
-        string_literal              => solarized_cyan,
-        character_literal           => solarized_green,
-        error_foreground            => solarized_base3,
-        error_background            => solarized_orange,
+       (foreground                  => Solarized.base01,
+        background                  => Solarized.base3,
+        keyword                     => Solarized.green,
+        number                      => Solarized.magenta,
+        comment                     => Solarized.base1,
+        string_literal              => Solarized.cyan,
+        character_literal           => Solarized.blue,
+        error_foreground            => Solarized.base3,
+        error_background            => Solarized.orange,
         caret                       => Black,
-        selection_foreground        => solarized_base00,
-        selection_background        => solarized_base2,
-        matched_parenthesis         => solarized_green,
-        unmatched_parenthesis       => solarized_red,
-        parenthesis_background      => solarized_base2,
-        matched_word_highlight      => solarized_green,
-        messages_foreground         => solarized_base02,
-        messages_background         => solarized_base3,
-        messages_control_background => solarized_base2));
+        selection_foreground        => Solarized.base3,
+        selection_background        => Solarized.base00,
+        matched_parenthesis         => Solarized.green,
+        unmatched_parenthesis       => Solarized.red,
+        parenthesis_background      => Solarized.base2,
+        matched_word_highlight      => Solarized.green,
+        messages_foreground         => Solarized.base02,
+        messages_background         => Solarized.base3,
+        messages_control_background => Solarized.base2));
 
 end LEA_Common.Color_Themes;
