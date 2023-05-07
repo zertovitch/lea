@@ -1,4 +1,4 @@
-with LEA_Common;
+with LEA_Common.Color_Themes;
 
 with GWindows.Colors,
      GWindows.Common_Dialogs,

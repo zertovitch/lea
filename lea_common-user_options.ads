@@ -1,3 +1,5 @@
+with LEA_Common.Color_Themes;
+
 package LEA_Common.User_options is
 
   use Ada.Strings.Wide_Unbounded;
