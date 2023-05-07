@@ -35,19 +35,19 @@ package LEA_Common.Color_Themes is
   Light_Gray  : constant RGB_Type := 16#C0C0C0#;
   Gray        : constant RGB_Type := 16#808080#;
   Dark_Gray   : constant RGB_Type := 16#404040#;
-  Red         : constant RGB_Type := 16#00FF00#;
-  Dark_Red    : constant RGB_Type := 16#008000#;
-  Green       : constant RGB_Type := 16#FF0000#;
-  Dark_Green  : constant RGB_Type := 16#800000#;
-  Light_Blue  : constant RGB_Type := 16#DD88FF#;
+  Red         : constant RGB_Type := 16#FF0000#;
+  Dark_Red    : constant RGB_Type := 16#800000#;
+  Green       : constant RGB_Type := 16#00FF00#;
+  Dark_Green  : constant RGB_Type := 16#008000#;
+  Light_Blue  : constant RGB_Type := 16#88DDFF#;
   Blue        : constant RGB_Type := 16#0000FF#;
   Dark_Blue   : constant RGB_Type := 16#000080#;
   Yellow      : constant RGB_Type := 16#FFFF00#;
-  Magenta     : constant RGB_Type := 16#00FFFF#;
-  Cyan        : constant RGB_Type := 16#FF00FF#;
-  Pink        : constant RGB_Type := 16#AFFFAF#;
-  Orange      : constant RGB_Type := 16#C8FF00#;
-  Dark_Orange : constant RGB_Type := 16#8DF024#;
+  Magenta     : constant RGB_Type := 16#FF00FF#;
+  Cyan        : constant RGB_Type := 16#00FFFF#;
+  Pink        : constant RGB_Type := 16#FFAFAF#;
+  Orange      : constant RGB_Type := 16#FFC800#;
+  Dark_Orange : constant RGB_Type := 16#F08D24#;
 
   package Solarized is
     --  https://ethanschoonover.com/solarized/#the-values
@@ -88,7 +88,7 @@ package LEA_Common.Color_Themes is
         selection_background        => Light_Gray,
         matched_parenthesis         => Dark_Green,
         unmatched_parenthesis       => Dark_Red,
-        parenthesis_background      => 16#F5E7CB#,
+        parenthesis_background      => 16#cbe7f5#,
         matched_word_highlight      => Dark_Green,
         messages_foreground         => Black,
         messages_background         => White,
@@ -96,24 +96,24 @@ package LEA_Common.Color_Themes is
 
      Dark_Side =>
        (foreground                  => Light_Gray,
-        background                  => 16#242322#,
+        background                  => 16#222324#,
         keyword                     => Dark_Orange,
         number                      => Red,
-        comment                     => 16#CF9F72#,
+        comment                     => 16#729fcf#,
         string_literal              => Yellow,
         character_literal           => Yellow,
         error_foreground            => White,
         error_background            => Dark_Red,
         caret                       => White,
         selection_foreground        => White,
-        selection_background        => 16#D28022#,
+        selection_background        => 16#2280d2#,
         matched_parenthesis         => Green,
         unmatched_parenthesis       => Red,
         parenthesis_background      => 16#505050#,
         matched_word_highlight      => Green,
         messages_foreground         => Light_Gray,
-        messages_background         => 16#181716#,
-        messages_control_background => 16#141312#),
+        messages_background         => 16#161718#,
+        messages_control_background => 16#121314#),
 
      Solarized_Light =>
        (foreground                  => Solarized.base01,
