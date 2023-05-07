@@ -20,7 +20,7 @@ package LEA_GWin.Search_box is
   type Find_Replace_box_type is
     new GWindows.Combo_Boxes.Drop_Down_Combo_Box_Type with
   record
-    parent_SB: LEA_search_box_access_type;
+    parent_SB : LEA_search_box_access_type;
   end record;
 
   overriding
@@ -49,13 +49,13 @@ package LEA_GWin.Search_box is
   procedure On_Close (SB        : in out LEA_search_box_type;
                       Can_Close :    out Boolean);
 
-  procedure Update_drop_downs (SB: in out LEA_search_box_type);
+  procedure Update_drop_downs (SB : in out LEA_search_box_type);
 
   procedure Create_as_search_box (
     SB     : in out LEA_search_box_type;
     Parent : in out GWindows.Base.Base_Window_Type'Class
   );
 
-  function Compose_Scintilla_search_flags (SB: in  LEA_search_box_type) return Integer;
+  function Compose_Scintilla_search_flags (SB : in  LEA_search_box_type) return Integer;
 
 end LEA_GWin.Search_box;

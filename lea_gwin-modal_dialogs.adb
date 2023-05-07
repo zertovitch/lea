@@ -24,14 +24,14 @@ with Ada.Wide_Characters.Handling;
 
 package body LEA_GWin.Modal_Dialogs is
 
-  procedure Do_Go_to_Line (Child_Window: in out MDI_Child.MDI_Child_Type) is
+  procedure Do_Go_to_Line (Child_Window : in out MDI_Child.MDI_Child_Type) is
     use LEA_Resource_GUI, GWindows.Application, GWindows.Constants, GWindows.Message_Boxes;
     box : Go_to_line_box_Type;
     new_line : Integer := 0;
     --
     procedure Get_Data (Window : in out GWindows.Base.Base_Window_Type'Class) is
     begin
-      new_line:= Integer'Wide_Value(box.Line_value_box.Text);
+      new_line := Integer'Wide_Value (box.Line_value_box.Text);
     exception
       when others =>
         Message_Box (Window, "Invalid data", "Line number is invalid", OK_Box, Error_Icon);
@@ -39,8 +39,8 @@ package body LEA_GWin.Modal_Dialogs is
     end Get_Data;
     --
   begin
-    box.Create_Full_Dialog(Child_Window);
-    box.Center(Child_Window);
+    box.Create_Full_Dialog (Child_Window);
+    box.Center (Child_Window);
     box.Line_value_box.Text (Integer'Wide_Image (Child_Window.Editor.Get_current_line + 1));
     box.Line_value_box.Set_Selection (0, 10);
     box.Line_value_box.Focus;
@@ -65,15 +65,15 @@ package body LEA_GWin.Modal_Dialogs is
     --
   begin
     box.Create_Full_Dialog (Main_Window);
-    box.Copyright_label.Text (S2G(Version_info.LegalCopyright));
+    box.Copyright_label.Text (S2G (Version_info.LegalCopyright));
     box.Version_label.Text (
-      S2G(Version_info.FileVersion) & ", built as" &
+      S2G (Version_info.FileVersion) & ", built as" &
       GWindows.GStrings.To_GString_From_String (Integer'Image (GWindows.Types.Wparam'Size)) &
       " bit app."
     );
-    Create_and_Swap (url_lea,     box.LEA_URL,     box, S2G(LEA_Common.LEA_web_page));
+    Create_and_Swap (url_lea,     box.LEA_URL,     box, S2G (LEA_Common.LEA_web_page));
     Create_and_Swap (url_gnat,    box.GNAT_URL,    box, "https://www.adacore.com/community");
-    box.GNAT_Version.Text    (S2G("version: " & GNAT_Version_string));
+    box.GNAT_Version.Text    (S2G ("version: " & GNAT_Version_string));
     Create_and_Swap (url_gnavi,   box.GNAVI_URL,   box, "http://sf.net/projects/gnavi");
     Create_and_Swap (url_hac,     box.HAC_URL,     box, "https://hacadacompiler.sourceforge.io/");
     box.HAC_Version.Text    (S2G ("version: " & HAC_Sys.version & ", ref. " & HAC_Sys.reference));

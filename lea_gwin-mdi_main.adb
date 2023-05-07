@@ -45,7 +45,7 @@ package body LEA_GWin.MDI_Main is
           new_pos_a, new_pos_z : GWindows.Scintilla.Position;
         begin
           if Equivalent (pw.ID, ID) then
-            is_open:= True;
+            is_open := True;
             pw.Set_Foreground_Window;
             pw.Focus;  --  Focus on document already open in our app.
             --  Scintilla lines are 0-based
@@ -109,7 +109,7 @@ package body LEA_GWin.MDI_Main is
     --  We do here like Excel or Word: close the unused blank window
     Window.Close_Initial_Document;
     --
-    Window.User_maximize_restore:= False;
+    Window.User_maximize_restore := False;
     New_Window.Create_LEA_MDI_Child (Window, New_ID);
     declare
       upper_name : GString := File_Name;
@@ -210,22 +210,22 @@ package body LEA_GWin.MDI_Main is
   -- Persistence --
   -----------------
 
-  kname: constant GString:= "Software\LEA";
+  kname : constant GString := "Software\LEA";
 
-  function Read_key(topic: Wide_String) return Wide_String is
+  function Read_key (topic : Wide_String) return Wide_String is
     use GWindows.Registry;
   begin
-    return Get_Value(kname, topic, HKEY_CURRENT_USER);
+    return Get_Value (kname, topic, HKEY_CURRENT_USER);
   end Read_key;
 
-  procedure Write_key(topic: Wide_String; value: Wide_String) is
+  procedure Write_key (topic : Wide_String; value : Wide_String) is
     use GWindows.Registry;
   begin
-    Register( kname, topic, value, HKEY_CURRENT_USER );
+    Register (kname, topic, value, HKEY_CURRENT_USER);
   end Write_key;
 
   package Windows_persistence is new
-    LEA_Common.User_options.Persistence(Read_key, Write_key);
+    LEA_Common.User_options.Persistence (Read_key, Write_key);
 
   --  Switch between Notepad and Studio views
   --
@@ -242,7 +242,7 @@ package body LEA_GWin.MDI_Main is
     if old_view = new_view and not force then
       return;
     end if;
-    MDI_Main.opt.view_mode:= new_view;
+    MDI_Main.opt.view_mode := new_view;
     case new_view is
       when Notepad =>
         if old_view /= Notepad then
@@ -278,25 +278,25 @@ package body LEA_GWin.MDI_Main is
   )
   is
   begin
-    MDI_Main.opt.toolset:= new_mode;
+    MDI_Main.opt.toolset := new_mode;
     MDI_Main.Update_Common_Menus;
   end Change_Mode;
 
-  timer_id: constant:= 1;
+  timer_id : constant := 1;
 
   ---------------
   -- On_Create --
   ---------------
 
-  procedure On_Create ( Window : in out MDI_Main_Type ) is
+  procedure On_Create (Window : in out MDI_Main_Type) is
     use GWindows.Common_Controls, Ada.Command_Line;
     --
     --  Replace LEA default values by system-dependent ones (here those of GWindows)
     --
-    procedure Replace_default(x: in out Integer) is
+    procedure Replace_default (x : in out Integer) is
     begin
       if x = LEA_Common.User_options.use_default then
-        x:= GWindows.Constants.Use_Default;
+        x := GWindows.Constants.Use_Default;
       end if;
     end Replace_default;
     --
@@ -310,10 +310,10 @@ package body LEA_GWin.MDI_Main is
          Line => Window.opt.mru (m).line);
     end loop;
     --
-    Replace_default(Window.opt.win_left);
-    Replace_default(Window.opt.win_width);
-    Replace_default(Window.opt.win_top);
-    Replace_default(Window.opt.win_height);
+    Replace_default (Window.opt.win_left);
+    Replace_default (Window.opt.win_width);
+    Replace_default (Window.opt.win_top);
+    Replace_default (Window.opt.win_height);
 
     Small_Icon (Window, "LEA_Icon_Small");
     Large_Icon (Window, "AAA_Main_Icon");
@@ -346,13 +346,13 @@ package body LEA_GWin.MDI_Main is
     --    1) Left panel, with project or file tree:
     --
     Window.Project_Panel.Splitter.MDI_Main := Window'Unrestricted_Access;
-    Window.Project_Panel.Create (Window, 1,1,20,20);
+    Window.Project_Panel.Create (Window, 1, 1, 20, 20);
     --
     --    2) Bottom panel, with messages:
     --
     Window.Message_Panel.Splitter.MDI_Main := Window'Unrestricted_Access;
     Window.Message_Panel.Message_List.mdi_main_parent := Window'Unrestricted_Access;
-    Window.Message_Panel.Create (Window, 1,1,20,80);
+    Window.Message_Panel.Create (Window, 1, 1, 20, 80);
     Window.Message_Panel.Message_List.Set_Image_List (Small, Window.Folders_Images);
 
     --  ** Resize according to options:
@@ -373,7 +373,7 @@ package body LEA_GWin.MDI_Main is
     LEA_GWin.Options.Apply_Main_Options (Window);
     Window.Show;
 
-    if Argument_Count=0 then
+    if Argument_Count = 0 then
       On_File_New (Window, extra_first_doc => True);
       --  ^ The MS Office-like first, empty document
     end if;
@@ -385,8 +385,8 @@ package body LEA_GWin.MDI_Main is
         if a (a'First) = '+' then  --  Emacs +linenum
           start_line := 0;
           for j in a'First + 1 .. a'Last loop
-            if a(j) in '0' .. '9' then
-              start_line := start_line * 10 + (Character'Pos(a(j)) - Character'Pos('0'));
+            if a (j) in '0' .. '9' then
+              start_line := start_line * 10 + (Character'Pos (a (j)) - Character'Pos ('0'));
             else
               start_line := -1;  --  Invalid number
               exit;
@@ -395,7 +395,7 @@ package body LEA_GWin.MDI_Main is
         else
           Open_Child_Window_And_Load
             (Window,
-             To_UTF_16(a),
+             To_UTF_16 (a),
              start_line - 1);  --  NB: Scintilla lines are 0-based
           start_line := -1;
         end if;
@@ -416,7 +416,7 @@ package body LEA_GWin.MDI_Main is
     Windows_Timers.Set_Timer (Window, timer_id, 100);
   end On_Create;
 
-  function Is_Minimized (MDI_Main: GWindows.Base.Base_Window_Type'Class)
+  function Is_Minimized (MDI_Main : GWindows.Base.Base_Window_Type'Class)
     return Boolean
   is
   begin
@@ -444,9 +444,9 @@ package body LEA_GWin.MDI_Main is
   is
     w   : constant Natural := Window.Client_Area_Width;
     tbh : constant Natural := Window.Tool_Bar.Height;
-    h   : constant Natural := Integer'Max(2, Window.Client_Area_Height - tbh);
-    tree_w : constant Integer := Integer (Window.opt.project_tree_portion * Float(w));
-    list_h : constant Integer := Integer (Window.opt.message_list_portion * Float(h));
+    h   : constant Natural := Integer'Max (2, Window.Client_Area_Height - tbh);
+    tree_w : constant Integer := Integer (Window.opt.project_tree_portion * Float (w));
+    list_h : constant Integer := Integer (Window.opt.message_list_portion * Float (h));
     use GWindows.Types;
   begin
     --  Resize project tree and message list panels using the recorded proportions
@@ -467,7 +467,7 @@ package body LEA_GWin.MDI_Main is
       --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
       Window.opt.win_width := Width;
-      Window.opt.win_height:= Height;
+      Window.opt.win_height := Height;
       --  Will remember position if sized, maximized and closed
     end if;
   end On_Size;
@@ -478,14 +478,14 @@ package body LEA_GWin.MDI_Main is
 
   New_MDI_window_counter : Natural := 0;
 
-  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean) is
+  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc : Boolean) is
 
     function Suffix return GWindows.GString is
     begin
       if New_MDI_window_counter = 0 then
         return "";
       else
-        return Integer'Wide_Image(New_MDI_window_counter + 1);
+        return Integer'Wide_Image (New_MDI_window_counter + 1);
       end if;
     end Suffix;
 
@@ -524,26 +524,25 @@ package body LEA_GWin.MDI_Main is
     File_Title : GString_Unbounded;
     Success    : Boolean;
     use GWindows.Windows;
-    File_Names: Array_Of_File_Names_Access;
-    procedure Dispose is new Ada.Unchecked_Deallocation(
-      Array_Of_File_Names,
-      Array_Of_File_Names_Access
-    );
+    File_Names : Array_Of_File_Names_Access;
+    procedure Dispose is new Ada.Unchecked_Deallocation
+      (Array_Of_File_Names,
+       Array_Of_File_Names_Access);
   begin
-    GWindows.Common_Dialogs.Open_Files (
-      MDI_Main,
-      "Open file(s)",
-      File_Names,
-      MDI_Main.text_files_filters,
-      ".ad*",
-      File_Title,
-      Success
-    );
+    GWindows.Common_Dialogs.Open_Files
+      (MDI_Main,
+       "Open file(s)",
+       File_Names,
+       MDI_Main.text_files_filters,
+       ".ad*",
+       File_Title,
+       Success);
+
     if Success then
       for File_Name of File_Names.all loop
         Open_Child_Window_And_Load (MDI_Main, GU2G (File_Name));
       end loop;
-      Dispose(File_Names);
+      Dispose (File_Names);
     end if;
   end On_File_Open;
 
@@ -573,7 +572,7 @@ package body LEA_GWin.MDI_Main is
       end if;
     end My_Close_Win;
   begin
-    MDI_Main.Success_in_enumerated_close:= True;
+    MDI_Main.Success_in_enumerated_close := True;
     GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Main).all,
                                       My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
@@ -582,9 +581,9 @@ package body LEA_GWin.MDI_Main is
   -- On_Menu_Select --
   --------------------
 
-  procedure On_Menu_Select (
-        Window : in out MDI_Main_Type;
-        Item   : in     Integer        )
+  overriding procedure On_Menu_Select
+    (Window : in out MDI_Main_Type;
+     Item   : in     Integer)
   is
     procedure Call_Parent_Method is
     begin
@@ -593,12 +592,12 @@ package body LEA_GWin.MDI_Main is
     use LEA_Resource_GUI;
   begin
     case Item is
-      when IDM_New_File=>
+      when IDM_New_File =>
         On_File_New (Window, extra_first_doc => False);
       when IDM_Open_File =>
         On_File_Open (Window);
       when IDM_Web =>
-        GWin_Util.Start(LEA_web_page);
+        GWin_Util.Start (LEA_web_page);
       when IDM_QUIT  =>
         Close (Window);
       when IDM_Close =>
@@ -616,9 +615,9 @@ package body LEA_GWin.MDI_Main is
       when IDM_WINDOW_TILE_VERTICAL =>
         MDI_Tile_Vertical (Window);
       when IDM_WINDOW_CLOSE_ALL =>
-        My_MDI_Close_All(Window);
+        My_MDI_Close_All (Window);
       when IDM_General_options =>
-        Options.On_General_Options(Window);
+        Options.On_General_Options (Window);
       when IDM_ABOUT =>
         Modal_Dialogs.Show_About_Box (Window);
       when IDM_Quick_Help =>
@@ -712,7 +711,7 @@ package body LEA_GWin.MDI_Main is
 
   --  Menus of MDI main *and* all children need to have their "View" menu up-to-date.
   --
-  procedure Update_View_Menu (m: Menu_Type; o: LEA_Common.User_options.Option_Pack_Type) is
+  procedure Update_View_Menu (m : Menu_Type; o : LEA_Common.User_options.Option_Pack_Type) is
     use LEA_Resource_GUI;
   begin
     case o.view_mode is
@@ -741,7 +740,7 @@ package body LEA_GWin.MDI_Main is
   begin
     if Any_Window /= null and then Any_Window.all in MDI_Child_Type'Class then
       declare
-        cw: MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
+        cw : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
       begin
         Update_MRU_Menu (cw.MDI_Root.MRU, cw.Menu.Popup_0001);
         Update_View_Menu (cw.Menu.Main, cw.MDI_Root.opt);
@@ -750,11 +749,10 @@ package body LEA_GWin.MDI_Main is
     end if;
   end Update_Common_Menus_Child;
 
-  procedure Update_Common_Menus(
-    Window         : in out MDI_Main_Type;
-    top_entry_name :        GString := "";
-    top_entry_line :        Integer := -1    --  When unknown, -1; otherwise: last visited line
-  )
+  procedure Update_Common_Menus
+    (Window         : in out MDI_Main_Type;
+     top_entry_name :        GString := "";
+     top_entry_line :        Integer := -1)    --  When unknown, -1; otherwise: last visited line
   is
     use Office_Applications;
   begin
@@ -773,9 +771,9 @@ package body LEA_GWin.MDI_Main is
     use type GString_Unbounded;
   begin
     if Window.Project_File_Name = "" then
-      Window.Text("LEA - [Projectless]");
+      Window.Text ("LEA - [Projectless]");
     else
-      Window.Text("LEA - [" & GU2G(Window.Project_Short_Name) & ']');
+      Window.Text ("LEA - [" & GU2G (Window.Project_Short_Name) & ']');
     end if;
   end Update_Title;
 
@@ -786,14 +784,13 @@ package body LEA_GWin.MDI_Main is
         and then Any_Window.all in MDI_Child_Type'Class
         and then Window.Focus = Any_Window
       then
-        MDI_Child_Type(Any_Window.all).Editor.Search(action);
+        MDI_Child_Type (Any_Window.all).Editor.Search (action);
       end if;
     end Search_on_focused_editor;
   begin
-    Enumerate_Children(
-      MDI_Client_Window (Window).all,
-      Search_on_focused_editor'Unrestricted_Access
-    );
+    Enumerate_Children
+      (MDI_Client_Window (Window).all,
+       Search_on_focused_editor'Unrestricted_Access);
   end Perform_Search;
 
   --  The operation reciprocal to Memorize_Splitters is done in On_Size.

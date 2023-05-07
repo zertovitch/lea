@@ -9,7 +9,7 @@ with GWin_Util;
 package LEA_GWin.Sliding_Panels is
 
   type LEA_splitter is new GWin_Util.Splitter_with_dashes with record
-    MDI_Main: GWindows.Windows.MDI.Pointer_To_MDI_Main_Window_Class;
+    MDI_Main : GWindows.Windows.MDI.Pointer_To_MDI_Main_Window_Class;
   end record;
 
   overriding procedure On_Bar_Moved (Splitter : in out LEA_splitter);

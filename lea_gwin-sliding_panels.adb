@@ -17,7 +17,7 @@ package body LEA_GWin.Sliding_Panels is
     Window.Dock (At_Left);
     --  Create widgets within the panel:
     Window.Splitter.Create (Window, At_Right);
-    Window.Project_Tree.Create (Window, 1,1,20,20, Lines_At_Root => False);
+    Window.Project_Tree.Create (Window, 1, 1, 20, 20, Lines_At_Root => False);
     Window.Project_Tree.Dock (Fill);
   end On_Create;
 
@@ -27,7 +27,7 @@ package body LEA_GWin.Sliding_Panels is
     Window.Dock (At_Bottom);
     --  Create widgets within the panel:
     Window.Splitter.Create (Window, At_Top, Height => 5);
-    Window.Message_List.Create (Window, 1,1,20,20, View => Report_View);
+    Window.Message_List.Create (Window, 1, 1, 20, 20, View => Report_View);
   end On_Create;
 
 end LEA_GWin.Sliding_Panels;

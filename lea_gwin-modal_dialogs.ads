@@ -5,7 +5,7 @@ with LEA_GWin.MDI_Child,
 
 package LEA_GWin.Modal_Dialogs is
 
-  procedure Do_Go_to_Line (Child_Window: in out MDI_Child.MDI_Child_Type);
+  procedure Do_Go_to_Line (Child_Window : in out MDI_Child.MDI_Child_Type);
 
   procedure Show_About_Box (Main_Window : in out MDI_Main.MDI_Main_Type);
 

@@ -15,6 +15,6 @@ package Windows_Timers is
   procedure Kill_Timer (Window   : GWindows.Base.Base_Window_Type'Class;
                         ID_Event : Natural);
 
-  error: exception;
+  error : exception;
 
 end Windows_Timers;

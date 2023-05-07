@@ -52,21 +52,20 @@ project LEA is
       when "Small_MinGW" => for Object_Dir use "obj/small_ming";
    end case;
 
-   Common_Compiler_Options := (
-     "-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
-     --  "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
-     "-gnatwcijkmopruvz.c.p.t.w.x",    --  Warnings switches (run "gnatmake" for full list)
-     "-gnatf",  --  Full errors. Verbose details, all undefined references
-     "-gnatq",  --  Don't quit, try semantics, even if parse errors
-     "-gnatQ",  --  Don't quit, write ali/tree file even if compile errors
-     --
-     "-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
-     "-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
-     "-gnatyx",       --  Style: check x:no extra parens
-     "-gnatye",       --  Style: check e:end/exit labels present
-     "-gnatyc"        --  Style: check c:comment format (two spaces)
-     --  "-gnatyt",       --  Style: check t:token separation rules
-   );
+   Common_Compiler_Options :=
+     ("-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
+      --  "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
+      "-gnatwcijkmopruvz.c.p.t.w.x",    --  Warnings switches (run "gnatmake" for full list)
+      "-gnatf",  --  Full errors. Verbose details, all undefined references
+      "-gnatq",  --  Don't quit, try semantics, even if parse errors
+      "-gnatQ",  --  Don't quit, write ali/tree file even if compile errors
+      --
+      "-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
+      "-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
+      "-gnatyx",       --  Style: check x:no extra parens
+      "-gnatye",       --  Style: check e:end/exit labels present
+      "-gnatyc",       --  Style: check c:comment format (two spaces)
+      "-gnatyt");      --  Style: check t:token separation rules
    
    Debug_Options := (
      "-gnata",         --  Assertions enabled

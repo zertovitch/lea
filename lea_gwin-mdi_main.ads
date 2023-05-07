@@ -41,43 +41,43 @@ package LEA_GWin.MDI_Main is
   type MDI_Main_Type is
     new Office_Applications.Classic_Main_Window_Type with
       record
-        Project_File_Name      : GString_Unbounded;
-        Project_Short_Name     : GString_Unbounded;
-        Success_in_enumerated_close: Boolean;
-        Folders_Images         : GWindows.Image_Lists.Image_List_Type;
+        Project_File_Name           : GString_Unbounded;
+        Project_Short_Name          : GString_Unbounded;
+        Success_in_enumerated_close : Boolean;
+        Folders_Images              : GWindows.Image_Lists.Image_List_Type;
         --
-        Tab_Bar                : LEA_Tab_Bar_Type;
+        Tab_Bar                     : LEA_Tab_Bar_Type;
         --
-        Project_Panel          : Sliding_Panels.Project_Panel_Type;
-        Message_Panel          : Sliding_Panels.Message_Panel_Type;
+        Project_Panel               : Sliding_Panels.Project_Panel_Type;
+        Message_Panel               : Sliding_Panels.Message_Panel_Type;
         --
-        Menu                   : LEA_Resource_GUI.Menu_MDI_Main_Type;
-        --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size
-        User_maximize_restore  : Boolean:= True;
+        Menu                        : LEA_Resource_GUI.Menu_MDI_Main_Type;
+        --  record_dimensions : Boolean:= False; -- in On_Move, On_Size
+        User_maximize_restore       : Boolean := True;
         --  ^ Detect user-triggered max/restore commands
-        record_dimensions      : Boolean:= False; -- in On_Move, On_Size
+        record_dimensions           : Boolean := False; -- in On_Move, On_Size
         --  Options of a "model" child window.
-        opt                    : LEA_Common.User_options.Option_Pack_Type;
+        opt                         : LEA_Common.User_options.Option_Pack_Type;
         --
-        Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
-        Task_bar_gadget        : GWindows.Taskbar.Taskbar_List;
+        Task_bar_gadget_ok          : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
+        Task_bar_gadget             : GWindows.Taskbar.Taskbar_List;
         --
-        Search_box             : LEA_GWin.Search_box.LEA_search_box_type;
+        Search_box                  : LEA_GWin.Search_box.LEA_search_box_type;
         --  Direct input stream from an editor window:
-        current_editor_stream  : aliased Editor.Editor_Stream_Type;
-        build_successful       : Boolean := False;
-        close_this_search_box  : Boolean := False;
+        current_editor_stream       : aliased Editor.Editor_Stream_Type;
+        build_successful            : Boolean := False;
+        close_this_search_box       : Boolean := False;
         pragma Volatile (close_this_search_box);
         --
-        text_files_filters     : GWindows.Common_Dialogs.Filter_Array
-                                   (Initial_text_files_filters'Range):=
-                                      Initial_text_files_filters;
+        text_files_filters          : GWindows.Common_Dialogs.Filter_Array
+                                        (Initial_text_files_filters'Range) :=
+                                           Initial_text_files_filters;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Main_Type);
   --  Handles setting up icons, menus, etc.
 
-  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean);
+  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc : Boolean);
   --  File|New event
 
   procedure On_Move (Window : in out MDI_Main_Type;
@@ -96,7 +96,7 @@ package LEA_GWin.MDI_Main is
       Canvas : in out GWindows.Drawing.Canvas_Type;
       Area   : in     GWindows.Types.Rectangle_Type) is null;
 
-  procedure Redraw_all (Window: in out MDI_Main_Type);
+  procedure Redraw_all (Window : in out MDI_Main_Type);
 
   procedure Open_Child_Window_And_Load
     (Window       : in out MDI_Main_Type;
@@ -119,11 +119,10 @@ package LEA_GWin.MDI_Main is
     (Window    : in out MDI_Main_Type;
      Can_Close :    out Boolean);
 
-  procedure Update_Common_Menus(
-    Window         : in out MDI_Main_Type;
-    top_entry_name :        GString := "";
-    top_entry_line :        Integer := -1    --  When unknown, -1; otherwise: last visited line
-  );
+  procedure Update_Common_Menus
+    (Window         : in out MDI_Main_Type;
+     top_entry_name :        GString := "";
+     top_entry_line :        Integer := -1);    --  When unknown, -1; otherwise: last visited line
 
   procedure Update_Title (Window : in out MDI_Main_Type);
 

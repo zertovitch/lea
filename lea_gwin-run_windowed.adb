@@ -75,10 +75,9 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
       );
       --  Here we set a payload in order to get the source file and position
       --  when selecting a row in the error / warnings message list.
-      ml.Item_Data(
-        count,
-        new Diagnostic_Kit'(diagnostic)  --  Copy `diagnostic` into a new heap allocated object.
-      );
+      ml.Item_Data
+        (count,
+         new Diagnostic_Kit'(diagnostic));  --  Copy `diagnostic` into a new heap allocated object.
       ml.Set_Sub_Item (S2G (Block_Name), count, 1);
       count := count + 1;
     end Show_Line_Information;
@@ -121,9 +120,9 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
   --
   progress_box : LEA_Resource_GUI.Progress_box_Type;
   --
-  procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+  procedure Abort_clicked (dummy : in out GWindows.Base.Base_Window_Type'Class) is
   begin
-    LEA_GWin.Messages.IO_Pipe.is_aborted_flag:= True;
+    LEA_GWin.Messages.IO_Pipe.is_aborted_flag := True;
     --  Will propagate user_abort upon next Boxed_Feedback.
   end Abort_clicked;
   --
@@ -151,9 +150,8 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     --  Otherwise Windows may be overflown by messages and it would
     --  slow down the interpreter.
     if Wall_Clock - tick >= 0.04  then
-      progress_box.Stack_Bar.Position(
-        Integer (100.0 * Long_Float (Stack_Current) / Long_Float (Stack_Total))
-      );
+      progress_box.Stack_Bar.Position
+        (Integer (100.0 * Long_Float (Stack_Current) / Long_Float (Stack_Total)));
       Message_Check;
       tick := Wall_Clock;
     end if;
@@ -162,7 +160,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
   package Windowed_Console is new
     Console_Traits
-      ( LEA_GWin.Messages.IO_Pipe.End_Of_File_Console,
+       (LEA_GWin.Messages.IO_Pipe.End_Of_File_Console,
         LEA_GWin.Messages.IO_Pipe.End_Of_Line_Console,
         LEA_GWin.Messages.IO_Pipe.Get_Needs_Skip_Line,
         LEA_GWin.Messages.IO_Pipe.Get_Console,
@@ -176,25 +174,22 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
         LEA_GWin.Messages.IO_Pipe.Put_Console,
         LEA_GWin.Messages.IO_Pipe.Put_Console,
         LEA_GWin.Messages.IO_Pipe.Put_Console,
-        LEA_GWin.Messages.IO_Pipe.New_Line_Console
-      );
+        LEA_GWin.Messages.IO_Pipe.New_Line_Console);
 
   package LEA_System_Calls is new
     System_Calls_Traits
-      ( Fake_Argument_Count,
+       (Fake_Argument_Count,
         Fake_Argument,
         HAC_Command_Name,
         Fake_Shell_Execute,
         Fake_Shell_Execute_Output,
-        HAT.Directory_Separator
-      );
+        HAT.Directory_Separator);
 
   procedure Windowed_interpret is new
     HAC_Sys.PCode.Interpreter.Interpret
-      ( Boxed_Feedback,
+       (Boxed_Feedback,
         Windowed_Console,
-        LEA_System_Calls
-      );
+        LEA_System_Calls);
 
   use Ada.Calendar, GWindows.Application, GWindows.Common_Controls;
 

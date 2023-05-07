@@ -30,17 +30,16 @@ package body Windows_Timers is
   -- Set_Timer --
   ---------------
 
-  procedure Set_Timer(Window       : GWindows.Base.Base_Window_Type'Class;
-                      ID_Event     : Natural;
-                      Milliseconds : Natural)
+  procedure Set_Timer (Window       : GWindows.Base.Base_Window_Type'Class;
+                       ID_Event     : Natural;
+                       Milliseconds : Natural)
   is
-    res: Interfaces.C.unsigned;
+    res : Interfaces.C.unsigned;
   begin
-    res:= SetTimer(hWnd        => Handle(Window),
-                   nIDEvent    => Interfaces.C.unsigned(ID_Event),
-                   uElapse     => Interfaces.C.unsigned(Milliseconds),
-                   lpTimerFunc => null
-                  );
+    res := SetTimer (hWnd        => Handle (Window),
+                     nIDEvent    => Interfaces.C.unsigned (ID_Event),
+                     uElapse     => Interfaces.C.unsigned (Milliseconds),
+                     lpTimerFunc => null);
     if res = 0 then
       raise error;
     end if;
@@ -50,14 +49,13 @@ package body Windows_Timers is
   -- Kill_Timer --
   ----------------
 
-  procedure Kill_Timer(Window   : GWindows.Base.Base_Window_Type'Class;
-                       ID_Event : Natural)
+  procedure Kill_Timer (Window   : GWindows.Base.Base_Window_Type'Class;
+                        ID_Event : Natural)
   is
-    res: Interfaces.C.int;
+    res : Interfaces.C.int;
   begin
-    res:= KillTimer(hWnd     => Handle(Window),
-                    uIDEvent => Interfaces.C.unsigned(ID_Event)
-                  );
+    res := KillTimer (hWnd     => Handle (Window),
+                      uIDEvent => Interfaces.C.unsigned (ID_Event));
     if res = 0 then
       raise error;
     end if;
