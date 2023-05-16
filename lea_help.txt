@@ -12,6 +12,18 @@ Windows
   in the main window. You can switch windows with Ctrl-Tab or via the
   Window menu.
 
+Installation
+============
+
+  LEA is a portable application in the sense that it runs without needing
+  to be installed. However, you can install it, typically in the
+  folder C:\Program Files\LEA if you want. Conversely, if you want to use
+  LEA and leave the least traces on the host PC, including its registry
+  (typically you would also run LEA from a USB stick), you can create a file
+  called `lea.cfg` beside `lea.exe`. Then, LEA will run in "stealth mode"
+  and the options, windows sizes and recent file names will be then stored
+  in that file.
+
 Display
 =======
 
@@ -105,18 +117,20 @@ Press F9 for build and run - that's it!
   less unconstrained types, plus a few items from Ada 95 and 2005.
   Recursion and nested subprograms are supported.
 
-  HAL
+  HAT
   ===
-  HAC has a general-purpose built-in package called HAL (HAC Ada Library).
-  HAL contains useful types and subprograms for text I/O,
+  HAC has a general-purpose built-in package called HAT (HAC Ada Toolbox).
+
+  The package HAT contains useful types and subprograms for text I/O,
   string manipulation, timing, system (calls, arguments, environment variables, ...),
   and some mathematical functions.
-  The HAL package is embedded in HAC, which is itself embedded in LEA.
 
-  For compatibility and the good understanding of HAL, a *real* Ada
-  implementation of HAL is available from the "Action" -> "Code sample" menu,
+  The HAT package is embedded in HAC, which is itself embedded in LEA.
+
+  For compatibility and the good understanding of HAT, a *real* Ada
+  implementation of HAT is available from the "Action" -> "Code sample" menu,
   then the "Compatibility" Topic choice.
-  The same files (hal.ads and hal*.adb) are also available @
+  The same files (hat.ads and hat*.adb) are also available @
       http://hacadacompiler.sf.net/  (see Download or Code)
   or
       https://github.com/zertovitch/hac

@@ -11,29 +11,26 @@ package body LEA_Common.User_options is
     end if;
   end Toggle_show_special;
 
+  type Persistence_Key is
+    (view_mode,      --  Notepad, Studio
+     toolset_mode,   --  HAC, GNAT, ...
+     color_theme,
+     backup,
+     indent, tab_width,
+     edge,  --  right margin
+     show_special,
+     show_indent,
+     auto_insert,
+     win_left, win_top, win_width, win_height,
+     maximized, children_maximized,
+     tree_portion,  --  !! to be removed
+     project_tree_portion,
+     message_list_portion,
+     subprogram_tree_portion,
+     mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
+     ada_files_filter);
+
   package body Persistence is
-
-    type Key is
-       (view_mode,      --  Notepad, Studio
-        toolset_mode,   --  HAC, GNAT, ...
-        color_theme,
-        backup,
-        indent, tab_width,
-        edge,  --  right margin
-        show_special,
-        show_indent,
-        auto_insert,
-        win_left, win_top, win_width, win_height,
-        maximized, children_maximized,
-        tree_portion,  --  !! to be removed
-        project_tree_portion,
-        message_list_portion,
-        subprogram_tree_portion,
-        mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
-        ada_files_filter
-      );
-
-    pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
 
     sep : constant UTF_16_String := ">";
 
@@ -42,11 +39,11 @@ package body LEA_Common.User_options is
       sep_pos_1 : Natural;
       use Ada.Strings.Wide_Fixed;
     begin
-      for k in Key loop
+      for k in Persistence_Key loop
         begin
           declare
-            ks : constant Wide_String := Key'Wide_Image (k);
-            s : constant Wide_String := Read_key (ks);
+            ks : constant Wide_String := Persistence_Key'Wide_Image (k);
+            s : constant Wide_String := Read_Key (ks);
           begin
             case k is
               when view_mode =>
@@ -90,7 +87,7 @@ package body LEA_Common.User_options is
               when subprogram_tree_portion =>
                 opt.subprogram_tree_portion := Float'Wide_Value (s);
               when mru1 .. mru9 =>
-                mru_idx := Key'Pos (k) - Key'Pos (mru1) + 1;
+                mru_idx := Persistence_Key'Pos (k) - Persistence_Key'Pos (mru1) + 1;
                 sep_pos_1 := Index (s, sep);
                 if sep_pos_1 > 0 then  --  Separator between file name and line number
                   opt.mru (mru_idx).name := To_Unbounded_Wide_String (s (s'First .. sep_pos_1 - 1));
@@ -120,12 +117,12 @@ package body LEA_Common.User_options is
     procedure Save (opt : in Option_Pack_Type) is
       mru_idx : Positive;
     begin
-      for k in Key loop
+      for k in Persistence_Key loop
         declare
-          ks : constant Wide_String := Key'Wide_Image (k);
+          ks : constant Wide_String := Persistence_Key'Wide_Image (k);
           procedure R (v : Wide_String) is
           begin
-            Write_key (ks, v);
+            Write_Key (ks, v);
           end R;
         begin
           case k is
@@ -170,7 +167,7 @@ package body LEA_Common.User_options is
             when subprogram_tree_portion =>
               R (Float'Wide_Image (opt.subprogram_tree_portion));
             when mru1 .. mru9 =>
-              mru_idx := Key'Pos (k) - Key'Pos (mru1) + 1;
+              mru_idx := Persistence_Key'Pos (k) - Persistence_Key'Pos (mru1) + 1;
               R (To_Wide_String (opt.mru (mru_idx).name) & sep &
                  Integer'Wide_Image (opt.mru (mru_idx).line));
             when ada_files_filter =>
@@ -181,5 +178,12 @@ package body LEA_Common.User_options is
     end Save;
 
   end Persistence;
+
+  procedure Show_Persistence_Keys is
+  begin
+    for k in Persistence_Key loop
+      String_Output (k'Image);
+    end loop;
+  end Show_Persistence_Keys;
 
 end LEA_Common.User_options;

@@ -4,6 +4,7 @@ with LEA_GWin.Embedded_Texts,
      LEA_GWin.MDI_Child,
      LEA_GWin.Modal_Dialogs,
      LEA_GWin.Options,
+     LEA_GWin.Persistence,
      LEA_GWin.Toolbars;
 
 with GWindows.Application,
@@ -206,27 +207,6 @@ package body LEA_GWin.MDI_Main is
        Scintilla.Position (Col_z));
   end Open_Child_Window_And_Load;
 
-  -----------------
-  -- Persistence --
-  -----------------
-
-  kname : constant GString := "Software\LEA";
-
-  function Read_key (topic : Wide_String) return Wide_String is
-    use GWindows.Registry;
-  begin
-    return Get_Value (kname, topic, HKEY_CURRENT_USER);
-  end Read_key;
-
-  procedure Write_key (topic : Wide_String; value : Wide_String) is
-    use GWindows.Registry;
-  begin
-    Register (kname, topic, value, HKEY_CURRENT_USER);
-  end Write_key;
-
-  package Windows_persistence is new
-    LEA_Common.User_options.Persistence (Read_key, Write_key);
-
   --  Switch between Notepad and Studio views
   --
   procedure Change_View (
@@ -303,7 +283,7 @@ package body LEA_GWin.MDI_Main is
     start_line : Integer := -1;
     use GWindows.Application, GWindows.Taskbar, GWindows.Image_Lists, LEA_Resource_GUI;
   begin
-    Windows_persistence.Load (Window.opt);  --  Load options from the registry
+    Persistence.Load (Window.opt);
     for m in Window.MRU.Item'Range loop
       Window.MRU.Item (m) :=
         (Name => Window.opt.mru (m).name,
@@ -700,7 +680,8 @@ package body LEA_GWin.MDI_Main is
           (name => Window.MRU.Item (m).Name,
            line => Window.MRU.Item (m).Line);
       end loop;
-      Windows_persistence.Save (Window.opt);
+      Persistence.Save (Window.opt);
+      --
       --  !! Trick to remove a strange crash on Destroy_Children
       --  !! on certain Windows platforms - 29-Jun-2012
       GWindows.Base.On_Exception_Handler (Handler => null);

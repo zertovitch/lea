@@ -131,7 +131,7 @@ package LEA_Common.Color_Themes is
         matched_parenthesis         => Solarized.green,
         unmatched_parenthesis       => Solarized.red,
         parenthesis_background      => Solarized.base2,
-        matched_word_highlight      => Solarized.green,
+        matched_word_highlight      => Orange,  --  Scintilla blends this with background.
         messages_foreground         => Solarized.base02,
         messages_background         => Solarized.base3,
         messages_control_background => Solarized.base2));
