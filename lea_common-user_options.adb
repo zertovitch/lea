@@ -11,25 +11,6 @@ package body LEA_Common.User_options is
     end if;
   end Toggle_show_special;
 
-  type Persistence_Key is
-    (view_mode,      --  Notepad, Studio
-     toolset_mode,   --  HAC, GNAT, ...
-     color_theme,
-     backup,
-     indent, tab_width,
-     edge,  --  right margin
-     show_special,
-     show_indent,
-     auto_insert,
-     win_left, win_top, win_width, win_height,
-     maximized, children_maximized,
-     tree_portion,  --  !! to be removed
-     project_tree_portion,
-     message_list_portion,
-     subprogram_tree_portion,
-     mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
-     ada_files_filter);
-
   package body Persistence is
 
     sep : constant UTF_16_String := ">";
@@ -42,8 +23,7 @@ package body LEA_Common.User_options is
       for k in Persistence_Key loop
         begin
           declare
-            ks : constant Wide_String := Persistence_Key'Wide_Image (k);
-            s : constant Wide_String := Read_Key (ks);
+            s : constant Wide_String := Read_Key (k);
           begin
             case k is
               when view_mode =>
@@ -119,10 +99,9 @@ package body LEA_Common.User_options is
     begin
       for k in Persistence_Key loop
         declare
-          ks : constant Wide_String := Persistence_Key'Wide_Image (k);
           procedure R (v : Wide_String) is
           begin
-            Write_Key (ks, v);
+            Write_Key (k, v);
           end R;
         begin
           case k is

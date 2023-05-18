@@ -283,7 +283,7 @@ package body LEA_GWin.MDI_Main is
     start_line : Integer := -1;
     use GWindows.Application, GWindows.Taskbar, GWindows.Image_Lists, LEA_Resource_GUI;
   begin
-    Persistence.Load (Window.opt);
+    Persistence.Blockwise_IO.Load (Window.opt);
     for m in Window.MRU.Item'Range loop
       Window.MRU.Item (m) :=
         (Name => Window.opt.mru (m).name,
@@ -680,7 +680,7 @@ package body LEA_GWin.MDI_Main is
           (name => Window.MRU.Item (m).Name,
            line => Window.MRU.Item (m).Line);
       end loop;
-      Persistence.Save (Window.opt);
+      Persistence.Blockwise_IO.Save (Window.opt);
       --
       --  !! Trick to remove a strange crash on Destroy_Children
       --  !! on certain Windows platforms - 29-Jun-2012

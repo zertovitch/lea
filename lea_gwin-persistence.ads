@@ -4,13 +4,20 @@
 
 with LEA_Common.User_options;
 
+with Windows_Persistence_IO;
+
 package LEA_GWin.Persistence is
 
-  function Cfg_file_available return Boolean;
-  --  ^ When True, we are in Stealth Mode and don't want to
-  --    leave any trace in the registry!
+  package Key_IO is
+    new Windows_Persistence_IO
+      (app_display_name => "LEA",
+       app_file_name    => "lea",
+       app_url          => LEA_Common.LEA_web_page,
+       Persistence_Key  => LEA_Common.User_options.Persistence_Key);
 
-  procedure Load (opt : out LEA_Common.User_options.Option_Pack_Type);
-  procedure Save (opt : in  LEA_Common.User_options.Option_Pack_Type);
+  package Blockwise_IO is
+    new LEA_Common.User_options.Persistence
+      (Read_Key  => Key_IO.Read_Key,
+       Write_Key => Key_IO.Write_Key);
 
 end LEA_GWin.Persistence;

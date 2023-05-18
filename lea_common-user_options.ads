@@ -58,12 +58,31 @@ package LEA_Common.User_options is
   -- Persistence --
   -----------------
 
-  --  On Windows "vanilla", persistence is done through the registry.
+  type Persistence_Key is
+    (view_mode,      --  Notepad, Studio
+     toolset_mode,   --  HAC, GNAT, ...
+     color_theme,
+     backup,
+     indent, tab_width,
+     edge,  --  right margin
+     show_special,
+     show_indent,
+     auto_insert,
+     win_left, win_top, win_width, win_height,
+     maximized, children_maximized,
+     tree_portion,  --  !! to be removed
+     project_tree_portion,
+     message_list_portion,
+     subprogram_tree_portion,
+     mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
+     ada_files_filter);
+
+  --  On Windows "vanilla", persistence is done usually through the registry.
   --  On Linux or Gtk (any platform) persistence is done usually in a config file.
 
   generic
-    with function Read_Key (topic : Wide_String) return Wide_String;
-    with procedure Write_Key (topic : Wide_String; value : Wide_String);
+    with function Read_Key (key : Persistence_Key) return Wide_String;
+    with procedure Write_Key (key : Persistence_Key; value : Wide_String);
   package Persistence is
     procedure Load (opt : out Option_Pack_Type);
     procedure Save (opt : in  Option_Pack_Type);
