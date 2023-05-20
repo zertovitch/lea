@@ -14,15 +14,14 @@ with GWindows.Application,
      GWindows.Menus,
      GWindows.Message_Boxes,
      GWindows.Registry,
-     GWindows.Scintilla;
+     GWindows.Scintilla,
+     GWindows.Timers;
 
 with Ada.Command_Line,
      Ada.Strings.Fixed,
      Ada.Text_IO,
      Ada.Unchecked_Deallocation,
      Ada.Wide_Characters.Handling;
-
-with Windows_Timers;
 
 package body LEA_GWin.MDI_Main is
 
@@ -393,7 +392,7 @@ package body LEA_GWin.MDI_Main is
         Window.Task_bar_gadget_ok := False;
     end;
     Window.Search_box.Create_as_search_box (Window);
-    Windows_Timers.Set_Timer (Window, timer_id, 100);
+    GWindows.Timers.Set_Timer (Window, timer_id, 100);
   end On_Create;
 
   function Is_Minimized (MDI_Main : GWindows.Base.Base_Window_Type'Class)
@@ -635,7 +634,7 @@ package body LEA_GWin.MDI_Main is
     use Interfaces.C;
 
   begin
-    if message = Windows_Timers.WM_TIMER then
+    if message = GWindows.Timers.WM_TIMER then
       if Window.close_this_search_box then
         Window.close_this_search_box := False;
         if Window.Search_box.Visible then
@@ -686,7 +685,7 @@ package body LEA_GWin.MDI_Main is
       --  !! on certain Windows platforms - 29-Jun-2012
       GWindows.Base.On_Exception_Handler (Handler => null);
       --
-      Windows_Timers.Kill_Timer (Window, timer_id);
+      GWindows.Timers.Kill_Timer (Window, timer_id);
     end if;
   end On_Close;
 

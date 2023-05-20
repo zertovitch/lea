@@ -4,12 +4,12 @@
 
 with LEA_Common.User_options;
 
-with Windows_Persistence_IO;
+with GWindows.Persistence_IO;
 
 package LEA_GWin.Persistence is
 
   package Key_IO is
-    new Windows_Persistence_IO
+    new GWindows.Persistence_IO
       (app_display_name => "LEA",
        app_file_name    => "lea",
        app_url          => LEA_Common.LEA_web_page,
