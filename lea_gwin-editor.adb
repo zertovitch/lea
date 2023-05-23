@@ -88,7 +88,9 @@ package body LEA_GWin.Editor is
           end if;
         end if;
       when '(' | '"' =>
-        if opt.auto_insert then
+        if opt.auto_insert and then Editor.Get_Selections = 1 then
+          --  Auto-insert ')' after a lone '(', or after some other matching character,
+          --  but *not* when there are multiple cursors (Get_Selections > 1).
           if Cur_Pos = Editor.Get_Text_Length
             or else Editor.Get_Text_Range (Cur_Pos, Cur_Pos + 1) /= (1 => Value)
           then
