@@ -49,13 +49,14 @@ package body LEA_GWin.Editor is
      Value       : in     GWindows.GCharacter)
   is
   pragma Unreferenced (Special_Key);
-    Cur_Pos  : constant Position   := Get_Current_Pos (Editor);
-    Line     : constant Integer    := Line_From_Position (Editor, Cur_Pos);
-    Prev_Ind : constant Integer    := Get_Line_Indentation (Editor, Line - 1);
-    New_Ind  :          Integer;
-    Pos      :          Position;
-    CR       : constant GCharacter := GCharacter'Val (13);
-    LF       : constant GCharacter := GCharacter'Val (10);
+    Cur_Pos        : constant Position   := Get_Current_Pos (Editor);
+    Line           : constant Integer    := Line_From_Position (Editor, Cur_Pos);
+    prev_ind       : constant Natural    := Get_Line_Indentation (Editor, Line - 1);
+    new_ind        :          Natural;
+    in_ada_comment :          Boolean    := False;
+    Pos            :          Position;
+    CR             : constant GCharacter := GCharacter'Val (13);
+    LF             : constant GCharacter := GCharacter'Val (10);
     opt : LEA_Common.User_options.Option_Pack_Type
             renames MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt;
     use LEA_Common.Syntax;
@@ -64,12 +65,12 @@ package body LEA_GWin.Editor is
     case Value is
       when LF =>
         if Line > 0 then
-          New_Ind := Prev_Ind;  --  We mimic previous line's indentation.
+          new_ind := prev_ind;  --  We mimic previous line's indentation.
           if Editor.syntax_kind = Ada_syntax then
             --  Look for extra indentation when the line ends with some specific keywords.
             Pos := Cur_Pos - 1;
             if Editor.Get_Text_Range (Pos - 1, Pos) = (1 => CR) then
-              --  Skip the CR in Windows' CR & LF line end.
+              --  Skip (backwards) the CR in Windows' CR & LF line end.
               --  Reminder: Scintilla's Pos is the cursor's position, *between* characters. So,
               --  (Pos - 1, Pos) wraps *one* character, not *two* like for a slice (Pos - 1 .. Pos).
               Pos := Pos - 1;
@@ -80,11 +81,25 @@ package body LEA_GWin.Editor is
             then
               --  On a "Return" keypress right after "begin", "record" or "(",
               --  we add an extra indentation.
-              New_Ind := New_Ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt.indentation;
+              new_ind := new_ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt.indentation;
             end if;
           end if;
-          if New_Ind > 0 then
-            Editor.Add_Text (New_Ind * ' ');
+          if Editor.syntax_kind in Ada_syntax | GPR_syntax then
+            in_ada_comment := True;
+            --  Ensure we are after the "--" token of the comment.
+            for shift in Position range -2 .. -1 loop
+              in_ada_comment :=
+                in_ada_comment and Editor.Get_Style_At (Pos + shift) = SCE_ADA_COMMENTLINE;
+            end loop;
+          end if;
+          if new_ind > 0 then
+            Editor.Add_Text (new_ind * ' ');
+          end if;
+          if in_ada_comment then
+            --  If the cursor is with in a comment when the Return key
+            --  is pressed, we add a comment starter token on the new line.
+            --  Cool feature seen on the Matlab (R2022) editor.
+            Editor.Add_Text ("--  ");
           end if;
         end if;
       when '(' | '"' =>
