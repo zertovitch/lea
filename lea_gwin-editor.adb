@@ -49,68 +49,101 @@ package body LEA_GWin.Editor is
      Value       : in     GWindows.GCharacter)
   is
   pragma Unreferenced (Special_Key);
-    Cur_Pos        : constant Position   := Get_Current_Pos (Editor);
-    Line           : constant Integer    := Line_From_Position (Editor, Cur_Pos);
-    prev_ind       : constant Natural    := Get_Line_Indentation (Editor, Line - 1);
-    new_ind        :          Natural;
-    in_ada_comment :          Boolean    := False;
-    Pos            :          Position;
+    cur_pos        : constant Position   := Editor.Get_Current_Pos;
+    line           : constant Integer    := Editor.Line_From_Position (cur_pos);
     CR             : constant GCharacter := GCharacter'Val (13);
     LF             : constant GCharacter := GCharacter'Val (10);
+    use LEA_Common.Syntax;
+
+    procedure Process_Return_Keystroke is
+      prev_ind              : constant Natural  := Get_Line_Indentation (Editor, line - 1);
+      new_ind               :          Natural;
+      old_pos               :          Position;
+      in_ada_comment        :          Boolean  := False;
+      in_ada_string_literal :          Boolean  := False;
+    begin
+      Editor.Undo;  --  Undo the lone "Return" keystroke.
+      old_pos := Editor.Get_Current_Pos;
+      if Editor.syntax_kind in Ada_syntax | GPR_syntax then
+        in_ada_comment := True;
+        --  Ensure we are after the "--" token of the comment and that
+        --  there is a bit of a comment after (at least one character).
+        for shift in Position range -2 .. 2 loop
+          in_ada_comment :=
+            in_ada_comment and then Editor.Get_Style_At (old_pos + shift) = SCE_ADA_COMMENTLINE;
+        end loop;
+        in_ada_string_literal :=
+          Editor.Get_Style_At (old_pos - 1) = SCE_ADA_STRING
+          and then not
+            --  But we exclude the case where the cursor is
+            --  right before the closing '"':
+            (Editor.Get_Text_Range (old_pos - 1, old_pos) = """" and then
+             Editor.Get_Style_At (old_pos - 2) = SCE_ADA_STRING);
+      end if;
+      new_ind := prev_ind;  --  We mimic previous line's indentation.
+      if Editor.syntax_kind = Ada_syntax
+        and then not in_ada_comment
+        and then not in_ada_string_literal
+        and then
+          (Editor.Get_Text_Range (old_pos - 5, old_pos) = "begin"
+             or else Editor.Get_Text_Range (old_pos - 6, old_pos) = "record"
+             or else Editor.Get_Text_Range (old_pos - 1, old_pos) = "(")
+      then
+        --  On a "Return" keypress right after "begin", "record" or "(",
+        --  we add an extra indentation.
+        new_ind := new_ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt.indentation;
+      end if;
+      --
+      --  Now, add the bonus keystrokes. We merge all keystrokes (the
+      --  real one and the bonus ones) into a single Undo action.
+      --
+      Editor.Begin_Undo_Action;
+      --
+      --  Redo the "Return" keystroke. If text was selected, it is deleted, again.
+      Editor.Redo;
+      if new_ind > 0 then
+        Editor.Add_Text (new_ind * ' ');
+      end if;
+      if in_ada_comment then
+        --  If the cursor is within a comment when the Return key
+        --  is pressed, we add a comment starter token on the new line.
+        --  Cool feature seen on the Matlab (R2022b) editor.
+        Editor.Add_Text ("--  ");
+      elsif in_ada_string_literal then
+        --  If the cursor is within a string literal when the Return key is
+        --  pressed, we add a closing string delimiter, a concatenation
+        --  operator and an opening string delimiter on the new line.
+        Editor.Insert_Text (old_pos, """ &");
+        Editor.Add_Text ("""");
+      end if;
+      Editor.End_Undo_Action;
+    end Process_Return_Keystroke;
+
     opt : LEA_Common.User_options.Option_Pack_Type
             renames MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt;
-    use LEA_Common.Syntax;
   begin
-    --  This works on Windows (CR, LF) and Unix (LF); we ignore the old Macs (CR).
+    if Editor.Get_Selections > 1 then
+      --  Auto-insertion of any kind is disabled when there are multiple
+      --  cursors (Get_Selections > 1), that is for multi-point (Ctrl-Click)
+      --  and vertical edition (Alt-Mouse-Selection).
+      return;
+    end if;
+    --  Now we know we have only one selection.
     case Value is
       when LF =>
-        if Line > 0 then
-          new_ind := prev_ind;  --  We mimic previous line's indentation.
-          if Editor.syntax_kind = Ada_syntax then
-            --  Look for extra indentation when the line ends with some specific keywords.
-            Pos := Cur_Pos - 1;
-            if Editor.Get_Text_Range (Pos - 1, Pos) = (1 => CR) then
-              --  Skip (backwards) the CR in Windows' CR & LF line end.
-              --  Reminder: Scintilla's Pos is the cursor's position, *between* characters. So,
-              --  (Pos - 1, Pos) wraps *one* character, not *two* like for a slice (Pos - 1 .. Pos).
-              Pos := Pos - 1;
-            end if;
-            if Editor.Get_Text_Range (Pos - 5, Pos) = "begin"
-              or else Editor.Get_Text_Range (Pos - 6, Pos) = "record"
-              or else Editor.Get_Text_Range (Pos - 1, Pos) = "("
-            then
-              --  On a "Return" keypress right after "begin", "record" or "(",
-              --  we add an extra indentation.
-              new_ind := new_ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt.indentation;
-            end if;
-          end if;
-          if Editor.syntax_kind in Ada_syntax | GPR_syntax then
-            in_ada_comment := True;
-            --  Ensure we are after the "--" token of the comment.
-            for shift in Position range -2 .. -1 loop
-              in_ada_comment :=
-                in_ada_comment and Editor.Get_Style_At (Pos + shift) = SCE_ADA_COMMENTLINE;
-            end loop;
-          end if;
-          if new_ind > 0 then
-            Editor.Add_Text (new_ind * ' ');
-          end if;
-          if in_ada_comment then
-            --  If the cursor is with in a comment when the Return key
-            --  is pressed, we add a comment starter token on the new line.
-            --  Cool feature seen on the Matlab (R2022) editor.
-            Editor.Add_Text ("--  ");
-          end if;
+        --  This works on Windows (CR, LF) and Unix (LF). We ignore the old Macs (CR).
+        if line > 0 then
+          Process_Return_Keystroke;
         end if;
       when '(' | '"' =>
-        if opt.auto_insert and then Editor.Get_Selections = 1 then
+        if opt.auto_insert then
           --  Auto-insert ')' after a lone '(', or after some other matching character,
           --  but *not* when there are multiple cursors (Get_Selections > 1).
-          if Cur_Pos = Editor.Get_Text_Length
-            or else Editor.Get_Text_Range (Cur_Pos, Cur_Pos + 1) /= (1 => Value)
+          if cur_pos = Editor.Get_Text_Length
+            or else Editor.Get_Text_Range (cur_pos, cur_pos + 1) /= (1 => Value)
           then
             Editor.Add_Text ((1 => Matching (Value)));
-            Editor.Go_To_Pos (Cur_Pos);
+            Editor.Go_To_Pos (cur_pos);
           end if;
         end if;
       when others =>
