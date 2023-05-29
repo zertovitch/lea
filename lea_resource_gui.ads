@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/02/28  21:30:38
+--  Transcription time: 2023/05/29  17:49:07
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -375,7 +375,7 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors : constant String := "Gautier de Montmollin";
     FileDescription : constant String := "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion : constant String := "0.86";
+    FileVersion : constant String := "0.87";
     LegalCopyright : constant String := "Copyright © Gautier de Montmollin 2017 .. 2023";
     ProductName : constant String := "LEA";
     Translation : constant := 1033;
