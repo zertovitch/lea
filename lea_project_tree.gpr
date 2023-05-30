@@ -5,43 +5,56 @@
 --      project page:  http://sf.net/projects/l-e-a/
 --      mirror:        https://github.com/zertovitch/lea
 --
---  Build me with "gprbuild -P lea", or open me with GNAT Studio
+--  Build me with "gprbuild -P lea_project_tree", or open me with GNAT Studio
 --
---  This variant is a single project, which handles all sources.
+--  This variant is a hierarchical project, which refers to other projects.
 --
---  *** External libraries (of which all sources are grabbed by this project file) ***
+--  *** External projects ***
 --  * 
---  *     You need to make the following projects' source files visible to this project
---  *     through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
+--  *     You need to make the following projects files visible to this project,
+--  *     for instance through the ADA_PROJECT_PATH environment variable:
 --  *   
 --  *   * GWindows and contributions:
---  *       [gnavi]\gwindows\framework
---  *       [gnavi]\gwindows\contrib
---  *       [gnavi]\gnatcom\framework
+--  *       [gnavi]\gwindows\gwindows_contrib.gpr
 --  *       Project URL: http://sf.net/projects/gnavi/
 --  *       Mirror URL: https://github.com/zertovitch/gwindows
 --  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
 --  *   
 --  *   * HAC Ada Compiler:
+--  *       [hac]\hac.gpr
 --  *       Project URL: https://sourceforge.net/projects/hacadacompiler/
 --  *       Mirror URL: https://github.com/zertovitch/hac
 --  *   
+--  *   * Ini file manager:
+--  *       [ini]\ini_files.gpr
+--  *       Project URL: http://ini-files.sourceforge.net/
+--  *       Mirror URL: https://github.com/zertovitch/ini-files
+--  *   
 --  *   * Zip-Ada:
---  *       [zip-ada]\zip_lib
+--  *       [zip-ada]\zipada.gpr
 --  *       Project URL: http://unzip-ada.sf.net
 --  *       Mirror URL: https://github.com/zertovitch/zip-ada
 --  * 
---  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;
---  *  =======    C:\Ada\zip-ada\zip_lib;
---  *             C:\Ada\HAC\src;C:\Ada\HAC\src\compile;C:\Ada\HAC\src\execute;C:\Ada\HAC\src\manage
+--  *  Example: ADA_PROJECT_PATH=C:\Ada\gnavi\gwindows;
+--  *  =======    C:\Ada\hac;
+--  *             C:\Ada\ini;
+--  *             C:\Ada\zip-ada
 
-project LEA is
+with "HAC";
+with "Ini_Files";
+with "ZipAda";
+
+project LEA_Project_Tree extends "GWindows_Contrib" is
+
+   --  The `extends "GWindows_Contrib"` instead of `with "GWindows_Contrib"`
+   --  is a trick to handle the dependency of GWindows.Persistence_IO on the
+   --  package Config (which is in project Ini_Files).
 
    type LEA_Build_Mode_Type is
       ("Debug", "Debug_MinGW", "Fast", "Fast_MinGW", "Small", "Small_MinGW");
    LEA_Build_Mode : LEA_Build_Mode_Type := external ("LEA_Build_Mode", "Debug");
    for Main use ("lea.adb", "sample_catalogue.adb");
-   for Source_Dirs use (".") & external_as_list("GNAT_SOURCE_PATH", ";");
+   for Source_Dirs use (".");
    for Exec_Dir use ".";
    for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
 
@@ -116,4 +129,4 @@ project LEA is
       for Default_Switches ("adacontrol") use ("-f", "verif.aru");
    end Ide;
 
-end LEA;
+end LEA_Project_Tree;
