@@ -11,14 +11,16 @@ if not exist _lea_data.zip sample_catalogue.exe
 if not exist lea.rbj windres lea.rc lea.rbj
 if not exist memorymodule.o gcc -c -Os memorymodule.c
 
-del lea.exe
-gprbuild -P lea         -XBuild_Mode=Debug%target%
-copy /B lea.exe + _lea_data.zip lea_debug%target%.exe
-copy /B lea.exe lea_debug_without_data.exe
+if exist lea_without_data.exe del lea_without_data.exe
 
-del lea.exe
-gprbuild -P lea lea.adb -XBuild_Mode=Small%target%
-copy /B lea.exe + _lea_data.zip "lea (ver)%target%.exe"
-copy /B lea.exe lea_small_without_data.exe
+gprbuild -P lea         -XLEA_Build_Mode=Debug%target%
+copy /B lea_without_data.exe + _lea_data.zip lea_debug%target%.exe
+copy /B lea_without_data.exe lea_debug_without_data.exe
+
+if exist lea_without_data.exe del lea_without_data.exe
+
+gprbuild -P lea lea_without_data.adb -XLEA_Build_Mode=Small%target%
+copy /B lea_without_data.exe + _lea_data.zip "lea (ver)%target%.exe"
+copy /B lea_without_data.exe lea_small_without_data.exe
 
 copy /B "lea (ver)%target%.exe" lea.exe

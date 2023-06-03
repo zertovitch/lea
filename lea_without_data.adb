@@ -16,7 +16,7 @@ with Ada.Command_Line,
 
 with GNAT.Traceback.Symbolic;
 
-procedure LEA is
+procedure LEA_without_data is
 
   Top : LEA_GWin.MDI_Main.MDI_Main_Type;
 
@@ -65,4 +65,4 @@ begin
     LEA_GWin.Installer.Load_Scintilla_DLL_from_Memory;
   end if;
   LEA_start;
-end LEA;
+end LEA_without_data;

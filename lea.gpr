@@ -40,7 +40,7 @@ project LEA is
    type LEA_Build_Mode_Type is
       ("Debug", "Debug_MinGW", "Fast", "Fast_MinGW", "Small", "Small_MinGW");
    LEA_Build_Mode : LEA_Build_Mode_Type := external ("LEA_Build_Mode", "Debug");
-   for Main use ("lea.adb", "sample_catalogue.adb");
+   for Main use ("lea_without_data.adb", "sample_catalogue.adb");
    for Source_Dirs use (".") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
    for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
