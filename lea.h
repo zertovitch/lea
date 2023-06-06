@@ -109,3 +109,6 @@
 #define IDM_Show_indentation_lines              40106
 #define IDM_Open_Containing_Folder              40107
 #define Auto_Insert_Check_Box                   40108
+#define Select_All_Button                       40109
+#define Unselect_All_Button                     40110
+#define Changed_Files_List                      40111

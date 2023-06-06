@@ -8,9 +8,9 @@ BASE_X           6
 BASE_Y          13
 BASE_DEFAULTS TRUE
 INITIALIZE_CONTROLS FALSE
-ADA_MAIN lea.exe
+ADA_MAIN lea_without_data.exe
 ADA_LISTEN TRUE
 ADA_AUTO_BUILD TRUE
-ADA_COMMAND gprbuild.exe lea -Plea.gpr -d -XBuild_Mode=Debug
+ADA_COMMAND gprbuild.exe lea_without_data -Plea.gpr -d -XBuild_Mode=LEA_Debug
 SHOW_DETAILS TRUE -- in the UI, show the bottom part with message boxes
 SHOW_ADA_BUILD TRUE -- in the UI, show the right part with ada build

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/05/29  17:49:07
+--  Transcription time: 2023/06/06  21:26:57
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -285,6 +285,42 @@ package LEA_Resource_GUI is
        resize      : in     Boolean := False  --  optionally resize Window as designed
      );
 
+  type Reload_Files_Box_Type is new Window_Type with record
+
+    --  Label: 0
+    Select_All_Button : Dialog_Button_Type;    --  Closes parent window after click
+    Select_All_Button_permanent : Button_Type;  --  Doesn't close parent window after click
+    Unselect_All_Button : Dialog_Button_Type;    --  Closes parent window after click
+    Unselect_All_Button_permanent : Button_Type;  --  Doesn't close parent window after click
+    Changed_Files_List : List_View_Control_Type;
+    IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+  end record; -- Reload_Files_Box_Type
+
+  --  Dialog at resource line 307
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Reload_Files_Box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Files externally changed";
+      Left        : in     Integer := Use_Default;  --  Default = as designed
+      Top         : in     Integer := Use_Default;  --  Default = as designed
+      Width       : in     Integer := Use_Default;  --  Default = as designed
+      Height      : in     Integer := Use_Default;  --  Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+      (Window      : in out Reload_Files_Box_Type;
+       for_dialog  : in     Boolean;          --  True: buttons do close the window
+       resize      : in     Boolean := False  --  optionally resize Window as designed
+     );
+
   type Search_box_Type is new Window_Type with record
 
     --  Label: 0
@@ -307,7 +343,7 @@ package LEA_Resource_GUI is
     Match_case : Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 314
+  --  Dialog at resource line 330
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -341,7 +377,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 328
+  --  Dialog at resource line 344
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -496,6 +532,9 @@ package LEA_Resource_GUI is
   IDM_Show_indentation_lines   : constant :=  40106;
   IDM_Open_Containing_Folder   : constant :=  40107;
   Auto_Insert_Check_Box        : constant :=  40108;
+  Select_All_Button            : constant :=  40109;
+  Unselect_All_Button          : constant :=  40110;
+  Changed_Files_List           : constant :=  40111;
 
   --  ** Some helper utilities (spec).
 
@@ -507,6 +546,6 @@ package LEA_Resource_GUI is
 
   function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  --  Last line of resource script file: 436
+  --  Last line of resource script file: 452
 
 end LEA_Resource_GUI;

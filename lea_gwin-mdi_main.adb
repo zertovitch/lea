@@ -22,6 +22,7 @@ with Ada.Command_Line,
      Ada.Text_IO,
      Ada.Unchecked_Deallocation,
      Ada.Wide_Characters.Handling;
+with HAT;
 
 package body LEA_GWin.MDI_Main is
 
@@ -261,7 +262,8 @@ package body LEA_GWin.MDI_Main is
     MDI_Main.Update_Common_Menus;
   end Change_Mode;
 
-  timer_id : constant := 1;
+  search_box_timer_id : constant := 1;
+  file_synch_timer_id : constant := 2;
 
   ---------------
   -- On_Create --
@@ -392,7 +394,8 @@ package body LEA_GWin.MDI_Main is
         Window.Task_bar_gadget_ok := False;
     end;
     Window.Search_box.Create_as_search_box (Window);
-    GWindows.Timers.Set_Timer (Window, timer_id, 100);
+    GWindows.Timers.Set_Timer (Window, search_box_timer_id, 100);
+    GWindows.Timers.Set_Timer (Window, file_synch_timer_id, 250);
   end On_Create;
 
   function Is_Minimized (MDI_Main : GWindows.Base.Base_Window_Type'Class)
@@ -635,14 +638,21 @@ package body LEA_GWin.MDI_Main is
 
   begin
     if message = GWindows.Timers.WM_TIMER then
-      if Window.close_this_search_box then
-        Window.close_this_search_box := False;
-        if Window.Search_box.Visible then
-          Window.Set_Foreground_Window;
-          Window.Focus;
-          Window.Search_box.Hide;
-        end if;
-      end if;
+      case wParam is
+        when search_box_timer_id =>
+          if Window.close_this_search_box then
+            Window.close_this_search_box := False;
+            if Window.Search_box.Visible then
+              Window.Set_Foreground_Window;
+              Window.Focus;
+              Window.Search_box.Hide;
+            end if;
+          end if;
+        when file_synch_timer_id =>
+          null;
+        when others =>
+          null;
+      end case;
     end if;
     --  Call parent method
     GWindows.Windows.MDI.MDI_Main_Window_Type (Window).On_Message (
@@ -685,7 +695,8 @@ package body LEA_GWin.MDI_Main is
       --  !! on certain Windows platforms - 29-Jun-2012
       GWindows.Base.On_Exception_Handler (Handler => null);
       --
-      GWindows.Timers.Kill_Timer (Window, timer_id);
+      GWindows.Timers.Kill_Timer (Window, search_box_timer_id);
+      GWindows.Timers.Kill_Timer (Window, file_synch_timer_id);
     end if;
   end On_Close;
 
