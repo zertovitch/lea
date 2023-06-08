@@ -648,7 +648,7 @@ package body LEA_GWin.MDI_Child is
              Duration'Wide_Image (t2 - t1) &
              " seconds." &
              Integer'Wide_Image (Window.BD.Total_Compiled_Lines) &
-             " lines compiled. No error, no warning",
+             " lines compiled in total. No error, no warning",
              message_count, 1);
         else
           --  Jump on first error

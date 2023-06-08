@@ -22,7 +22,6 @@ with Ada.Command_Line,
      Ada.Text_IO,
      Ada.Unchecked_Deallocation,
      Ada.Wide_Characters.Handling;
-with HAT;
 
 package body LEA_GWin.MDI_Main is
 
