@@ -126,19 +126,14 @@ package body LEA_GWin.Modal_Dialogs is
       zb : List_View_Control_Type renames box.Zipped_file_box;
     begin
       --
-      --  List on the left, with topics (Algorithm, Script,... ).
+      --  List on the left box, with topics (Algorithm, Script,... ).
       --
       for topic in Sample_Topic loop
-        declare
-          wi : GString := Sample_Topic'Wide_Image (topic);
-        begin
-          wi (wi'First + 1 .. wi'Last) := Ada.Wide_Characters.Handling.To_Lower (wi (wi'First + 1 .. wi'Last));
-          box.Topic_box.Add (wi);
-        end;
+        box.Topic_box.Add (S2G (To_String (directory_title (topic))));
       end loop;
       box.Topic_box.Selected (Sample_Topic'Pos (sel_topic) + 1);
       --
-      --  List on the right with samples for the selected topic.
+      --  List on the right box with samples for the selected topic.
       --
       zb.Set_Extended_Style (Full_Row_Select);
       zb.Insert_Column ("File name", 0, 100);

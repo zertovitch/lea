@@ -57,13 +57,20 @@ package LEA_Common.HAC_Samples is
       (Compatibility, +"hat-non_standard.adb", +"GNAT-specific part of HAT's body")
     );
 
-  directory : array (Sample_Topic) of VString :=
+  directory : constant array (Sample_Topic) of VString :=
      (Algorithm     => +"algorithms",
       Mathematics   => +"mathematics",
       Script        => +"scripts",
       Tasking       => +"tasking",
       Template      => +"templates",
-      Compatibility => +"compatibility"
-    );
+      Compatibility => +"compatibility");
+
+  directory_title : constant array (Sample_Topic) of VString :=
+     (Algorithm     => +"Algorithms",
+      Mathematics   => +"Mathematics",
+      Script        => +"Scripts",
+      Tasking       => +"Tasking",
+      Template      => +"Templates",
+      Compatibility => +"HAT package - compatibility");
 
 end LEA_Common.HAC_Samples;
