@@ -90,7 +90,7 @@ Menu_MDI_Child MENU
     {
         MENUITEM "&Compile this file\tShift-F4", IDM_Compile_single
         MENUITEM "&Build application\tF4", IDM_Build
-        MENUITEM "Build and &run\tF9", IDM_Build_and_run
+        MENUITEM "Build and &Run\tF9", IDM_Build_and_run
         MENUITEM SEPARATOR
         MENUITEM "Code sam&ple", IDM_Ada_Sample
     }
@@ -159,7 +159,7 @@ Menu_MDI_Main MENU
     {
         MENUITEM "&Compile this file\tShift-F4", IDM_Compile_single, INACTIVE
         MENUITEM "&Build application\tF4", IDM_Build, INACTIVE
-        MENUITEM "Build and &run\tF9", IDM_Build_and_run, INACTIVE
+        MENUITEM "Build and &Run\tF9", IDM_Build_and_run, INACTIVE
         MENUITEM SEPARATOR
         MENUITEM "Code sam&ple", IDM_Ada_Sample
     }

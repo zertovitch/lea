@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/06/06  21:26:57
+--  Transcription time: 2023/06/29  20:09:23
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -87,7 +87,7 @@ package body LEA_Resource_GUI is
     Append_Menu (New_Menu.Main, "&Actions", New_Menu.Popup_0005);
     Append_Item (New_Menu.Popup_0005, "&Compile this file" & To_GString_From_String ((1 => ASCII.HT)) & "Shift-F4", IDM_Compile_single);
     Append_Item (New_Menu.Popup_0005, "&Build application" & To_GString_From_String ((1 => ASCII.HT)) & "F4", IDM_Build);
-    Append_Item (New_Menu.Popup_0005, "Build and &run" & To_GString_From_String ((1 => ASCII.HT)) & "F9", IDM_Build_and_run);
+    Append_Item (New_Menu.Popup_0005, "Build and &Run" & To_GString_From_String ((1 => ASCII.HT)) & "F9", IDM_Build_and_run);
     Append_Separator (New_Menu.Popup_0005);
     Append_Item (New_Menu.Popup_0005, "Code sam&ple", IDM_Ada_Sample);
     New_Menu.Popup_0006 := Create_Popup;
@@ -153,7 +153,7 @@ package body LEA_Resource_GUI is
     State (New_Menu.Popup_0004, Command, IDM_Compile_single, Disabled);
     Append_Item (New_Menu.Popup_0004, "&Build application" & To_GString_From_String ((1 => ASCII.HT)) & "F4", IDM_Build);
     State (New_Menu.Popup_0004, Command, IDM_Build, Disabled);
-    Append_Item (New_Menu.Popup_0004, "Build and &run" & To_GString_From_String ((1 => ASCII.HT)) & "F9", IDM_Build_and_run);
+    Append_Item (New_Menu.Popup_0004, "Build and &Run" & To_GString_From_String ((1 => ASCII.HT)) & "F9", IDM_Build_and_run);
     State (New_Menu.Popup_0004, Command, IDM_Build_and_run, Disabled);
     Append_Separator (New_Menu.Popup_0004);
     Append_Item (New_Menu.Popup_0004, "Code sam&ple", IDM_Ada_Sample);

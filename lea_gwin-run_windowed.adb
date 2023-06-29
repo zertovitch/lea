@@ -19,6 +19,8 @@ with Ada.Calendar,
      Ada.Strings.Unbounded,
      Ada.Strings.Wide_Fixed;
 
+with Interfaces;
+
 procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
   function Fake_Argument_Count return Natural is
@@ -116,6 +118,12 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     ml.Set_Sub_Item (S2G (Message (post_mortem.Unhandled)), count + 2, 1);
   end Show_Error;
 
+  procedure Scroll_Down_To_Last_Input_Line is
+    use GWindows.Common_Controls;
+  begin
+    ml.Ensure_Visible (Integer'Max (0, ml.Item_Count - 1), Full);
+  end Scroll_Down_To_Last_Input_Line;
+
   --  The following is copied and adapted from AZip's progress bar.
   --
   progress_box : LEA_Resource_GUI.Progress_box_Type;
@@ -129,14 +137,14 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
   tick  : Ada.Calendar.Time;
   start : constant Ada.Calendar.Time := Ada.Calendar.Clock;
   hidden_progress_box : Boolean := True;
+  infrequent : Interfaces.Unsigned_8 := 0;
   --
-  procedure Boxed_Feedback (
-    Stack_Current, Stack_Total : in     Natural;
-    Wall_Clock                 : in     Ada.Calendar.Time;
-    User_Abort                 :    out Boolean
-  )
+  procedure Boxed_Feedback
+    (Stack_Current, Stack_Total : in     Natural;
+     Wall_Clock                 : in     Ada.Calendar.Time;
+     User_Abort                 :    out Boolean)
   is
-    use Ada.Calendar, GWindows.Application;
+    use Ada.Calendar, GWindows.Application, Interfaces;
   begin
     --  Don't show the progress box for programms running very shortly.
     --  For those programs, the box would flash nastily without this delay.
@@ -152,6 +160,10 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     if Wall_Clock - tick >= 0.04  then
       progress_box.Stack_Bar.Position
         (Integer (100.0 * Long_Float (Stack_Current) / Long_Float (Stack_Total)));
+      infrequent := infrequent + 1;  --  No overflow.
+      if (infrequent and 7) = 0 then
+        Scroll_Down_To_Last_Input_Line;
+      end if;
       Message_Check;
       tick := Wall_Clock;
     end if;
@@ -191,7 +203,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
         Windowed_Console,
         LEA_System_Calls);
 
-  use Ada.Calendar, GWindows.Application, GWindows.Common_Controls;
+  use Ada.Calendar, GWindows.Application;
 
 begin
   LEA_GWin.Messages.IO_Pipe.is_aborted_flag := False;
@@ -213,8 +225,7 @@ begin
       Window.MDI_Root.Disable;
       Windowed_interpret (Window.BD, post_mortem);  --  Running the HAC program happens here.
       ml.Set_Column ("Console", 0, ml.Column_Width (0));
-      --  Scroll to last output line:
-      ml.Ensure_Visible (Integer'Max (0, ml.Item_Count - 1), Full);
+      Scroll_Down_To_Last_Input_Line;
       Window.MDI_Root.Enable;
       Window.MDI_Root.Focus;
       if Is_Exception_Raised (post_mortem.Unhandled) then
