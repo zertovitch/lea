@@ -4,8 +4,6 @@ with GWindows.Colors,
      GWindows.Common_Dialogs,
      GWindows.GStrings;
 
-with Ada.Containers.Vectors;
-
 package LEA_GWin is
 
   use GWindows, GWindows.GStrings;
@@ -38,8 +36,6 @@ package LEA_GWin is
   end record;
 
   function Equivalent (Id_1, Id_2 : ID_Type) return Boolean;
-
-  package ID_Vectors is new Ada.Containers.Vectors (Natural, ID_Type);
 
   function Color_Convert
     (rgb : LEA_Common.Color_Themes.RGB_Type) return GWindows.Colors.Color_Type;

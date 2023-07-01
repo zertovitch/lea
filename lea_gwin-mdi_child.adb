@@ -294,7 +294,7 @@ package body LEA_GWin.MDI_Child is
     begin
       Parent.Tab_Bar.Insert_Tab (Parent.Tab_Bar.Tab_Count, Simple_Name (title));
       Parent.Tab_Bar.Selected_Tab (Parent.Tab_Bar.Tab_Count - 1);
-      Parent.Tab_Bar.ID.Append (Window.ID);
+      Parent.Tab_Bar.info.Append ((Window.ID, Window'Unrestricted_Access));
     end Append_Tab;
   begin
     Window.ID := ID;
@@ -467,8 +467,8 @@ package body LEA_GWin.MDI_Child is
     New_ID := (File_Name => New_File_Name, Short_Name => File_Title);
     --  Change title in the tab bar.
     for index in 0 .. tab_bar.Tab_Count - 1 loop
-      if tab_bar.ID (index) = Window.ID then
-        tab_bar.ID (index) := New_ID;
+      if tab_bar.info (index).ID = Window.ID then
+        tab_bar.info (index).ID := New_ID;
         tab_bar.Text (index, Simple_Name (GU2G (New_File_Name)));
         exit;
       end if;

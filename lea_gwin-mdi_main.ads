@@ -18,6 +18,8 @@ with GWindows.Windows.MDI;
 
 with GWin_Util;
 
+with Ada.Containers.Vectors;
+
 with Interfaces.C;
 
 package LEA_GWin.MDI_Main is
@@ -25,14 +27,23 @@ package LEA_GWin.MDI_Main is
   type MDI_Main_Type;
   type MDI_Main_Access is access all MDI_Main_Type;
 
+  type Tab_Info_Type is record
+    ID     : ID_Type;
+    Window : GWindows.Windows.MDI.Pointer_To_MDI_Child_Window_Class;
+  end record;
+
+  package Tab_Info_Vectors is new Ada.Containers.Vectors (Natural, Tab_Info_Type);
+
   type LEA_Tab_Bar_Type is
     new GWindows.Common_Controls.Tab_Control_Type with
       record
-        MDI_Parent : MDI_Main_Access;    --  Access to the containing main window
-        ID         : ID_Vectors.Vector;  --  File & Short Names corresponding to tabs
+        MDI_Parent : MDI_Main_Access;          --  Access to the containing main window
+        info       : Tab_Info_Vectors.Vector;  --  Info corresponding to tabs
       end record;
 
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type);
+
+  overriding procedure On_Middle_Click (Control : in out LEA_Tab_Bar_Type);
 
   overriding procedure Delete_Tab (Control : in out LEA_Tab_Bar_Type; Where : in Integer);
 
