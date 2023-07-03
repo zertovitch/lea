@@ -293,6 +293,14 @@ package body LEA_GWin.MDI_Main is
     Window.Tab_Bar.Create (Window, 0, 30, 10, 25);
     Window.Tab_Bar.Dock (GWindows.Base.At_Top);
     GWin_Util.Use_GUI_Font (Window.Tab_Bar);
+    --  Tool Tips for the Tab bar:
+    Window.Tab_Bar.tips.Create (Window);
+    Window.Tab_Bar.Set_Tool_Tips (Window.Tab_Bar.tips);
+    GWin_Util.Use_GUI_Font (Window.Tab_Bar.tips);
+    Window.Tab_Bar.tips.Set_Durations
+      (Initial  =>  0.2,
+       Reshow   =>  0.1,
+       Til_Hide => 60.0);
 
     --  ** Sizeable panels. For a sketch, see the "Layout" sheet in lea_work.xls.
     --
@@ -607,10 +615,10 @@ package body LEA_GWin.MDI_Main is
                         Return_Value : in out GWindows.Types.Lresult)
   is
     use Interfaces.C;
-
   begin
-    if message = GWindows.Timers.WM_TIMER then
-      case wParam is
+    case message is
+      when GWindows.Timers.WM_TIMER =>
+        case wParam is
         when search_box_timer_id =>
           if Window.close_this_search_box then
             Window.close_this_search_box := False;
@@ -624,8 +632,10 @@ package body LEA_GWin.MDI_Main is
           null;
         when others =>
           null;
-      end case;
-    end if;
+        end case;
+      when others =>
+        null;
+    end case;
     --  Call parent method
     GWindows.Windows.MDI.MDI_Main_Window_Type (Window).On_Message (
       message,

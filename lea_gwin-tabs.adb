@@ -2,6 +2,7 @@ with LEA_GWin.MDI_Main;
 
 with GWindows.Cursors,
      GWindows.Scintilla;
+with Ada.Text_IO;
 
 package body LEA_GWin.Tabs is
 
@@ -13,6 +14,34 @@ package body LEA_GWin.Tabs is
        Control.info (Control.Selected_Tab).ID,
        is_open => dummy);
   end On_Change;
+
+  overriding procedure On_Message
+     (Window       : in out LEA_Tab_Bar_Type;
+      message      : in     Interfaces.C.unsigned;
+      wParam       : in     GWindows.Types.Wparam;
+      lParam       : in     GWindows.Types.Lparam;
+      Return_Value : in out GWindows.Types.Lresult)
+  is
+    tab_under_pointer : Integer;
+    window_of_tab_under_pointer : GWindows.Windows.MDI.Pointer_To_MDI_Child_Window_Class;
+    use type Interfaces.C.unsigned;
+    WM_MOUSEMOVE : constant := 512;
+    WM_NCHITTEST : constant := 132;
+    WM_PAINT     : constant :=  15;
+  begin
+    if message in WM_NCHITTEST | WM_PAINT | WM_MOUSEMOVE then
+      tab_under_pointer :=
+        Window.Item_At_Position
+          (Window.Point_To_Client (GWindows.Cursors.Get_Cursor_Position));
+      if tab_under_pointer >= 0 and then tab_under_pointer /= Window.tip_index then
+        Window.tip_index := tab_under_pointer;
+        window_of_tab_under_pointer := Window.info (tab_under_pointer).Window;
+        Window.tips.Add_Tool_Tip (Window, "File: " & window_of_tab_under_pointer.Text);
+      end if;
+    end if;
+    GWindows.Common_Controls.Tab_Control_Type (Window).On_Message
+      (Message, wparam, lParam, Return_Value);
+  end On_Message;
 
   overriding procedure On_Middle_Click (Control : in out LEA_Tab_Bar_Type) is
     chosen_tab : Integer;
@@ -34,6 +63,7 @@ package body LEA_GWin.Tabs is
     if Where >= 0 then
       GWindows.Common_Controls.Tab_Control_Type (Control).Delete_Tab (Where);  --  Call parent method
       Control.info.Delete (Where);
+      Control.tip_index := -1;
     end if;
   end Delete_Tab;
 

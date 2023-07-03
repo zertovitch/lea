@@ -1,7 +1,10 @@
-with GWindows.Common_Controls,
-     GWindows.Windows.MDI;
+with GWindows.Base,
+     GWindows.Common_Controls,
+     GWindows.Windows.MDI,
+     GWindows.Types;
 
 with Ada.Containers.Vectors;
+with Interfaces.C;
 
 package LEA_GWin.Tabs is
 
@@ -19,9 +22,18 @@ package LEA_GWin.Tabs is
         MDI_Parent : GWindows.Windows.MDI.Pointer_To_MDI_Main_Window_Class;
         --  Info corresponding to tabs:
         info       : Tab_Info_Vectors.Vector;
+        tips       : GWindows.Common_Controls.Tool_Tip_Type;
+        tip_index  : Integer := -1;
       end record;
 
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type);
+
+  overriding procedure On_Message
+     (Window       : in out LEA_Tab_Bar_Type;
+      message      : in     Interfaces.C.unsigned;
+      wParam       : in     GWindows.Types.Wparam;
+      lParam       : in     GWindows.Types.Lparam;
+      Return_Value : in out GWindows.Types.Lresult);
 
   overriding procedure On_Middle_Click (Control : in out LEA_Tab_Bar_Type);
 
