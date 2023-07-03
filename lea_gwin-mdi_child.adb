@@ -5,7 +5,8 @@ with LEA_GWin.Messages,
      LEA_GWin.Modal_Dialogs,
      LEA_GWin.Options,
      LEA_GWin.Run_Windowed,
-     LEA_GWin.Search_box;
+     LEA_GWin.Search_box,
+     LEA_GWin.Tabs;
 
 with HAC_Sys.Co_Defs,
      HAC_Sys.Defs;
@@ -416,7 +417,7 @@ package body LEA_GWin.MDI_Child is
     File_Title    : GWindows.GString_Unbounded;
     Success       : Boolean;
     New_ID : ID_Type;
-    tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
+    tab_bar : Tabs.LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
     use HAC_Sys.Defs;
     use type Alfa;
   begin
@@ -774,7 +775,7 @@ package body LEA_GWin.MDI_Child is
   end On_Menu_Select;
 
   overriding procedure On_Focus (Window : in out MDI_Child_Type) is
-    tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
+    tab_bar : Tabs.LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
     tab_index : Integer;
   begin
     Update_Information (Window, toolbar_and_menu);
@@ -791,7 +792,7 @@ package body LEA_GWin.MDI_Child is
     use LEA_Resource_GUI;
     bar : Office_Applications.Classic_Main_Tool_Bar_Type
       renames Window.MDI_Root.Tool_Bar;
-    tab_bar : LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
+    tab_bar : Tabs.LEA_Tab_Bar_Type renames Window.MDI_Root.Tab_Bar;
   begin
     Can_Close := True;
     if Window.Is_Document_Modified then

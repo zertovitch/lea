@@ -1,4 +1,5 @@
 with LEA_GWin.Editor,
+     LEA_GWin.Tabs,
      LEA_GWin.Messages,
      LEA_GWin.Search_box,
      LEA_GWin.Sliding_Panels;
@@ -9,12 +10,13 @@ with LEA_Common.User_options;
 
 with Office_Applications;
 
-with GWindows.Common_Controls;
-with GWindows.Drawing;
-with GWindows.Image_Lists;
-with GWindows.Taskbar;
-with GWindows.Types;
-with GWindows.Windows.MDI;
+with GWindows.Common_Controls,
+     GWindows.Drawing,
+     GWindows.Image_Lists,
+     GWindows.Scintilla,
+     GWindows.Taskbar,
+     GWindows.Types,
+     GWindows.Windows.MDI;
 
 with GWin_Util;
 
@@ -27,28 +29,6 @@ package LEA_GWin.MDI_Main is
   type MDI_Main_Type;
   type MDI_Main_Access is access all MDI_Main_Type;
 
-  type Tab_Info_Type is record
-    ID     : ID_Type;
-    Window : GWindows.Windows.MDI.Pointer_To_MDI_Child_Window_Class;
-  end record;
-
-  package Tab_Info_Vectors is new Ada.Containers.Vectors (Natural, Tab_Info_Type);
-
-  type LEA_Tab_Bar_Type is
-    new GWindows.Common_Controls.Tab_Control_Type with
-      record
-        MDI_Parent : MDI_Main_Access;          --  Access to the containing main window
-        info       : Tab_Info_Vectors.Vector;  --  Info corresponding to tabs
-      end record;
-
-  overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type);
-
-  overriding procedure On_Middle_Click (Control : in out LEA_Tab_Bar_Type);
-
-  overriding procedure Delete_Tab (Control : in out LEA_Tab_Bar_Type; Where : in Integer);
-
-  function Tab_Index (Control : in out LEA_Tab_Bar_Type; ID : ID_Type) return Integer;
-
   type MDI_Main_Type is
     new Office_Applications.Classic_Main_Window_Type with
       record
@@ -57,7 +37,7 @@ package LEA_GWin.MDI_Main is
         Success_in_enumerated_close : Boolean;
         Folders_Images              : GWindows.Image_Lists.Image_List_Type;
         --
-        Tab_Bar                     : LEA_Tab_Bar_Type;
+        Tab_Bar                     : Tabs.LEA_Tab_Bar_Type;
         --
         Project_Panel               : Sliding_Panels.Project_Panel_Type;
         Message_Panel               : Sliding_Panels.Message_Panel_Type;
@@ -129,6 +109,13 @@ package LEA_GWin.MDI_Main is
   overriding procedure On_Close
     (Window    : in out MDI_Main_Type;
      Can_Close :    out Boolean);
+
+  procedure Focus_an_already_opened_window
+    (MDI_Main     : in out MDI_Main_Type;
+     ID           :        ID_Type;
+     Line         :        Integer                     := GWindows.Scintilla.INVALID_POSITION;
+     Col_a, Col_z :        GWindows.Scintilla.Position := GWindows.Scintilla.INVALID_POSITION;
+     is_open      :    out Boolean);
 
   procedure Update_Common_Menus
     (Window         : in out MDI_Main_Type;
