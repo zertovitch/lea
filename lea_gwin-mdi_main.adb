@@ -298,9 +298,9 @@ package body LEA_GWin.MDI_Main is
     Window.Tab_Bar.Set_Tool_Tips (Window.Tab_Bar.tips);
     GWin_Util.Use_GUI_Font (Window.Tab_Bar.tips);
     Window.Tab_Bar.tips.Set_Durations
-      (Initial  =>  0.2,
-       Reshow   =>  0.1,
-       Til_Hide => 60.0);
+      (Initial  => 0.2,
+       Reshow   => 0.1,
+       Til_Hide => 5.0);
 
     --  ** Sizeable panels. For a sketch, see the "Layout" sheet in lea_work.xls.
     --

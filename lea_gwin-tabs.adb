@@ -1,8 +1,8 @@
-with LEA_GWin.MDI_Main;
+with LEA_GWin.MDI_Child,
+     LEA_GWin.MDI_Main;
 
 with GWindows.Cursors,
      GWindows.Scintilla;
-with Ada.Text_IO;
 
 package body LEA_GWin.Tabs is
 
@@ -23,24 +23,33 @@ package body LEA_GWin.Tabs is
       Return_Value : in out GWindows.Types.Lresult)
   is
     tab_under_pointer : Integer;
-    window_of_tab_under_pointer : GWindows.Windows.MDI.Pointer_To_MDI_Child_Window_Class;
-    use type Interfaces.C.unsigned;
     WM_MOUSEMOVE : constant := 512;
     WM_NCHITTEST : constant := 132;
     WM_PAINT     : constant :=  15;
+    WM_SETCURSOR : constant :=  32;
+    use type Interfaces.C.unsigned;
   begin
-    if message in WM_NCHITTEST | WM_PAINT | WM_MOUSEMOVE then
+    if message in WM_MOUSEMOVE | WM_NCHITTEST | WM_PAINT | WM_SETCURSOR then
       tab_under_pointer :=
         Window.Item_At_Position
           (Window.Point_To_Client (GWindows.Cursors.Get_Cursor_Position));
       if tab_under_pointer >= 0 and then tab_under_pointer /= Window.tip_index then
         Window.tip_index := tab_under_pointer;
-        window_of_tab_under_pointer := Window.info (tab_under_pointer).Window;
-        Window.tips.Add_Tool_Tip (Window, "File: " & window_of_tab_under_pointer.Text);
+        declare
+          window_of_tab_under_pointer : MDI_Child.MDI_Child_Type
+            renames MDI_Child.MDI_Child_Type (Window.info (tab_under_pointer).Window.all);
+          fn : constant GString := GU2G (window_of_tab_under_pointer.ID.File_Name);
+        begin
+          if fn'Length = 0 then
+            Window.tips.Add_Tool_Tip (Window, "Document without file");
+          else
+            Window.tips.Add_Tool_Tip (Window, "File: " & fn);
+          end if;
+        end;
       end if;
     end if;
     GWindows.Common_Controls.Tab_Control_Type (Window).On_Message
-      (Message, wparam, lParam, Return_Value);
+      (message, wParam, lParam, Return_Value);
   end On_Message;
 
   overriding procedure On_Middle_Click (Control : in out LEA_Tab_Bar_Type) is
