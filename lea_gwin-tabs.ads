@@ -15,6 +15,8 @@ package LEA_GWin.Tabs is
 
   package Tab_Info_Vectors is new Ada.Containers.Vectors (Natural, Tab_Info_Type);
 
+  invalid_tip_index : constant := -1;
+
   type LEA_Tab_Bar_Type is
     new GWindows.Common_Controls.Tab_Control_Type with
       record
@@ -23,7 +25,7 @@ package LEA_GWin.Tabs is
         --  Info corresponding to tabs:
         info       : Tab_Info_Vectors.Vector;
         tips       : GWindows.Common_Controls.Tool_Tip_Type;
-        tip_index  : Integer := -1;
+        tip_index  : Integer := invalid_tip_index;
       end record;
 
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type);

@@ -6,6 +6,35 @@ with GWindows.Cursors,
 
 package body LEA_GWin.Tabs is
 
+  procedure Refresh_Tool_Tip (Control : in out LEA_Tab_Bar_Type) is
+    tab_under_pointer : Integer;
+  begin
+    tab_under_pointer :=
+      Control.Item_At_Position
+        (Control.Point_To_Client (GWindows.Cursors.Get_Cursor_Position));
+    if tab_under_pointer >= 0
+      and then tab_under_pointer /= Control.tip_index
+    then
+      Control.tip_index := tab_under_pointer;
+      Control.tips.Delete_Tool_Tip (Control);
+      --  NB: A more obvious way to proceed would be to use Update_Tool_Tip
+      --      after an initial call to Add_Tool_Tip, but that doesn't work
+      --      as expected (at least, on Windows 10).
+      declare
+        window_of_tab_under_pointer : MDI_Child.MDI_Child_Type
+          renames
+            MDI_Child.MDI_Child_Type
+              (Control.info (tab_under_pointer).Window.all);
+        fn : constant GString :=
+               GU2G (window_of_tab_under_pointer.ID.File_Name);
+      begin
+        Control.tips.Add_Tool_Tip
+          (Control,
+           (if fn'Length = 0 then "Document without file" else "File: " & fn));
+      end;
+    end if;
+  end Refresh_Tool_Tip;
+
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type) is
     dummy : Boolean;
   begin
@@ -13,6 +42,8 @@ package body LEA_GWin.Tabs is
       (MDI_Main.MDI_Main_Type (Control.MDI_Parent.all),
        Control.info (Control.Selected_Tab).ID,
        is_open => dummy);
+    Control.tip_index := invalid_tip_index;
+    Refresh_Tool_Tip (Control);  --  The effect of this is invisible...
   end On_Change;
 
   overriding procedure On_Message
@@ -22,7 +53,6 @@ package body LEA_GWin.Tabs is
       lParam       : in     GWindows.Types.Lparam;
       Return_Value : in out GWindows.Types.Lresult)
   is
-    tab_under_pointer : Integer;
     WM_MOUSEMOVE : constant := 512;
     WM_NCHITTEST : constant := 132;
     WM_PAINT     : constant :=  15;
@@ -30,27 +60,7 @@ package body LEA_GWin.Tabs is
     use type Interfaces.C.unsigned;
   begin
     if message in WM_MOUSEMOVE | WM_NCHITTEST | WM_PAINT | WM_SETCURSOR then
-      tab_under_pointer :=
-        Window.Item_At_Position
-          (Window.Point_To_Client (GWindows.Cursors.Get_Cursor_Position));
-      if tab_under_pointer >= 0 and then tab_under_pointer /= Window.tip_index then
-        Window.tip_index := tab_under_pointer;
-        Window.tips.Delete_Tool_Tip (Window);
-        --  NB: A more obvious way to proceed would be to use Update_Tool_Tip
-        --      after an initial Add_Tool_Tip, but that doesn't work as
-        --      expected (at least, on Windows 10).
-        declare
-          window_of_tab_under_pointer : MDI_Child.MDI_Child_Type
-            renames MDI_Child.MDI_Child_Type (Window.info (tab_under_pointer).Window.all);
-          fn : constant GString := GU2G (window_of_tab_under_pointer.ID.File_Name);
-        begin
-          if fn'Length = 0 then
-            Window.tips.Add_Tool_Tip (Window, "Document without file");
-          else
-            Window.tips.Add_Tool_Tip (Window, "File: " & fn);
-          end if;
-        end;
-      end if;
+      Refresh_Tool_Tip (Window);
     end if;
     GWindows.Common_Controls.Tab_Control_Type (Window).On_Message
       (message, wParam, lParam, Return_Value);
@@ -76,7 +86,7 @@ package body LEA_GWin.Tabs is
     if Where >= 0 then
       GWindows.Common_Controls.Tab_Control_Type (Control).Delete_Tab (Where);  --  Call parent method
       Control.info.Delete (Where);
-      Control.tip_index := -1;
+      Control.tip_index := invalid_tip_index;
     end if;
   end Delete_Tab;
 
