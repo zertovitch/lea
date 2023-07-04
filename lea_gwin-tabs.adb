@@ -35,6 +35,10 @@ package body LEA_GWin.Tabs is
           (Window.Point_To_Client (GWindows.Cursors.Get_Cursor_Position));
       if tab_under_pointer >= 0 and then tab_under_pointer /= Window.tip_index then
         Window.tip_index := tab_under_pointer;
+        Window.tips.Delete_Tool_Tip (Window);
+        --  NB: A more obvious way to proceed would be to use Update_Tool_Tip
+        --      after an initial Add_Tool_Tip, but that doesn't work as
+        --      expected (at least, on Windows 10).
         declare
           window_of_tab_under_pointer : MDI_Child.MDI_Child_Type
             renames MDI_Child.MDI_Child_Type (Window.info (tab_under_pointer).Window.all);
