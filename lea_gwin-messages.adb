@@ -8,7 +8,8 @@ with GWindows.Clipboard,
      GWindows.Cursors,
      GWindows.Windows;
 
-with Ada.Strings.Unbounded,
+with Ada.Directories,
+     Ada.Strings.Unbounded,
      Ada.Strings.Wide_Unbounded;
 
 package body LEA_GWin.Messages is
@@ -17,26 +18,34 @@ package body LEA_GWin.Messages is
     pl : LEA_LV_Ex.Data_Access;
     use HAC_Sys.Defs, LEA_LV_Ex, LEA_GWin.MDI_Main, Ada.Strings.Unbounded;
     mm : MDI_Main_Access;
+    --
+    function Get_Full_Name return String is
+    begin
+      --  For a future version: use the same search path as the compiler.
+      return Ada.Directories.Full_Name (To_String (pl.file_name));
+    end Get_Full_Name;
   begin
     for i in 0 .. Control.Item_Count loop
       if Control.Is_Selected (i) then
         pl := Control.Item_Data (i);
         if pl /= null then
-          mm := MDI_Main_Access (Control.mdi_main_parent);
-          mm.Open_Child_Window_And_Load
-            (S2G (To_String (pl.file_name)),
-             pl.line - 1,  --  Scintilla's lines are 0-based
-             pl.column_a,
-             pl.column_a);
-          --  At this point focus is on the editor window.
-          if pl.repair_kind /= none
-            and then real_click
-            and then Control.Point_To_Client (GWindows.Cursors.Get_Cursor_Position).X < 16
-          then
-            LEA_GWin.Repair.Do_Repair (mm.all, pl.all);
-            if pl.repair_kind = none then
-              --  Remove tool icon:
-              Control.Set_Item (Control.Text (Item => i, SubItem => 0), i, Icon => 0);
+          if Ada.Directories.Exists (Get_Full_Name) then
+            mm := MDI_Main_Access (Control.mdi_main_parent);
+            mm.Open_Child_Window_And_Load
+              (S2G (Get_Full_Name),
+               pl.line - 1,  --  Scintilla's lines are 0-based
+               pl.column_a,
+               pl.column_a);
+            --  At this point focus is on the editor window.
+            if pl.repair_kind /= none
+              and then real_click
+              and then Control.Point_To_Client (GWindows.Cursors.Get_Cursor_Position).X < 16
+            then
+              LEA_GWin.Repair.Do_Repair (mm.all, pl.all);
+              if pl.repair_kind = none then
+                --  Remove tool icon:
+                Control.Set_Item (Control.Text (Item => i, SubItem => 0), i, Icon => 0);
+              end if;
             end if;
           end if;
         end if;
