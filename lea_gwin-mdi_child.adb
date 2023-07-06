@@ -373,7 +373,7 @@ package body LEA_GWin.MDI_Child is
     --  The eventual startup extra new document is now saved as a file.
     --  So, in any case, we won't close it now on next window opening.
     MDI_Child.Extra_First_Doc := False;
-    MDI_Child.Update_Common_Menus (File_Name, MDI_Child.Editor.Get_current_line);
+    MDI_Child.Update_Common_Menus (File_Name, MDI_Child.Editor.Get_Current_Line_Number);
     MDI_Child.Editor.Set_Save_Point;
     MDI_Child.Editor.modified := False;
     MDI_Child.Editor.Set_Read_Only (False);
@@ -475,7 +475,7 @@ package body LEA_GWin.MDI_Child is
       end if;
     end loop;
     Window.ID := New_ID;
-    Window.Update_Common_Menus (GU2G (New_File_Name), Window.Editor.Get_current_line);
+    Window.Update_Common_Menus (GU2G (New_File_Name), Window.Editor.Get_Current_Line_Number);
     Window.Editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
         GU2G (Window.ID.File_Name),
@@ -735,8 +735,8 @@ package body LEA_GWin.MDI_Child is
         Window.Editor.Set_Tab_Width (Window.MDI_Root.opt.indentation);
         Window.Editor.Back_Tab;
         Window.Editor.Set_Tab_Width (Window.MDI_Root.opt.tab_width);
-      when IDM_Comment =>       Window.Editor.Selection_comment;
-      when IDM_Uncomment =>     Window.Editor.Selection_uncomment;
+      when IDM_Comment =>       Window.Editor.Selection_Comment;
+      when IDM_Uncomment =>     Window.Editor.Selection_Uncomment;
       when IDM_Find =>          Window.Show_Search_Box;
       when IDM_Find_Next =>
         --  If F3 is pressed or "Find next" menu entry is selected
@@ -749,11 +749,11 @@ package body LEA_GWin.MDI_Child is
       when IDM_Go_to_line =>
         Modal_Dialogs.Do_Go_to_Line (Window);
       when IDM_Toggle_bookmark =>
-        Window.Editor.Bookmark_toggle (Window.Editor.Get_current_line);
+        Window.Editor.Bookmark_Toggle (Window.Editor.Get_Current_Line_Number);
       when IDM_Next_bookmark =>
-        Window.Editor.Bookmark_next;
+        Window.Editor.Bookmark_Next;
       when IDM_Previous_bookmark =>
-        Window.Editor.Bookmark_previous;
+        Window.Editor.Bookmark_Previous;
       --  Compile / Build actions
       when IDM_Compile_single =>  Window.Build_as_Main;
       when IDM_Build          =>  Window.Build;
@@ -823,7 +823,7 @@ package body LEA_GWin.MDI_Child is
     else
       --  We can safely close this document.
       Window.Update_Common_Menus
-        (GU2G (Window.ID.File_Name), Window.Editor.Get_current_line);
+        (GU2G (Window.ID.File_Name), Window.Editor.Get_Current_Line_Number);
     end if;
     if Can_Close then
       --  !! Empty the editor's memory if needed

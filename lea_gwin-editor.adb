@@ -66,12 +66,17 @@ package body LEA_GWin.Editor is
       old_pos := Editor.Get_Current_Pos;
       if Editor.syntax_kind in Ada_syntax | GPR_syntax then
         in_ada_comment := True;
-        --  Ensure we are after the "--" token of the comment and that
-        --  there is a bit of a comment after (at least one character).
-        for shift in Position range -2 .. 2 loop
+        --  Ensure we are after the "--" token of the comment:
+        for shift in Position range -2 .. 0 loop
           in_ada_comment :=
-            in_ada_comment and then Editor.Get_Style_At (old_pos + shift) = SCE_ADA_COMMENTLINE;
+            in_ada_comment and then
+              Editor.Get_Style_At (old_pos + shift) = SCE_ADA_COMMENTLINE;
         end loop;
+        --  Ensure that there is a bit of a comment after (at least one character):
+        in_ada_comment :=
+          in_ada_comment and then
+            Editor.Get_Current_Pos < Editor.Get_Line_End_Position (Editor.Get_Current_Line_Number);
+        --  Check if we are inside a string literal:
         in_ada_string_literal :=
           Editor.Get_Style_At (old_pos - 1) = SCE_ADA_STRING
           and then not
@@ -175,7 +180,7 @@ package body LEA_GWin.Editor is
 
     Editor.Set_Scintilla_Syntax;
 
-    Editor.Apply_options;
+    Editor.Apply_Options;
 
     Editor.Set_Margin_Width_N (margin_for_line_numbers, 50);
     Editor.Set_Margin_Type_N (margin_for_line_numbers, SC_MARGIN_NUMBER);
@@ -199,7 +204,7 @@ package body LEA_GWin.Editor is
     line : constant Integer := Editor.Line_From_Position (Pos);
   begin
     if Margin = margin_for_bookmarks then
-      Editor.Bookmark_toggle (line);
+      Editor.Bookmark_Toggle (line);
     end if;
   end On_Margin_Click;
 
@@ -257,7 +262,7 @@ package body LEA_GWin.Editor is
      is_whole :        Boolean
     )
   is
-    line : constant Integer := Editor.Get_current_line;
+    line : constant Integer := Editor.Get_Current_Line_Number;
     --  Performance: we scope the highlighting to 'around' lines around current one.
     around : constant := 200;
     line_a : constant Integer := Integer'Max (line - around, 1);
@@ -367,7 +372,7 @@ package body LEA_GWin.Editor is
     end if;
   end On_Update_UI;
 
-  procedure Apply_options (Editor : in out LEA_Scintilla_Type) is
+  procedure Apply_Options (Editor : in out LEA_Scintilla_Type) is
     use GWindows.Colors, LEA_Common.Color_Themes;
     --
     parent    : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
@@ -445,14 +450,9 @@ package body LEA_GWin.Editor is
     end case;
     Editor.Set_Indentation_Guides (mdi_root.opt.show_indent);
 
-  end Apply_options;
+  end Apply_Options;
 
-  function Get_current_line (Editor : LEA_Scintilla_Type) return Integer is
-  begin
-    return Editor.Line_From_Position (Editor.Get_Current_Pos);
-  end Get_current_line;
-
-  procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line : Integer) is
+  procedure Set_Current_Line (Editor : in out LEA_Scintilla_Type; line : Integer) is
     shake : constant := 10;
   begin
     --  Tactic to show the desired line closer to the middle of the window,
@@ -462,7 +462,7 @@ package body LEA_GWin.Editor is
     end if;
     Editor.Go_To_Line (line + shake);    --  A bit too low
     Editor.Go_To_Line (line);            --  Finally, set the correct line
-  end Set_current_line;
+  end Set_Current_Line;
 
   --  If the last line of a selection is fully selected, the end of the selection's
   --  position is at the line *after* the selection and an operation like comment or
@@ -484,7 +484,7 @@ package body LEA_GWin.Editor is
     end if;
   end Get_Reduced_Selection;
 
-  procedure Selection_comment (Editor : in out LEA_Scintilla_Type) is
+  procedure Selection_Comment (Editor : in out LEA_Scintilla_Type) is
     --
     blank_line_code : constant := -1;
     --
@@ -591,9 +591,9 @@ package body LEA_GWin.Editor is
     Editor.End_Undo_Action;
     --  Select the whole block of lines again.
     Editor.Set_Sel (Editor.Position_From_Line (lin_a), Editor.Position_From_Line (lin_z + 1));
-  end Selection_comment;
+  end Selection_Comment;
 
-  procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type) is
+  procedure Selection_Uncomment (Editor : in out LEA_Scintilla_Type) is
     pos, sel_a, sel_z : Position;
     lin_a, lin_z : Integer;
   begin
@@ -621,7 +621,7 @@ package body LEA_GWin.Editor is
       Editor.Position_From_Line (lin_a),
       Editor.Position_From_Line (lin_z + 1)
     );
-  end Selection_uncomment;
+  end Selection_Uncomment;
 
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action)
   is
@@ -672,9 +672,9 @@ package body LEA_GWin.Editor is
             --  First, we go off a few lines in order to have a good focus.
             Editor.Go_To_Pos (Editor.Get_Target_Start);
             if action = find_next then
-              Editor.Go_To_Line (Editor.Get_current_line + 10);
+              Editor.Go_To_Line (Editor.Get_Current_Line_Number + 10);
             else
-              Editor.Go_To_Line (Editor.Get_current_line - 5);
+              Editor.Go_To_Line (Editor.Get_Current_Line_Number - 5);
             end if;
             --  Now we select the found text.
             Editor.Set_Sel (Editor.Get_Target_Start, Editor.Get_Target_End);
@@ -813,27 +813,27 @@ package body LEA_GWin.Editor is
     end case;
   end Search;
 
-  procedure Bookmark_next (Editor : in out LEA_Scintilla_Type) is
+  procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type) is
     line : constant Integer :=
-      Editor.Marker_Next (Editor.Get_current_line + 1, 2 ** marker_for_bookmarks);
+      Editor.Marker_Next (Editor.Get_Current_Line_Number + 1, 2 ** marker_for_bookmarks);
   begin
     if line >= 0 then
-      Editor.Set_current_line (line);
+      Editor.Set_Current_Line (line);
     end if;
-  end Bookmark_next;
+  end Bookmark_Next;
 
-  procedure Bookmark_previous (Editor : in out LEA_Scintilla_Type) is
+  procedure Bookmark_Previous (Editor : in out LEA_Scintilla_Type) is
     line : constant Integer :=
-      Editor.Marker_Previous (Editor.Get_current_line - 1, 2 ** marker_for_bookmarks);
+      Editor.Marker_Previous (Editor.Get_Current_Line_Number - 1, 2 ** marker_for_bookmarks);
   begin
     if line >= 0 then
-      Editor.Set_current_line (line);
+      Editor.Set_Current_Line (line);
     end if;
-  end Bookmark_previous;
+  end Bookmark_Previous;
 
   type U32 is mod 2**32;
 
-  procedure Bookmark_toggle (Editor : in out LEA_Scintilla_Type; line : Integer) is
+  procedure Bookmark_Toggle (Editor : in out LEA_Scintilla_Type; line : Integer) is
     flags : U32;
     dummy : Integer;
   begin
@@ -843,7 +843,7 @@ package body LEA_GWin.Editor is
     else
       Editor.Marker_Delete (line, marker_for_bookmarks);
     end if;
-  end Bookmark_toggle;
+  end Bookmark_Toggle;
 
   function EOL (Editor : LEA_Scintilla_Type) return GString is
   begin

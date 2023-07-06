@@ -50,7 +50,7 @@ package body LEA_GWin.MDI_Main is
             pw.Focus;  --  Focus on document already open in our app.
             --  Scintilla lines are 0-based
             if Line > -1 then
-              pw.Editor.Set_current_line (Line);
+              pw.Editor.Set_Current_Line (Line);
             end if;
             if Col_a > -1 then
               new_pos_a := pw.Editor.Get_Current_Pos + Col_a;
@@ -139,10 +139,10 @@ package body LEA_GWin.MDI_Main is
     New_Window.Editor.Focus;
     --  NB: Scintilla lines are 0-based
     if Line > -1 then
-      New_Window.Editor.Set_current_line (Line);
+      New_Window.Editor.Set_Current_Line (Line);
     elsif mru_line > -1 then
       --  Set cursor position to memorized line number
-      New_Window.Editor.Set_current_line (mru_line);
+      New_Window.Editor.Set_Current_Line (mru_line);
     end if;
     if Col_a > -1 then
       new_pos_a := New_Window.Editor.Get_Current_Pos + Col_a;

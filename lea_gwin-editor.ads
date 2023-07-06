@@ -64,21 +64,20 @@ package LEA_GWin.Editor is
   --  Methods introduced in the LEA_Scintilla_Type class  --
   ----------------------------------------------------------
 
-  procedure Apply_options (Editor : in out LEA_Scintilla_Type);
-  function Get_current_line (Editor : LEA_Scintilla_Type) return Integer;
-  procedure Set_current_line (Editor : in out LEA_Scintilla_Type; line : Integer);
+  procedure Apply_Options (Editor : in out LEA_Scintilla_Type);
+  procedure Set_Current_Line (Editor : in out LEA_Scintilla_Type; line : Integer);
 
   --  Comment / uncomment
-  procedure Selection_comment (Editor : in out LEA_Scintilla_Type);
-  procedure Selection_uncomment (Editor : in out LEA_Scintilla_Type);
+  procedure Selection_Comment (Editor : in out LEA_Scintilla_Type);
+  procedure Selection_Uncomment (Editor : in out LEA_Scintilla_Type);
 
   --  Search & replace actions
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action);
 
   --  Bookmarks
-  procedure Bookmark_next (Editor : in out LEA_Scintilla_Type);
-  procedure Bookmark_previous (Editor : in out LEA_Scintilla_Type);
-  procedure Bookmark_toggle (Editor : in out LEA_Scintilla_Type; line : Integer);
+  procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type);
+  procedure Bookmark_Previous (Editor : in out LEA_Scintilla_Type);
+  procedure Bookmark_Toggle (Editor : in out LEA_Scintilla_Type; line : Integer);
 
   --  Duplicate current line if no selection, or duplicate selection. Shortcut: Ctrl-D.
   --  Clipboard remains untouched - that the cool aspect in this feature.

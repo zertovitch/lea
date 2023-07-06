@@ -88,7 +88,7 @@ package body LEA_GWin.Options is
       use LEA_GWin.MDI_Child;
     begin
       if Window.all in MDI_Child_Type'Class then
-        MDI_Child_Type (Window.all).Editor.Apply_options;
+        MDI_Child_Type (Window.all).Editor.Apply_Options;
       end if;
     end Apply_changes_to_child;
     use LEA_GWin.MDI_Main;
