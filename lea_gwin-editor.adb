@@ -34,13 +34,10 @@ package body LEA_GWin.Editor is
   end On_Change;
 
   function Matching (c : GCharacter) return GCharacter is
-  begin
-    case c is
-      when '(' => return ')';
-      when '"' => return '"';
-      when others => return ' ';
-    end case;
-  end Matching;
+    (case c is
+      when '('    => ')',
+      when '"'    => '"',
+      when others => ' ');
 
   overriding
   procedure On_Character_Added
@@ -124,6 +121,31 @@ package body LEA_GWin.Editor is
       Editor.End_Undo_Action;
     end Process_Return_Keystroke;
 
+    procedure Try_Auto_Insert is
+      auto_insert_ok : Boolean := False;
+      closing : constant GCharacter := Matching (Value);
+    begin
+      --  Auto-insert ')' after a lone '(', or '"' after a lone '"'.
+      --  But do it only when there is white space right to the cursor,
+      --  or a closing symbol which doesn't coincide with an opening one.
+      if cur_pos = Editor.Get_Text_Length then
+        --  End of text -> infinite white space on the right!
+        auto_insert_ok := True;
+      else
+        declare
+          slice_1 : constant GString := Editor.Get_Text_Range (cur_pos, cur_pos + 1);
+          next_ch : constant GCharacter := slice_1 (slice_1'First);
+        begin
+          auto_insert_ok :=
+            next_ch in ' ' | CR | LF | closing and then next_ch /= Value;
+        end;
+      end if;
+      if auto_insert_ok then
+        Editor.Add_Text ((1 => closing));
+        Editor.Go_To_Pos (cur_pos);
+      end if;
+    end Try_Auto_Insert;
+
     opt : LEA_Common.User_options.Option_Pack_Type
             renames MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt;
   begin
@@ -142,14 +164,7 @@ package body LEA_GWin.Editor is
         end if;
       when '(' | '"' =>
         if opt.auto_insert then
-          --  Auto-insert ')' after a lone '(', or after some other matching character,
-          --  but *not* when there are multiple cursors (Get_Selections > 1).
-          if cur_pos = Editor.Get_Text_Length
-            or else Editor.Get_Text_Range (cur_pos, cur_pos + 1) /= (1 => Value)
-          then
-            Editor.Add_Text ((1 => Matching (Value)));
-            Editor.Go_To_Pos (cur_pos);
-          end if;
+          Try_Auto_Insert;
         end if;
       when others =>
         null;
