@@ -92,7 +92,7 @@ project LEA is
             for Default_Switches ("ada") use Common_Compiler_Options & Fast_Options;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small" | "Small_MinGW"  =>
-            for Default_Switches ("ada") use Common_Compiler_Options & "-Os";
+            for Default_Switches ("ada") use Common_Compiler_Options & ("-Os", "-gnatp");
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
       end case;
    end Compiler;
