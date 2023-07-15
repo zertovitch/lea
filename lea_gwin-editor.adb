@@ -129,7 +129,7 @@ package body LEA_GWin.Editor is
       --  But do it only when there is white space right to the cursor,
       --  or a closing symbol which doesn't coincide with an opening one.
       if cur_pos = Editor.Get_Text_Length then
-        --  End of text -> infinite white space on the right!
+        --  End of text -> infinite white space on the right and below.
         auto_insert_ok := True;
       else
         declare
@@ -137,7 +137,13 @@ package body LEA_GWin.Editor is
           next_ch : constant GCharacter := slice_1 (slice_1'First);
         begin
           auto_insert_ok :=
-            next_ch in ' ' | CR | LF | closing and then next_ch /= Value;
+            next_ch in CR | LF  --  End of line -> infinite white space on the right.
+            or else
+              --  Insert mode: more possibilities.
+              ((not Editor.Get_Overtype)
+               and then next_ch in ' ' | closing
+               --  No insert of '"' before '"' (in that case, opening = closing)
+               and then next_ch /= Value);
         end;
       end if;
       if auto_insert_ok then
