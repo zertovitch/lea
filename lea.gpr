@@ -38,20 +38,29 @@
 project LEA is
 
    type LEA_Build_Mode_Type is
-      ("Debug", "Debug_MinGW", "Fast", "Fast_MinGW", "Small", "Small_MinGW");
+      ("Debug",
+       "Debug_MinGW",
+       "Fast",
+       "Fast_MinGW",
+       "Small",
+       "Small_MinGW",
+       "Small_Unchecked");  --  Smallest size, at the price of less safety. Not for the release binary!
+
    LEA_Build_Mode : LEA_Build_Mode_Type := external ("LEA_Build_Mode", "Debug");
+
    for Main use ("lea_without_data.adb", "sample_catalogue.adb");
    for Source_Dirs use (".") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
    for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
 
    case LEA_Build_Mode is
-      when "Debug"       => for Object_Dir use "obj/debug";
-      when "Fast"        => for Object_Dir use "obj/fast";
-      when "Small"       => for Object_Dir use "obj/small";
-      when "Debug_MinGW" => for Object_Dir use "obj/debug_ming";
-      when "Fast_MinGW"  => for Object_Dir use "obj/fast_ming";
-      when "Small_MinGW" => for Object_Dir use "obj/small_ming";
+      when "Debug"           => for Object_Dir use "obj/debug";
+      when "Fast"            => for Object_Dir use "obj/fast";
+      when "Small"           => for Object_Dir use "obj/small";
+      when "Debug_MinGW"     => for Object_Dir use "obj/debug_ming";
+      when "Fast_MinGW"      => for Object_Dir use "obj/fast_ming";
+      when "Small_MinGW"     => for Object_Dir use "obj/small_ming";
+      when "Small_Unchecked" => for Object_Dir use "obj/small_unchecked";
    end case;
 
    Common_Compiler_Options :=
@@ -92,6 +101,9 @@ project LEA is
             for Default_Switches ("ada") use Common_Compiler_Options & Fast_Options;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small" | "Small_MinGW"  =>
+            for Default_Switches ("ada") use Common_Compiler_Options & ("-Os");
+            for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
+         when "Small_Unchecked"  =>
             for Default_Switches ("ada") use Common_Compiler_Options & ("-Os", "-gnatp");
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
       end case;
@@ -101,7 +113,8 @@ project LEA is
       case LEA_Build_Mode is
          when "Debug" | "Debug_MinGW" =>
             for Default_Switches ("ada") use ("-g",                                   "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
-         when "Fast" | "Fast_MinGW" | "Small" | "Small_MinGW" =>
+         when "Fast" | "Fast_MinGW" |
+              "Small" | "Small_MinGW" | "Small_Unchecked"=>
             for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
        end case;
    end Linker;
