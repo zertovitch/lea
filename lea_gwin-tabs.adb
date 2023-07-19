@@ -1,10 +1,16 @@
 with LEA_GWin.MDI_Child,
      LEA_GWin.MDI_Main;
 
+with LEA_Resource_GUI;
+
 with GWindows.Cursors,
      GWindows.Scintilla;
 
+with Ada.Strings.Wide_Unbounded;
+
 package body LEA_GWin.Tabs is
+
+  use GWindows.Menus;
 
   procedure Refresh_Tool_Tip (Control : in out LEA_Tab_Bar_Type) is
     tab_under_pointer : Integer;
@@ -30,21 +36,24 @@ package body LEA_GWin.Tabs is
       begin
         Control.tips.Add_Tool_Tip
           (Control,
-           (if fn'Length = 0 then "Document without file" else "File: " & fn));
+           (if fn'Length = 0 then "No file yet" else "File: " & fn));
       end;
     end if;
   end Refresh_Tool_Tip;
 
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type) is
-    dummy : Boolean;
   begin
-    MDI_Main.Focus_an_already_opened_window
-      (MDI_Main.MDI_Main_Type (Control.MDI_Parent.all),
-       Control.info (Control.Selected_Tab).ID,
-       is_open => dummy);
+    Control.info (Control.Selected_Tab).Window.Focus;
     Control.tip_index := invalid_tip_index;
     Refresh_Tool_Tip (Control);  --  The effect of this is invisible...
   end On_Change;
+
+  overriding procedure On_Create (Control : in out LEA_Tab_Bar_Type) is
+    use LEA_Resource_GUI;
+  begin
+    Append_Item (Control.context_menu, "Close", IDM_Close);
+    Append_Item (Control.context_menu, "Open containing &folder", IDM_Open_Containing_Folder);
+  end On_Create;
 
   overriding procedure On_Message
      (Window       : in out LEA_Tab_Bar_Type;
@@ -80,6 +89,32 @@ package body LEA_GWin.Tabs is
     window_to_be_closed := Control.info (chosen_tab).Window;
     window_to_be_closed.Close;
   end On_Middle_Click;
+
+  overriding procedure On_Right_Click (Control : in out LEA_Tab_Bar_Type) is
+    tab_under_pointer : Integer;
+    location : constant GWindows.Types.Point_Type :=
+       GWindows.Cursors.Get_Cursor_Position;
+    use Ada.Strings.Wide_Unbounded;
+  begin
+    tab_under_pointer :=
+      Control.Item_At_Position
+        (Control.Point_To_Client (location));
+    if tab_under_pointer >= 0 then
+      declare
+        window_of_tab_under_pointer : MDI_Child.MDI_Child_Type
+          renames
+            MDI_Child.MDI_Child_Type
+              (Control.info (tab_under_pointer).Window.all);
+      begin
+        State
+          (Control.context_menu,
+           Command,
+           LEA_Resource_GUI.IDM_Open_Containing_Folder,
+           bool_to_state (Length (window_of_tab_under_pointer.ID.File_Name) > 0));
+        Immediate_Popup_Menu (Control.context_menu, window_of_tab_under_pointer);
+      end;
+    end if;
+  end On_Right_Click;
 
   overriding procedure Delete_Tab (Control : in out LEA_Tab_Bar_Type; Where : in Integer) is
   begin

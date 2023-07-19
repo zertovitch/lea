@@ -157,7 +157,6 @@ package body LEA_GWin.MDI_Child is
 
     procedure Update_Menus is
       use LEA_Resource_GUI, GWindows.Menus;
-      bool_to_state : constant array (Boolean) of State_Type := (Disabled, Enabled);
       is_any_selection : constant Boolean :=
         Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
     begin

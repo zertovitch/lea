@@ -1,5 +1,5 @@
-with GWindows.Base,
-     GWindows.Common_Controls,
+with GWindows.Common_Controls,
+     GWindows.Menus,
      GWindows.Windows.MDI,
      GWindows.Types;
 
@@ -23,12 +23,14 @@ package LEA_GWin.Tabs is
         --  Access to the containing main window:
         MDI_Parent : GWindows.Windows.MDI.Pointer_To_MDI_Main_Window_Class;
         --  Info corresponding to tabs:
-        info       : Tab_Info_Vectors.Vector;
-        tips       : GWindows.Common_Controls.Tool_Tip_Type;
-        tip_index  : Integer := invalid_tip_index;
+        info         : Tab_Info_Vectors.Vector;
+        tips         : GWindows.Common_Controls.Tool_Tip_Type;
+        tip_index    : Integer := invalid_tip_index;
+        context_menu : GWindows.Menus.Menu_Type := GWindows.Menus.Create_Popup;
       end record;
 
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type);
+  overriding procedure On_Create (Control : in out LEA_Tab_Bar_Type);
 
   overriding procedure On_Message
      (Window       : in out LEA_Tab_Bar_Type;
@@ -38,6 +40,7 @@ package LEA_GWin.Tabs is
       Return_Value : in out GWindows.Types.Lresult);
 
   overriding procedure On_Middle_Click (Control : in out LEA_Tab_Bar_Type);
+  overriding procedure On_Right_Click (Control : in out LEA_Tab_Bar_Type);
 
   overriding procedure Delete_Tab (Control : in out LEA_Tab_Bar_Type; Where : in Integer);
 

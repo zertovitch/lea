@@ -2,7 +2,8 @@ with LEA_Common.Color_Themes;
 
 with GWindows.Colors,
      GWindows.Common_Dialogs,
-     GWindows.GStrings;
+     GWindows.GStrings,
+     GWindows.Menus;
 
 package LEA_GWin is
 
@@ -43,5 +44,8 @@ package LEA_GWin is
   function GWindows_Color_Theme
     (theme : LEA_Common.Color_Themes.Color_Theme_Type;
      topic : LEA_Common.Color_Themes.Color_Topic) return GWindows.Colors.Color_Type;
+
+  bool_to_state : constant array (Boolean) of GWindows.Menus.State_Type :=
+    (GWindows.Menus.Disabled, GWindows.Menus.Enabled);
 
 end LEA_GWin;
