@@ -12,12 +12,14 @@ package body LEA_GWin.Tabs is
 
   use GWindows.Menus;
 
+  function Item_under_Mouse_Cursor (Control : in out LEA_Tab_Bar_Type) return Integer is
+    (Control.Item_At_Position
+      (Control.Point_To_Client
+        (GWindows.Cursors.Get_Cursor_Position)));
+
   procedure Refresh_Tool_Tip (Control : in out LEA_Tab_Bar_Type) is
-    tab_under_pointer : Integer;
+    tab_under_pointer : constant Integer := Item_under_Mouse_Cursor (Control);
   begin
-    tab_under_pointer :=
-      Control.Item_At_Position
-        (Control.Point_To_Client (GWindows.Cursors.Get_Cursor_Position));
     if tab_under_pointer >= 0
       and then tab_under_pointer /= Control.tip_index
     then
@@ -76,43 +78,32 @@ package body LEA_GWin.Tabs is
   end On_Message;
 
   overriding procedure On_Middle_Click (Control : in out LEA_Tab_Bar_Type) is
-    chosen_tab : Integer;
-    window_to_be_closed : GWindows.Windows.MDI.Pointer_To_MDI_Child_Window_Class;
+    chosen_tab : constant Integer := Item_under_Mouse_Cursor (Control);
+    chosen_child_window : GWindows.Windows.MDI.Pointer_To_MDI_Child_Window_Class;
   begin
-    --  Focus on the middle-button-clicked tab:
-    chosen_tab :=
-      Control.Item_At_Position
-        (Control.Point_To_Client (GWindows.Cursors.Get_Cursor_Position));
-    Control.Selected_Tab (chosen_tab);
-    Control.On_Change;
-    --  Close the corresponding editor (and subsequently, the tab itself):
-    window_to_be_closed := Control.info (chosen_tab).Window;
-    window_to_be_closed.Close;
+    if chosen_tab >= 0 then
+      --  Focus on the middle-button-clicked tab:
+      Control.Selected_Tab (chosen_tab);
+      Control.On_Change;
+      chosen_child_window := Control.info (chosen_tab).Window;
+      --  Close the corresponding editor (and subsequently, the tab itself):
+      chosen_child_window.Close;
+    end if;
   end On_Middle_Click;
 
   overriding procedure On_Right_Click (Control : in out LEA_Tab_Bar_Type) is
-    tab_under_pointer : Integer;
-    location : constant GWindows.Types.Point_Type :=
-       GWindows.Cursors.Get_Cursor_Position;
+    chosen_tab : constant Integer := Item_under_Mouse_Cursor (Control);
+    chosen_child_window : GWindows.Windows.MDI.Pointer_To_MDI_Child_Window_Class;
     use Ada.Strings.Wide_Unbounded;
   begin
-    tab_under_pointer :=
-      Control.Item_At_Position
-        (Control.Point_To_Client (location));
-    if tab_under_pointer >= 0 then
-      declare
-        window_of_tab_under_pointer : MDI_Child.MDI_Child_Type
-          renames
-            MDI_Child.MDI_Child_Type
-              (Control.info (tab_under_pointer).Window.all);
-      begin
-        State
-          (Control.context_menu,
-           Command,
-           LEA_Resource_GUI.IDM_Open_Containing_Folder,
-           bool_to_state (Length (window_of_tab_under_pointer.ID.File_Name) > 0));
-        Immediate_Popup_Menu (Control.context_menu, window_of_tab_under_pointer);
-      end;
+    if chosen_tab >= 0 then
+      chosen_child_window := Control.info (chosen_tab).Window;
+      State
+        (Control.context_menu,
+         Command,
+         LEA_Resource_GUI.IDM_Open_Containing_Folder,
+         bool_to_state (Length (Control.info (chosen_tab).ID.File_Name) > 0));
+      Immediate_Popup_Menu (Control.context_menu, chosen_child_window.all);
     end if;
   end On_Right_Click;
 
