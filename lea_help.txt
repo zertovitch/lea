@@ -64,6 +64,18 @@ Editing
   where a "Find & Replace" operation, with some guess-work, trial & error and
   manual adjustments would be used instead.
 
+Integration with GNAT Studio
+============================
+
+Can be set as External Editor for GNAT Studio.
+Here is how to configure GNAT Studio.
+  1) Menu "Edit" -> "Preferences...";
+  2) From there: "Editor", at bottom: "External Editors"
+        "External Editor": custom
+        "Custom editor command: "[path]\lea.exe +%l %f"
+     The "+%l" parameter will scroll the LEA editor window
+     to the appropriate line.
+
 Updates
 =======
 
