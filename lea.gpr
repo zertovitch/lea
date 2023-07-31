@@ -33,7 +33,7 @@
 --  * 
 --  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;
 --  *  =======    C:\Ada\zip-ada\zip_lib;
---  *             C:\Ada\HAC\src;C:\Ada\HAC\src\compile;C:\Ada\HAC\src\execute;C:\Ada\HAC\src\manage
+--  *             C:\Ada\HAC\src;C:\Ada\HAC\src\compile;C:\Ada\HAC\src\compile\emit;C:\Ada\HAC\src\execute;C:\Ada\HAC\src\manage
 
 project LEA is
 
