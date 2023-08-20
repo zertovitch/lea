@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/06/29  20:09:23
+--  Transcription time: 2023/08/20  18:41:20
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -67,11 +67,11 @@ package body LEA_Resource_GUI is
     Append_Separator (New_Menu.Popup_0003);
     Append_Item (New_Menu.Popup_0003, "Select &all" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+A", IDM_Select_all);
     Append_Separator (New_Menu.Popup_0003);
-    Append_Item (New_Menu.Popup_0003, "&Indent" & To_GString_From_String ((1 => ASCII.HT)) & "Tab", IDM_Indent);
-    Append_Item (New_Menu.Popup_0003, "&Unindent" & To_GString_From_String ((1 => ASCII.HT)) & "Shift+Tab", IDM_Unindent);
+    Append_Item (New_Menu.Popup_0003, "&Indent selection" & To_GString_From_String ((1 => ASCII.HT)) & "Tab", IDM_Indent);
+    Append_Item (New_Menu.Popup_0003, "&Unindent selection" & To_GString_From_String ((1 => ASCII.HT)) & "Shift+Tab", IDM_Unindent);
     Append_Separator (New_Menu.Popup_0003);
-    Append_Item (New_Menu.Popup_0003, "Co&mment" & To_GString_From_String ((1 => ASCII.HT)) & "F7", IDM_Comment);
-    Append_Item (New_Menu.Popup_0003, "U&ncomment" & To_GString_From_String ((1 => ASCII.HT)) & "Shift+F7", IDM_Uncomment);
+    Append_Item (New_Menu.Popup_0003, "Co&mment selection" & To_GString_From_String ((1 => ASCII.HT)) & "F7", IDM_Comment);
+    Append_Item (New_Menu.Popup_0003, "U&ncomment selection" & To_GString_From_String ((1 => ASCII.HT)) & "Shift+F7", IDM_Uncomment);
     New_Menu.Popup_0004 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Navigate", New_Menu.Popup_0004);
     Append_Item (New_Menu.Popup_0004, "Find && Replace..." & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+F", IDM_Find);

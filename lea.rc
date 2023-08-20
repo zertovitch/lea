@@ -68,11 +68,11 @@ Menu_MDI_Child MENU
         MENUITEM SEPARATOR
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
         MENUITEM SEPARATOR
-        MENUITEM "&Indent\tTab", IDM_Indent
-        MENUITEM "&Unindent\tShift+Tab", IDM_Unindent
+        MENUITEM "&Indent selection\tTab", IDM_Indent
+        MENUITEM "&Unindent selection\tShift+Tab", IDM_Unindent
         MENUITEM SEPARATOR
-        MENUITEM "Co&mment\tF7", IDM_Comment
-        MENUITEM "U&ncomment\tShift+F7", IDM_Uncomment
+        MENUITEM "Co&mment selection\tF7", IDM_Comment
+        MENUITEM "U&ncomment selection\tShift+F7", IDM_Uncomment
     }
     POPUP "&Navigate"
     {
