@@ -33,5 +33,5 @@ begin
   for topic in Sample_Topic loop
     samples := samples & hac_samples_dir & sep & directory (topic) & sep & "* ";
   end loop;
-  HAT.Shell_Execute (+"zipada -eps _lea_data.zip SciLexer.dll lea_help.txt " & samples);
+  HAT.Shell_Execute (+"zipada -eps _lea_data_new.zip SciLexer.dll lea_help.txt " & samples);
 end Sample_catalogue;

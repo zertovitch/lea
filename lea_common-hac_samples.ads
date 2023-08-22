@@ -49,8 +49,9 @@ package LEA_Common.HAC_Samples is
       (Tasking, +"tasks_01.adb", +"Simplest example of tasking"),
       (Tasking, +"tasks_02.adb", +"Example with passing of data between tasks"),
       --
-      (Template,  +"hello.adb",      +"Tiny program (Hello World)"),
-      (Template,  +"hello_big.adb",  +"Larger ""Hello World"""),
+      (Template,  +"hello.adb",            +"Tiny program (Hello World)"),
+      (Template,  +"hello_big.adb",        +"Larger ""Hello World"""),
+      (Template,  +"record_code_gen.adb",  +"Code generation example for Ada records"),
       --
       (Compatibility, +"hat.ads",              +"Package specification of HAT for use with a full Ada system"),
       (Compatibility, +"hat.adb",              +"Package body of HAT for use with a full Ada system"),
