@@ -136,7 +136,7 @@ package body LEA_GWin.Modal_Dialogs is
       --  List on the right box with samples for the selected topic.
       --
       zb.Set_Extended_Style (Full_Row_Select);
-      zb.Insert_Column ("File name", 0, 100);
+      zb.Insert_Column ("File name", 0, 130);
       zb.Insert_Column ("Description", 1, 350);
       Refresh_Cat;
     end Set_Data;

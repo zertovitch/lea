@@ -881,83 +881,13 @@ package body LEA_GWin.Editor is
   end EOL;
 
   procedure Duplicate (Editor : in out LEA_Scintilla_Type) is
-    --  NB: the Duplicate feature is actually present in Scintilla
-    --  v.3.5.6 and was "accidentally" reprogrammed in full here.
-    --  At least, it gives the possibility to customize it...
-    pos, sel_a, sel_z, line_start, next_line_start : Position;
-    lin : Integer;
-    selections : Positive;
   begin
-    sel_a := Editor.Get_Selection_Start;
-    sel_z := Editor.Get_Selection_End;
-    pos  := Editor.Get_Current_Pos;
-    if sel_a = sel_z then  --  No selection: we duplicate the current line
-      lin := Editor.Line_From_Position (sel_a);
-      line_start      := Editor.Position_From_Line (lin);
-      next_line_start := Editor.Position_From_Line (lin + 1);
-      if line_start < next_line_start then
-        if Editor.Line_From_Position (next_line_start) = lin then
-          --  Special case: we are on last line. Actually, next_line_start is the
-          --  end of current line - and of the whole document as well.
-          --  We need to add an EOL first.
-          Editor.Insert_Text (next_line_start,
-            EOL (Editor) & Editor.Get_Text_Range (line_start, next_line_start));
-        else
-          Editor.Insert_Text (next_line_start,
-                          Editor.Get_Text_Range (line_start, next_line_start));
-        end if;
-      end if;
-    else  --  There is a selection (or selections): we duplicate it (them).
-      selections := Editor.Get_Selections;
-      declare
-        sel_n_a, sel_n_z, caret_n : array (1 .. selections) of Position;
-        length : Position;
-      begin
-        for n in 1 .. selections loop
-          sel_n_a (n) := Editor.Get_Selection_N_Start (n);
-          sel_n_z (n) := Editor.Get_Selection_N_End (n);
-          caret_n (n) := Editor.Get_Selection_N_Caret (n);
-        end loop;
-        Editor.Begin_Undo_Action;
-        for n in 1 .. selections loop
-          --  Duplicate text at the end of the nth selection.
-          length := sel_n_z (n) - sel_n_a (n);
-          Editor.Insert_Text (sel_n_z (n), Editor.Get_Text_Range (sel_n_a (n), sel_n_z (n)));
-          for nn in 1 .. selections loop
-            --  All selections located after the current one will be shifted by the text insertion.
-            if sel_n_a (nn) > sel_n_z (n) then
-              sel_n_a (nn) := sel_n_a (nn) + length;
-              sel_n_z (nn) := sel_n_z (nn) + length;
-              caret_n (nn) := caret_n (nn) + length;
-            end if;
-          end loop;
-        end loop;
-        Editor.End_Undo_Action;
-        if selections = 1 then
-          --  Restore selection *and* cursor as before
-          if pos = sel_a then
-            Editor.Set_Sel (sel_z, sel_a);  --  Right to left: cursor at begin of selection
-          else
-            Editor.Set_Sel (sel_a, sel_z);  --  Left to right: cursor at end of selection
-          end if;
-        else
-          --  Version for multiple selections (TBD: try removing special case above).
-          --  NB: the parameters of Set_Selection are inverted compared to SetSel
-          --  (a Scintilla oddity).
-          if caret_n (1) = sel_n_a (1) then
-            Editor.Set_Selection (sel_n_a (1), sel_n_z (1));
-          else
-            Editor.Set_Selection (sel_n_z (1), sel_n_a (1));
-          end if;
-          for n in 2 .. selections loop
-            if caret_n (n) = sel_n_a (n) then
-              Editor.Add_Selection (sel_n_a (n), sel_n_z (n));
-            else
-              Editor.Add_Selection (sel_n_z (n), sel_n_a (n));
-            end if;
-          end loop;
-        end if;
-      end;
+    if Editor.Get_Selection_Start = Editor.Get_Selection_End then
+      --  No selection: we duplicate the current line
+      Editor.Line_Duplicate;
+    else
+      --  There is a selection (or selections): we duplicate it (them).
+      Editor.Selection_Duplicate;
     end if;
   end Duplicate;
 
