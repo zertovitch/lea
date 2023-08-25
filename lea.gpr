@@ -8,11 +8,12 @@
 --  Build me with "gprbuild -P lea", or open me with GNAT Studio
 --
 --  This variant is a single project, which handles all sources.
+--  See "lea_project_tree.gpr" for the other variant.
 --
 --  *** External libraries (of which all sources are grabbed by this project file) ***
 --  * 
---  *     You need to make the following projects' source files visible to this project
---  *     through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
+--  *   You need to make the following projects' source files visible to this project
+--  *   through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
 --  *   
 --  *   * GWindows and contributions:
 --  *       [gnavi]\gwindows\framework
@@ -26,14 +27,21 @@
 --  *       Project URL: https://sourceforge.net/projects/hacadacompiler/
 --  *       Mirror URL: https://github.com/zertovitch/hac
 --  *   
+--  *   * Ini file manager:
+--  *       [ini]
+--  *       Project URL: http://ini-files.sourceforge.net/
+--  *       Mirror URL: https://github.com/zertovitch/ini-files
+--
 --  *   * Zip-Ada:
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net
 --  *       Mirror URL: https://github.com/zertovitch/zip-ada
 --  * 
---  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;
---  *  =======    C:\Ada\zip-ada\zip_lib;
---  *             C:\Ada\HAC\src;C:\Ada\HAC\src\compile;C:\Ada\HAC\src\compile\emit;C:\Ada\HAC\src\execute;C:\Ada\HAC\src\manage
+--  *  Example: GNAT_SOURCE_PATH=
+--  *  =======    C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;
+--  *             C:\Ada\hac\src;C:\Ada\hac\src\compile;C:\Ada\hac\src\compile\emit;C:\Ada\hac\src\execute;C:\Ada\hac\src\manage;
+--  *             C:\Ada\ini;
+--  *             C:\Ada\zip-ada\zip_lib;
 
 project LEA is
 
@@ -101,7 +109,7 @@ project LEA is
             for Default_Switches ("ada") use Common_Compiler_Options & Fast_Options;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small" | "Small_MinGW"  =>
-            for Default_Switches ("ada") use Common_Compiler_Options & ("-Os");
+            for Default_Switches ("ada") use Common_Compiler_Options & "-Os";
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small_Unchecked"  =>
             for Default_Switches ("ada") use Common_Compiler_Options & ("-Os", "-gnatp");
