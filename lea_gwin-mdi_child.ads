@@ -82,8 +82,6 @@ package LEA_GWin.MDI_Child is
         last_op_comment_1 : GString_Unbounded;
         last_op_comment_2 : GString_Unbounded;
         save_all_hint     : Boolean;  --  Used during Update_Information only.
-        --
-        BD                : HAC_Sys.Builder.Build_Data;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);
@@ -153,6 +151,9 @@ package LEA_GWin.MDI_Child is
   );
 
   procedure Show_Search_Box (Window : in out MDI_Child_Type);
+
+  function Best_Name (Window : MDI_Child_Type) return GString;
+  procedure Switch_Current_Directory (Window : MDI_Child_Type);
 
   --  Compile / Build actions
 

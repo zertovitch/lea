@@ -99,7 +99,7 @@ package body LEA_GWin.Messages.IO_Pipe is
       I := 0;
     else
       I := HAC_Sys.Defs.HAC_Integer'Value (User_Input);
-      --  An eventual error raises an exception like for Ada.Text_IO.Get.
+      --  An possible error raises an exception like for Ada.Text_IO.Get.
       Put_Console (I);  --  Reflect the input on the "console".
     end if;
   end Get_Console;
@@ -112,7 +112,7 @@ package body LEA_GWin.Messages.IO_Pipe is
       F := 0.0;
     else
       F := HAC_Sys.Defs.HAC_Float'Value (User_Input);
-      --  An eventual error raises an exception like for Ada.Text_IO.Get.
+      --  An possible error raises an exception like for Ada.Text_IO.Get.
       Put_Console (F);  --  Reflect the input on the "console".
     end if;
   end Get_Console;

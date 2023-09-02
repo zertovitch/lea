@@ -1,5 +1,7 @@
 with LEA_Common.Syntax;
 
+with HAC_Sys.Targets.Semantics;
+
 with GWindows.Base,
      GWindows.Scintilla,
      GWindows.Types,
@@ -26,39 +28,44 @@ package LEA_GWin.Editor is
     syntax_kind          : LEA_Common.Syntax.Syntax_type := LEA_Common.Syntax.Undefined;
   end record;
 
-  overriding
-  procedure On_Change (Editor : in out LEA_Scintilla_Type);
+  overriding procedure On_Change (Editor : in out LEA_Scintilla_Type);
 
-  overriding
-  procedure On_Character_Added
+  overriding procedure On_Character_Added
     (Editor      : in out LEA_Scintilla_Type;
      Special_Key : in     GWindows.Windows.Special_Key_Type;
      Value       : in     GWindows.GCharacter);
 
-  overriding
-  procedure On_Create (Editor : in out LEA_Scintilla_Type);
+  overriding procedure On_Create (Editor : in out LEA_Scintilla_Type);
 
-  overriding
-  procedure On_Margin_Click (Editor  : in out LEA_Scintilla_Type;
-                             Pos     : in     Position;
-                             Margin  : in     Integer);
+  overriding procedure On_Margin_Click
+    (Editor  : in out LEA_Scintilla_Type;
+     Pos     : in     Position;
+     Margin  : in     Integer);
 
-  overriding
-  procedure On_Message
+  overriding procedure On_Message
     (Editor       : in out LEA_Scintilla_Type;
      message      : in     Interfaces.C.unsigned;
      wParam       : in     GWindows.Types.Wparam;
      lParam       : in     GWindows.Types.Lparam;
      Return_Value : in out GWindows.Types.Lresult);
 
-  overriding
-  procedure On_Save_Point_Reached (Editor : in out LEA_Scintilla_Type);
+  overriding procedure On_Modified
+    (Editor              : in out LEA_Scintilla_Type;
+     Pos                 : in     Position;
+     Modification_Type   : in     Integer;
+     Text                : in     GString;
+     Lines_Added         : in     Integer;
+     Line                : in     Integer;
+     Fold_Level_Now      : in     Integer;
+     Fold_Level_Previous : in     Integer);
 
-  overriding
-  procedure On_Save_Point_Left (Editor : in out LEA_Scintilla_Type);
+  overriding procedure On_Save_Point_Reached
+    (Editor : in out LEA_Scintilla_Type);
 
-  overriding
-  procedure On_Update_UI (Editor : in out LEA_Scintilla_Type);
+  overriding procedure On_Save_Point_Left
+    (Editor : in out LEA_Scintilla_Type);
+
+  overriding procedure On_Update_UI (Editor : in out LEA_Scintilla_Type);
 
   ----------------------------------------------------------
   --  Methods introduced in the LEA_Scintilla_Type class  --

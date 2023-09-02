@@ -223,7 +223,7 @@ begin
       progress_box.Stop_VM_Button_permanent.On_Click_Handler (Abort_clicked'Unrestricted_Access);
       progress_box.Center;
       Window.MDI_Root.Disable;
-      Windowed_interpret (Window.BD, post_mortem);  --  Running the HAC program happens here.
+      Windowed_interpret (Window.MDI_Root.BD, post_mortem);  --  Running the HAC program happens here.
       ml.Set_Column ("Console", 0, ml.Column_Width (0));
       Scroll_Down_To_Last_Input_Line;
       Window.MDI_Root.Enable;

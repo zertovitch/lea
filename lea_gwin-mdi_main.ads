@@ -8,6 +8,10 @@ with LEA_Resource_GUI;
 
 with LEA_Common.User_options;
 
+with HAC_Sys.Builder,
+     HAC_Sys.Targets.HAC_Virtual_Machine,
+     HAC_Sys.Targets.Semantics;
+
 with Office_Applications;
 
 with GWindows.Common_Controls,
@@ -63,6 +67,11 @@ package LEA_GWin.MDI_Main is
         text_files_filters          : GWindows.Common_Dialogs.Filter_Array
                                         (Initial_text_files_filters'Range) :=
                                            Initial_text_files_filters;
+        --
+        BD                          : HAC_Sys.Builder.Build_Data;
+        --  Semantics analysis (will be moved to a daemon)
+        BD_sem                      : HAC_Sys.Builder.Build_Data;
+        sem_machine                 : aliased HAC_Sys.Targets.Semantics.Machine;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Main_Type);

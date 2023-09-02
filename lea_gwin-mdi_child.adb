@@ -369,7 +369,7 @@ package body LEA_GWin.MDI_Child is
           raise backup_error_3;
       end;
     end if;
-    --  The eventual startup extra new document is now saved as a file.
+    --  The possible startup extra new document is now saved as a file.
     --  So, in any case, we won't close it now on next window opening.
     MDI_Child.Extra_First_Doc := False;
     MDI_Child.Update_Common_Menus (File_Name, MDI_Child.Editor.Get_Current_Line_Number);
@@ -420,13 +420,13 @@ package body LEA_GWin.MDI_Child is
     use HAC_Sys.Defs;
     use type Alfa;
   begin
-    if Window.BD.CD.Main_Program_ID_with_case /= Empty_Alfa then
+    if Window.MDI_Root.BD.CD.Main_Program_ID_with_case /= Empty_Alfa then
       --  Suggest the Ada main's name of last tentative build.
       New_File_Name :=
         G2GU
           (S2G
              (HAC_Sys.Librarian.GNAT_File_Naming
-                (A2S (Window.BD.CD.Main_Program_ID_with_case)))) &
+                (A2S (Window.MDI_Root.BD.CD.Main_Program_ID_with_case)))) &
         ".adb";
     elsif Window.ID.File_Name = "" then
       --  No file yet for this window.
@@ -540,6 +540,26 @@ package body LEA_GWin.MDI_Child is
     Dock_Children (Window);
   end On_Size;
 
+  function Best_Name (Window : MDI_Child_Type) return GString is
+  begin
+    if Length (Window.ID.File_Name) = 0 then  --  For example, an unsaved template.
+      return GU2G (Window.ID.Short_Name);
+    else
+      return GU2G (Window.ID.File_Name);
+    end if;
+  end Best_Name;
+
+  procedure Switch_Current_Directory (Window : MDI_Child_Type) is
+    use Ada.Directories;
+  begin
+    --  We switch the current directory in order to compile other units that
+    --  may reside in the same directory as main.
+    --  To do: support project files with source paths.
+    Set_Directory (Containing_Directory (G2S (GU2G (Window.ID.File_Name))));
+  exception
+    when Ada.Directories.Name_Error => null;  --  Could be a sample, an unsaved file, ...
+  end Switch_Current_Directory;
+
   procedure Build_as_Main (Window : in out MDI_Child_Type) is
     use HAC_Sys.Defs, Messages;
     MDI_Main : MDI_Main_Type renames Window.MDI_Root.all;
@@ -586,68 +606,57 @@ package body LEA_GWin.MDI_Child is
     shebang_offset : Natural;
     t1, t2 : Time;
     --
-    function Best_Name return String is
-    begin
-      if file_name = "" then  --  For example, an unsaved template.
-        return short_name;
-      else
-        return file_name;
-      end if;
-    end Best_Name;
-    --
   begin
     case Window.MDI_Root.opt.toolset is
       when HAC_mode =>
         if use_editor_stream then
           --  We connect the main editor input stream to this window's editor.
-          Window.MDI_Root.current_editor_stream.Reset (Window.Editor, shebang_offset);
-          Set_Main_Source_Stream (
-            Window.BD,
-            Window.MDI_Root.current_editor_stream'Access,
-            Best_Name, shebang_offset);
+          Window.MDI_Root.current_editor_stream.Reset
+            (Window.Editor, shebang_offset);
+          Set_Main_Source_Stream
+            (Window.MDI_Root.BD,
+             Window.MDI_Root.current_editor_stream'Access,
+             G2S (Window.Best_Name),
+             shebang_offset);
         else
           --  In case the file is not open in an editor window in LEA,
           --  we use Stream_IO.
           Open (f, In_File, file_name);
           Skip_Shebang (f, shebang_offset);
-          Set_Main_Source_Stream (Window.BD, Text_Streams.Stream (f), Best_Name, shebang_offset);
+          Set_Main_Source_Stream
+            (Window.MDI_Root.BD,
+             Text_Streams.Stream (f),
+             G2S (Window.Best_Name),
+             shebang_offset);
         end if;
+        Window.Switch_Current_Directory;
         --
-        --  We switch the current directory in order to compile other units that
-        --  may reside in the same directory as main.
-        --  To do: support project files with source paths.
-        --
-        begin
-          Set_Directory (Containing_Directory (file_name));
-        exception
-          when Ada.Directories.Name_Error => null;  --  Could be a sample, an unsaved file, ...
-        end;
         ml.Clear;
         --  Hiding of column 2 is on purpose before setting width for 0 and 1.
         ml.Set_Column ("", 2, 0);
         ml.Set_Column ("Line",     0, 60);
         ml.Set_Column_Scroll_Left ("Message",  1, 800);
         Set_Message_Feedbacks
-          (Window.BD,
+          (Window.MDI_Root.BD,
            (pipe         => LEA_HAC_Build_Error_Feedback'Unrestricted_Access,
             progress     => LEA_HAC_Build_Feedback'Unrestricted_Access,
             detail_level => 1));
         t1 := Clock;
-        Build_Main (Window.BD);
+        Build_Main (Window.MDI_Root.BD);
         t2 := Clock;
         if not use_editor_stream then
           Close (f);
         end if;
-        Set_Message_Feedbacks (Window.BD, HAC_Sys.Co_Defs.default_trace);
+        Set_Message_Feedbacks (Window.MDI_Root.BD, HAC_Sys.Co_Defs.default_trace);
         --  Here we have a single-unit build, from the current child window:
-        MDI_Main.build_successful := Build_Successful (Window.BD);
+        MDI_Main.build_successful := Build_Successful (Window.MDI_Root.BD);
         if err_count = 0 then
           ml.Insert_Item ("", message_count);
           ml.Set_Sub_Item
             ("Build finished in" &
              Duration'Wide_Image (t2 - t1) &
              " seconds." &
-             Integer'Wide_Image (Window.BD.Total_Compiled_Lines) &
+             Integer'Wide_Image (Window.MDI_Root.BD.Total_Compiled_Lines) &
              " lines compiled in total. No error, no warning",
              message_count, 1);
         else
@@ -718,10 +727,10 @@ package body LEA_GWin.MDI_Child is
         Window.Close;
       when IDM_Undo =>
         Window.Editor.Undo;
-        Window.Update_Information (toolbar_and_menu);  --  Eventually disable Undo if no more available
+        Window.Update_Information (toolbar_and_menu);  --  Possibly disable Undo if no more available
       when IDM_Redo =>
         Window.Editor.Redo;
-        Window.Update_Information (toolbar_and_menu);  --  Eventually disable Redo if no more available
+        Window.Update_Information (toolbar_and_menu);  --  Possibly disable Redo if no more available
       when IDM_Cut =>           Window.Editor.Cut;
       when IDM_Copy =>          Window.Editor.Copy;
       when IDM_Paste =>         Window.Editor.Paste;

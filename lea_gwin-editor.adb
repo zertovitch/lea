@@ -6,7 +6,8 @@ with LEA_GWin.MDI_Child,
 
 with LEA_Common.User_options;
 
-with HAC_Sys.Defs;
+with HAC_Sys.Builder,
+     HAC_Sys.Defs;
 
 with GWindows.Colors,
      GWindows.Message_Boxes;
@@ -24,8 +25,7 @@ package body LEA_GWin.Editor is
   use Ada.Strings, Ada.Strings.Wide_Fixed;
   use GWindows.Message_Boxes;
 
-  overriding
-  procedure On_Change (Editor : in out LEA_Scintilla_Type) is
+  overriding procedure On_Change (Editor : in out LEA_Scintilla_Type) is
     --  parent: MDI_Child_Type renames MDI_Child_Type(Editor.MDI_Root.all);
   begin
     --  NB: Status bar display and other changes (menus / icons) is done @ On_Update_UI
@@ -39,8 +39,7 @@ package body LEA_GWin.Editor is
       when '"'    => '"',
       when others => ' ');
 
-  overriding
-  procedure On_Character_Added
+  overriding procedure On_Character_Added
     (Editor      : in out LEA_Scintilla_Type;
      Special_Key : in     GWindows.Windows.Special_Key_Type;
      Value       : in     GWindows.GCharacter)
@@ -183,8 +182,7 @@ package body LEA_GWin.Editor is
 
   marker_for_bookmarks : constant := 0;
 
-  overriding
-  procedure On_Create (Editor : in out LEA_Scintilla_Type) is
+  overriding procedure On_Create (Editor : in out LEA_Scintilla_Type) is
     use GWindows.Colors;
   begin
     --  Set up editor
@@ -217,10 +215,10 @@ package body LEA_GWin.Editor is
     Editor.Focus;
   end On_Create;
 
-  overriding
-  procedure On_Margin_Click (Editor  : in out LEA_Scintilla_Type;
-                             Pos     : in     Position;
-                             Margin  : in     Integer)
+  overriding procedure On_Margin_Click
+    (Editor  : in out LEA_Scintilla_Type;
+     Pos     : in     Position;
+     Margin  : in     Integer)
   is
     line : constant Integer := Editor.Line_From_Position (Pos);
   begin
@@ -229,8 +227,7 @@ package body LEA_GWin.Editor is
     end if;
   end On_Margin_Click;
 
-  overriding
-  procedure On_Message
+  overriding procedure On_Message
     (Editor       : in out LEA_Scintilla_Type;
      message      : in     Interfaces.C.unsigned;
      wParam       : in     GWindows.Types.Wparam;
@@ -257,8 +254,43 @@ package body LEA_GWin.Editor is
     end if;
   end On_Message;
 
-  overriding
-  procedure On_Save_Point_Reached (Editor : in out LEA_Scintilla_Type) is
+  overriding procedure On_Modified
+    (Editor              : in out LEA_Scintilla_Type;
+     Pos                 : in     Position;
+     Modification_Type   : in     Integer;
+     Text                : in     GString;
+     Lines_Added         : in     Integer;
+     Line                : in     Integer;
+     Fold_Level_Now      : in     Integer;
+     Fold_Level_Previous : in     Integer)
+  is
+    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    main   : MDI_Main_Type  renames parent.MDI_Root.all;
+    --
+    --  !! Test setup: we launch directly an ad-hoc semantic analysis.
+    --     Should be done in a background task (rationale: analysis
+    --     could be slow on large sources) !!
+    shebang_offset : Natural;
+    --
+  begin
+    main.BD_sem.Set_Target (main.sem_machine'Access);
+    main.sem_machine.CD := main.BD_sem.CD;
+    --  We connect the main editor input stream to this editor.
+    main.current_editor_stream.Reset (Editor, shebang_offset);
+    HAC_Sys.Builder.Set_Main_Source_Stream
+      (main.BD,
+       main.current_editor_stream'Access,
+       G2S (parent.Best_Name),
+       shebang_offset);
+    parent.Switch_Current_Directory;
+
+    --  !!  TBD : Here: start the analysis (Build_Main)) !!
+
+  end On_Modified;
+
+  overriding procedure On_Save_Point_Reached
+    (Editor : in out LEA_Scintilla_Type)
+  is
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
   begin
     --  We have had enough Undo's to make the document unmodified again.
@@ -266,8 +298,9 @@ package body LEA_GWin.Editor is
     parent.Update_Information (toolbar_and_menu);
   end On_Save_Point_Reached;
 
-  overriding
-  procedure On_Save_Point_Left (Editor : in out LEA_Scintilla_Type) is
+  overriding procedure On_Save_Point_Left
+    (Editor : in out LEA_Scintilla_Type)
+  is
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
   begin
     --  Either new changes after last saved state, or Undo's from last saved state.
@@ -280,8 +313,7 @@ package body LEA_GWin.Editor is
   procedure Highlight_word
     (Editor   : in out LEA_Scintilla_Type;
      word     :        GString;
-     is_whole :        Boolean
-    )
+     is_whole :        Boolean)
   is
     line : constant Integer := Editor.Get_Current_Line_Number;
     --  Performance: we scope the highlighting to 'around' lines around current one.
@@ -324,8 +356,8 @@ package body LEA_GWin.Editor is
     end loop;
   end Highlight_word;
 
-  overriding
-  procedure On_Update_UI (Editor : in out LEA_Scintilla_Type) is
+  overriding procedure On_Update_UI (Editor : in out LEA_Scintilla_Type)
+  is
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     pos : constant Position := Editor.Get_Current_Pos;
     p1, p2 : Position := INVALID_POSITION;
