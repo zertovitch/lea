@@ -49,7 +49,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     Output := HAT.Null_VString;
   end Fake_Shell_Execute_Output;
 
-  MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames Window.MDI_Root.all;
+  MDI_Main  : LEA_GWin.MDI_Main.MDI_Main_Type  renames Window.mdi_root.all;
   ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
 
   use LEA_Common, HAC_Sys.PCode.Interpreter, Ada.Strings.Unbounded;
@@ -72,7 +72,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
       diagnostic.file_name := To_Unbounded_String (File_Name);
       diagnostic.line      := Line_Number;
       ml.Insert_Item (
-        Trim (Integer'Wide_Image (Line_Number), Left),
+        Trim (Line_Number'Wide_Image, Left),
         count
       );
       --  Here we set a payload in order to get the source file and position
@@ -207,14 +207,14 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
 begin
   LEA_GWin.Messages.IO_Pipe.is_aborted_flag := False;
-  case Window.MDI_Root.opt.toolset is
+  case Window.mdi_root.opt.toolset is
     when HAC_mode =>
       --  !!  Check if anything compiled ?
       ml.Clear;
       ml.Set_Column ("Console - Running...", 0, 800);
       ml.Set_Column ("", 1, 0);
       ml.Set_Column ("", 2, 0);
-      LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (Window.MDI_Root.Message_Panel.Message_List);
+      LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (Window.mdi_root.Message_Panel.Message_List);
       tick := Clock - 5.0;  --  Ensure refresh code in Boxed_Feedback is executed soon
       progress_box.Create_Full_Dialog (Window);
       progress_box.Stack_Bar.Position (0);
@@ -222,12 +222,12 @@ begin
       progress_box.Stop_VM_Button_permanent.Show;
       progress_box.Stop_VM_Button_permanent.On_Click_Handler (Abort_clicked'Unrestricted_Access);
       progress_box.Center;
-      Window.MDI_Root.Disable;
-      Windowed_interpret (Window.MDI_Root.BD, post_mortem);  --  Running the HAC program happens here.
+      Window.mdi_root.Disable;
+      Windowed_interpret (Window.mdi_root.BD, post_mortem);  --  Running the HAC program happens here.
       ml.Set_Column ("Console", 0, ml.Column_Width (0));
       Scroll_Down_To_Last_Input_Line;
-      Window.MDI_Root.Enable;
-      Window.MDI_Root.Focus;
+      Window.mdi_root.Enable;
+      Window.mdi_root.Focus;
       if Is_Exception_Raised (post_mortem.Unhandled) then
         Show_Error;
       end if;

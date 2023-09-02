@@ -7,16 +7,21 @@ with LEA_GWin.MDI_Child,
 with LEA_Common.User_options;
 
 with HAC_Sys.Builder,
-     HAC_Sys.Defs;
+     HAC_Sys.Co_Defs,
+     HAC_Sys.Defs,
+     HAC_Sys.Targets;
+
+with HAT;
 
 with GWindows.Colors,
      GWindows.Message_Boxes;
 
-with Ada.Wide_Characters.Handling,
+with Ada.Directories,
      Ada.Integer_Wide_Text_IO,
      Ada.Streams.Stream_IO,
      Ada.Strings.Wide_Fixed,
-     Ada.Strings.Unbounded;
+     Ada.Strings.Unbounded,
+     Ada.Wide_Characters.Handling;
 
 package body LEA_GWin.Editor is
 
@@ -92,7 +97,7 @@ package body LEA_GWin.Editor is
       then
         --  On a "Return" keypress right after "begin", "record" or "(",
         --  we add an extra indentation.
-        new_ind := new_ind + MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt.indentation;
+        new_ind := new_ind + MDI_Child_Type (Editor.mdi_parent.all).mdi_root.opt.indentation;
       end if;
       --
       --  Now, add the bonus keystrokes. We merge all keystrokes (the
@@ -152,7 +157,7 @@ package body LEA_GWin.Editor is
     end Try_Auto_Insert;
 
     opt : LEA_Common.User_options.Option_Pack_Type
-            renames MDI_Child_Type (Editor.mdi_parent.all).MDI_Root.opt;
+            renames MDI_Child_Type (Editor.mdi_parent.all).mdi_root.opt;
   begin
     if Editor.Get_Selections > 1 then
       --  Auto-insertion of any kind is disabled when there are multiple
@@ -213,7 +218,64 @@ package body LEA_GWin.Editor is
     Editor.Marker_Set_Fore (marker_for_bookmarks, Blue);
     Editor.Marker_Set_Back (marker_for_bookmarks, Light_Blue);
     Editor.Focus;
+    Editor.Set_Mouse_Dwell_Time (500);
   end On_Create;
+
+  overriding procedure On_Dwell_Start
+    (Editor : in out LEA_Scintilla_Type;
+     Pos    : in     Position)
+  is
+    parent     : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    main       : MDI_Main_Type  renames parent.mdi_root.all;
+    id_pos     : Position;
+    line, col  : Integer;
+    point      : HAC_Sys.Targets.Declaration_Point;
+    located_id : Integer;
+    found      : Boolean;
+    use Ada.Directories;
+  begin
+    if Editor.Get_Style_At (Pos) = SCE_ADA_IDENTIFIER then
+      id_pos := Editor.Word_Start_Position (Pos, True);
+      if id_pos >= 0 then
+        line := Editor.Line_From_Position (id_pos) + 1;
+        col  := Editor.Get_Column (id_pos) + 1;
+        point := (False, HAT.To_VString (G2S (GU2G (parent.ID.File_Name))), line, col);
+        main.sem_machine.Find_Declaration
+          (point      => point,
+           located_id => located_id,
+           found      => found);
+        if found then
+          declare
+            ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (located_id);
+            full_id_name : constant GString := S2G (HAC_Sys.Defs.A2S (ide.name_with_case));
+          begin
+            --  Mouse hover tool tip
+            if point.is_built_in then
+              Editor.Call_Tip_Show (Pos, full_id_name);
+            else
+              Editor.Call_Tip_Show
+                (Pos,
+                 full_id_name & NL &
+                 "____" & NL &
+                 "at " & S2G (Simple_Name (HAT.To_String (point.file_name))) &
+                 " (" &
+                 Trim (point.line'Wide_Image, Left) & ':'  &
+                 Trim (point.column'Wide_Image, Left) & ')');
+            end if;
+          end;
+        end if;
+      end if;
+    end if;
+  end On_Dwell_Start;
+
+  overriding procedure On_Dwell_End
+    (Editor : in out LEA_Scintilla_Type;
+     Pos    : in     Position)
+  is
+  pragma Unreferenced (Pos);
+  begin
+    Editor.Call_Tip_Cancel;
+  end On_Dwell_End;
 
   overriding procedure On_Margin_Click
     (Editor  : in out LEA_Scintilla_Type;
@@ -265,27 +327,30 @@ package body LEA_GWin.Editor is
      Fold_Level_Previous : in     Integer)
   is
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
-    main   : MDI_Main_Type  renames parent.MDI_Root.all;
+    main   : MDI_Main_Type  renames parent.mdi_root.all;
     --
     --  !! Test setup: we launch directly an ad-hoc semantic analysis.
     --     Should be done in a background task (rationale: analysis
     --     could be slow on large sources) !!
     shebang_offset : Natural;
     --
+    use HAC_Sys.Builder;
   begin
+    return;  --  Comment this for running the "smart editor" features.
+             --  It is not yet "bullet-proof"...
+    --
     main.BD_sem.Set_Target (main.sem_machine'Access);
     main.sem_machine.CD := main.BD_sem.CD;
     --  We connect the main editor input stream to this editor.
     main.current_editor_stream.Reset (Editor, shebang_offset);
-    HAC_Sys.Builder.Set_Main_Source_Stream
-      (main.BD,
+    Set_Main_Source_Stream
+      (main.BD_sem,
        main.current_editor_stream'Access,
        G2S (parent.Best_Name),
        shebang_offset);
     parent.Switch_Current_Directory;
-
-    --  !!  TBD : Here: start the analysis (Build_Main)) !!
-
+    Set_Message_Feedbacks (main.BD_sem, HAC_Sys.Co_Defs.silent_trace);
+    Build_Main (main.BD_sem);
   end On_Modified;
 
   overriding procedure On_Save_Point_Reached
@@ -429,7 +494,7 @@ package body LEA_GWin.Editor is
     use GWindows.Colors, LEA_Common.Color_Themes;
     --
     parent    : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
-    mdi_root  : MDI_Main_Type renames parent.MDI_Root.all;
+    mdi_root  : MDI_Main_Type renames parent.mdi_root.all;
     theme     : Color_Theme_Type renames mdi_root.opt.color_theme;
     Edit_Zone : constant := SCE_ADA_DEFAULT;
   begin
@@ -679,7 +744,7 @@ package body LEA_GWin.Editor is
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action)
   is
     MDI_Child : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
-    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
+    MDI_Main  : MDI_Main_Type  renames MDI_Child.mdi_root.all;
     find_str  : constant GString := MDI_Main.Search_box.Find_box.Text;
     repl_str  : constant GString := MDI_Main.Search_box.Replace_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
@@ -744,7 +809,7 @@ package body LEA_GWin.Editor is
             --  Not found, even *after* the wrap around: find_str is really nowhere!
             --  Restore initial selection
             Editor.Set_Sel (sel_a, sel_z);
-            Message_Box (MDI_Child.MDI_Root.Search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
+            Message_Box (MDI_Child.mdi_root.Search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
             if MDI_Main.Search_box.Visible then
               MDI_Main.Search_box.Focus;
             end if;
@@ -810,7 +875,7 @@ package body LEA_GWin.Editor is
         end loop;
         ml.Set_Column_Scroll_Left
           ("Search for [" & find_str & "] (" &
-           Trim (Integer'Wide_Image (count), Left) & " items)", 2,
+           Trim (count'Wide_Image, Left) & " items)", 2,
            large_message_width - line_msg_col_width - col_msg_col_width);
       when replace_all =>
         ml.Clear;
@@ -844,14 +909,14 @@ package body LEA_GWin.Editor is
         Editor.End_Undo_Action;
         ml.Set_Column (
           "Replaced all [" & find_str & "] by [" & repl_str & "] (" &
-          Trim (Integer'Wide_Image (count), Left) & " items)", 0,
+          Trim (count'Wide_Image, Left) & " items)", 0,
           large_message_width
         );
         Message_Box (
-          MDI_Child.MDI_Root.Search_box,
+          MDI_Child.mdi_root.Search_box,
           "Replace all",
           "Replaced all (" &
-          Trim (Integer'Wide_Image (count), Left) &
+          Trim (count'Wide_Image, Left) &
           ") occurrences of" & NL & NL &
           "     [" & find_str & "]" & NL &
           "        by" & NL &

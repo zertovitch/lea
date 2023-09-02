@@ -106,49 +106,49 @@ package body LEA_Common.User_options is
         begin
           case k is
             when view_mode =>
-              R (View_Mode_Type'Wide_Image (opt.view_mode));
+              R (opt.view_mode'Wide_Image);
             when toolset_mode =>
-              R (Toolset_mode_type'Wide_Image (opt.toolset));
+              R (opt.toolset'Wide_Image);
             when color_theme =>
-              R (Color_Themes.Color_Theme_Type'Wide_Image (opt.color_theme));
+              R (opt.color_theme'Wide_Image);
             when backup =>
-              R (Backup_mode'Wide_Image (opt.backup));
+              R (opt.backup'Wide_Image);
             when indent =>
-              R (Integer'Wide_Image (opt.indentation));
+              R (opt.indentation'Wide_Image);
             when tab_width =>
-              R (Integer'Wide_Image (opt.tab_width));
+              R (opt.tab_width'Wide_Image);
             when edge =>
-              R (Integer'Wide_Image (opt.right_margin));
+              R (opt.right_margin'Wide_Image);
             when show_special =>
-              R (Show_special_symbol_mode'Wide_Image (opt.show_special));
+              R (opt.show_special'Wide_Image);
             when show_indent =>
-              R (Boolean'Wide_Image (opt.show_indent));
+              R (opt.show_indent'Wide_Image);
             when auto_insert =>
-              R (Boolean'Wide_Image (opt.auto_insert));
+              R (opt.auto_insert'Wide_Image);
             when win_left =>
-              R (Integer'Wide_Image (opt.win_left));
+              R (opt.win_left'Wide_Image);
             when win_top =>
-              R (Integer'Wide_Image (opt.win_top));
+              R (opt.win_top'Wide_Image);
             when win_width =>
-              R (Integer'Wide_Image (opt.win_width));
+              R (opt.win_width'Wide_Image);
             when win_height =>
-              R (Integer'Wide_Image (opt.win_height));
+              R (opt.win_height'Wide_Image);
             when maximized =>
-              R (Boolean'Wide_Image (opt.MDI_main_maximized));
+              R (opt.MDI_main_maximized'Wide_Image);
             when children_maximized =>
-              R (Boolean'Wide_Image (opt.MDI_childen_maximized));
+              R (opt.MDI_childen_maximized'Wide_Image);
             when tree_portion =>
-              R (Float'Wide_Image (opt.tree_portion));
+              R (opt.tree_portion'Wide_Image);
             when project_tree_portion =>
-              R (Float'Wide_Image (opt.tree_portion));
+              R (opt.tree_portion'Wide_Image);
             when message_list_portion =>
-              R (Float'Wide_Image (opt.message_list_portion));
+              R (opt.message_list_portion'Wide_Image);
             when subprogram_tree_portion =>
-              R (Float'Wide_Image (opt.subprogram_tree_portion));
+              R (opt.subprogram_tree_portion'Wide_Image);
             when mru1 .. mru9 =>
               mru_idx := Persistence_Key'Pos (k) - Persistence_Key'Pos (mru1) + 1;
               R (To_Wide_String (opt.mru (mru_idx).name) & sep &
-                 Integer'Wide_Image (opt.mru (mru_idx).line));
+                 opt.mru (mru_idx).line'Wide_Image);
             when ada_files_filter =>
               R (To_Wide_String (opt.ada_files_filter));
           end case;

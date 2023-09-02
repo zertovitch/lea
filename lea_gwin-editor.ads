@@ -37,6 +37,14 @@ package LEA_GWin.Editor is
 
   overriding procedure On_Create (Editor : in out LEA_Scintilla_Type);
 
+  overriding procedure On_Dwell_Start
+    (Editor : in out LEA_Scintilla_Type;
+     Pos    : in     Position);
+
+  overriding procedure On_Dwell_End
+    (Editor : in out LEA_Scintilla_Type;
+     Pos    : in     Position);
+
   overriding procedure On_Margin_Click
     (Editor  : in out LEA_Scintilla_Type;
      Pos     : in     Position;

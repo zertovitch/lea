@@ -23,9 +23,9 @@ package body LEA_GWin.Options is
     procedure Set_Data is
       use GWin_Util;
     begin
-      box.Indentation_edit_box.Text        (Integer'Wide_Image (candidate.indentation));
-      box.Tab_width_edit_box.Text          (Integer'Wide_Image (candidate.tab_width));
-      box.Right_margin_edit_box.Text       (Integer'Wide_Image (candidate.right_margin));
+      box.Indentation_edit_box.Text        (candidate.indentation'Wide_Image);
+      box.Tab_width_edit_box.Text          (candidate.tab_width'Wide_Image);
+      box.Right_margin_edit_box.Text       (candidate.right_margin'Wide_Image);
       box.Auto_Insert_Check_Box.State (boolean_to_state (candidate.auto_insert));
       box.Ada_file_extension_edit_box.Text (GU2G (candidate.ada_files_filter));
       --

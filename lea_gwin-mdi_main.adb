@@ -715,8 +715,8 @@ package body LEA_GWin.MDI_Main is
       declare
         cw : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
       begin
-        Update_MRU_Menu (cw.MDI_Root.MRU, cw.Menu.Popup_0001);
-        Update_View_Menu (cw.Menu.Main, cw.MDI_Root.opt);
+        Update_MRU_Menu (cw.mdi_root.MRU, cw.menu.Popup_0001);
+        Update_View_Menu (cw.menu.Main, cw.mdi_root.opt);
         --  Update_Toolbar_Menu(cw.View_menu, cw.MDI_Root.Floating_toolbars);
       end;
     end if;
