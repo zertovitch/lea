@@ -46,9 +46,8 @@ package LEA_Common is
 
   type Toolset_mode_type is (HAC_mode, GNAT_mode);
 
-  type Document_kind_type is (
-    editable_text,
-    help_main       --  There is only at most one of this.
-  );
+  type Document_kind_type is
+    (editable_text,
+     help_main);       --  There is only at most one help file.
 
 end LEA_Common;

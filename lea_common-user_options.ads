@@ -50,6 +50,10 @@ package LEA_Common.User_options is
     mru                   : MRU_List;
     ada_files_filter      : Unbounded_Wide_String :=
                               To_Unbounded_Wide_String ("*.ads;*.adb;*.ada;*.hac");
+    --
+    --  "Smart editor" features: mouse-hover tips, call tips, auto-complete, ...
+    --  Note Sep-2023: it is in its erly days and not yet "bullet-proof"...
+    smart_editor : Boolean := False;
   end record;
 
   procedure Toggle_show_special (o : in out Option_Pack_Type);
@@ -75,7 +79,8 @@ package LEA_Common.User_options is
      message_list_portion,
      subprogram_tree_portion,
      mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
-     ada_files_filter);
+     ada_files_filter,
+     smart_editor);
 
   --  On Windows "vanilla", persistence is done usually through the registry.
   --  On Linux or Gtk (any platform) persistence is done usually in a config file.

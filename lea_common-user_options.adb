@@ -82,6 +82,8 @@ package body LEA_Common.User_options is
                 then
                   opt.ada_files_filter := To_Unbounded_Wide_String (s);
                 end if;
+              when smart_editor =>
+                opt.smart_editor := Boolean'Wide_Value (s);
             end case;
           end;
         exception
@@ -151,6 +153,8 @@ package body LEA_Common.User_options is
                  opt.mru (mru_idx).line'Wide_Image);
             when ada_files_filter =>
               R (To_Wide_String (opt.ada_files_filter));
+            when smart_editor =>
+              R (opt.smart_editor'Wide_Image);
           end case;
         end;
       end loop;

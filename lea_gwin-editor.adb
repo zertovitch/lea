@@ -336,21 +336,20 @@ package body LEA_GWin.Editor is
     --
     use HAC_Sys.Builder;
   begin
-    return;  --  Comment this for running the "smart editor" features.
-             --  It is not yet "bullet-proof"...
-    --
-    main.BD_sem.Set_Target (main.sem_machine'Access);
-    main.sem_machine.CD := main.BD_sem.CD;
-    --  We connect the main editor input stream to this editor.
-    main.current_editor_stream.Reset (Editor, shebang_offset);
-    Set_Main_Source_Stream
-      (main.BD_sem,
-       main.current_editor_stream'Access,
-       G2S (parent.Best_Name),
-       shebang_offset);
-    parent.Switch_Current_Directory;
-    Set_Message_Feedbacks (main.BD_sem, HAC_Sys.Co_Defs.silent_trace);
-    Build_Main (main.BD_sem);
+    if main.opt.smart_editor then
+      main.BD_sem.Set_Target (main.sem_machine);
+      HAC_Sys.Targets.Semantics.Machine (main.sem_machine.all).CD := main.BD_sem.CD;
+      --  We connect the main editor input stream to this editor.
+      main.current_editor_stream.Reset (Editor, shebang_offset);
+      Set_Main_Source_Stream
+        (main.BD_sem,
+         main.current_editor_stream'Access,
+         G2S (parent.Best_Name),
+         shebang_offset);
+      parent.Switch_Current_Directory;
+      Set_Message_Feedbacks (main.BD_sem, HAC_Sys.Co_Defs.silent_trace);
+      Build_Main (main.BD_sem);
+    end if;
   end On_Modified;
 
   overriding procedure On_Save_Point_Reached
