@@ -794,6 +794,45 @@ package body LEA_GWin.MDI_Child is
     end if;
   end On_Focus;
 
+  overriding procedure On_Context_Menu
+    (Window : in out MDI_Child_Type;
+     X      : in     Integer;
+     Y      : in     Integer)
+  is
+    main : constant MDI_Main_Access := Window.mdi_root;
+    is_any_selection : constant Boolean :=
+      Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
+    can_paste : constant Boolean := Window.Editor.Can_Paste;
+    need_separator, has_declaration : Boolean;
+    use GWindows.Menus, LEA_Resource_GUI;
+  begin
+    Window.context_menu := Create_Popup;
+    if is_any_selection then
+      Append_Item (Window.context_menu, "Cut",    IDM_Cut);
+      Append_Item (Window.context_menu, "Copy",   IDM_Copy);
+    end if;
+    if can_paste then
+      Append_Item (Window.context_menu, "Paste",  IDM_Paste);
+    end if;
+    --
+    need_separator := is_any_selection or can_paste;
+    if main.opt.smart_editor then
+      has_declaration := True;
+      --  !!  ^ Check availability like for On_Dwell_Start
+      if has_declaration then
+        if need_separator then
+          Append_Separator (Window.context_menu);
+          need_separator := False;
+        end if;
+        Append_Item (Window.context_menu, "Go to declaration",  IDM_Copy);
+        --  !!  ^ Add new command IDM_Go_To_Declaration
+      end if;
+    end if;
+    --
+    Immediate_Popup_Menu (Window.context_menu, Window);
+    Destroy_Menu (Window.context_menu);
+  end On_Context_Menu;
+
   overriding procedure On_Close (Window    : in out MDI_Child_Type;
                                  Can_Close :    out Boolean)
   is

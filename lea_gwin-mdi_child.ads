@@ -67,6 +67,7 @@ package LEA_GWin.MDI_Child is
         menu              : LEA_Resource_GUI.Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Editor            : LEA_GWin.Editor.LEA_Scintilla_Type;
+        context_menu      : GWindows.Menus.Menu_Type := GWindows.Menus.Null_Menu;
         Subprogram_Panel  : Sliding_Panels.Subprogram_Panel_Type;
         selected_path     : GString_Unbounded := Null_GString_Unbounded;
         --  opt              : Option_Pack_Type;  --  No per-child-window option in this app
@@ -128,6 +129,11 @@ package LEA_GWin.MDI_Child is
   );
 
   overriding procedure On_Focus (Window : in out MDI_Child_Type);
+
+  overriding procedure On_Context_Menu
+    (Window : in out MDI_Child_Type;
+     X      : in     Integer;
+     Y      : in     Integer);
 
   overriding procedure On_Close (
     Window    : in out MDI_Child_Type;

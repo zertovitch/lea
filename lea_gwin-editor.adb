@@ -219,6 +219,9 @@ package body LEA_GWin.Editor is
     Editor.Marker_Set_Back (marker_for_bookmarks, Light_Blue);
     Editor.Focus;
     Editor.Set_Mouse_Dwell_Time (500);
+    --  Disable default Scintilla context menu, we
+    --  provide a custom one via On_Context_Menu.
+    Editor.Use_Pop_Up (False);
   end On_Create;
 
   overriding procedure On_Dwell_Start
@@ -232,7 +235,33 @@ package body LEA_GWin.Editor is
     point      : HAC_Sys.Targets.Declaration_Point;
     located_id : Integer;
     found      : Boolean;
-    use Ada.Directories;
+    procedure Show_Tip is
+      ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (located_id);
+      full_id_name   : constant GString := S2G (HAC_Sys.Defs.A2S (ide.name_with_case));
+      padded_id_name : constant GString := NL & ' ' & full_id_name & ' ' & NL;
+      use Ada.Directories, LEA_Common.Color_Themes;
+      theme : Color_Theme_Type renames main.opt.color_theme;
+    begin
+      --  Mouse hover tool tip
+      Editor.Call_Tip_Set_Background_Color
+        (GWindows_Color_Theme (theme, tool_tip_background));
+      Editor.Call_Tip_Set_Foreground_Color
+        (GWindows_Color_Theme (theme, foreground));
+      Editor.Call_Tip_Set_Foreground_Color_Highlighted
+        (GWindows_Color_Theme (theme, tool_tip_foreground_highlighted));
+      if point.is_built_in then
+        Editor.Call_Tip_Show (Pos, padded_id_name);
+      else
+        Editor.Call_Tip_Show
+          (Pos,
+           padded_id_name & NL &
+           " at " & S2G (Simple_Name (HAT.To_String (point.file_name))) &
+           " (" &
+           Trim (point.line'Wide_Image, Left) & ':'  &
+           Trim (point.column'Wide_Image, Left) & ')' & NL);
+      end if;
+      Editor.Call_Tip_Set_Highlight (3, 3 + full_id_name'Length);
+    end Show_Tip;
   begin
     if Editor.Get_Style_At (Pos) = SCE_ADA_IDENTIFIER then
       id_pos := Editor.Word_Start_Position (Pos, True);
@@ -245,24 +274,7 @@ package body LEA_GWin.Editor is
            located_id => located_id,
            found      => found);
         if found then
-          declare
-            ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (located_id);
-            full_id_name : constant GString := S2G (HAC_Sys.Defs.A2S (ide.name_with_case));
-          begin
-            --  Mouse hover tool tip
-            if point.is_built_in then
-              Editor.Call_Tip_Show (Pos, full_id_name);
-            else
-              Editor.Call_Tip_Show
-                (Pos,
-                 full_id_name & NL &
-                 "____" & NL &
-                 "at " & S2G (Simple_Name (HAT.To_String (point.file_name))) &
-                 " (" &
-                 Trim (point.line'Wide_Image, Left) & ':'  &
-                 Trim (point.column'Wide_Image, Left) & ')');
-            end if;
-          end;
+          Show_Tip;
         end if;
       end if;
     end if;
