@@ -8,8 +8,7 @@ with LEA_Common.User_options;
 
 with HAC_Sys.Builder,
      HAC_Sys.Co_Defs,
-     HAC_Sys.Defs,
-     HAC_Sys.Targets;
+     HAC_Sys.Defs;
 
 with HAT;
 
@@ -228,15 +227,12 @@ package body LEA_GWin.Editor is
     (Editor : in out LEA_Scintilla_Type;
      Pos    : in     Position)
   is
-    parent     : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
-    main       : MDI_Main_Type  renames parent.mdi_root.all;
-    id_pos     : Position;
-    line, col  : Integer;
-    point      : HAC_Sys.Targets.Declaration_Point;
-    located_id : Integer;
-    found      : Boolean;
+    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    main   : MDI_Main_Type  renames parent.mdi_root.all;
+    decl   : HAC_Sys.Targets.Declaration_Point;
+    --
     procedure Show_Tip is
-      ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (located_id);
+      ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
       full_id_name   : constant GString := S2G (HAC_Sys.Defs.A2S (ide.name_with_case));
       padded_id_name : constant GString := NL & ' ' & full_id_name & ' ' & NL;
       use Ada.Directories, LEA_Common.Color_Themes;
@@ -249,35 +245,31 @@ package body LEA_GWin.Editor is
         (GWindows_Color_Theme (theme, foreground));
       Editor.Call_Tip_Set_Foreground_Color_Highlighted
         (GWindows_Color_Theme (theme, tool_tip_foreground_highlighted));
-      if point.is_built_in then
+      if decl.is_built_in then
         Editor.Call_Tip_Show (Pos, padded_id_name);
       else
         Editor.Call_Tip_Show
           (Pos,
            padded_id_name & NL &
-           " at " & S2G (Simple_Name (HAT.To_String (point.file_name))) &
+           " at " & S2G (Simple_Name (HAT.To_String (decl.file_name))) &
            " (" &
-           Trim (point.line'Wide_Image, Left) & ':'  &
-           Trim (point.column'Wide_Image, Left) & ')' & NL);
+           Trim (decl.line'Wide_Image, Left) & ':'  &
+           Trim (decl.column'Wide_Image, Left) & ')' & NL);
       end if;
       Editor.Call_Tip_Set_Highlight (3, 3 + full_id_name'Length);
     end Show_Tip;
+    --
+    was_found : Boolean;
   begin
-    if Editor.Get_Style_At (Pos) = SCE_ADA_IDENTIFIER then
-      id_pos := Editor.Word_Start_Position (Pos, True);
-      if id_pos >= 0 then
-        line := Editor.Line_From_Position (id_pos) + 1;
-        col  := Editor.Get_Column (id_pos) + 1;
-        point := (False, HAT.To_VString (G2S (GU2G (parent.ID.File_Name))), line, col);
-        main.sem_machine.Find_Declaration
-          (point      => point,
-           located_id => located_id,
-           found      => found);
-        if found then
+    case main.opt.toolset is
+      when HAC_mode =>
+        Editor.Find_HAC_Declaration (Pos, decl, was_found);
+        if was_found then
           Show_Tip;
         end if;
-      end if;
-    end if;
+      when GNAT_mode =>
+        null;
+    end case;
   end On_Dwell_Start;
 
   overriding procedure On_Dwell_End
@@ -1090,6 +1082,33 @@ package body LEA_GWin.Editor is
         --     is not recognized by SCLEX_ADA.
     end case;
   end Set_Scintilla_Syntax;
+
+  procedure Find_HAC_Declaration
+    (Editor     : in out LEA_Scintilla_Type;
+     pos        : in     Position;
+     decl       :    out HAC_Sys.Targets.Declaration_Point;
+     was_found  :    out Boolean)
+  is
+    parent    : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    main      : MDI_Main_Type  renames parent.mdi_root.all;
+    id_pos    : Position;
+    line, col : Integer;
+    ref       : HAC_Sys.Targets.Reference_Point;
+  begin
+    was_found := False;
+    if Editor.Get_Style_At (pos) = SCE_ADA_IDENTIFIER then
+      id_pos := Editor.Word_Start_Position (pos, True);
+      if id_pos >= 0 then
+        line := Editor.Line_From_Position (id_pos) + 1;
+        col  := Editor.Get_Column (id_pos) + 1;
+        ref := (HAT.To_VString (G2S (GU2G (parent.ID.File_Name))), line, col);
+        main.sem_machine.Find_Declaration
+          (ref       => ref,
+           decl      => decl,
+           was_found => was_found);
+      end if;
+    end if;
+  end Find_HAC_Declaration;
 
   --------------------------------------------------------------
   --  Output of the editor's text is used as an input stream  --

@@ -111,6 +111,13 @@ package LEA_GWin.Editor is
   --  visible behaviour in the Scintilla widget.
   procedure Set_Scintilla_Syntax (Editor : in out LEA_Scintilla_Type);
 
+  --  Smart Editor Navigation
+  procedure Find_HAC_Declaration
+    (Editor    : in out LEA_Scintilla_Type;
+     pos       : in     Position;
+     decl      :    out HAC_Sys.Targets.Declaration_Point;
+     was_found :    out Boolean);
+
   ------------------------------------------------------
   --  Output of the editor's text as an input stream  --
   ------------------------------------------------------
