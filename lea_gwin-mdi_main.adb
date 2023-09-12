@@ -7,6 +7,8 @@ with LEA_GWin.Embedded_Texts,
      LEA_GWin.Persistence,
      LEA_GWin.Toolbars;
 
+with HAT;
+
 with GWindows.Application,
      GWindows.Base,
      GWindows.Common_Dialogs,
@@ -30,7 +32,7 @@ package body LEA_GWin.MDI_Main is
   use GWindows.Base, GWindows.Menus;
 
   procedure Focus_an_already_opened_window
-    (MDI_Main     : in out MDI_Main_Type;
+    (Window       : in out MDI_Main_Type;
      ID           :        ID_Type;
      Line         :        Integer            := GWindows.Scintilla.INVALID_POSITION;
      Col_a, Col_z :        Scintilla.Position := GWindows.Scintilla.INVALID_POSITION;
@@ -65,9 +67,19 @@ package body LEA_GWin.MDI_Main is
   begin
     is_open := False;
     Enumerate_Children
-      (MDI_Client_Window (MDI_Main).all,
+      (MDI_Client_Window (Window).all,
        Identify'Unrestricted_Access);
   end Focus_an_already_opened_window;
+
+  procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type) is
+    decl : HAC_Sys.Targets.Declaration_Point renames Window.memo_declaration;
+  begin
+    Window.Open_Child_Window_And_Load
+      (S2G (HAT.To_String (decl.file_name)),
+       decl.line,
+       decl.column,
+       decl.column);
+  end Go_to_memorized_Declaration;
 
   procedure Redraw_Child (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
   is

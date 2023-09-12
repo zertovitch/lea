@@ -9,7 +9,9 @@ with LEA_GWin.Messages,
      LEA_GWin.Tabs;
 
 with HAC_Sys.Co_Defs,
-     HAC_Sys.Defs;
+     HAC_Sys.Defs,
+     HAC_Sys.Librarian,
+     HAC_Sys.Targets;
 
 with GWindows.Base,
      GWindows.Common_Dialogs,
@@ -27,8 +29,6 @@ with Ada.Characters.Handling,
      Ada.Strings.Wide_Fixed,
      Ada.Strings.Wide_Unbounded,
      Ada.Text_IO.Text_Streams;
-
-with HAC_Sys.Librarian;
 
 package body LEA_GWin.MDI_Child is
 
@@ -804,6 +804,9 @@ package body LEA_GWin.MDI_Child is
       Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
     can_paste : constant Boolean := Window.Editor.Can_Paste;
     need_separator, has_declaration : Boolean;
+    decl : HAC_Sys.Targets.Declaration_Point;
+    xe, ye : Integer;
+    pos : Position;
     use GWindows.Menus, LEA_Resource_GUI;
   begin
     Window.context_menu := Create_Popup;
@@ -817,15 +820,24 @@ package body LEA_GWin.MDI_Child is
     --
     need_separator := is_any_selection or can_paste;
     if main.opt.smart_editor then
-      has_declaration := True;
-      --  !!  ^ Check availability like for On_Dwell_Start
+      --  Should translate to Editor client coord !!
+      xe := X;
+      ye := Y;
+      if xe >= 0 and then ye >= 0 then
+        pos := Window.Editor.Position_From_Point_Close (xe, ye);
+      else
+        --  Invalid mouse coordinates, likely the menu key was used.
+        pos := Window.Editor.Get_Current_Pos;
+      end if;
+      Window.Editor.Find_HAC_Declaration (pos, decl, has_declaration);
       if has_declaration then
         if need_separator then
           Append_Separator (Window.context_menu);
           need_separator := False;
         end if;
-        Append_Item (Window.context_menu, "Go to declaration",  IDM_Copy);
+        Append_Item (Window.context_menu, "Go to declaration", IDM_Copy);
         --  !!  ^ Add new command IDM_Go_To_Declaration
+        main.memo_declaration := decl;
       end if;
     end if;
     --

@@ -73,6 +73,7 @@ package LEA_GWin.MDI_Main is
         BD_sem                      : HAC_Sys.Builder.Build_Data;
         sem_machine                 : HAC_Sys.Targets.Abstract_Machine_Reference :=
                                         new HAC_Sys.Targets.Semantics.Machine;
+        memo_declaration            : HAC_Sys.Targets.Declaration_Point;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Main_Type);
@@ -121,11 +122,13 @@ package LEA_GWin.MDI_Main is
      Can_Close :    out Boolean);
 
   procedure Focus_an_already_opened_window
-    (MDI_Main     : in out MDI_Main_Type;
+    (Window       : in out MDI_Main_Type;
      ID           :        ID_Type;
      Line         :        Integer                     := GWindows.Scintilla.INVALID_POSITION;
      Col_a, Col_z :        GWindows.Scintilla.Position := GWindows.Scintilla.INVALID_POSITION;
      is_open      :    out Boolean);
+
+  procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type);
 
   procedure Update_Common_Menus
     (Window         : in out MDI_Main_Type;
