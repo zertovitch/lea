@@ -830,18 +830,20 @@ package body LEA_GWin.MDI_Child is
         pos := Window.Editor.Get_Current_Pos;
       end if;
       Window.Editor.Find_HAC_Declaration (pos, decl, has_declaration);
-      if has_declaration then
+      if has_declaration and then not decl.is_built_in then
         if need_separator then
           Append_Separator (Window.context_menu);
           need_separator := False;
         end if;
-        Append_Item (Window.context_menu, "Go to declaration", IDM_Copy);
-        --  !!  ^ Add new command IDM_Go_To_Declaration
+        Append_Item
+          (Window.context_menu,
+           "Go to declaration",
+           IDM_Go_to_memorized_Declaration);
         main.memo_declaration := decl;
       end if;
     end if;
     --
-    Immediate_Popup_Menu (Window.context_menu, Window);
+    Immediate_Popup_Menu (Window.context_menu, main.all);
     Destroy_Menu (Window.context_menu);
   end On_Context_Menu;
 

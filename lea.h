@@ -7,6 +7,7 @@
 #define LEA_Icon                                114
 #define Toolbar_BMP                             123
 #define Folders_BMP                             124
+#define Menu_Fake                               126
 #define Backup_none_button                      40000
 #define IDM_Go_to_line                          40001
 #define IDM_Open_Project                        40002
@@ -112,3 +113,4 @@
 #define Select_All_Button                       40109
 #define Unselect_All_Button                     40110
 #define Changed_Files_List                      40111
+#define IDM_Go_to_memorized_Declaration         40112

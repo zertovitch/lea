@@ -25,6 +25,17 @@ Toolbar_BMP        BITMAP         "ico_bmp/lea_tools.bmp"
 //
 // Menu resources
 //
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Menu_Fake MENU
+{
+    POPUP "Fake_Menu"
+    {
+        MENUITEM "Go to memorized declaration", IDM_Go_to_memorized_Declaration
+    }
+}
+
+
+
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Menu_MDI_Child MENU
 {

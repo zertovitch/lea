@@ -74,11 +74,13 @@ package body LEA_GWin.MDI_Main is
   procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type) is
     decl : HAC_Sys.Targets.Declaration_Point renames Window.memo_declaration;
   begin
-    Window.Open_Child_Window_And_Load
-      (S2G (HAT.To_String (decl.file_name)),
-       decl.line,
-       decl.column,
-       decl.column);
+    if not decl.is_built_in then
+      Window.Open_Child_Window_And_Load
+        (S2G (HAT.To_String (decl.file_name)),
+         decl.line - 1,  --  Scintilla's lines are 0-based
+         decl.column - 1,
+         decl.column - 1);
+    end if;
   end Go_to_memorized_Declaration;
 
   procedure Redraw_Child (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -606,6 +608,8 @@ package body LEA_GWin.MDI_Main is
         Change_Mode (Window, HAC_mode);
       when IDM_GNAT_Mode =>
         Change_Mode (Window, GNAT_mode);
+      when IDM_Go_to_memorized_Declaration =>
+        Window.Go_to_memorized_Declaration;
       when others =>
         --  We have perhaps a MRU (most recently used) file entry.
         for i_mru in Window.MRU.ID_Menu'Range loop

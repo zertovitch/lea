@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/08/20  18:41:20
+--  Transcription time: 2023/09/12  21:34:37
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -31,6 +31,14 @@ pragma Warnings ("U");  --  turn off warnings for unused entity
 
 package LEA_Resource_GUI is
 
+  type Menu_Fake_Type is tagged record
+    Main : Menu_Type;  --  Root of the whole menu tree
+    Popup_0001 : Menu_Type;   --  Popup level: 1; title: "Fake_Menu"
+  end record;  --  Menu_Fake_Type
+
+  --  Menu at line 34
+  procedure Create_Full_Menu (New_Menu : in out Menu_Fake_Type);
+
   type Menu_MDI_Child_Type is tagged record
     Main : Menu_Type;  --  Root of the whole menu tree
     Popup_0001 : Menu_Type;   --  Popup level: 1; title: "&File"
@@ -44,7 +52,7 @@ package LEA_Resource_GUI is
     Popup_0009 : Menu_Type;   --  Popup level: 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 125
+  --  Menu at line 136
   procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Child_Type);
 
   type Menu_MDI_Main_Type is tagged record
@@ -59,7 +67,7 @@ package LEA_Resource_GUI is
     Popup_0008 : Menu_Type;   --  Popup level: 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  --  Menu at line 191
+  --  Menu at line 202
   procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Main_Type);
 
   type About_box_Type is new Window_Type with record
@@ -85,7 +93,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- About_box_Type
 
-  --  Dialog at resource line 222
+  --  Dialog at resource line 233
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -125,7 +133,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  --  Dialog at resource line 235
+  --  Dialog at resource line 246
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -168,7 +176,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- HAC_example_box_Type
 
-  --  Dialog at resource line 251
+  --  Dialog at resource line 262
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -221,7 +229,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 277
+  --  Dialog at resource line 288
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -254,7 +262,7 @@ package LEA_Resource_GUI is
     Stop_VM_Button_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 291
+  --  Dialog at resource line 302
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -297,7 +305,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Reload_Files_Box_Type
 
-  --  Dialog at resource line 307
+  --  Dialog at resource line 318
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -343,7 +351,7 @@ package LEA_Resource_GUI is
     Match_case : Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 330
+  --  Dialog at resource line 341
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -377,7 +385,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 344
+  --  Dialog at resource line 355
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -424,117 +432,119 @@ package LEA_Resource_GUI is
   --  NB: only items with a defined symbol get a constant here
   --  These constants are needed for getting button and menu feedbacks.
 
-  IDC_STATIC                   : constant :=     -1;
-  Menu_MDI_Main                : constant :=    102;
-  Menu_MDI_Child               : constant :=    104;
-  LEA_Icon                     : constant :=    114;
-  Toolbar_BMP                  : constant :=    123;
-  Folders_BMP                  : constant :=    124;
-  Backup_none_button           : constant :=  40000;
-  IDM_Go_to_line               : constant :=  40001;
-  IDM_Open_Project             : constant :=  40002;
-  IDM_Previous_bookmark        : constant :=  40003;
-  IDM_Toggle_bookmark          : constant :=  40004;
-  IDM_Copy                     : constant :=  40005;
-  IDM_Cut                      : constant :=  40006;
-  IDM_Find_Next                : constant :=  40007;
-  IDM_Paste                    : constant :=  40008;
-  IDM_Duplicate                : constant :=  40009;
-  IDM_New_File                 : constant :=  40011;
-  IDM_Build_and_run            : constant :=  40012;
-  IDM_Build                    : constant :=  40013;
-  IDM_Compile_single           : constant :=  40014;
-  IDM_ABOUT                    : constant :=  40015;
-  IDM_Open_File                : constant :=  40016;
-  IDM_HAC_Mode                 : constant :=  40017;
-  IDM_GNAT_Mode                : constant :=  40018;
-  IDM_Studio_view              : constant :=  40019;
-  IDM_Notepad_view             : constant :=  40020;
-  IDM_Copy_Messages            : constant :=  40021;
-  Replace_all_button           : constant :=  40021;
-  Close_search_box             : constant :=  40022;
-  IDM_Undo                     : constant :=  40023;
-  Version_label                : constant :=  40024;
-  Whole_word                   : constant :=  40025;
-  Backup_bak_button            : constant :=  40026;
-  GNAT_URL                     : constant :=  40028;
-  IDM_Save_All                 : constant :=  40029;
-  IDM_Unselect_all             : constant :=  40030;
-  GNAT_Version                 : constant :=  40031;
-  IDM_Save_File                : constant :=  40032;
-  Right_margin_edit_box        : constant :=  40033;
-  GNAVI_URL                    : constant :=  40034;
-  Group_color_theme            : constant :=  40035;
-  IDM_Redo                     : constant :=  40036;
-  IDM_TEST_ARCHIVE             : constant :=  40038;
-  ResEdit_URL                  : constant :=  40039;
-  IDM_Save_As                  : constant :=  40040;
-  IDM_QUIT                     : constant :=  40041;
-  IDM_Close                    : constant :=  40042;
-  IDM_RECOMPRESS_ARCHIVE       : constant :=  40043;
-  IDM_EXTRACT                  : constant :=  40044;
-  IDM_General_options          : constant :=  40045;
-  IDM_Find                     : constant :=  40046;
-  IDM_MRU_2                    : constant :=  40049;
-  IDM_MRU_3                    : constant :=  40050;
-  IDM_MRU_4                    : constant :=  40051;
-  IDM_MRU_5                    : constant :=  40052;
-  IDM_MRU_6                    : constant :=  40053;
-  IDM_MRU_7                    : constant :=  40054;
-  IDM_MRU_8                    : constant :=  40055;
-  IDM_MRU_9                    : constant :=  40056;
-  IDM_WINDOW_CASCADE           : constant :=  40057;
-  IDM_WINDOW_TILE_HORIZONTAL   : constant :=  40058;
-  IDM_WINDOW_TILE_VERTICAL     : constant :=  40059;
-  IDM_WINDOW_CLOSE_ALL         : constant :=  40060;
-  IDM_UPDATE_ARCHIVE           : constant :=  40061;
-  IDM_Quick_Help               : constant :=  40062;
-  IDM_Web                      : constant :=  40063;
-  IDM_Select_all               : constant :=  40064;
-  IDM_MRU_1                    : constant :=  40065;
-  IDM_Indent                   : constant :=  40066;
-  IDM_Unindent                 : constant :=  40067;
-  IDM_Comment                  : constant :=  40068;
-  IDM_Uncomment                : constant :=  40069;
-  IDM_Show_special_symbols     : constant :=  40070;
-  IDM_Find_Previous            : constant :=  40071;
-  ZipAda_URL                   : constant :=  40073;
-  ZipAda_Version               : constant :=  40074;
-  HAC_Version                  : constant :=  40075;
-  Tab_width_edit_box           : constant :=  40076;
-  HAC_URL                      : constant :=  40077;
-  IDM_Next_bookmark            : constant :=  40078;
-  Model_find_box               : constant :=  40079;
-  Model_replace_box            : constant :=  40080;
-  Line_value_box               : constant :=  40081;
-  Match_case                   : constant :=  40082;
-  Copyright_label              : constant :=  40083;
-  Group_Backup                 : constant :=  40084;
-  Find_next_button             : constant :=  40085;
-  Find_previous_button         : constant :=  40086;
-  LEA_URL                      : constant :=  40087;
-  Find_all_button              : constant :=  40088;
-  Replace_and_find_next_button : constant :=  40089;
-  Color_theme_list_box         : constant :=  40090;
-  Indentation_edit_box         : constant :=  40091;
-  Ada_file_extension_edit_box  : constant :=  40092;
-  String_Prompt_Edit_Box       : constant :=  40093;
-  String_Prompt_Label          : constant :=  40094;
-  Group_VM_Inter               : constant :=  40095;
-  Group_Stack                  : constant :=  40096;
-  Stack_Bar                    : constant :=  40098;
-  Stop_VM_Button               : constant :=  40099;
-  IDM_Ada_Sample               : constant :=  40100;
-  Zipped_file_box              : constant :=  40101;
-  Topic_box                    : constant :=  40103;
-  Label_HAC_topic              : constant :=  40104;
-  Label_HAC_sample             : constant :=  40105;
-  IDM_Show_indentation_lines   : constant :=  40106;
-  IDM_Open_Containing_Folder   : constant :=  40107;
-  Auto_Insert_Check_Box        : constant :=  40108;
-  Select_All_Button            : constant :=  40109;
-  Unselect_All_Button          : constant :=  40110;
-  Changed_Files_List           : constant :=  40111;
+  IDC_STATIC                      : constant :=     -1;
+  Menu_MDI_Main                   : constant :=    102;
+  Menu_MDI_Child                  : constant :=    104;
+  LEA_Icon                        : constant :=    114;
+  Toolbar_BMP                     : constant :=    123;
+  Folders_BMP                     : constant :=    124;
+  Menu_Fake                       : constant :=    126;
+  Backup_none_button              : constant :=  40000;
+  IDM_Go_to_line                  : constant :=  40001;
+  IDM_Open_Project                : constant :=  40002;
+  IDM_Previous_bookmark           : constant :=  40003;
+  IDM_Toggle_bookmark             : constant :=  40004;
+  IDM_Copy                        : constant :=  40005;
+  IDM_Cut                         : constant :=  40006;
+  IDM_Find_Next                   : constant :=  40007;
+  IDM_Paste                       : constant :=  40008;
+  IDM_Duplicate                   : constant :=  40009;
+  IDM_New_File                    : constant :=  40011;
+  IDM_Build_and_run               : constant :=  40012;
+  IDM_Build                       : constant :=  40013;
+  IDM_Compile_single              : constant :=  40014;
+  IDM_ABOUT                       : constant :=  40015;
+  IDM_Open_File                   : constant :=  40016;
+  IDM_HAC_Mode                    : constant :=  40017;
+  IDM_GNAT_Mode                   : constant :=  40018;
+  IDM_Studio_view                 : constant :=  40019;
+  IDM_Notepad_view                : constant :=  40020;
+  IDM_Copy_Messages               : constant :=  40021;
+  Replace_all_button              : constant :=  40021;
+  Close_search_box                : constant :=  40022;
+  IDM_Undo                        : constant :=  40023;
+  Version_label                   : constant :=  40024;
+  Whole_word                      : constant :=  40025;
+  Backup_bak_button               : constant :=  40026;
+  GNAT_URL                        : constant :=  40028;
+  IDM_Save_All                    : constant :=  40029;
+  IDM_Unselect_all                : constant :=  40030;
+  GNAT_Version                    : constant :=  40031;
+  IDM_Save_File                   : constant :=  40032;
+  Right_margin_edit_box           : constant :=  40033;
+  GNAVI_URL                       : constant :=  40034;
+  Group_color_theme               : constant :=  40035;
+  IDM_Redo                        : constant :=  40036;
+  IDM_TEST_ARCHIVE                : constant :=  40038;
+  ResEdit_URL                     : constant :=  40039;
+  IDM_Save_As                     : constant :=  40040;
+  IDM_QUIT                        : constant :=  40041;
+  IDM_Close                       : constant :=  40042;
+  IDM_RECOMPRESS_ARCHIVE          : constant :=  40043;
+  IDM_EXTRACT                     : constant :=  40044;
+  IDM_General_options             : constant :=  40045;
+  IDM_Find                        : constant :=  40046;
+  IDM_MRU_2                       : constant :=  40049;
+  IDM_MRU_3                       : constant :=  40050;
+  IDM_MRU_4                       : constant :=  40051;
+  IDM_MRU_5                       : constant :=  40052;
+  IDM_MRU_6                       : constant :=  40053;
+  IDM_MRU_7                       : constant :=  40054;
+  IDM_MRU_8                       : constant :=  40055;
+  IDM_MRU_9                       : constant :=  40056;
+  IDM_WINDOW_CASCADE              : constant :=  40057;
+  IDM_WINDOW_TILE_HORIZONTAL      : constant :=  40058;
+  IDM_WINDOW_TILE_VERTICAL        : constant :=  40059;
+  IDM_WINDOW_CLOSE_ALL            : constant :=  40060;
+  IDM_UPDATE_ARCHIVE              : constant :=  40061;
+  IDM_Quick_Help                  : constant :=  40062;
+  IDM_Web                         : constant :=  40063;
+  IDM_Select_all                  : constant :=  40064;
+  IDM_MRU_1                       : constant :=  40065;
+  IDM_Indent                      : constant :=  40066;
+  IDM_Unindent                    : constant :=  40067;
+  IDM_Comment                     : constant :=  40068;
+  IDM_Uncomment                   : constant :=  40069;
+  IDM_Show_special_symbols        : constant :=  40070;
+  IDM_Find_Previous               : constant :=  40071;
+  ZipAda_URL                      : constant :=  40073;
+  ZipAda_Version                  : constant :=  40074;
+  HAC_Version                     : constant :=  40075;
+  Tab_width_edit_box              : constant :=  40076;
+  HAC_URL                         : constant :=  40077;
+  IDM_Next_bookmark               : constant :=  40078;
+  Model_find_box                  : constant :=  40079;
+  Model_replace_box               : constant :=  40080;
+  Line_value_box                  : constant :=  40081;
+  Match_case                      : constant :=  40082;
+  Copyright_label                 : constant :=  40083;
+  Group_Backup                    : constant :=  40084;
+  Find_next_button                : constant :=  40085;
+  Find_previous_button            : constant :=  40086;
+  LEA_URL                         : constant :=  40087;
+  Find_all_button                 : constant :=  40088;
+  Replace_and_find_next_button    : constant :=  40089;
+  Color_theme_list_box            : constant :=  40090;
+  Indentation_edit_box            : constant :=  40091;
+  Ada_file_extension_edit_box     : constant :=  40092;
+  String_Prompt_Edit_Box          : constant :=  40093;
+  String_Prompt_Label             : constant :=  40094;
+  Group_VM_Inter                  : constant :=  40095;
+  Group_Stack                     : constant :=  40096;
+  Stack_Bar                       : constant :=  40098;
+  Stop_VM_Button                  : constant :=  40099;
+  IDM_Ada_Sample                  : constant :=  40100;
+  Zipped_file_box                 : constant :=  40101;
+  Topic_box                       : constant :=  40103;
+  Label_HAC_topic                 : constant :=  40104;
+  Label_HAC_sample                : constant :=  40105;
+  IDM_Show_indentation_lines      : constant :=  40106;
+  IDM_Open_Containing_Folder      : constant :=  40107;
+  Auto_Insert_Check_Box           : constant :=  40108;
+  Select_All_Button               : constant :=  40109;
+  Unselect_All_Button             : constant :=  40110;
+  Changed_Files_List              : constant :=  40111;
+  IDM_Go_to_memorized_Declaration : constant :=  40112;
 
   --  ** Some helper utilities (spec).
 
@@ -546,6 +556,6 @@ package LEA_Resource_GUI is
 
   function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  --  Last line of resource script file: 452
+  --  Last line of resource script file: 463
 
 end LEA_Resource_GUI;
