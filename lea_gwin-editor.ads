@@ -60,7 +60,7 @@ package LEA_GWin.Editor is
   overriding procedure On_Modified
     (Editor              : in out LEA_Scintilla_Type;
      Pos                 : in     Position;
-     Modification_Type   : in     Integer;
+     Modification_Type   : in     Interfaces.Unsigned_32;
      Text                : in     GString;
      Lines_Added         : in     Integer;
      Line                : in     Integer;
@@ -93,7 +93,7 @@ package LEA_GWin.Editor is
   --  through declarations.
   procedure Semantics
     (Editor            : in out LEA_Scintilla_Type;
-     Modification_Type : in     Integer);
+     Modification_Type : in     Interfaces.Unsigned_32);
 
   --  Bookmarks
   procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type);

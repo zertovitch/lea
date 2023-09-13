@@ -324,39 +324,22 @@ package body LEA_GWin.Editor is
   overriding procedure On_Modified
     (Editor              : in out LEA_Scintilla_Type;
      Pos                 : in     Position;
-     Modification_Type   : in     Integer;
+     Modification_Type   : in     Interfaces.Unsigned_32;
      Text                : in     GString;
      Lines_Added         : in     Integer;
      Line                : in     Integer;
      Fold_Level_Now      : in     Integer;
      Fold_Level_Previous : in     Integer)
   is
-    type U32 is mod 2 ** 32;
-    m32 : constant U32 := U32 (Modification_Type);
-    trace : constant Boolean := True;
+    trace : constant Boolean := False;
+    procedure Console_Show_Details is new Show_Details (HAT.Put_Line);
+    use Interfaces;
   begin
-      if trace then
-        HAT.Put_Line ("Modification...");
-        if (m32 and SC_MOD_INSERTTEXT) /= 0 then
-          HAT.Put_Line ("  INSERT TEXT");
-        end if;
-        if (m32 and SC_MOD_DELETETEXT) /= 0  then
-          HAT.Put_Line ("  DELETE TEXT");
-        end if;
-        if (m32 and SC_PERFORMED_USER) /= 0  then
-          HAT.Put_Line ("  PERFORMED USER");
-        end if;
-        if (m32 and SC_MOD_CHANGEMARKER) /= 0  then
-          HAT.Put_Line ("  CHANGE MARKER");
-        end if;
-        if (m32 and SC_MOD_BEFOREINSERT) /= 0  then
-          HAT.Put_Line ("  BEFORE INSERT");
-        end if;
-        if (m32 and SC_MOD_BEFOREDELETE) /= 0  then
-          HAT.Put_Line ("  BEFORE DELETE");
-        end if;
-      end if;
-    if (U32 (Modification_Type) and SC_PERFORMED_USER) /= 0 then
+    if trace then
+      HAT.Put_Line ("====== On_Modified ======");
+      Console_Show_Details (Modification_Type);
+    end if;
+    if (Modification_Type and SC_PERFORMED_USER) /= 0 then
       Editor.Semantics (Modification_Type);
     end if;
   end On_Modified;
@@ -944,7 +927,7 @@ package body LEA_GWin.Editor is
 
   procedure Semantics
     (Editor            : in out LEA_Scintilla_Type;
-     Modification_Type : in     Integer)
+     Modification_Type : in     Interfaces.Unsigned_32)
   is
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     main   : MDI_Main_Type  renames parent.mdi_root.all;
