@@ -805,7 +805,7 @@ package body LEA_GWin.MDI_Child is
     can_paste : constant Boolean := Window.Editor.Can_Paste;
     need_separator, has_declaration : Boolean;
     decl : HAC_Sys.Targets.Declaration_Point;
-    xe, ye : Integer;
+    ed_point : GWindows.Types.Point_Type;
     pos : Position;
     use GWindows.Menus, LEA_Resource_GUI;
   begin
@@ -821,12 +821,12 @@ package body LEA_GWin.MDI_Child is
     need_separator := is_any_selection or can_paste;
     if main.opt.smart_editor then
       --  Should translate to Editor client coord !!
-      xe := X;
-      ye := Y;
-      if xe >= 0 and then ye >= 0 then
-        pos := Window.Editor.Position_From_Point_Close (xe, ye);
+      if X >= 0 and then Y >= 0 then
+        ed_point := Window.Editor.Point_To_Client ((X, Y));
+        pos :=
+          Window.Editor.Position_From_Point_Close (ed_point.X, ed_point.Y);
       else
-        --  Invalid mouse coordinates, likely the menu key was used.
+        --  Invalid mouse coordinates. Likely, the menu key was used.
         pos := Window.Editor.Get_Current_Pos;
       end if;
       Window.Editor.Find_HAC_Declaration (pos, decl, has_declaration);
@@ -843,6 +843,10 @@ package body LEA_GWin.MDI_Child is
       end if;
     end if;
     --
+    if Count (Window.context_menu) = 0 then
+      Append_Item (Window.context_menu, "(empty)", 1);
+      State (Window.context_menu, GWindows.Menus.Position, 1, Disabled);
+    end if;
     Immediate_Popup_Menu (Window.context_menu, main.all);
     Destroy_Menu (Window.context_menu);
   end On_Context_Menu;

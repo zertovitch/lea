@@ -8,7 +8,8 @@ with LEA_Common.User_options;
 
 with HAC_Sys.Builder,
      HAC_Sys.Co_Defs,
-     HAC_Sys.Defs;
+     HAC_Sys.Defs,
+     HAC_Sys.Targets.Semantics;
 
 with HAT;
 
@@ -330,29 +331,33 @@ package body LEA_GWin.Editor is
      Fold_Level_Now      : in     Integer;
      Fold_Level_Previous : in     Integer)
   is
-    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
-    main   : MDI_Main_Type  renames parent.mdi_root.all;
-    --
-    --  !! Test setup: we launch directly an ad-hoc semantic analysis.
-    --     Should be done in a background task (rationale: analysis
-    --     could be slow on large sources) !!
-    shebang_offset : Natural;
-    --
-    use HAC_Sys.Builder;
+    type U32 is mod 2 ** 32;
+    m32 : constant U32 := U32 (Modification_Type);
+    trace : constant Boolean := True;
   begin
-    if main.opt.smart_editor then
-      main.BD_sem.Set_Target (main.sem_machine);
-      HAC_Sys.Targets.Semantics.Machine (main.sem_machine.all).CD := main.BD_sem.CD;
-      --  We connect the main editor input stream to this editor.
-      main.current_editor_stream.Reset (Editor, shebang_offset);
-      Set_Main_Source_Stream
-        (main.BD_sem,
-         main.current_editor_stream'Access,
-         G2S (parent.Best_Name),
-         shebang_offset);
-      parent.Switch_Current_Directory;
-      Set_Message_Feedbacks (main.BD_sem, HAC_Sys.Co_Defs.silent_trace);
-      Build_Main (main.BD_sem);
+      if trace then
+        HAT.Put_Line ("Modification...");
+        if (m32 and SC_MOD_INSERTTEXT) /= 0 then
+          HAT.Put_Line ("  INSERT TEXT");
+        end if;
+        if (m32 and SC_MOD_DELETETEXT) /= 0  then
+          HAT.Put_Line ("  DELETE TEXT");
+        end if;
+        if (m32 and SC_PERFORMED_USER) /= 0  then
+          HAT.Put_Line ("  PERFORMED USER");
+        end if;
+        if (m32 and SC_MOD_CHANGEMARKER) /= 0  then
+          HAT.Put_Line ("  CHANGE MARKER");
+        end if;
+        if (m32 and SC_MOD_BEFOREINSERT) /= 0  then
+          HAT.Put_Line ("  BEFORE INSERT");
+        end if;
+        if (m32 and SC_MOD_BEFOREDELETE) /= 0  then
+          HAT.Put_Line ("  BEFORE DELETE");
+        end if;
+      end if;
+    if (U32 (Modification_Type) and SC_PERFORMED_USER) /= 0 then
+      Editor.Semantics (Modification_Type);
     end if;
   end On_Modified;
 
@@ -756,18 +761,21 @@ package body LEA_GWin.Editor is
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     line_msg_col_width : constant := 70;
     col_msg_col_width  : constant := 40;
+    --
     function Right_aligned_line_number (line : Positive) return Wide_String is
       s : Wide_String := "12345";
     begin
       Ada.Integer_Wide_Text_IO.Put (s, line);
       return s;
     end Right_aligned_line_number;
+    --
     function Right_aligned_column_number (column : Positive) return Wide_String is
       s : Wide_String := "123";
     begin
       Ada.Integer_Wide_Text_IO.Put (s, column);
       return s;
     end Right_aligned_column_number;
+    --
     use LEA_GWin.Messages, Ada.Strings.Unbounded;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
@@ -933,6 +941,36 @@ package body LEA_GWin.Editor is
         end if;
     end case;
   end Search;
+
+  procedure Semantics
+    (Editor            : in out LEA_Scintilla_Type;
+     Modification_Type : in     Integer)
+  is
+    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    main   : MDI_Main_Type  renames parent.mdi_root.all;
+    --
+    --  !! Test setup: we launch directly an ad-hoc semantic analysis.
+    --     Should be done in a background task (rationale: analysis
+    --     could be slow on large sources) !!
+    shebang_offset : Natural;
+    --
+    use HAC_Sys.Builder;
+  begin
+    if main.opt.smart_editor then
+      main.BD_sem.Set_Target (main.sem_machine);
+      HAC_Sys.Targets.Semantics.Machine (main.sem_machine.all).CD := main.BD_sem.CD;
+      --  We connect the main editor input stream to this editor.
+      main.current_editor_stream.Reset (Editor, shebang_offset);
+      Set_Main_Source_Stream
+        (main.BD_sem,
+         main.current_editor_stream'Access,
+         G2S (parent.Best_Name),
+         shebang_offset);
+      parent.Switch_Current_Directory;
+      Set_Message_Feedbacks (main.BD_sem, HAC_Sys.Co_Defs.silent_trace);
+      Build_Main (main.BD_sem);
+    end if;
+  end Semantics;
 
   procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type) is
     line : constant Integer :=

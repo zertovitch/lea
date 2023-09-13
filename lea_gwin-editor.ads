@@ -1,6 +1,6 @@
 with LEA_Common.Syntax;
 
-with HAC_Sys.Targets.Semantics;
+with HAC_Sys.Targets;
 
 with GWindows.Base,
      GWindows.Scintilla,
@@ -88,6 +88,12 @@ package LEA_GWin.Editor is
 
   --  Search & replace actions
   procedure Search (Editor : in out LEA_Scintilla_Type; action : LEA_Common.Search_action);
+
+  --  Semantics analysis ("smart editor" mode) for navigation
+  --  through declarations.
+  procedure Semantics
+    (Editor            : in out LEA_Scintilla_Type;
+     Modification_Type : in     Integer);
 
   --  Bookmarks
   procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type);
