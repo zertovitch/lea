@@ -334,7 +334,7 @@ package body LEA_GWin.MDI_Child is
       written_name := written_name & temp_ext;
     end if;
     --
-    MDI_Child.Editor.Save_text (GU2G (written_name));
+    MDI_Child.Editor.Save_Text (GU2G (written_name));
     --
     if with_backup then
       --  If there was an exception at writing,
@@ -792,6 +792,7 @@ package body LEA_GWin.MDI_Child is
     if tab_index >= 0 then
       tab_bar.Selected_Tab (tab_index);
     end if;
+    Window.Editor.Semantics;
   end On_Focus;
 
   overriding procedure On_Context_Menu

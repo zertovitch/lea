@@ -16,6 +16,8 @@ with HAT;
 with GWindows.Colors,
      GWindows.Message_Boxes;
 
+with Time_Display;
+
 with Ada.Directories,
      Ada.Integer_Wide_Text_IO,
      Ada.Streams.Stream_IO,
@@ -187,6 +189,8 @@ package body LEA_GWin.Editor is
 
   marker_for_bookmarks : constant := 0;
 
+  modification_messages_mask : constant := SC_STARTACTION + SC_PERFORMED_USER;
+
   overriding procedure On_Create (Editor : in out LEA_Scintilla_Type) is
     use GWindows.Colors;
   begin
@@ -222,6 +226,8 @@ package body LEA_GWin.Editor is
     --  Disable default Scintilla context menu, we
     --  provide a custom one via On_Context_Menu.
     Editor.Use_Pop_Up (False);
+    --  Filter modification messages.
+    Editor.Set_Mod_Event_Mask (modification_messages_mask);
   end On_Create;
 
   overriding procedure On_Dwell_Start
@@ -294,6 +300,8 @@ package body LEA_GWin.Editor is
     end if;
   end On_Margin_Click;
 
+  trace : constant Boolean := False;
+
   overriding procedure On_Message
     (Editor       : in out LEA_Scintilla_Type;
      message      : in     Interfaces.C.unsigned;
@@ -331,16 +339,24 @@ package body LEA_GWin.Editor is
      Fold_Level_Now      : in     Integer;
      Fold_Level_Previous : in     Integer)
   is
-    trace : constant Boolean := False;
     procedure Console_Show_Details is new Show_Details (HAT.Put_Line);
     use Interfaces;
+    mask : Unsigned_32;
   begin
     if trace then
-      HAT.Put_Line ("====== On_Modified ======");
+      HAT.Put_Line ("====== On_Modified ======   " & Time_Display);
       Console_Show_Details (Modification_Type);
     end if;
-    if (Modification_Type and SC_PERFORMED_USER) /= 0 then
-      Editor.Semantics (Modification_Type);
+    if Editor.Get_Selections > 1 then
+      --  For multipoint edition, there are a message for EACH point,
+      --  so we are more restrictive in that context, in order to avoid
+      --  a message flood...
+      mask := SC_STARTACTION;
+    else
+      mask := modification_messages_mask;
+    end if;
+    if (Modification_Type and mask) /= 0 then
+      Editor.Semantics;
     end if;
   end On_Modified;
 
@@ -416,9 +432,10 @@ package body LEA_GWin.Editor is
   is
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     pos : constant Position := Editor.Get_Current_Pos;
-    p1, p2 : Position := INVALID_POSITION;
+    p1, p2 : Position;
     sel_a, sel_z : Position;
     lin_a, lin_z : Integer;
+    new_selection_count : Positive;
     --
     function Is_parenthesis (s : GString) return Boolean is (s = "(" or else s = ")");
     is_whole : Boolean;
@@ -438,7 +455,9 @@ package body LEA_GWin.Editor is
     end if;
     Editor.pos_last_update_UI := pos;
     parent.Update_Information (status_bar);
+    --
     --  Highlight instances of selected word
+    --
     sel_a := Editor.Get_Selection_Start;
     sel_z := Editor.Get_Selection_End;
     if sel_a /= Editor.sel_a_last_update_UI
@@ -466,6 +485,8 @@ package body LEA_GWin.Editor is
       p1 := pos - 1;  --  Found on the left of the cursor
     elsif Is_parenthesis (Editor.Get_Text_Range (pos, pos + 1)) then
       p1 := pos;      --  Found at the cursor
+    else
+      p1 := INVALID_POSITION;
     end if;
     if p1 = INVALID_POSITION then
       --  No parenthesis
@@ -477,6 +498,19 @@ package body LEA_GWin.Editor is
         Editor.Brace_Bad_Light (p1);
       else
         Editor.Brace_Highlight (p1, p2);
+      end if;
+    end if;
+    --
+    --  Re-run semantics?
+    --
+    new_selection_count := Editor.Get_Selections;
+    if new_selection_count /= Editor.previous_selection_count then
+      Editor.previous_selection_count := new_selection_count;
+      if new_selection_count = 1 then
+        if trace then
+          HAT.Put_Line ("Semantics re-run by On_Update_UI");
+        end if;
+        Editor.Semantics;
       end if;
     end if;
   end On_Update_UI;
@@ -925,10 +959,7 @@ package body LEA_GWin.Editor is
     end case;
   end Search;
 
-  procedure Semantics
-    (Editor            : in out LEA_Scintilla_Type;
-     Modification_Type : in     Interfaces.Unsigned_32)
-  is
+  procedure Semantics (Editor : in out LEA_Scintilla_Type) is
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     main   : MDI_Main_Type  renames parent.mdi_root.all;
     --
@@ -1035,7 +1066,7 @@ package body LEA_GWin.Editor is
     Editor.modified := False;
   end Load_Text;
 
-  procedure Load_text (Editor : in out LEA_Scintilla_Type) is
+  procedure Load_Text (Editor : in out LEA_Scintilla_Type) is
     use Ada.Streams.Stream_IO;
     f : File_Type;
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
@@ -1049,9 +1080,9 @@ package body LEA_GWin.Editor is
       Editor.Load_Text (contents => s);
     end;
     Close (f);
-  end Load_text;
+  end Load_Text;
 
-  procedure Save_text (Editor : in out LEA_Scintilla_Type; under : GString) is
+  procedure Save_Text (Editor : in out LEA_Scintilla_Type; under : GString) is
     use Ada.Streams.Stream_IO;
     f : File_Type;
     --  s : aliased Editor_Stream_Type;
@@ -1084,7 +1115,7 @@ package body LEA_GWin.Editor is
     --    when End_Error => null;
     --  end;
     --  Close(f);
-  end Save_text;
+  end Save_Text;
 
   procedure Set_Scintilla_Syntax (Editor : in out LEA_Scintilla_Type) is
     use LEA_Common.Syntax;

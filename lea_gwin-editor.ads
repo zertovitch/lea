@@ -18,14 +18,16 @@ package LEA_GWin.Editor is
   type LEA_Scintilla_Type is new Scintilla_Type with record
     --  Direct access to the window owning the editor widget.
     --  This is needed to reach the options (color theme, etc.).
-    mdi_parent           : GWindows.Base.Pointer_To_Base_Window_Class;
-    document_kind        : LEA_Common.Document_kind_type
+    mdi_parent               : GWindows.Base.Pointer_To_Base_Window_Class;
+    document_kind            : LEA_Common.Document_kind_type
                                        := LEA_Common.editable_text;
-    modified             : Boolean     := False;  --  Is the doc modified from load or last save ?
-    pos_last_update_UI   : Position    := INVALID_POSITION;
-    sel_a_last_update_UI : Position    := INVALID_POSITION;
-    sel_z_last_update_UI : Position    := INVALID_POSITION;
-    syntax_kind          : LEA_Common.Syntax.Syntax_type := LEA_Common.Syntax.Undefined;
+    --  Is the doc modified from load or last save ?
+    modified                 : Boolean     := False;
+    pos_last_update_UI       : Position    := INVALID_POSITION;
+    sel_a_last_update_UI     : Position    := INVALID_POSITION;
+    sel_z_last_update_UI     : Position    := INVALID_POSITION;
+    previous_selection_count : Positive    := 1;
+    syntax_kind              : LEA_Common.Syntax.Syntax_type := LEA_Common.Syntax.Undefined;
   end record;
 
   overriding procedure On_Change (Editor : in out LEA_Scintilla_Type);
@@ -91,9 +93,7 @@ package LEA_GWin.Editor is
 
   --  Semantics analysis ("smart editor" mode) for navigation
   --  through declarations.
-  procedure Semantics
-    (Editor            : in out LEA_Scintilla_Type;
-     Modification_Type : in     Interfaces.Unsigned_32);
+  procedure Semantics (Editor : in out LEA_Scintilla_Type);
 
   --  Bookmarks
   procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type);
@@ -110,8 +110,8 @@ package LEA_GWin.Editor is
 
   --  I/O
   procedure Load_Text (Editor : in out LEA_Scintilla_Type; contents : String);
-  procedure Load_text (Editor : in out LEA_Scintilla_Type);  --  Loads from File_Name
-  procedure Save_text (Editor : in out LEA_Scintilla_Type; under : GString);
+  procedure Load_Text (Editor : in out LEA_Scintilla_Type);  --  Loads from File_Name
+  procedure Save_Text (Editor : in out LEA_Scintilla_Type; under : GString);
 
   --  Propagate the Editor.syntax_kind value to the corresponding
   --  visible behaviour in the Scintilla widget.

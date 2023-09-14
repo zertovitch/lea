@@ -128,7 +128,7 @@ package body LEA_GWin.MDI_Main is
     declare
       upper_name : GString := File_Name;
     begin
-      New_Window.Editor.Load_text;
+      New_Window.Editor.Load_Text;
       file_loaded := True;
       To_Upper (upper_name);
       for m of Window.MRU.Item loop
