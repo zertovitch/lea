@@ -189,7 +189,9 @@ package body LEA_GWin.Editor is
 
   marker_for_bookmarks : constant := 0;
 
-  modification_messages_mask : constant := SC_STARTACTION + SC_PERFORMED_USER;
+  modification_messages_mask : constant := SC_STARTACTION;
+  --  Possible: SC_PERFORMED_USER, but must be filtered out
+  --  in the case of selection changes to avoid a message flood.
 
   overriding procedure On_Create (Editor : in out LEA_Scintilla_Type) is
     use GWindows.Colors;
