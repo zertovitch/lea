@@ -95,6 +95,10 @@ package LEA_GWin.Editor is
   --  through declarations.
   procedure Semantics (Editor : in out LEA_Scintilla_Type);
 
+  procedure Set_Tip_Styles
+    (Editor : in out LEA_Scintilla_Type;
+     Theme  :        LEA_Common.Color_Themes.Color_Theme_Type);
+
   --  Bookmarks
   procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type);
   procedure Bookmark_Previous (Editor : in out LEA_Scintilla_Type);

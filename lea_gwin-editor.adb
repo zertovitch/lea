@@ -21,8 +21,9 @@ with Time_Display;
 with Ada.Directories,
      Ada.Integer_Wide_Text_IO,
      Ada.Streams.Stream_IO,
-     Ada.Strings.Wide_Fixed,
      Ada.Strings.Unbounded,
+     Ada.Strings.Wide_Fixed,
+     Ada.Strings.Wide_Unbounded,
      Ada.Wide_Characters.Handling;
 
 package body LEA_GWin.Editor is
@@ -46,12 +47,16 @@ package body LEA_GWin.Editor is
       when '"'    => '"',
       when others => ' ');
 
+  trace : constant Boolean := False;
+
   overriding procedure On_Character_Added
     (Editor      : in out LEA_Scintilla_Type;
      Special_Key : in     GWindows.Windows.Special_Key_Type;
      Value       : in     GWindows.GCharacter)
   is
   pragma Unreferenced (Special_Key);
+    parent         : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    main           : MDI_Main_Type  renames parent.mdi_root.all;
     cur_pos        : constant Position   := Editor.Get_Current_Pos;
     line           : constant Integer    := Editor.Line_From_Position (cur_pos);
     CR             : constant GCharacter := GCharacter'Val (13);
@@ -158,6 +163,76 @@ package body LEA_GWin.Editor is
       end if;
     end Try_Auto_Insert;
 
+    procedure Try_Call_Tip is
+      search_tolerance : constant := 100;
+      was_found : Boolean;
+      decl   : HAC_Sys.Targets.Declaration_Point;
+      --
+      procedure Show_Tip_HAC is
+        ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
+        full_id_name   : constant String := HAC_Sys.Defs.A2S (ide.name_with_case);
+        full_id_name_g : constant GString := S2G (full_id_name);
+        entity, params : GString_Unbounded;
+        first_param, last_param, block_idx : HAC_Sys.Defs.Index;
+        use HAC_Sys.Co_Defs, HAC_Sys.Defs, Ada.Strings.Wide_Unbounded;
+      begin
+        case ide.entity is
+          when Prozedure | Prozedure_Intrinsic => entity := G2GU ("procedure");
+          when Funktion | Funktion_Intrinsic   => entity := G2GU ("function");
+          when others =>
+            return;  --  Not a subprogram!
+        end case;
+        if trace then
+          HAT.Put_Line
+            ("====== Call Tip: found subprogram identifier for '(' : " & full_id_name);
+        end if;
+        case ide.entity is
+          when Prozedure | Funktion =>
+            block_idx := ide.block_or_pkg_ref;
+            first_param := main.BD_sem.CD.Blocks_Table (block_idx).First_Param_Id_Idx;
+            last_param  := main.BD_sem.CD.Blocks_Table (block_idx).Last_Param_Id_Idx;
+            if first_param <= last_param then
+              params := G2GU ("(");
+              for param in first_param .. last_param loop
+                params := params & S2G (A2S (main.BD_sem.CD.IdTab (param).name_with_case));
+                if param < last_param then
+                  params := params & ", ";
+                end if;
+              end loop;
+              params := params & ')';
+            else
+              params := G2GU (" [ no parameter ]");
+            end if;
+          when Prozedure_Intrinsic | Funktion_Intrinsic =>
+            --  Possibly overloaded, like Put, so we
+            --  show no parameter list at all...
+            null;
+          when others =>
+            null;
+        end case;
+        Editor.Set_Tip_Styles (main.opt.color_theme);
+        Editor.Call_Tip_Show
+          (cur_pos,
+           GU2G (entity) & ' ' & full_id_name_g & ' ' & GU2G (params));
+      end Show_Tip_HAC;
+
+    begin
+      for pos in reverse Position'Max (0, cur_pos - search_tolerance) .. cur_pos loop
+        if Editor.Get_Style_At (pos) = SCE_ADA_IDENTIFIER then
+          case main.opt.toolset is
+            when HAC_mode =>
+              Editor.Find_HAC_Declaration (pos, decl, was_found);
+              if was_found then
+                Show_Tip_HAC;
+              end if;
+            when GNAT_mode =>
+              null;
+          end case;
+          exit;
+        end if;
+      end loop;
+    end Try_Call_Tip;
+
     opt : LEA_Common.User_options.Option_Pack_Type
             renames MDI_Child_Type (Editor.mdi_parent.all).mdi_root.opt;
   begin
@@ -177,6 +252,10 @@ package body LEA_GWin.Editor is
       when '(' | '"' =>
         if opt.auto_insert then
           Try_Auto_Insert;
+        end if;
+        if Value = '(' and then main.opt.smart_editor then
+          --  Consider a Call Tip (showing parameters of a subprogram).
+          Try_Call_Tip;
         end if;
       when others =>
         null;
@@ -240,20 +319,14 @@ package body LEA_GWin.Editor is
     main   : MDI_Main_Type  renames parent.mdi_root.all;
     decl   : HAC_Sys.Targets.Declaration_Point;
     --
-    procedure Show_Tip is
+    procedure Show_Tip_HAC is
       ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
       full_id_name   : constant GString := S2G (HAC_Sys.Defs.A2S (ide.name_with_case));
       padded_id_name : constant GString := NL & ' ' & full_id_name & ' ' & NL;
       use Ada.Directories, LEA_Common.Color_Themes;
-      theme : Color_Theme_Type renames main.opt.color_theme;
     begin
       --  Mouse hover tool tip
-      Editor.Call_Tip_Set_Background_Color
-        (GWindows_Color_Theme (theme, tool_tip_background));
-      Editor.Call_Tip_Set_Foreground_Color
-        (GWindows_Color_Theme (theme, foreground));
-      Editor.Call_Tip_Set_Foreground_Color_Highlighted
-        (GWindows_Color_Theme (theme, tool_tip_foreground_highlighted));
+      Editor.Set_Tip_Styles (main.opt.color_theme);
       if decl.is_built_in then
         Editor.Call_Tip_Show (Pos, padded_id_name);
       else
@@ -266,19 +339,21 @@ package body LEA_GWin.Editor is
            Trim (decl.column'Wide_Image, Left) & ')' & NL);
       end if;
       Editor.Call_Tip_Set_Highlight (3, 3 + full_id_name'Length);
-    end Show_Tip;
+    end Show_Tip_HAC;
     --
     was_found : Boolean;
   begin
-    case main.opt.toolset is
-      when HAC_mode =>
-        Editor.Find_HAC_Declaration (Pos, decl, was_found);
-        if was_found then
-          Show_Tip;
-        end if;
-      when GNAT_mode =>
-        null;
-    end case;
+    if main.opt.smart_editor then
+      case main.opt.toolset is
+        when HAC_mode =>
+          Editor.Find_HAC_Declaration (Pos, decl, was_found);
+          if was_found then
+            Show_Tip_HAC;
+          end if;
+        when GNAT_mode =>
+          null;
+      end case;
+    end if;
   end On_Dwell_Start;
 
   overriding procedure On_Dwell_End
@@ -301,8 +376,6 @@ package body LEA_GWin.Editor is
       Editor.Bookmark_Toggle (line);
     end if;
   end On_Margin_Click;
-
-  trace : constant Boolean := False;
 
   overriding procedure On_Message
     (Editor       : in out LEA_Scintilla_Type;
@@ -987,6 +1060,20 @@ package body LEA_GWin.Editor is
       Build_Main (main.BD_sem);
     end if;
   end Semantics;
+
+  procedure Set_Tip_Styles
+    (Editor : in out LEA_Scintilla_Type;
+     Theme  :        LEA_Common.Color_Themes.Color_Theme_Type)
+  is
+    use LEA_Common.Color_Themes;
+  begin
+    Editor.Call_Tip_Set_Background_Color
+      (GWindows_Color_Theme (Theme, tool_tip_background));
+    Editor.Call_Tip_Set_Foreground_Color
+      (GWindows_Color_Theme (Theme, foreground));
+    Editor.Call_Tip_Set_Foreground_Color_Highlighted
+      (GWindows_Color_Theme (Theme, tool_tip_foreground_highlighted));
+  end Set_Tip_Styles;
 
   procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type) is
     line : constant Integer :=
