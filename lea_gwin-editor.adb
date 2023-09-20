@@ -54,13 +54,12 @@ package body LEA_GWin.Editor is
      Special_Key : in     GWindows.Windows.Special_Key_Type;
      Value       : in     GWindows.GCharacter)
   is
-  pragma Unreferenced (Special_Key);
-    parent         : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
-    main           : MDI_Main_Type  renames parent.mdi_root.all;
-    cur_pos        : constant Position   := Editor.Get_Current_Pos;
-    line           : constant Integer    := Editor.Line_From_Position (cur_pos);
-    CR             : constant GCharacter := GCharacter'Val (13);
-    LF             : constant GCharacter := GCharacter'Val (10);
+    parent  : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    main    : MDI_Main_Type  renames parent.mdi_root.all;
+    cur_pos : constant Position   := Editor.Get_Current_Pos;
+    line    : constant Integer    := Editor.Line_From_Position (cur_pos);
+    CR      : constant GCharacter := GCharacter'Val (13);
+    LF      : constant GCharacter := GCharacter'Val (10);
     use LEA_Common.Syntax;
 
     procedure Process_Return_Keystroke is
@@ -69,6 +68,7 @@ package body LEA_GWin.Editor is
       old_pos               :          Position;
       in_ada_comment        :          Boolean  := False;
       in_ada_string_literal :          Boolean  := False;
+      use GWindows.Windows;
     begin
       Editor.Undo;  --  Undo the lone "Return" keystroke.
       old_pos := Editor.Get_Current_Pos;
@@ -80,10 +80,16 @@ package body LEA_GWin.Editor is
             in_ada_comment and then
               Editor.Get_Style_At (old_pos + shift) = SCE_ADA_COMMENTLINE;
         end loop;
-        --  Ensure that there is a bit of a comment after (at least one character):
+        --  Ensure that there is a bit of a comment after (at least one character).
+        --  On Shift-Return, we ignore this limit and the comment is extended even
+        --  when the cursor is at the end of the line.
+        --  !! Unfortunately Special_Key is always None !!
         in_ada_comment :=
           in_ada_comment and then
-            Editor.Get_Current_Pos < Editor.Get_Line_End_Position (Editor.Get_Current_Line_Number);
+            (Special_Key = GWindows.Windows.Shift
+             or else
+               old_pos <
+               Editor.Get_Line_End_Position (Editor.Get_Current_Line_Number));
         --  Check if we are inside a string literal:
         in_ada_string_literal :=
           Editor.Get_Style_At (old_pos - 1) = SCE_ADA_STRING
@@ -168,17 +174,18 @@ package body LEA_GWin.Editor is
       was_found : Boolean;
       decl   : HAC_Sys.Targets.Declaration_Point;
       --
-      procedure Show_Tip_HAC is
+      procedure Show_Call_Tip_HAC is
         ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
         full_id_name   : constant String := HAC_Sys.Defs.A2S (ide.name_with_case);
         full_id_name_g : constant GString := S2G (full_id_name);
-        entity, params : GString_Unbounded;
+        tip : GString_Unbounded;
         first_param, last_param, block_idx : HAC_Sys.Defs.Index;
         use HAC_Sys.Co_Defs, HAC_Sys.Defs, Ada.Strings.Wide_Unbounded;
+        columns : Natural;
       begin
         case ide.entity is
-          when Prozedure | Prozedure_Intrinsic => entity := G2GU ("procedure");
-          when Funktion | Funktion_Intrinsic   => entity := G2GU ("function");
+          when Prozedure | Prozedure_Intrinsic => tip := G2GU ("procedure");
+          when Funktion | Funktion_Intrinsic   => tip := G2GU ("function");
           when others =>
             return;  --  Not a subprogram!
         end case;
@@ -186,22 +193,35 @@ package body LEA_GWin.Editor is
           HAT.Put_Line
             ("====== Call Tip: found subprogram identifier for '(' : " & full_id_name);
         end if;
+        tip := tip & ' ' & full_id_name_g;
         case ide.entity is
           when Prozedure | Funktion =>
             block_idx := ide.block_or_pkg_ref;
             first_param := main.BD_sem.CD.Blocks_Table (block_idx).First_Param_Id_Idx;
             last_param  := main.BD_sem.CD.Blocks_Table (block_idx).Last_Param_Id_Idx;
             if first_param <= last_param then
-              params := G2GU ("(");
+              columns := Length (tip) + 2;
+              tip := tip & " (";
               for param in first_param .. last_param loop
-                params := params & S2G (A2S (main.BD_sem.CD.IdTab (param).name_with_case));
+                declare
+                  param_name : constant GString :=
+                    S2G (A2S (main.BD_sem.CD.IdTab (param).name_with_case));
+                begin
+                  tip := tip & param_name;
+                  columns := columns + param_name'Length;
+                end;
                 if param < last_param then
-                  params := params & ", ";
+                  tip := tip & ", ";
+                  columns := columns + 2;
+                end if;
+                if columns > 80 then
+                  columns := 2;
+                  tip := tip & NL & "  ";
                 end if;
               end loop;
-              params := params & ')';
+              tip := tip & ')';
             else
-              params := G2GU (" [ no parameter ]");
+              tip := tip & " [ no parameter ]";
             end if;
           when Prozedure_Intrinsic | Funktion_Intrinsic =>
             --  Possibly overloaded, like Put, so we
@@ -213,8 +233,8 @@ package body LEA_GWin.Editor is
         Editor.Set_Tip_Styles (main.opt.color_theme);
         Editor.Call_Tip_Show
           (cur_pos,
-           GU2G (entity) & ' ' & full_id_name_g & ' ' & GU2G (params));
-      end Show_Tip_HAC;
+           GU2G (tip));
+      end Show_Call_Tip_HAC;
 
     begin
       for pos in reverse Position'Max (0, cur_pos - search_tolerance) .. cur_pos loop
@@ -223,7 +243,7 @@ package body LEA_GWin.Editor is
             when HAC_mode =>
               Editor.Find_HAC_Declaration (pos, decl, was_found);
               if was_found then
-                Show_Tip_HAC;
+                Show_Call_Tip_HAC;
               end if;
             when GNAT_mode =>
               null;
@@ -232,6 +252,15 @@ package body LEA_GWin.Editor is
         end if;
       end loop;
     end Try_Call_Tip;
+
+    procedure Identifier_Auto_Complete (prefix : String) is
+    begin
+      --  Build identifier list. If preceded by a '.', build a record
+      --  selector list.
+      Editor.Auto_C_Set_Ignore_Case (True);
+      Editor.Auto_C_Show
+        (prefix'Length, "");
+    end Identifier_Auto_Complete;
 
     opt : LEA_Common.User_options.Option_Pack_Type
             renames MDI_Child_Type (Editor.mdi_parent.all).mdi_root.opt;
@@ -253,9 +282,19 @@ package body LEA_GWin.Editor is
         if opt.auto_insert then
           Try_Auto_Insert;
         end if;
-        if Value = '(' and then main.opt.smart_editor then
+        if Value = '(' and then opt.smart_editor then
           --  Consider a Call Tip (showing parameters of a subprogram).
           Try_Call_Tip;
+        end if;
+      when ')' =>
+        Editor.Call_Tip_Cancel;
+      when 'A' .. 'Z' | 'a' .. 'z' | '_'  | '0' .. '9' =>
+        if opt.smart_editor then
+          --  !! Have an explicit loop for Alpha-numerical cases !!
+          Identifier_Auto_Complete
+            (G2S
+               (Editor.Get_Text_Range
+                  (Editor.Word_Start_Position (cur_pos, False), cur_pos)));
         end if;
       when others =>
         null;
@@ -319,7 +358,7 @@ package body LEA_GWin.Editor is
     main   : MDI_Main_Type  renames parent.mdi_root.all;
     decl   : HAC_Sys.Targets.Declaration_Point;
     --
-    procedure Show_Tip_HAC is
+    procedure Show_Mouse_Hover_Tip_HAC is
       ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
       full_id_name   : constant GString := S2G (HAC_Sys.Defs.A2S (ide.name_with_case));
       padded_id_name : constant GString := NL & ' ' & full_id_name & ' ' & NL;
@@ -339,7 +378,7 @@ package body LEA_GWin.Editor is
            Trim (decl.column'Wide_Image, Left) & ')' & NL);
       end if;
       Editor.Call_Tip_Set_Highlight (3, 3 + full_id_name'Length);
-    end Show_Tip_HAC;
+    end Show_Mouse_Hover_Tip_HAC;
     --
     was_found : Boolean;
   begin
@@ -348,7 +387,7 @@ package body LEA_GWin.Editor is
         when HAC_mode =>
           Editor.Find_HAC_Declaration (Pos, decl, was_found);
           if was_found then
-            Show_Tip_HAC;
+            Show_Mouse_Hover_Tip_HAC;
           end if;
         when GNAT_mode =>
           null;
