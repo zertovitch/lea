@@ -1,6 +1,6 @@
 with LEA_Common.Syntax;
 
-with HAC_Sys.Targets;
+with HAC_Sys.Targets.Semantics;
 
 with GWindows.Base,
      GWindows.Scintilla,
@@ -125,7 +125,7 @@ package LEA_GWin.Editor is
   procedure Find_HAC_Declaration
     (Editor    : in out LEA_Scintilla_Type;
      pos       : in     Position;
-     decl      :    out HAC_Sys.Targets.Declaration_Point;
+     decl      :    out HAC_Sys.Targets.Semantics.Declaration_Point;
      was_found :    out Boolean);
 
   ------------------------------------------------------

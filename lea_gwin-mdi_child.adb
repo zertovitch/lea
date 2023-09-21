@@ -11,7 +11,7 @@ with LEA_GWin.Messages,
 with HAC_Sys.Co_Defs,
      HAC_Sys.Defs,
      HAC_Sys.Librarian,
-     HAC_Sys.Targets;
+     HAC_Sys.Targets.Semantics;
 
 with GWindows.Base,
      GWindows.Common_Dialogs,
@@ -805,7 +805,7 @@ package body LEA_GWin.MDI_Child is
       Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
     can_paste : constant Boolean := Window.Editor.Can_Paste;
     need_separator, has_declaration : Boolean;
-    decl : HAC_Sys.Targets.Declaration_Point;
+    decl : HAC_Sys.Targets.Semantics.Declaration_Point;
     ed_point : GWindows.Types.Point_Type;
     pos : Position;
     use GWindows.Menus, LEA_Resource_GUI;

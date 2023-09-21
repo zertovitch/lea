@@ -8,8 +8,7 @@ with LEA_Common.User_options;
 
 with HAC_Sys.Builder,
      HAC_Sys.Co_Defs,
-     HAC_Sys.Defs,
-     HAC_Sys.Targets.Semantics;
+     HAC_Sys.Defs;
 
 with HAT;
 
@@ -172,7 +171,7 @@ package body LEA_GWin.Editor is
     procedure Try_Call_Tip is
       search_tolerance : constant := 100;
       was_found : Boolean;
-      decl   : HAC_Sys.Targets.Declaration_Point;
+      decl   : HAC_Sys.Targets.Semantics.Declaration_Point;
       --
       procedure Show_Call_Tip_HAC is
         ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
@@ -253,14 +252,39 @@ package body LEA_GWin.Editor is
       end loop;
     end Try_Call_Tip;
 
-    procedure Identifier_Auto_Complete (prefix : String) is
+    procedure Try_Auto_Complete (dot : Boolean) is
+
+      procedure Identifier_Auto_Complete (prefix : String) is
+        ref : constant HAC_Sys.Targets.Semantics.Reference_Point :=
+          (HAT.To_VString (G2S (GU2G (parent.ID.File_Name))),
+           line + 1,
+           Editor.Get_Column (cur_pos) + 1);
+      begin
+        Editor.Auto_C_Set_Ignore_Case (True);
+        Editor.Auto_C_Show
+          (prefix'Length,
+           S2G (main.sem_machine.Find_Possible_Declarations (ref, prefix)));
+      end Identifier_Auto_Complete;
+
+      back_pos : constant Position :=
+        Position'Max (0, Editor.Position_From_Line (line));
+
     begin
-      --  Build identifier list. If preceded by a '.', build a record
-      --  selector list.
-      Editor.Auto_C_Set_Ignore_Case (True);
-      Editor.Auto_C_Show
-        (prefix'Length, "");
-    end Identifier_Auto_Complete;
+      if dot then
+        null;  --  !! try and call Selector_Auto_Complete
+      else
+        for pos_first in reverse back_pos .. cur_pos loop
+          if pos_first = 0 or else Editor.Get_Char_At (pos_first - 1) not in
+            'A' .. 'Z' | 'a' .. 'z' | '_' | '0' .. '9'
+          then
+            --  !! If preceded by a '.', call Selector_Auto_Complete
+            Identifier_Auto_Complete
+              (To_String (Editor.Get_Text_Range (pos_first, cur_pos)));
+            exit;
+          end if;
+        end loop;
+      end if;
+    end Try_Auto_Complete;
 
     opt : LEA_Common.User_options.Option_Pack_Type
             renames MDI_Child_Type (Editor.mdi_parent.all).mdi_root.opt;
@@ -290,11 +314,11 @@ package body LEA_GWin.Editor is
         Editor.Call_Tip_Cancel;
       when 'A' .. 'Z' | 'a' .. 'z' | '_'  | '0' .. '9' =>
         if opt.smart_editor then
-          --  !! Have an explicit loop for Alpha-numerical cases !!
-          Identifier_Auto_Complete
-            (G2S
-               (Editor.Get_Text_Range
-                  (Editor.Word_Start_Position (cur_pos, False), cur_pos)));
+          Try_Auto_Complete (dot => False);
+        end if;
+      when '.' =>
+        if opt.smart_editor then
+          Try_Auto_Complete (dot => True);
         end if;
       when others =>
         null;
@@ -356,7 +380,7 @@ package body LEA_GWin.Editor is
   is
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     main   : MDI_Main_Type  renames parent.mdi_root.all;
-    decl   : HAC_Sys.Targets.Declaration_Point;
+    decl   : HAC_Sys.Targets.Semantics.Declaration_Point;
     --
     procedure Show_Mouse_Hover_Tip_HAC is
       ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
@@ -1085,7 +1109,8 @@ package body LEA_GWin.Editor is
     use HAC_Sys.Builder;
   begin
     if main.opt.smart_editor then
-      main.BD_sem.Set_Target (main.sem_machine);
+      main.BD_sem.Set_Target
+        (HAC_Sys.Targets.Abstract_Machine_Reference (main.sem_machine));
       HAC_Sys.Targets.Semantics.Machine (main.sem_machine.all).CD := main.BD_sem.CD;
       --  We connect the main editor input stream to this editor.
       main.current_editor_stream.Reset (Editor, shebang_offset);
@@ -1266,28 +1291,31 @@ package body LEA_GWin.Editor is
   procedure Find_HAC_Declaration
     (Editor     : in out LEA_Scintilla_Type;
      pos        : in     Position;
-     decl       :    out HAC_Sys.Targets.Declaration_Point;
+     decl       :    out HAC_Sys.Targets.Semantics.Declaration_Point;
      was_found  :    out Boolean)
   is
     parent    : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     main      : MDI_Main_Type  renames parent.mdi_root.all;
     id_pos    : Position;
     line, col : Integer;
-    ref       : HAC_Sys.Targets.Reference_Point;
+    ref       : HAC_Sys.Targets.Semantics.Reference_Point;
   begin
     was_found := False;
-    if Editor.Get_Style_At (pos) = SCE_ADA_IDENTIFIER then
-      id_pos := Editor.Word_Start_Position (pos, True);
-      if id_pos >= 0 then
-        line := Editor.Line_From_Position (id_pos) + 1;
-        col  := Editor.Get_Column (id_pos) + 1;
-        ref := (HAT.To_VString (G2S (GU2G (parent.ID.File_Name))), line, col);
-        main.sem_machine.Find_Declaration
-          (ref       => ref,
-           decl      => decl,
-           was_found => was_found);
+    for test_pos in Position'Max (0, pos - 1) .. pos loop
+      if Editor.Get_Style_At (test_pos) = SCE_ADA_IDENTIFIER then
+        id_pos := Editor.Word_Start_Position (test_pos, True);
+        if id_pos >= 0 then
+          line := Editor.Line_From_Position (id_pos) + 1;
+          col  := Editor.Get_Column (id_pos) + 1;
+          ref := (HAT.To_VString (G2S (GU2G (parent.ID.File_Name))), line, col);
+          main.sem_machine.Find_Declaration
+            (ref       => ref,
+             decl      => decl,
+             was_found => was_found);
+        end if;
+        exit;
       end if;
-    end if;
+    end loop;
   end Find_HAC_Declaration;
 
   --------------------------------------------------------------

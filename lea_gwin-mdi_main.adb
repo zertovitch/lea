@@ -72,7 +72,7 @@ package body LEA_GWin.MDI_Main is
   end Focus_an_already_opened_window;
 
   procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type) is
-    decl : HAC_Sys.Targets.Declaration_Point renames Window.memo_declaration;
+    decl : HAC_Sys.Targets.Semantics.Declaration_Point renames Window.memo_declaration;
   begin
     if not decl.is_built_in then
       Window.Open_Child_Window_And_Load

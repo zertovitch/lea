@@ -71,9 +71,9 @@ package LEA_GWin.MDI_Main is
         BD                          : HAC_Sys.Builder.Build_Data;
         --  Semantics analysis (will be moved to a daemon)
         BD_sem                      : HAC_Sys.Builder.Build_Data;
-        sem_machine                 : HAC_Sys.Targets.Abstract_Machine_Reference :=
+        sem_machine                 : HAC_Sys.Targets.Semantics.Semantics_Machine_Reference :=
                                         new HAC_Sys.Targets.Semantics.Machine;
-        memo_declaration            : HAC_Sys.Targets.Declaration_Point;
+        memo_declaration            : HAC_Sys.Targets.Semantics.Declaration_Point;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Main_Type);
