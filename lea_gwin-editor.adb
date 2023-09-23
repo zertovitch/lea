@@ -263,7 +263,8 @@ package body LEA_GWin.Editor is
         Editor.Auto_C_Set_Ignore_Case (True);
         Editor.Auto_C_Show
           (prefix'Length,
-           S2G (main.sem_machine.Find_Possible_Declarations (ref, prefix)));
+           S2G (main.sem_machine.Find_Possible_Declarations
+             (ref, prefix, 20, 100)));
       end Identifier_Auto_Complete;
 
       back_pos : constant Position :=
@@ -1308,7 +1309,7 @@ package body LEA_GWin.Editor is
           line := Editor.Line_From_Position (id_pos) + 1;
           col  := Editor.Get_Column (id_pos) + 1;
           ref := (HAT.To_VString (G2S (GU2G (parent.ID.File_Name))), line, col);
-          main.sem_machine.Find_Declaration
+          main.sem_machine.Find_Referenced_Declaration
             (ref       => ref,
              decl      => decl,
              was_found => was_found);
