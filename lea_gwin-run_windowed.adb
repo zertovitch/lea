@@ -69,13 +69,10 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
       use HAC_Sys.Defs, Ada.Strings, Ada.Strings.Wide_Fixed;
       diagnostic : Diagnostic_Kit;
     begin
-      diagnostic.file_name := To_Unbounded_String (File_Name);
-      diagnostic.line      := Line_Number;
-      ml.Insert_Item (
-        Trim (Line_Number'Wide_Image, Left),
-        count
-      );
-      --  Here we set a payload in order to get the source file and position
+      diagnostic.file_name     := To_Unbounded_String (File_Name);
+      diagnostic.location.line := Line_Number;
+      ml.Insert_Item (Trim (Line_Number'Wide_Image, Left), count);
+      --  Here, we set a payload in order to get the source file and position
       --  when selecting a row in the error / warnings message list.
       ml.Item_Data
         (count,

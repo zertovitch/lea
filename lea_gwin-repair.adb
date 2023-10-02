@@ -37,7 +37,8 @@ package body LEA_GWin.Repair is
           procedure Expand is
             prev_is_backslash : Boolean := False;
             alt : constant GString := S2G (HAT.VStr_Pkg.To_String (repair.alternative));
-            curr_ind : constant Integer := pw.Editor.Get_Line_Indentation (repair.line - 1);
+            curr_ind : constant Integer :=
+              pw.Editor.Get_Line_Indentation (repair.location.line - 1);
           begin
             for c of alt loop
               case c is
@@ -77,9 +78,9 @@ package body LEA_GWin.Repair is
             --
             pw.Editor.Begin_Undo_Action;
             --
-            line_pos := pw.Editor.Position_From_Line (repair.line - 1);  --  Scintilla's lines are 0-based
-            start_pos := line_pos + Position (repair.column_a);
-            end_pos   := line_pos + Position (repair.column_z);
+            line_pos := pw.Editor.Position_From_Line (repair.location.line - 1);  --  Scintilla's lines are 0-based
+            start_pos := line_pos + Position (repair.location.column_start);
+            end_pos   := line_pos + Position (repair.location.column_stop);
             case repair.repair_kind is
               when none =>
                 --  We should not get here.
@@ -107,9 +108,9 @@ package body LEA_GWin.Repair is
     end if;
     MDI_Main.Open_Child_Window_And_Load
       (file_name,
-       repair.line,  --  Scintilla's lines are 0-based
-       repair.column_a,
-       repair.column_z);
+       repair.location.line,  --  Scintilla's lines are 0-based
+       repair.location.column_start,
+       repair.location.column_stop);
     --  At this point, focus is on the editor window (if the file still exists).
     Enumerate_Children (
       MDI_Client_Window (MDI_Main).all,

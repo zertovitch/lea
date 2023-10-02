@@ -573,7 +573,7 @@ package body LEA_GWin.MDI_Child is
     begin
       msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
       ml.Insert_Item (
-        Trim (diagnostic.line'Wide_Image, Left),
+        Trim (diagnostic.location.line'Wide_Image, Left),
         message_count,
         Icon => Wrench_Icon (diagnostic.repair_kind /= none, has_dark_background)
       );
