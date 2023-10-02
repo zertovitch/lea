@@ -183,8 +183,8 @@ package body LEA_GWin.Editor is
         columns : Natural;
       begin
         case ide.entity is
-          when Prozedure | Prozedure_Intrinsic => tip := G2GU ("procedure");
-          when Funktion | Funktion_Intrinsic   => tip := G2GU ("function");
+          when prozedure | prozedure_intrinsic => tip := G2GU ("procedure");
+          when funktion | funktion_intrinsic   => tip := G2GU ("function");
           when others =>
             return;  --  Not a subprogram!
         end case;
@@ -194,7 +194,7 @@ package body LEA_GWin.Editor is
         end if;
         tip := tip & ' ' & full_id_name_g;
         case ide.entity is
-          when Prozedure | Funktion =>
+          when prozedure | funktion =>
             block_idx := ide.block_or_pkg_ref;
             first_param := main.BD_sem.CD.Blocks_Table (block_idx).First_Param_Id_Idx;
             last_param  := main.BD_sem.CD.Blocks_Table (block_idx).Last_Param_Id_Idx;
@@ -222,7 +222,7 @@ package body LEA_GWin.Editor is
             else
               tip := tip & " [ no parameter ]";
             end if;
-          when Prozedure_Intrinsic | Funktion_Intrinsic =>
+          when prozedure_intrinsic | funktion_intrinsic =>
             --  Possibly overloaded, like Put, so we
             --  show no parameter list at all...
             null;
@@ -1028,10 +1028,11 @@ package body LEA_GWin.Editor is
           ml.Item_Data
             (count,
              new HAC_Sys.Defs.Diagnostic_Kit'
-               (file_name   => To_Unbounded_String (G2S (GU2G (MDI_Child.ID.File_Name))),
-                line        => line + 1,  --  Lines in Diagnostic_Kit are 1-based.
-                column_a    => col,
-                column_z    => col + find_str'Length,
+               (file_name => To_Unbounded_String (G2S (GU2G (MDI_Child.ID.File_Name))),
+                location  =>
+                  (line         => line + 1,  --  Lines in Diagnostic_Kit are 1-based.
+                   column_start => col,
+                   column_stop  => col + find_str'Length),
                 others      => <>));
           ml.Set_Sub_Item (Right_aligned_column_number (col + 1), count, 1);
           ml.Set_Sub_Item (Editor.Get_Line (line), count, 2);
