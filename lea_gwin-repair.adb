@@ -79,7 +79,7 @@ package body LEA_GWin.Repair is
             pw.Editor.Begin_Undo_Action;
             --
             line_pos := pw.Editor.Position_From_Line (repair.location.line - 1);  --  Scintilla's lines are 0-based
-            start_pos := line_pos + Position (repair.location.column_start);
+            start_pos := line_pos + Position (repair.location.column_start) - 1;
             end_pos   := line_pos + Position (repair.location.column_stop);
             case repair.repair_kind is
               when none =>
@@ -109,7 +109,7 @@ package body LEA_GWin.Repair is
     MDI_Main.Open_Child_Window_And_Load
       (file_name,
        repair.location.line,  --  Scintilla's lines are 0-based
-       repair.location.column_start,
+       repair.location.column_start - 1,
        repair.location.column_stop);
     --  At this point, focus is on the editor window (if the file still exists).
     Enumerate_Children (

@@ -34,8 +34,10 @@ package body LEA_GWin.Messages is
             mm.Open_Child_Window_And_Load
               (S2G (Get_Full_Name),
                pl.location.line - 1,  --  Scintilla's lines are 0-based
-               pl.location.column_start,
-               pl.location.column_stop);
+               pl.location.column_start - 1,
+               pl.location.column_start - 1);
+               --  ^ NB: we dont mark the word, otherwise it would be
+               --        .column_stop .
             --  At this point focus is on the editor window.
             if pl.repair_kind /= none
               and then real_click
