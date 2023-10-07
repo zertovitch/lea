@@ -264,14 +264,16 @@ package body LEA_GWin.Editor is
         Editor.Auto_C_Show
           (prefix'Length,
            S2G (main.sem_machine.Find_Possible_Declarations
-             (ref, prefix, 20, 100)));
+             (ref, prefix, 20, 1000)));
       end Identifier_Auto_Complete;
 
       back_pos : constant Position :=
         Position'Max (0, Editor.Position_From_Line (line));
 
     begin
-      if dot then
+      if Editor.Get_Style_At (cur_pos) = SCE_ADA_COMMENTLINE then
+        null;  --  Skip auto-completion within a comment.
+      elsif dot then
         null;  --  !! try and call Selector_Auto_Complete
       else
         for pos_first in reverse back_pos .. cur_pos loop
