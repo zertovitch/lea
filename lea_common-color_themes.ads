@@ -27,7 +27,8 @@ package LEA_Common.Color_Themes is
      messages_background,
      messages_control_background,
      tool_tip_background,
-     tool_tip_foreground_highlighted);
+     tool_tip_foreground_highlighted,
+     caret_line_background);
 
   type RGB_Type is range 0 .. 2**24;
 
@@ -96,7 +97,8 @@ package LEA_Common.Color_Themes is
         messages_background             => White,
         messages_control_background     => White,
         tool_tip_background             => 16#F8F8F8#,  --  Very light gray
-        tool_tip_foreground_highlighted => Dark_Blue),
+        tool_tip_foreground_highlighted => Dark_Blue,
+        caret_line_background           => 16#f0f0ff#),
 
      Dark_Side =>
        (foreground                      => Light_Gray,
@@ -119,7 +121,8 @@ package LEA_Common.Color_Themes is
         messages_background             => 16#161718#,
         messages_control_background     => 16#121314#,
         tool_tip_background             => Dark_Gray,
-        tool_tip_foreground_highlighted => Light_Blue),
+        tool_tip_foreground_highlighted => Light_Blue,
+        caret_line_background           => 16#402020#),
 
      Solarized_Light =>
        (foreground                      => Solarized.base01,
@@ -142,6 +145,7 @@ package LEA_Common.Color_Themes is
         messages_background             => Solarized.base3,
         messages_control_background     => Solarized.base2,
         tool_tip_background             => 16#fdf3e0#,  --  base2, a bit darker
-        tool_tip_foreground_highlighted => Dark_Blue));
+        tool_tip_foreground_highlighted => Dark_Blue,
+        caret_line_background           => 16#ffe8d8#));
 
 end LEA_Common.Color_Themes;
