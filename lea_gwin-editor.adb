@@ -345,6 +345,7 @@ package body LEA_GWin.Editor is
     Editor.Set_EOL_Mode (SC_EOL_CRLF);
     Editor.Set_Use_Tabs (False);  --  New Tab keystrokes use space only (Tab character euthanasia).
     Editor.Set_Edge_Mode (EDGE_LINE);
+    Editor.Set_Caret_Line_Visible (True);
     --
     --  Multi-line edit
     Editor.Set_Multiple_Selection;
@@ -677,6 +678,7 @@ package body LEA_GWin.Editor is
     --  only *after* Style_Clear_All, for some reason):
     Editor.Style_Set_Fore (SCE_ADA_DEFAULT, GWindows_Color_Theme (theme, foreground));
     Editor.Set_Caret_Fore (GWindows_Color_Theme (theme, caret));
+    Editor.Set_Caret_Line_Back (GWindows_Color_Theme (theme, caret_line_background));
 
     if Editor.document_kind /= editable_text then
       Editor.Set_Edge_Mode (EDGE_NONE);
