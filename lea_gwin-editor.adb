@@ -334,7 +334,7 @@ package body LEA_GWin.Editor is
 
   marker_for_bookmarks : constant := 0;
 
-  modification_messages_mask : constant := SC_STARTACTION;
+  modification_messages_mask : constant := SC_STARTACTION + SC_MOD_INSERTTEXT;
   --  Possible: SC_PERFORMED_USER, but must be filtered out
   --  in the case of selection changes to avoid a message flood.
 
@@ -494,6 +494,9 @@ package body LEA_GWin.Editor is
       --  so we are more restrictive in that context, in order to avoid
       --  a message flood...
       mask := SC_STARTACTION;
+      if trace then
+        HAT.Put_Line ("NB: multiple selections, restricted modification mask");
+      end if;
     else
       mask := modification_messages_mask;
     end if;
