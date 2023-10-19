@@ -367,8 +367,6 @@ package body LEA_GWin.Editor is
     Editor.Set_Margin_Mask_N (margin_for_line_numbers, 0);
     Editor.Set_Margin_Mask_N (margin_for_bookmarks,    2 ** marker_for_bookmarks);
     Editor.Marker_Define (marker_for_bookmarks, SC_MARK_BOOKMARK);
-    Editor.Marker_Set_Fore (marker_for_bookmarks, Blue);
-    Editor.Marker_Set_Back (marker_for_bookmarks, Light_Blue);
     Editor.Focus;
     Editor.Set_Mouse_Dwell_Time (500);
     --  Disable default Scintilla context menu, we
@@ -682,6 +680,10 @@ package body LEA_GWin.Editor is
     Editor.Style_Set_Fore (SCE_ADA_DEFAULT, GWindows_Color_Theme (theme, foreground));
     Editor.Set_Caret_Fore (GWindows_Color_Theme (theme, caret));
     Editor.Set_Caret_Line_Back (GWindows_Color_Theme (theme, caret_line_background));
+    Editor.Style_Set_Fore (STYLE_LINENUMBER, GWindows_Color_Theme (theme, foreground));
+    Editor.Style_Set_Back (STYLE_LINENUMBER, GWindows_Color_Theme (theme, caret_line_background));
+    Editor.Marker_Set_Fore (marker_for_bookmarks, GWindows_Color_Theme (theme, bookmark_foreground));
+    Editor.Marker_Set_Back (marker_for_bookmarks, GWindows_Color_Theme (theme, bookmark_background));
 
     if Editor.document_kind /= editable_text then
       Editor.Set_Edge_Mode (EDGE_NONE);
