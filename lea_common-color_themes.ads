@@ -32,7 +32,10 @@ package LEA_Common.Color_Themes is
      bookmark_foreground,
      bookmark_background);
 
-  type RGB_Type is range 0 .. 2**24;
+  --  Color encoding: each value of Red, Green, Blue on 8 bits.
+  --  Red * 16#1_00_00# + Green * 16#1_00# + Blue.
+
+  type RGB_Type is range 0 .. 2**24 - 1;
 
   White       : constant RGB_Type := 16#FFFFFF#;
   Black       : constant RGB_Type := 16#000000#;
