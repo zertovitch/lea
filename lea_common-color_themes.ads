@@ -30,32 +30,34 @@ package LEA_Common.Color_Themes is
      tool_tip_foreground_highlighted,
      caret_line_background,
      bookmark_foreground,
-     bookmark_background);
+     bookmark_background,
+     line_number_background);
 
   --  Color encoding: each value of Red, Green, Blue on 8 bits.
   --  Red * 16#1_00_00# + Green * 16#1_00# + Blue.
 
   type RGB_Type is range 0 .. 2**24 - 1;
 
-  White       : constant RGB_Type := 16#FFFFFF#;
-  Black       : constant RGB_Type := 16#000000#;
-  Silver      : constant RGB_Type := 16#E0E0E0#;
-  Light_Gray  : constant RGB_Type := 16#C0C0C0#;
-  Gray        : constant RGB_Type := 16#808080#;
-  Dark_Gray   : constant RGB_Type := 16#404040#;
-  Red         : constant RGB_Type := 16#FF0000#;
-  Dark_Red    : constant RGB_Type := 16#800000#;
-  Green       : constant RGB_Type := 16#00FF00#;
-  Dark_Green  : constant RGB_Type := 16#008000#;
-  Light_Blue  : constant RGB_Type := 16#88DDFF#;
-  Blue        : constant RGB_Type := 16#0000FF#;
-  Dark_Blue   : constant RGB_Type := 16#000080#;
-  Yellow      : constant RGB_Type := 16#FFFF00#;
-  Magenta     : constant RGB_Type := 16#FF00FF#;
-  Cyan        : constant RGB_Type := 16#00FFFF#;
-  Pink        : constant RGB_Type := 16#FFAFAF#;
-  Orange      : constant RGB_Type := 16#FFC800#;
-  Dark_Orange : constant RGB_Type := 16#F08D24#;
+  White           : constant RGB_Type := 16#FFFFFF#;
+  Black           : constant RGB_Type := 16#000000#;
+  Silver          : constant RGB_Type := 16#E0E0E0#;
+  Very_Light_Gray : constant RGB_Type := 16#F8F8F8#;
+  Light_Gray      : constant RGB_Type := 16#C0C0C0#;
+  Gray            : constant RGB_Type := 16#808080#;
+  Dark_Gray       : constant RGB_Type := 16#404040#;
+  Red             : constant RGB_Type := 16#FF0000#;
+  Dark_Red        : constant RGB_Type := 16#800000#;
+  Green           : constant RGB_Type := 16#00FF00#;
+  Dark_Green      : constant RGB_Type := 16#008000#;
+  Light_Blue      : constant RGB_Type := 16#88DDFF#;
+  Blue            : constant RGB_Type := 16#0000FF#;
+  Dark_Blue       : constant RGB_Type := 16#000080#;
+  Yellow          : constant RGB_Type := 16#FFFF00#;
+  Magenta         : constant RGB_Type := 16#FF00FF#;
+  Cyan            : constant RGB_Type := 16#00FFFF#;
+  Pink            : constant RGB_Type := 16#FFAFAF#;
+  Orange          : constant RGB_Type := 16#FFC800#;
+  Dark_Orange     : constant RGB_Type := 16#F08D24#;
 
   package Solarized is
     --  https://ethanschoonover.com/solarized/#the-values
@@ -101,11 +103,12 @@ package LEA_Common.Color_Themes is
         messages_foreground             => Black,
         messages_background             => White,
         messages_control_background     => White,
-        tool_tip_background             => 16#F8F8F8#,  --  Very light gray
+        tool_tip_background             => Very_Light_Gray,
         tool_tip_foreground_highlighted => Dark_Blue,
         caret_line_background           => 16#f0f0ff#,
         bookmark_foreground             => Blue,
-        bookmark_background             => Light_Blue),
+        bookmark_background             => Light_Blue,
+        line_number_background          => Very_Light_Gray),
 
      Dark_Side =>
        (foreground                      => Light_Gray,
@@ -131,7 +134,8 @@ package LEA_Common.Color_Themes is
         tool_tip_foreground_highlighted => Light_Blue,
         caret_line_background           => 16#402020#,
         bookmark_foreground             => 16#c06060#,
-        bookmark_background             => 16#c06060#),
+        bookmark_background             => 16#c06060#,
+        line_number_background          => 16#282324#),
 
      Solarized_Light =>
        (foreground                      => Solarized.base01,
@@ -157,6 +161,7 @@ package LEA_Common.Color_Themes is
         tool_tip_foreground_highlighted => Dark_Blue,
         caret_line_background           => 16#ffe8d8#,
         bookmark_foreground             => 16#ffc8c8#,
-        bookmark_background             => 16#ffc8c8#));
+        bookmark_background             => 16#ffc8c8#,
+        line_number_background          => 16#faf2e2#));
 
 end LEA_Common.Color_Themes;

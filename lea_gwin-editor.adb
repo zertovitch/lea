@@ -681,7 +681,7 @@ package body LEA_GWin.Editor is
     Editor.Set_Caret_Fore (GWindows_Color_Theme (theme, caret));
     Editor.Set_Caret_Line_Back (GWindows_Color_Theme (theme, caret_line_background));
     Editor.Style_Set_Fore (STYLE_LINENUMBER, GWindows_Color_Theme (theme, foreground));
-    Editor.Style_Set_Back (STYLE_LINENUMBER, GWindows_Color_Theme (theme, caret_line_background));
+    Editor.Style_Set_Back (STYLE_LINENUMBER, GWindows_Color_Theme (theme, line_number_background));
     Editor.Marker_Set_Fore (marker_for_bookmarks, GWindows_Color_Theme (theme, bookmark_foreground));
     Editor.Marker_Set_Back (marker_for_bookmarks, GWindows_Color_Theme (theme, bookmark_background));
 
