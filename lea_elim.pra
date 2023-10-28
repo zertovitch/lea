@@ -364,7 +364,6 @@ pragma Eliminate (GWindows.Common_Controls, Maximum, Source_Location => "gwindow
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:3336");
 pragma Eliminate (GWindows.Common_Controls, Create, Source_Location => "gwindows-common_controls.ads:546");
 pragma Eliminate (GWindows.Common_Controls, Position, Source_Location => "gwindows-common_controls.ads:569");
-pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:3441");
 pragma Eliminate (GWindows.Common_Controls, Position, Source_Location => "gwindows-common_controls.ads:572");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:3454");
 pragma Eliminate (GWindows.Common_Controls, Set_Range, Source_Location => "gwindows-common_controls.ads:575");

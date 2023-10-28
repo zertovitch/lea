@@ -135,7 +135,7 @@ package LEA_Common.Color_Themes is
         caret_line_background           => 16#402020#,
         bookmark_foreground             => 16#c06060#,
         bookmark_background             => 16#c06060#,
-        line_number_background          => 16#282324#),
+        line_number_background          => 16#383334#),
 
      Solarized_Light =>
        (foreground                      => Solarized.base01,
@@ -162,6 +162,6 @@ package LEA_Common.Color_Themes is
         caret_line_background           => 16#ffe8d8#,
         bookmark_foreground             => 16#ffc8c8#,
         bookmark_background             => 16#ffc8c8#,
-        line_number_background          => 16#faf2e2#));
+        line_number_background          => 16#f6ecdc#));
 
 end LEA_Common.Color_Themes;
