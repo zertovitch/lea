@@ -1132,7 +1132,7 @@ package body LEA_GWin.Editor is
          shebang_offset);
       parent.Switch_Current_Directory;
       Set_Message_Feedbacks (main.BD_sem, HAC_Sys.Co_Defs.silent_trace);
-      Build_Main (main.BD_sem);
+      Build_Main (main.BD_sem, compile_only);  --  "Shallow build", for performance.
     end if;
   end Semantics;
 
@@ -1241,9 +1241,12 @@ package body LEA_GWin.Editor is
       s : String (1 .. Integer (l));
     begin
       String'Read (Stream (f), s);
+      Close (f);
+      --  ^ We need to close f before inserting the text.
+      --  Reason: if f contains a package body, Semantics will parse
+      --  the spec, that will continue with the body, opening the file again!
       Editor.Load_Text (contents => s);
     end;
-    Close (f);
   end Load_Text;
 
   procedure Save_Text (Editor : in out LEA_Scintilla_Type; under : GString) is

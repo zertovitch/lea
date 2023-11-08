@@ -419,14 +419,12 @@ package body LEA_GWin.MDI_Child is
     tab_bar : Tabs.LEA_Tab_Bar_Type renames Window.mdi_root.Tab_Bar;
     use HAC_Sys.Defs;
     use type Alfa;
+    main_unit : Alfa renames Window.mdi_root.BD.CD.main_unit_ident_with_case;
   begin
-    if Window.mdi_root.BD.CD.Main_Program_ID_with_case /= Empty_Alfa then
+    if main_unit /= Empty_Alfa then
       --  Suggest the Ada main's name of last tentative build.
       New_File_Name :=
-        G2GU
-          (S2G
-             (HAC_Sys.Librarian.GNAT_File_Naming
-                (A2S (Window.mdi_root.BD.CD.Main_Program_ID_with_case)))) &
+        G2GU (S2G (HAC_Sys.Librarian.GNAT_File_Naming (A2S (main_unit)))) &
         ".adb";
     elsif Window.ID.File_Name = "" then
       --  No file yet for this window.
