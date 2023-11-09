@@ -1118,6 +1118,8 @@ package body LEA_GWin.Editor is
     shebang_offset : Natural;
     --
     use HAC_Sys.Builder;
+    --
+    trace_enabled : constant Boolean := False;
   begin
     if main.opt.smart_editor then
       main.BD_sem.Set_Target
@@ -1131,7 +1133,9 @@ package body LEA_GWin.Editor is
          G2S (parent.Best_Name),
          shebang_offset);
       parent.Switch_Current_Directory;
-      Set_Message_Feedbacks (main.BD_sem, HAC_Sys.Co_Defs.silent_trace);
+      Set_Message_Feedbacks
+        (main.BD_sem,
+         (if trace_enabled then (null, null, 2) else HAC_Sys.Co_Defs.silent_trace));
       Build_Main (main.BD_sem, compile_only);  --  "Shallow build", for performance.
     end if;
   end Semantics;
