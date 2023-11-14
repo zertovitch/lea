@@ -50,12 +50,12 @@ package body LEA_GWin is
          Blue  => Color_Range (rgb mod (2**8)));
   end Color_Convert;
 
-  function GWindows_Color_Theme
-    (theme : LEA_Common.Color_Themes.Color_Theme_Type;
-     topic : LEA_Common.Color_Themes.Color_Topic) return GWindows.Colors.Color_Type
-  is
-  begin
-    return Color_Convert (LEA_Common.Color_Themes.theme_color (theme, topic));
-  end GWindows_Color_Theme;
+--   function GWindows_Color_Theme
+--     (theme : LEA_Common.Color_Themes.Color_Theme_Type;
+--      topic : LEA_Common.Color_Themes.Color_Topic) return GWindows.Colors.Color_Type
+--   is
+--   begin
+--     return Color_Convert (LEA_Common.Color_Themes.theme_color (theme, topic));
+--   end GWindows_Color_Theme;
 
 end LEA_GWin;

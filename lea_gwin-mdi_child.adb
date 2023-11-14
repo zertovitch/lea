@@ -567,7 +567,7 @@ package body LEA_GWin.MDI_Child is
     procedure LEA_HAC_Build_Error_Feedback (diagnostic : Diagnostic_Kit) is
       use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed, LEA_Common.Color_Themes;
       msg_up : String := To_String (diagnostic.message);
-      has_dark_background : constant Boolean := dark_backgrounded (MDI_Main.opt.color_theme);
+      has_dark_background : constant Boolean := Theme_Dark_Backgrounded;
     begin
       msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
       ml.Insert_Item (

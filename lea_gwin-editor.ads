@@ -17,7 +17,7 @@ package LEA_GWin.Editor is
 
   type LEA_Scintilla_Type is new Scintilla_Type with record
     --  Direct access to the window owning the editor widget.
-    --  This is needed to reach the options (color theme, etc.).
+    --  This is needed to reach the options.
     mdi_parent               : GWindows.Base.Pointer_To_Base_Window_Class;
     document_kind            : LEA_Common.Document_kind_type
                                        := LEA_Common.editable_text;
@@ -95,9 +95,7 @@ package LEA_GWin.Editor is
   --  through declarations.
   procedure Semantics (Editor : in out LEA_Scintilla_Type);
 
-  procedure Set_Tip_Styles
-    (Editor : in out LEA_Scintilla_Type;
-     Theme  :        LEA_Common.Color_Themes.Color_Theme_Type);
+  procedure Set_Tip_Styles (Editor : in out LEA_Scintilla_Type);
 
   --  Bookmarks
   procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type);

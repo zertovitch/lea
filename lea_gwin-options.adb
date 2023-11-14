@@ -91,8 +91,9 @@ package body LEA_GWin.Options is
         MDI_Child_Type (Window.all).Editor.Apply_Options;
       end if;
     end Apply_changes_to_child;
-    use LEA_GWin.MDI_Main;
+    use LEA_GWin.MDI_Main, LEA_Common.Color_Themes;
   begin
+    Select_Theme (main.opt.color_theme);
     main.text_files_filters (main.text_files_filters'First).Filter := main.opt.ada_files_filter;
     main.Message_Panel.Message_List.Apply_Options;
     main.Message_Panel.Redraw;
