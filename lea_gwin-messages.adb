@@ -83,12 +83,11 @@ package body LEA_GWin.Messages is
     use GWindows.Colors, LEA_Common, LEA_Common.Color_Themes, MDI_Main;
     --
     mdi_root : MDI_Main_Type renames MDI_Main_Type (Control.mdi_main_parent.all);
-    theme    : Color_Theme_Type renames mdi_root.opt.color_theme;
   begin
-    Control.Text_Color (GWindows_Color_Theme (theme, messages_foreground));
-    Control.Back_Color (GWindows_Color_Theme (theme, messages_background));
-    Control.Control_Back_Color (GWindows_Color_Theme (theme, messages_control_background));
-    mdi_root.Message_Panel.Background_Color (GWindows_Color_Theme (theme, messages_control_background));
+    Control.Text_Color (Color_Convert (Theme_Color (messages_foreground)));
+    Control.Back_Color (Color_Convert (Theme_Color (messages_background)));
+    Control.Control_Back_Color (Color_Convert (Theme_Color (messages_control_background)));
+    mdi_root.Message_Panel.Background_Color (Color_Convert (Theme_Color (messages_control_background)));
   end Apply_Options;
 
   procedure Copy_Messages (Control : in out Message_List_Type) is
@@ -129,8 +128,7 @@ package body LEA_GWin.Messages is
 
   procedure Redraw_Icons (Control : in out Message_List_Type) is
     use HAC_Sys.Defs, LEA_Common.Color_Themes, LEA_LV_Ex;
-    has_dark_background : constant Boolean :=
-      dark_backgrounded (MDI_Main.MDI_Main_Type (Control.mdi_main_parent.all).opt.color_theme);
+    has_dark_background : constant Boolean := Theme_Dark_Backgrounded;
   begin
     for i in 0 .. Control.Item_Count - 1 loop
       if Control.Item_Data (i) /= null

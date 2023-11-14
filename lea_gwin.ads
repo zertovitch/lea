@@ -41,9 +41,9 @@ package LEA_GWin is
   function Color_Convert
     (rgb : LEA_Common.Color_Themes.RGB_Type) return GWindows.Colors.Color_Type;
 
-  function GWindows_Color_Theme
-    (theme : LEA_Common.Color_Themes.Color_Theme_Type;
-     topic : LEA_Common.Color_Themes.Color_Topic) return GWindows.Colors.Color_Type;
+--   function GWindows_Color_Theme
+--     (theme : LEA_Common.Color_Themes.Color_Theme_Type;
+--      topic : LEA_Common.Color_Themes.Color_Topic) return GWindows.Colors.Color_Type;
 
   bool_to_state : constant array (Boolean) of GWindows.Menus.State_Type :=
     (GWindows.Menus.Disabled, GWindows.Menus.Enabled);

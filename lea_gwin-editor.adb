@@ -229,7 +229,7 @@ package body LEA_GWin.Editor is
           when others =>
             null;
         end case;
-        Editor.Set_Tip_Styles (main.opt.color_theme);
+        Editor.Set_Tip_Styles;
         Editor.Call_Tip_Show
           (cur_pos,
            GU2G (tip));
@@ -391,7 +391,7 @@ package body LEA_GWin.Editor is
       use Ada.Directories, LEA_Common.Color_Themes;
     begin
       --  Mouse hover tool tip
-      Editor.Set_Tip_Styles (main.opt.color_theme);
+      Editor.Set_Tip_Styles;
       if decl.is_built_in then
         Editor.Call_Tip_Show (Pos, padded_id_name);
       else
@@ -663,27 +663,26 @@ package body LEA_GWin.Editor is
     --
     parent    : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     mdi_root  : MDI_Main_Type renames parent.mdi_root.all;
-    theme     : Color_Theme_Type renames mdi_root.opt.color_theme;
     Edit_Zone : constant := SCE_ADA_DEFAULT;
   begin
     --  General style
     --  Font color of the line numbers in the left margin:
     Editor.Style_Set_Fore (STYLE_DEFAULT, GWindows.Colors.Gray);
-    Editor.Style_Set_Back (STYLE_DEFAULT, GWindows_Color_Theme (theme, background));
+    Editor.Style_Set_Back (STYLE_DEFAULT, Color_Convert (Theme_Color (background)));
     Editor.Style_Set_Size (STYLE_DEFAULT, App_default_font_size);
     Editor.Style_Set_Font (STYLE_DEFAULT, App_default_font);
-    Editor.Set_Sel_Fore (True, GWindows_Color_Theme (theme, selection_foreground));
-    Editor.Set_Sel_Back (True, GWindows_Color_Theme (theme, selection_background));
+    Editor.Set_Sel_Fore (True, Color_Convert (Theme_Color (selection_foreground)));
+    Editor.Set_Sel_Back (True, Color_Convert (Theme_Color (selection_background)));
     Editor.Style_Clear_All;
     --  Font color of the editor zone (not related to Ada, and works
     --  only *after* Style_Clear_All, for some reason):
-    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, GWindows_Color_Theme (theme, foreground));
-    Editor.Set_Caret_Fore (GWindows_Color_Theme (theme, caret));
-    Editor.Set_Caret_Line_Back (GWindows_Color_Theme (theme, caret_line_background));
-    Editor.Style_Set_Fore (STYLE_LINENUMBER, GWindows_Color_Theme (theme, foreground));
-    Editor.Style_Set_Back (STYLE_LINENUMBER, GWindows_Color_Theme (theme, line_number_background));
-    Editor.Marker_Set_Fore (marker_for_bookmarks, GWindows_Color_Theme (theme, bookmark_foreground));
-    Editor.Marker_Set_Back (marker_for_bookmarks, GWindows_Color_Theme (theme, bookmark_background));
+    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, Color_Convert (Theme_Color (foreground)));
+    Editor.Set_Caret_Fore (Color_Convert (Theme_Color (caret)));
+    Editor.Set_Caret_Line_Back (Color_Convert (Theme_Color (caret_line_background)));
+    Editor.Style_Set_Fore (STYLE_LINENUMBER, Color_Convert (Theme_Color (foreground)));
+    Editor.Style_Set_Back (STYLE_LINENUMBER, Color_Convert (Theme_Color (line_number_background)));
+    Editor.Marker_Set_Fore (marker_for_bookmarks, Color_Convert (Theme_Color (bookmark_foreground)));
+    Editor.Marker_Set_Back (marker_for_bookmarks, Color_Convert (Theme_Color (bookmark_background)));
 
     if Editor.document_kind /= editable_text then
       Editor.Set_Edge_Mode (EDGE_NONE);
@@ -695,37 +694,37 @@ package body LEA_GWin.Editor is
 
     --  Style: parentheses coloring
     --    For matched parentheses:
-    Editor.Style_Set_Fore (STYLE_BRACELIGHT, GWindows_Color_Theme (theme, matched_parenthesis));
-    Editor.Style_Set_Back (STYLE_BRACELIGHT, GWindows_Color_Theme (theme, parenthesis_background));
+    Editor.Style_Set_Fore (STYLE_BRACELIGHT, Color_Convert (Theme_Color (matched_parenthesis)));
+    Editor.Style_Set_Back (STYLE_BRACELIGHT, Color_Convert (Theme_Color (parenthesis_background)));
     --    For unmatched parentheses:
-    Editor.Style_Set_Fore (STYLE_BRACEBAD, GWindows_Color_Theme (theme, unmatched_parenthesis));
-    Editor.Style_Set_Back (STYLE_BRACEBAD, GWindows_Color_Theme (theme, parenthesis_background));
+    Editor.Style_Set_Fore (STYLE_BRACEBAD, Color_Convert (Theme_Color (unmatched_parenthesis)));
+    Editor.Style_Set_Back (STYLE_BRACEBAD, Color_Convert (Theme_Color (parenthesis_background)));
 
     --  Style: Ada-specific coloring
-    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, GWindows_Color_Theme (theme, foreground));
-    Editor.Style_Set_Back (SCE_ADA_DEFAULT, GWindows_Color_Theme (theme, background));
+    Editor.Style_Set_Fore (SCE_ADA_DEFAULT, Color_Convert (Theme_Color (foreground)));
+    Editor.Style_Set_Back (SCE_ADA_DEFAULT, Color_Convert (Theme_Color (background)));
     Editor.Style_Set_Size (SCE_ADA_DEFAULT, App_default_font_size);
     Editor.Style_Set_Font (SCE_ADA_DEFAULT, App_default_font);
     --
-    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, GWindows_Color_Theme (theme, comment));
-    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      GWindows_Color_Theme (theme, number));
-    Editor.Style_Set_Fore (SCE_ADA_WORD,        GWindows_Color_Theme (theme, keyword));
-    Editor.Style_Set_Fore (SCE_ADA_STRING,      GWindows_Color_Theme (theme, string_literal));
-    Editor.Style_Set_Fore (SCE_ADA_CHARACTER,   GWindows_Color_Theme (theme, character_literal));
-    Editor.Style_Set_Fore (SCE_ADA_IDENTIFIER,  GWindows_Color_Theme (theme, foreground));
+    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, Color_Convert (Theme_Color (comment)));
+    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      Color_Convert (Theme_Color (number)));
+    Editor.Style_Set_Fore (SCE_ADA_WORD,        Color_Convert (Theme_Color (keyword)));
+    Editor.Style_Set_Fore (SCE_ADA_STRING,      Color_Convert (Theme_Color (string_literal)));
+    Editor.Style_Set_Fore (SCE_ADA_CHARACTER,   Color_Convert (Theme_Color (character_literal)));
+    Editor.Style_Set_Fore (SCE_ADA_IDENTIFIER,  Color_Convert (Theme_Color (foreground)));
     --
     --  Cases where the text is obviously wrong
     --  (unfinished character or string, illegal identifier)
-    Editor.Style_Set_Fore (SCE_ADA_CHARACTEREOL, GWindows_Color_Theme (theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_CHARACTEREOL, GWindows_Color_Theme (theme, error_background));
-    Editor.Style_Set_Fore (SCE_ADA_STRINGEOL, GWindows_Color_Theme (theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_STRINGEOL, GWindows_Color_Theme (theme, error_background));
-    Editor.Style_Set_Fore (SCE_ADA_ILLEGAL, GWindows_Color_Theme (theme, error_foreground));
-    Editor.Style_Set_Back (SCE_ADA_ILLEGAL, GWindows_Color_Theme (theme, error_background));
+    Editor.Style_Set_Fore (SCE_ADA_CHARACTEREOL, Color_Convert (Theme_Color (error_foreground)));
+    Editor.Style_Set_Back (SCE_ADA_CHARACTEREOL, Color_Convert (Theme_Color (error_background)));
+    Editor.Style_Set_Fore (SCE_ADA_STRINGEOL, Color_Convert (Theme_Color (error_foreground)));
+    Editor.Style_Set_Back (SCE_ADA_STRINGEOL, Color_Convert (Theme_Color (error_background)));
+    Editor.Style_Set_Fore (SCE_ADA_ILLEGAL, Color_Convert (Theme_Color (error_foreground)));
+    Editor.Style_Set_Back (SCE_ADA_ILLEGAL, Color_Convert (Theme_Color (error_background)));
 
     Editor.Indic_Set_Fore (
       word_highlighting_indicator_index,
-      GWindows_Color_Theme (theme, matched_word_highlight)
+      Color_Convert (Theme_Color (matched_word_highlight))
     );
 
     case mdi_root.opt.show_special is
@@ -1140,18 +1139,16 @@ package body LEA_GWin.Editor is
     end if;
   end Semantics;
 
-  procedure Set_Tip_Styles
-    (Editor : in out LEA_Scintilla_Type;
-     Theme  :        LEA_Common.Color_Themes.Color_Theme_Type)
+  procedure Set_Tip_Styles (Editor : in out LEA_Scintilla_Type)
   is
     use LEA_Common.Color_Themes;
   begin
     Editor.Call_Tip_Set_Background_Color
-      (GWindows_Color_Theme (Theme, tool_tip_background));
+      (Color_Convert (Theme_Color (tool_tip_background)));
     Editor.Call_Tip_Set_Foreground_Color
-      (GWindows_Color_Theme (Theme, foreground));
+      (Color_Convert (Theme_Color (foreground)));
     Editor.Call_Tip_Set_Foreground_Color_Highlighted
-      (GWindows_Color_Theme (Theme, tool_tip_foreground_highlighted));
+      (Color_Convert (Theme_Color (tool_tip_foreground_highlighted)));
   end Set_Tip_Styles;
 
   procedure Bookmark_Next (Editor : in out LEA_Scintilla_Type) is
