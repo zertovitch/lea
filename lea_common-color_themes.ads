@@ -25,7 +25,10 @@ package LEA_Common.Color_Themes is
      caret_line_background,
      bookmark_foreground,
      bookmark_background,
-     line_number_background);
+     line_number_background,
+     status_bar_foreground,
+     status_bar_foreground_highlighted,
+     status_bar_background);
 
   --  Color encoding: each value of Red, Green, Blue on 8 bits.
   --  Red * 16#1_00_00# + Green * 16#1_00# + Blue.
