@@ -1,5 +1,6 @@
 with LEA_Common.Syntax,
-     LEA_Common.User_options;
+     LEA_Common.User_options,
+     LEA_Common.Color_Themes;
 
 with LEA_GWin.Messages,
      LEA_GWin.Modal_Dialogs,
@@ -68,64 +69,127 @@ package body LEA_GWin.MDI_Child is
       --  !! Window.Focus = Window.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
+  procedure Apply_Options (Window : in out MDI_Child_Type) is
+  begin
+    Window.Update_Information (first_display);
+  end Apply_Options;
+
   procedure Update_Information
     (Window : in out MDI_Child_Type;
      need   :        Update_need)
   is
-  pragma Unreferenced (need);
+    use GWindows.Common_Controls;
+    use LEA_Common.Color_Themes;
 
     procedure Update_Status_Bar is
       pos, sel_a, sel_z : Scintilla.Position;
     begin
+      --  Part 0
+      Window.Status_Bar.Part_Colors
+        (Part             => 0,
+         Background_Color => Color_Convert (Theme_Color (status_bar_background)),
+         Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
       if Window.ID.File_Name = Null_GString_Unbounded then
-        Window.Status_Bar.Text ("No file", 0);
+        Window.Status_Bar.Text ("No file", 0, How => Owner_Drawn);
       end if;
-      if Folder_Focus (Window) then
-        Window.Status_Bar.Text ("Folder selected", 0);
+      if False then -- Folder_Focus (Window) then  TODO: Manage Folder Focus
+        Window.Status_Bar.Text ("Folder selected", 0, How => Owner_Drawn);
         return;
       else
         case Window.Editor.document_kind is
           when editable_text =>
             Window.Status_Bar.Text (
-              LEA_Common.Syntax.File_type_image (Window.Editor.syntax_kind), 0
+              LEA_Common.Syntax.File_type_image (Window.Editor.syntax_kind),
+              0,
+              How => Owner_Drawn
             );
           when help_main =>
-            Window.Status_Bar.Text ("Help", 0);
+            Window.Status_Bar.Text ("Help", 0, How => Owner_Drawn);
         end case;
       end if;
+
+      --  Part 1
+      Window.Status_Bar.Part_Colors
+        (Part             => 1,
+         Background_Color => Color_Convert (Theme_Color (status_bar_background)),
+         Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
       Window.Status_Bar.Text
         ("Length:" & Window.Editor.Get_Length'Wide_Image &
          "     Lines:" & Window.Editor.Get_Line_Count'Wide_Image,
-         1);
+         1,
+         How => Owner_Drawn);
+
+      --  Part 2
+      Window.Status_Bar.Part_Colors
+        (Part             => 2,
+         Background_Color => Color_Convert (Theme_Color (status_bar_background)),
+         Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
       pos   := Window.Editor.Get_Current_Pos;
       sel_a := Window.Editor.Get_Selection_Start;
       sel_z := Window.Editor.Get_Selection_End;
       Window.Status_Bar.Text
         ("Line:"  & Integer'Wide_Image (1 + Window.Editor.Line_From_Position (pos)) &
          " Col:" & Integer'Wide_Image (1 + Window.Editor.Get_Column (pos)),
-         2);
+         2,
+         How => Owner_Drawn);
+
+      --  Part 3
+      Window.Status_Bar.Part_Colors
+        (Part             => 3,
+         Background_Color => Color_Convert (Theme_Color (status_bar_background)),
+         Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
       Window.Status_Bar.Text
         ("Sel:" & Scintilla.Position'Wide_Image (sel_z - sel_a) &
          " (ln:" & Integer'Wide_Image
            (1 +
             Window.Editor.Line_From_Position (sel_z) -
             Window.Editor.Line_From_Position (sel_a)) & ')',
-         3);
+         3,
+         How => Owner_Drawn);
+
+      --  Part 4
+      Window.Status_Bar.Part_Colors
+        (Part             => 4,
+         Background_Color => Color_Convert (Theme_Color (status_bar_background)),
+         Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
       case Window.Editor.Get_EOL_Mode is
         when SC_EOL_CR =>
-          Window.Status_Bar.Text ("EOL: Mac (CR)",        4);
+          Window.Status_Bar.Text ("EOL: Mac (CR)",        4, How => Owner_Drawn);
         when SC_EOL_CRLF =>
-          Window.Status_Bar.Text ("EOL: Windows (CR LF)", 4);
+          Window.Status_Bar.Text ("EOL: Windows (CR LF)", 4, How => Owner_Drawn);
         when SC_EOL_LF =>
-          Window.Status_Bar.Text ("EOL: Unix (LF)",       4);
+          Window.Status_Bar.Text ("EOL: Unix (LF)",       4, How => Owner_Drawn);
         when others =>
           null;
       end case;
+
+      --  Part 5
+      Window.Status_Bar.Part_Colors
+        (Part             => 5,
+         Background_Color => Color_Convert (Theme_Color (status_bar_background)),
+         Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
+
+      --  Part 6
       if Window.Editor.Get_Overtype then
-        Window.Status_Bar.Text ("OVR", 6);
+        Window.Status_Bar.Part_Colors
+          (Part             => 6,
+           Background_Color => Color_Convert (Theme_Color (status_bar_background)),
+           Text_Color       => Color_Convert (Theme_Color (status_bar_foreground_highlighted)));
+        Window.Status_Bar.Text ("OVR", 6, How => Owner_Drawn);
       else
-        Window.Status_Bar.Text ("INS", 6);
+        Window.Status_Bar.Part_Colors
+          (Part             => 6,
+           Background_Color => Color_Convert (Theme_Color (status_bar_background)),
+           Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
+        Window.Status_Bar.Text ("INS", 6, How => Owner_Drawn);
       end if;
+
+      --  Background
+      if need = first_display then
+        Window.Status_Bar.Background_Color (Color_Convert (Theme_Color (status_bar_background)),
+                                            Update_Now => True);
+      end if;
+
     end Update_Status_Bar;
 
     procedure Update_Tool_Bar is
@@ -227,11 +291,7 @@ package body LEA_GWin.MDI_Child is
     --  Window.Subprogram_Panel.Subprogram_Tree.Create (Window.Subprogram_Panel, 1,1,20,20, Lines_At_Root => False);
     --  Window.Subprogram_Panel.Subprogram_Tree.Dock (Fill);
 
-    Window.Editor.mdi_parent := Window'Unrestricted_Access;
-    Window.Editor.Create (Window, 50, 1, 20, 20);  --  Widget starts as a small square...
-    Window.Editor.Dock (Fill);                        --  ...expands into MDI child window.
-    Window.Editor.Set_EOL_Mode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
-
+    --  Status_Bar must be created before Editor
     Window.Status_Bar.Create (Window, "No file");
     Window.Status_Bar.Parts (
         (0 => Status_bar_parts.general_info,      --  General info ("Ada file", ...)
@@ -243,6 +303,12 @@ package body LEA_GWin.MDI_Child is
          6 => Status_bar_parts.ins_ovr            --  Ins / Ovr
        )
     );
+
+    Window.Editor.mdi_parent := Window'Unrestricted_Access;
+    Window.Editor.Create (Window, 50, 1, 20, 20);  --  Widget starts as a small square...
+    Window.Editor.Dock (Fill);                        --  ...expands into MDI child window.
+    Window.Editor.Set_EOL_Mode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
+
     Window.Status_Bar.Dock (At_Bottom);
     Window.Dock_Children;
 
