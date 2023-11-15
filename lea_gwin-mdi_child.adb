@@ -659,9 +659,6 @@ package body LEA_GWin.MDI_Child is
       message_count := message_count + 1;
     end LEA_HAC_Build_Feedback;
     --
-    use_editor_stream : constant Boolean := True;
-    --  ^ So far we don't set a main file name elsewhere, so we
-    --    can always use the editor data as a stream.
     use HAC_Sys.Builder,
         Ada.Calendar, Ada.Directories, Ada.Strings, Ada.Strings.Wide_Fixed, Ada.Text_IO;
     f : Ada.Text_IO.File_Type;
@@ -673,26 +670,14 @@ package body LEA_GWin.MDI_Child is
   begin
     case Window.mdi_root.opt.toolset is
       when HAC_mode =>
-        if use_editor_stream then
-          --  We connect the main editor input stream to this window's editor.
-          Window.mdi_root.current_editor_stream.Reset
-            (Window.Editor, shebang_offset);
-          Set_Main_Source_Stream
-            (Window.mdi_root.BD,
-             Window.mdi_root.current_editor_stream'Access,
-             G2S (Window.Best_Name),
-             shebang_offset);
-        else
-          --  In case the file is not open in an editor window in LEA,
-          --  we use Stream_IO.
-          Open (f, In_File, file_name);
-          Skip_Shebang (f, shebang_offset);
-          Set_Main_Source_Stream
-            (Window.mdi_root.BD,
-             Text_Streams.Stream (f),
-             G2S (Window.Best_Name),
-             shebang_offset);
-        end if;
+        --  We connect the main editor input stream to this window's editor.
+        Window.mdi_root.current_editor_stream.Reset
+          (Window.Editor, shebang_offset);
+        Set_Main_Source_Stream
+          (Window.mdi_root.BD,
+           Window.mdi_root.current_editor_stream'Access,
+           G2S (Window.Best_Name),
+           shebang_offset);
         Window.Switch_Current_Directory;
         --
         ml.Clear;
@@ -708,9 +693,6 @@ package body LEA_GWin.MDI_Child is
         t1 := Clock;
         Build_Main (Window.mdi_root.BD);
         t2 := Clock;
-        if not use_editor_stream then
-          Close (f);
-        end if;
         Set_Message_Feedbacks (Window.mdi_root.BD, HAC_Sys.Co_Defs.default_trace);
         --  Here we have a single-unit build, from the current child window:
         MDI_Main.build_successful := Build_Successful (Window.mdi_root.BD);
