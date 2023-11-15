@@ -72,6 +72,7 @@ package body LEA_GWin.MDI_Child is
   procedure Apply_Options (Window : in out MDI_Child_Type) is
   begin
     Window.Update_Information (first_display);
+    Window.Editor.Apply_Options;
   end Apply_Options;
 
   procedure Update_Information

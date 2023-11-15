@@ -739,8 +739,6 @@ package body LEA_GWin.Editor is
         Editor.Set_View_EOL (True);
     end case;
     Editor.Set_Indentation_Guides (mdi_root.opt.show_indent);
-
-    parent.Apply_Options;
   end Apply_Options;
 
   procedure Set_Current_Line (Editor : in out LEA_Scintilla_Type; line : Integer) is

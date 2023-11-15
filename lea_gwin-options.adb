@@ -84,13 +84,15 @@ package body LEA_GWin.Options is
   end On_General_Options;
 
   procedure Apply_Main_Options (main : in out LEA_GWin.MDI_Main.MDI_Main_Type) is
-    procedure Apply_changes_to_child (Window : GWindows.Base.Pointer_To_Base_Window_Class) is
+    --
+    procedure Apply_Changes_to_Child (Window : GWindows.Base.Pointer_To_Base_Window_Class) is
       use LEA_GWin.MDI_Child;
     begin
       if Window.all in MDI_Child_Type'Class then
-        MDI_Child_Type (Window.all).Editor.Apply_Options;
+        MDI_Child_Type (Window.all).Apply_Options;
       end if;
-    end Apply_changes_to_child;
+    end Apply_Changes_to_Child;
+    --
     use LEA_GWin.MDI_Main, LEA_Common.Color_Themes;
   begin
     Select_Theme (main.opt.color_theme);
@@ -98,7 +100,7 @@ package body LEA_GWin.Options is
     main.Message_Panel.Message_List.Apply_Options;
     main.Message_Panel.Redraw;
     main.Update_Common_Menus;
-    MDI_Client_Window (main).Enumerate_Children (Apply_changes_to_child'Unrestricted_Access);
+    MDI_Client_Window (main).Enumerate_Children (Apply_Changes_to_Child'Unrestricted_Access);
   end Apply_Main_Options;
 
 end LEA_GWin.Options;
