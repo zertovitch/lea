@@ -37,7 +37,8 @@ package body LEA_GWin.MDI_Child is
   use GWindows.Message_Boxes, GWindows.Scintilla;
   use Ada.Strings.Wide_Unbounded;
 
-  package Status_bar_parts is
+  package Status_Bar_Parts is
+    --  Values designate the x-value of the *right* side of each part.
     general_info      : constant := 130;
     length_and_lines  : constant := 170 + general_info;
     line_and_col      : constant := 130 + length_and_lines;
@@ -45,20 +46,26 @@ package body LEA_GWin.MDI_Child is
     eol_indicator     : constant := 130 + selection;
     ansi_unicode      : constant := 120 + eol_indicator;
     ins_ovr           : constant :=  30 + ansi_unicode;
-  end Status_bar_parts;
+  end Status_Bar_Parts;
 
   overriding procedure On_Click (Bar : in out MDI_Child_Status_Bar_Type) is
     x : Integer;
     parent : MDI_Child_Type renames MDI_Child_Type (Bar.Parent.all);
-    use Status_bar_parts;
+    use Status_Bar_Parts;
     frame_width : constant := 8;  --  A hack, guessing the window frame's width
+    bar_margin  : constant := 2;
   begin
     x := GWindows.Cursors.Get_Cursor_Position.X;
     --  NB: parent.Left is the absolute position of the MDI
     --  Child window, not relative to MDI main!
     x := x - parent.Left - Bar.Left - frame_width;
-    if x in length_and_lines .. line_and_col then
+    if x in length_and_lines + bar_margin .. line_and_col - bar_margin then
+      --  Click on the "Line & Column" part.
       Modal_Dialogs.Do_Go_to_Line (parent);
+    elsif x in ansi_unicode + bar_margin .. ins_ovr - bar_margin then
+      --  Click on INS or OVR to toggle it.
+      parent.Editor.Edit_Toggle_Overtype;
+      parent.Update_Information (status_bar);
     end if;
   end On_Click;
 
@@ -295,13 +302,13 @@ package body LEA_GWin.MDI_Child is
     --  Status_Bar must be created before Editor
     Window.Status_Bar.Create (Window, "No file");
     Window.Status_Bar.Parts (
-        (0 => Status_bar_parts.general_info,      --  General info ("Ada file", ...)
-         1 => Status_bar_parts.length_and_lines,  --  Length & lines
-         2 => Status_bar_parts.line_and_col,      --  Line / Col
-         3 => Status_bar_parts.selection,         --  Selection
-         4 => Status_bar_parts.eol_indicator,     --  Unix / Windows / Mac EOLs
-         5 => Status_bar_parts.ansi_unicode,      --  ANSI / Unicode
-         6 => Status_bar_parts.ins_ovr            --  Ins / Ovr
+        (0 => Status_Bar_Parts.general_info,      --  General info ("Ada file", ...)
+         1 => Status_Bar_Parts.length_and_lines,  --  Length & lines
+         2 => Status_Bar_Parts.line_and_col,      --  Line / Col
+         3 => Status_Bar_Parts.selection,         --  Selection
+         4 => Status_Bar_Parts.eol_indicator,     --  Unix / Windows / Mac EOLs
+         5 => Status_Bar_Parts.ansi_unicode,      --  ANSI / Unicode
+         6 => Status_Bar_Parts.ins_ovr            --  Ins / Ovr (Insert vs. Overwrite mode)
        )
     );
 
@@ -851,11 +858,35 @@ package body LEA_GWin.MDI_Child is
     is_any_selection : constant Boolean :=
       Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
     can_paste : constant Boolean := Window.Editor.Can_Paste;
-    need_separator, has_declaration : Boolean;
-    decl : HAC_Sys.Targets.Semantics.Declaration_Point;
+    need_separator : Boolean;
     ed_point : GWindows.Types.Point_Type;
     pos : Position;
     use GWindows.Menus, LEA_Resource_GUI;
+    --
+    procedure Add_Entries_for_Go_to_Declaration is
+      decl : Declaration_Point_Pair;
+      declarations : Natural;
+    begin
+      Window.Editor.Find_HAC_Declarations (pos, decl (1), decl (2), declarations);
+      if declarations > 0 and then not decl (1).is_built_in then
+        if need_separator then
+          Append_Separator (Window.context_menu);
+          need_separator := False;
+        end if;
+        Append_Item
+          (Window.context_menu,
+           "Go to item declaration",
+           IDM_Go_to_memorized_Declaration);
+        if declarations = 2 then
+          Append_Item
+            (Window.context_menu,
+             "Go to item body or full declaration",
+             IDM_Go_to_memorized_Body);
+        end if;
+        main.memo_declaration := decl;
+      end if;
+    end Add_Entries_for_Go_to_Declaration;
+    --
   begin
     Window.context_menu := Create_Popup;
     if is_any_selection then
@@ -868,7 +899,6 @@ package body LEA_GWin.MDI_Child is
     --
     need_separator := is_any_selection or can_paste;
     if main.opt.smart_editor then
-      --  Should translate to Editor client coord !!
       if X >= 0 and then Y >= 0 then
         ed_point := Window.Editor.Point_To_Client ((X, Y));
         pos :=
@@ -877,18 +907,7 @@ package body LEA_GWin.MDI_Child is
         --  Invalid mouse coordinates. Likely, the menu key was used.
         pos := Window.Editor.Get_Current_Pos;
       end if;
-      Window.Editor.Find_HAC_Declaration (pos, decl, has_declaration);
-      if has_declaration and then not decl.is_built_in then
-        if need_separator then
-          Append_Separator (Window.context_menu);
-          need_separator := False;
-        end if;
-        Append_Item
-          (Window.context_menu,
-           "Go to declaration",
-           IDM_Go_to_memorized_Declaration);
-        main.memo_declaration := decl;
-      end if;
+      Add_Entries_for_Go_to_Declaration;
     end if;
     --
     if Count (Window.context_menu) = 0 then

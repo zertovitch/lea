@@ -170,11 +170,11 @@ package body LEA_GWin.Editor is
 
     procedure Try_Call_Tip is
       search_tolerance : constant := 100;
-      was_found : Boolean;
-      decl   : HAC_Sys.Targets.Semantics.Declaration_Point;
+      found : Natural;
+      decl_1, decl_2 : HAC_Sys.Targets.Semantics.Declaration_Point;
       --
       procedure Show_Call_Tip_HAC is
-        ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
+        ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl_1.id_index);
         full_id_name   : constant String := HAC_Sys.Defs.A2S (ide.name_with_case);
         full_id_name_g : constant GString := S2G (full_id_name);
         tip : GString_Unbounded;
@@ -240,8 +240,8 @@ package body LEA_GWin.Editor is
         if Editor.Get_Style_At (pos) = SCE_ADA_IDENTIFIER then
           case main.opt.toolset is
             when HAC_mode =>
-              Editor.Find_HAC_Declaration (pos, decl, was_found);
-              if was_found then
+              Editor.Find_HAC_Declarations (pos, decl_1, decl_2, found);
+              if found > 0 then
                 Show_Call_Tip_HAC;
               end if;
             when GNAT_mode =>
@@ -380,39 +380,39 @@ package body LEA_GWin.Editor is
     (Editor : in out LEA_Scintilla_Type;
      Pos    : in     Position)
   is
-    parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
-    main   : MDI_Main_Type  renames parent.mdi_root.all;
-    decl   : HAC_Sys.Targets.Semantics.Declaration_Point;
+    parent         : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
+    main           : MDI_Main_Type  renames parent.mdi_root.all;
+    decl_1, decl_2 : HAC_Sys.Targets.Semantics.Declaration_Point;
     --
     procedure Show_Mouse_Hover_Tip_HAC is
-      ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl.id_index);
+      ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl_1.id_index);
       full_id_name   : constant GString := S2G (HAC_Sys.Defs.A2S (ide.name_with_case));
       padded_id_name : constant GString := NL & ' ' & full_id_name & ' ' & NL;
       use Ada.Directories, LEA_Common.Color_Themes;
     begin
       --  Mouse hover tool tip
       Editor.Set_Tip_Styles;
-      if decl.is_built_in then
+      if decl_1.is_built_in then
         Editor.Call_Tip_Show (Pos, padded_id_name);
       else
         Editor.Call_Tip_Show
           (Pos,
            padded_id_name & NL &
-           " at " & S2G (Simple_Name (HAT.To_String (decl.file_name))) &
+           " at " & S2G (Simple_Name (HAT.To_String (decl_1.file_name))) &
            " (" &
-           Trim (decl.line'Wide_Image, Left) & ':'  &
-           Trim (decl.column'Wide_Image, Left) & ')' & NL);
+           Trim (decl_1.line'Wide_Image, Left) & ':'  &
+           Trim (decl_1.column'Wide_Image, Left) & ')' & NL);
       end if;
       Editor.Call_Tip_Set_Highlight (3, 3 + full_id_name'Length);
     end Show_Mouse_Hover_Tip_HAC;
     --
-    was_found : Boolean;
+    found : Natural;
   begin
     if main.opt.smart_editor then
       case main.opt.toolset is
         when HAC_mode =>
-          Editor.Find_HAC_Declaration (Pos, decl, was_found);
-          if was_found then
+          Editor.Find_HAC_Declarations (Pos, decl_1, decl_2, found);
+          if found > 0 then
             Show_Mouse_Hover_Tip_HAC;
           end if;
         when GNAT_mode =>
@@ -746,11 +746,9 @@ package body LEA_GWin.Editor is
   begin
     --  Tactic to show the desired line closer to the middle of the window,
     --  avoiding top or bottom if possible.
-    if line > shake then
-      Editor.Go_To_Line (line - shake);  --  A bit too high
-    end if;
-    Editor.Go_To_Line (line + shake);    --  A bit too low
-    Editor.Go_To_Line (line);            --  Finally, set the correct line
+    Editor.Go_To_Line (Integer'Max (0, line - shake));  --  A bit too high
+    Editor.Go_To_Line (line + shake);                   --  A bit too low
+    Editor.Go_To_Line (line);                           --  Finally, set the correct line
   end Set_Current_Line;
 
   --  If the last line of a selection is fully selected, the end of the selection's
@@ -1134,7 +1132,9 @@ package body LEA_GWin.Editor is
       Set_Message_Feedbacks
         (main.BD_sem,
          (if trace_enabled then (null, null, 2) else HAC_Sys.Co_Defs.silent_trace));
-      Build_Main (main.BD_sem, compile_only);  --  "Shallow build", for performance.
+      --  We build the main (what's in the focused editor),
+      --  plus the bodies of immediatly referenced units.
+      Build_Main (main.BD_sem, body_compilation_rounds_limit => compile_only + 1);
     end if;
   end Semantics;
 
@@ -1302,11 +1302,11 @@ package body LEA_GWin.Editor is
     end case;
   end Set_Scintilla_Syntax;
 
-  procedure Find_HAC_Declaration
-    (Editor     : in out LEA_Scintilla_Type;
-     pos        : in     Position;
-     decl       :    out HAC_Sys.Targets.Semantics.Declaration_Point;
-     was_found  :    out Boolean)
+  procedure Find_HAC_Declarations
+    (Editor         : in out LEA_Scintilla_Type;
+     pos            : in     Position;
+     decl_1, decl_2 :    out HAC_Sys.Targets.Semantics.Declaration_Point;
+     found          :    out Natural)
   is
     parent    : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     main      : MDI_Main_Type  renames parent.mdi_root.all;
@@ -1314,7 +1314,7 @@ package body LEA_GWin.Editor is
     line, col : Integer;
     ref       : HAC_Sys.Targets.Semantics.Reference_Point;
   begin
-    was_found := False;
+    found := 0;
     for test_pos in Position'Max (0, pos - 1) .. pos loop
       if Editor.Get_Style_At (test_pos) = SCE_ADA_IDENTIFIER then
         id_pos := Editor.Word_Start_Position (test_pos, True);
@@ -1322,15 +1322,16 @@ package body LEA_GWin.Editor is
           line := Editor.Line_From_Position (id_pos) + 1;
           col  := Editor.Get_Column (id_pos) + 1;
           ref := (HAT.To_VString (G2S (GU2G (parent.ID.File_Name))), line, col);
-          main.sem_machine.Find_Referenced_Declaration
-            (ref       => ref,
-             decl      => decl,
-             was_found => was_found);
+          main.sem_machine.Find_Referenced_Declarations
+            (ref    => ref,
+             decl_1 => decl_1,
+             decl_2 => decl_2,
+             found  => found);
         end if;
         exit;
       end if;
     end loop;
-  end Find_HAC_Declaration;
+  end Find_HAC_Declarations;
 
   --------------------------------------------------------------
   --  Output of the editor's text is used as an input stream  --

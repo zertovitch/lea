@@ -9,6 +9,7 @@
 #define Folders_BMP                             124
 #define Menu_Fake                               126
 #define Backup_none_button                      40000
+#define IDM_Go_to_memorized_Body                40000
 #define IDM_Go_to_line                          40001
 #define IDM_Open_Project                        40002
 #define IDM_Previous_bookmark                   40003

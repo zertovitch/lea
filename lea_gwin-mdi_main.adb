@@ -71,15 +71,15 @@ package body LEA_GWin.MDI_Main is
        Identify'Unrestricted_Access);
   end Focus_an_already_opened_window;
 
-  procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type) is
-    decl : HAC_Sys.Targets.Semantics.Declaration_Point renames Window.memo_declaration;
+  procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type; number : Pair) is
+    decl : Declaration_Point_Pair renames Window.memo_declaration;
   begin
-    if not decl.is_built_in then
+    if not decl (1).is_built_in then
       Window.Open_Child_Window_And_Load
-        (S2G (HAT.To_String (decl.file_name)),
-         decl.line - 1,  --  Scintilla's lines are 0-based
-         decl.column - 1,
-         decl.column - 1);
+        (S2G (HAT.To_String (decl (number).file_name)),
+         decl (number).line - 1,  --  Scintilla's lines are 0-based
+         decl (number).column - 1,
+         decl (number).column - 1);
     end if;
   end Go_to_memorized_Declaration;
 
@@ -609,7 +609,9 @@ package body LEA_GWin.MDI_Main is
       when IDM_GNAT_Mode =>
         Change_Mode (Window, GNAT_mode);
       when IDM_Go_to_memorized_Declaration =>
-        Window.Go_to_memorized_Declaration;
+        Window.Go_to_memorized_Declaration (1);
+      when IDM_Go_to_memorized_Body =>
+        Window.Go_to_memorized_Declaration (2);
       when others =>
         --  We have perhaps a MRU (most recently used) file entry.
         for i_mru in Window.MRU.ID_Menu'Range loop

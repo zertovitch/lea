@@ -30,6 +30,11 @@ with Interfaces.C;
 
 package LEA_GWin.MDI_Main is
 
+  subtype Pair is Integer range 1 .. 2;
+
+  type Declaration_Point_Pair is
+    array (Pair) of HAC_Sys.Targets.Semantics.Declaration_Point;
+
   type MDI_Main_Type;
   type MDI_Main_Access is access all MDI_Main_Type;
 
@@ -73,7 +78,7 @@ package LEA_GWin.MDI_Main is
         BD_sem                      : HAC_Sys.Builder.Build_Data;
         sem_machine                 : HAC_Sys.Targets.Semantics.Semantics_Machine_Reference :=
                                         new HAC_Sys.Targets.Semantics.Machine;
-        memo_declaration            : HAC_Sys.Targets.Semantics.Declaration_Point;
+        memo_declaration            : Declaration_Point_Pair;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Main_Type);
@@ -128,7 +133,7 @@ package LEA_GWin.MDI_Main is
      Col_a, Col_z :        GWindows.Scintilla.Position := GWindows.Scintilla.INVALID_POSITION;
      is_open      :    out Boolean);
 
-  procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type);
+  procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type; number : Pair);
 
   procedure Update_Common_Menus
     (Window         : in out MDI_Main_Type;
