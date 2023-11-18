@@ -873,11 +873,13 @@ package body LEA_GWin.MDI_Child is
           Append_Separator (Window.context_menu);
           need_separator := False;
         end if;
-        Append_Item
-          (Window.context_menu,
-           "Go to item declaration",
-           IDM_Go_to_memorized_Declaration);
-        if declarations = 2 then
+        if not decl (1).self_reference then
+          Append_Item
+            (Window.context_menu,
+             "Go to item declaration",
+             IDM_Go_to_memorized_Declaration);
+        end if;
+        if declarations = 2 and then not decl (2).self_reference then
           Append_Item
             (Window.context_menu,
              "Go to item body or full declaration",
