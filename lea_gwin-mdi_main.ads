@@ -79,6 +79,7 @@ package LEA_GWin.MDI_Main is
         sem_machine                 : HAC_Sys.Targets.Semantics.Semantics_Machine_Reference :=
                                         new HAC_Sys.Targets.Semantics.Machine;
         memo_declaration            : Declaration_Point_Pair;
+        memo_other_file             : GString_Unbounded;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Main_Type);

@@ -612,6 +612,8 @@ package body LEA_GWin.MDI_Main is
         Window.Go_to_memorized_Declaration (1);
       when IDM_Go_to_memorized_Body =>
         Window.Go_to_memorized_Declaration (2);
+      when IDM_Go_to_other_File =>
+        Window.Open_Child_Window_And_Load (GU2G (Window.memo_other_file));
       when others =>
         --  We have perhaps a MRU (most recently used) file entry.
         for i_mru in Window.MRU.ID_Menu'Range loop

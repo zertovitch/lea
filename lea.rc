@@ -32,6 +32,7 @@ Menu_Fake MENU
     {
         MENUITEM "Go to memorized declaration", IDM_Go_to_memorized_Declaration
         MENUITEM "Go to memorized body", IDM_Go_to_memorized_Body
+        MENUITEM "Go to other file", IDM_Go_to_other_File
     }
 }
 

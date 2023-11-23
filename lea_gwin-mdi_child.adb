@@ -861,7 +861,7 @@ package body LEA_GWin.MDI_Child is
     need_separator : Boolean;
     ed_point : GWindows.Types.Point_Type;
     pos : Position;
-    use GWindows.Menus, LEA_Resource_GUI;
+    use GWindows.Menus, HAC_Sys.Co_Defs, LEA_Resource_GUI;
     --
     procedure Add_Entries_for_Go_to_Declaration is
       decl : Declaration_Point_Pair;
@@ -882,12 +882,48 @@ package body LEA_GWin.MDI_Child is
         if declarations = 2 and then not decl (2).self_reference then
           Append_Item
             (Window.context_menu,
-             "Go to item body or full declaration",
+             "Go to item " &
+             (if main.BD_sem.CD.IdTab (decl (1).id_index).entity in
+                 declared_number_or_enum_item | constant_object | type_mark
+              then
+                --  Incomplete & complete declarations of record, constant, etc.
+                "full declaration"
+              else
+                --  Spec & body for subprogram, package, task, etc.
+                "body"),
              IDM_Go_to_memorized_Body);
         end if;
         main.memo_declaration := decl;
       end if;
     end Add_Entries_for_Go_to_Declaration;
+    --
+    procedure Add_Entries_for_Spec_Body_Swap is
+      fn_curr : constant String := G2S (GU2G (Window.ID.File_Name));
+      seems_spec : constant Boolean :=
+        fn_curr'Length > 0 and then fn_curr (fn_curr'Last) = 's';
+      fn_other : constant String :=
+        (if seems_spec then
+           main.BD_sem.LD.cat.Full_Body_Source_Name (fn_curr)
+         else
+           main.BD_sem.LD.cat.Full_Spec_Source_Name (fn_curr));
+    begin
+      if fn_curr'Length > 0 then
+        if main.BD_sem.LD.cat.Exists (fn_other) then
+          if need_separator then
+            Append_Separator (Window.context_menu);
+            need_separator := False;
+          end if;
+          Append_Item
+            (Window.context_menu,
+             (if seems_spec then
+                "Jump to body file"
+              else
+                "Jump to specification file"),
+             IDM_Go_to_other_File);
+          main.memo_other_file := G2GU (S2G (fn_other));
+        end if;
+      end if;
+    end Add_Entries_for_Spec_Body_Swap;
     --
   begin
     Window.context_menu := Create_Popup;
@@ -901,15 +937,21 @@ package body LEA_GWin.MDI_Child is
     --
     need_separator := is_any_selection or can_paste;
     if main.opt.smart_editor then
-      if X >= 0 and then Y >= 0 then
-        ed_point := Window.Editor.Point_To_Client ((X, Y));
-        pos :=
-          Window.Editor.Position_From_Point_Close (ed_point.X, ed_point.Y);
-      else
-        --  Invalid mouse coordinates. Likely, the menu key was used.
-        pos := Window.Editor.Get_Current_Pos;
-      end if;
-      Add_Entries_for_Go_to_Declaration;
+      case main.opt.toolset is
+        when HAC_mode =>
+          Add_Entries_for_Spec_Body_Swap;
+          if X >= 0 and then Y >= 0 then
+            ed_point := Window.Editor.Point_To_Client ((X, Y));
+            pos :=
+              Window.Editor.Position_From_Point_Close (ed_point.X, ed_point.Y);
+          else
+            --  Invalid mouse coordinates. Likely, the menu key was used.
+            pos := Window.Editor.Get_Current_Pos;
+          end if;
+          Add_Entries_for_Go_to_Declaration;
+        when GNAT_mode =>
+          null;
+      end case;
     end if;
     --
     if Count (Window.context_menu) = 0 then
