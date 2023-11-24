@@ -7,7 +7,7 @@ package body LEA_Common.Color_Themes is
 --  Silver          : constant RGB_Type := 16#E0E0E0#;
   Very_Light_Gray : constant RGB_Type := 16#F8F8F8#;
   Light_Gray      : constant RGB_Type := 16#C0C0C0#;
----  Gray            : constant RGB_Type := 16#808080#;
+  Gray            : constant RGB_Type := 16#808080#;
   Dark_Gray       : constant RGB_Type := 16#404040#;
   Red             : constant RGB_Type := 16#FF0000#;
   Dark_Red        : constant RGB_Type := 16#800000#;
@@ -31,7 +31,7 @@ package body LEA_Common.Color_Themes is
     base02 : constant RGB_Type := 16#073642#;
     base01 : constant RGB_Type := 16#586e75#;
     base00 : constant RGB_Type := 16#657b83#;
---    base0  : constant RGB_Type := 16#839496#;
+    base0  : constant RGB_Type := 16#839496#;
     base1  : constant RGB_Type := 16#93a1a1#;
     base2  : constant RGB_Type := 16#eee8d5#;
     base3  : constant RGB_Type := 16#fdf6e3#;
@@ -75,7 +75,9 @@ package body LEA_Common.Color_Themes is
         line_number_background            => Very_Light_Gray,
         status_bar_foreground             => 16#202020#,
         status_bar_foreground_highlighted => Dark_Orange,
-        status_bar_background             => White),
+        status_bar_background             => White,
+        splitter_background               => Light_Gray,
+        splitter_dashes                   => Gray),
 
      Dark_Side =>
        (foreground                        => Light_Gray,
@@ -105,7 +107,9 @@ package body LEA_Common.Color_Themes is
         line_number_background            => 16#383334#,
         status_bar_foreground             => Light_Gray,
         status_bar_foreground_highlighted => Orange,
-        status_bar_background             => 16#161718#),
+        status_bar_background             => 16#161718#,
+        splitter_background               => Dark_Gray,
+        splitter_dashes                   => Gray),
 
      Solarized_Light =>
        (foreground                        => Solarized.base01,
@@ -135,7 +139,9 @@ package body LEA_Common.Color_Themes is
         line_number_background            => 16#f6ecdc#,
         status_bar_foreground             => Solarized.base02,
         status_bar_foreground_highlighted => Dark_Orange,
-        status_bar_background             => Solarized.base3));
+        status_bar_background             => Solarized.base3,
+        splitter_background               => Solarized.base2,
+        splitter_dashes                   => Solarized.base0));
 
   --  *************************************************************************
   function Nice_Image (ct : Color_Theme_Type) return UTF_16_String is
