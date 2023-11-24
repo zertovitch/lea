@@ -166,7 +166,35 @@ Menu_MDI_Main MENU
     }
     POPUP "&Edit"
     {
+        MENUITEM "&Undo\tCtrl+Z", IDM_Undo, INACTIVE
+        MENUITEM "&Redo\tCtrl+Y", IDM_Redo, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t to clipboard\tCtrl+X or Shift+Del", IDM_Cut, INACTIVE
+        MENUITEM "&Copy to clipboard\tCtrl+C or Ctrl+Ins", IDM_Copy, INACTIVE
         MENUITEM "Copy message &list to clipboard", IDM_Copy_Messages
+        MENUITEM "&Paste from clipboard\tCtrl+V or Shift+Ins", IDM_Paste, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Duplicate line or selection\tCtrl+D", IDM_Duplicate, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "Select &all\tCtrl+A", IDM_Select_all, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Indent selection\tTab", IDM_Indent, INACTIVE
+        MENUITEM "&Unindent selection\tShift+Tab", IDM_Unindent, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "Co&mment selection\tF7", IDM_Comment, INACTIVE
+        MENUITEM "U&ncomment selection\tShift+F7", IDM_Uncomment, INACTIVE
+    }
+    POPUP "&Navigate"
+    {
+        MENUITEM "Find && Replace...\tCtrl+F", IDM_Find, INACTIVE
+        MENUITEM "Find next\tF3", IDM_Find_Next, INACTIVE
+        MENUITEM "Find previous\tShift+F3", IDM_Find_Previous, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Go to line...\tCtrl+G", IDM_Go_to_line, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "Next bookmark\tF2", IDM_Next_bookmark, INACTIVE
+        MENUITEM "Previous bookmark\tShift+F2", IDM_Previous_bookmark, INACTIVE
+        MENUITEM "Toggle bookmark\tCtrl+F2", IDM_Toggle_bookmark, INACTIVE
     }
     POPUP "&Actions"
     {

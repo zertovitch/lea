@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/11/23  20:17:34
+--  Transcription time: 2023/11/24  21:32:38
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -60,14 +60,15 @@ package LEA_Resource_GUI is
     Popup_0001 : Menu_Type;   --  Popup level: 1; title: "&File"
     Popup_0002 : Menu_Type;   --  Popup level: 2; title: "Open &recent"
     Popup_0003 : Menu_Type;   --  Popup level: 1; title: "&Edit"
-    Popup_0004 : Menu_Type;   --  Popup level: 1; title: "&Actions"
-    Popup_0005 : Menu_Type;   --  Popup level: 1; title: "&View"
-    Popup_0006 : Menu_Type;   --  Popup level: 1; title: "&Options"
-    Popup_0007 : Menu_Type;   --  Popup level: 1; title: "&Window"
-    Popup_0008 : Menu_Type;   --  Popup level: 1; title: "&Help"
+    Popup_0004 : Menu_Type;   --  Popup level: 1; title: "&Navigate"
+    Popup_0005 : Menu_Type;   --  Popup level: 1; title: "&Actions"
+    Popup_0006 : Menu_Type;   --  Popup level: 1; title: "&View"
+    Popup_0007 : Menu_Type;   --  Popup level: 1; title: "&Options"
+    Popup_0008 : Menu_Type;   --  Popup level: 1; title: "&Window"
+    Popup_0009 : Menu_Type;   --  Popup level: 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  --  Menu at line 204
+  --  Menu at line 232
   procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Main_Type);
 
   type About_box_Type is new Window_Type with record
@@ -93,7 +94,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- About_box_Type
 
-  --  Dialog at resource line 235
+  --  Dialog at resource line 263
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -133,7 +134,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  --  Dialog at resource line 248
+  --  Dialog at resource line 276
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -176,7 +177,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- HAC_example_box_Type
 
-  --  Dialog at resource line 264
+  --  Dialog at resource line 292
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -229,7 +230,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 290
+  --  Dialog at resource line 318
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -262,7 +263,7 @@ package LEA_Resource_GUI is
     Stop_VM_Button_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 304
+  --  Dialog at resource line 332
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -305,7 +306,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Reload_Files_Box_Type
 
-  --  Dialog at resource line 320
+  --  Dialog at resource line 348
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -351,7 +352,7 @@ package LEA_Resource_GUI is
     Match_case : Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 343
+  --  Dialog at resource line 371
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -385,7 +386,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 357
+  --  Dialog at resource line 385
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -558,6 +559,6 @@ package LEA_Resource_GUI is
 
   function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  --  Last line of resource script file: 465
+  --  Last line of resource script file: 493
 
 end LEA_Resource_GUI;
