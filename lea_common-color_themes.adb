@@ -20,6 +20,7 @@ package body LEA_Common.Color_Themes is
 --  Magenta         : constant RGB_Type := 16#FF00FF#;
 --  Cyan            : constant RGB_Type := 16#00FFFF#;
   Pink            : constant RGB_Type := 16#FFAFAF#;
+  Light_Pink      : constant RGB_Type := 16#FFF2F2#;
   Orange          : constant RGB_Type := 16#FFC800#;
   Dark_Orange     : constant RGB_Type := 16#F08D24#;
 
@@ -55,8 +56,8 @@ package body LEA_Common.Color_Themes is
         comment                           => Dark_Green,
         string_literal                    => Dark_Gray,
         character_literal                 => Dark_Gray,
-        error_foreground                  => Black,
-        error_background                  => Pink,
+        error_foreground                  => Red,
+        error_background                  => Light_Pink,
         caret                             => Black,
         selection_foreground              => Black,
         selection_background              => Light_Gray,
@@ -87,7 +88,7 @@ package body LEA_Common.Color_Themes is
         comment                           => 16#729fcf#,
         string_literal                    => Yellow,
         character_literal                 => Yellow,
-        error_foreground                  => White,
+        error_foreground                  => Pink,
         error_background                  => Dark_Red,
         caret                             => White,
         selection_foreground              => White,
@@ -119,8 +120,8 @@ package body LEA_Common.Color_Themes is
         comment                           => Solarized.base1,
         string_literal                    => Solarized.cyan,
         character_literal                 => Solarized.blue,
-        error_foreground                  => Solarized.base3,
-        error_background                  => Solarized.orange,
+        error_foreground                  => Solarized.orange,
+        error_background                  => Solarized.base2,
         caret                             => Black,
         selection_foreground              => Solarized.base3,
         selection_background              => Solarized.base00,
