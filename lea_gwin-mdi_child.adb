@@ -638,23 +638,21 @@ package body LEA_GWin.MDI_Child is
     ml : Message_List_Type renames MDI_Main.Message_Panel.Message_List;
     message_count, err_count : Natural := 0;
     --
-    procedure LEA_HAC_Build_Error_Feedback (diagnostic : Diagnostic_Kit) is
+    procedure LEA_HAC_Build_Error_Feedback (kit : Diagnostic_Kit) is
       use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed, LEA_Common.Color_Themes;
-      msg_up : String := To_String (diagnostic.message);
+      msg_up : String := To_String (kit.message);
       has_dark_background : constant Boolean := Theme_Dark_Backgrounded;
     begin
       msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
-      ml.Insert_Item (
-        Trim (diagnostic.location.line'Wide_Image, Left),
-        message_count,
-        Icon => Wrench_Icon (diagnostic.repair_kind /= none, has_dark_background)
-      );
+      ml.Insert_Item
+        (Trim (kit.location.line'Wide_Image, Left),
+         message_count,
+         Icon => Wrench_Icon (kit.repair_kind /= none, has_dark_background));
       --  Here we set a payload in order to get the source file and position
       --  when selecting a row in the error / warnings message list.
-      ml.Item_Data (
-        message_count,
-        new Diagnostic_Kit'(diagnostic)  --  Copy diagnostic into a new heap allocated object.
-      );
+      ml.Item_Data
+        (message_count,
+         new Diagnostic_Kit'(kit));  --  Copy `kit` into a new heap allocated object.
       ml.Set_Sub_Item (S2G (msg_up), message_count, 1);
       message_count := message_count + 1;
       err_count := err_count + 1;
