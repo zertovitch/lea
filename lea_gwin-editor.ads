@@ -126,29 +126,4 @@ package LEA_GWin.Editor is
      decl_1, decl_2 :    out HAC_Sys.Targets.Semantics.Declaration_Point;
      found          :    out Natural);
 
-  ------------------------------------------------------
-  --  Output of the editor's text as an input stream  --
-  ------------------------------------------------------
-
-  type Editor_Stream_Type is new Ada.Streams.Root_Stream_Type with record
-    index  : Ada.Streams.Stream_Element_Offset := 0;
-    editor : access LEA_Scintilla_Type'Class;
-  end record;
-
-  procedure Reset
-    (Stream         : in out Editor_Stream_Type;
-     using          : in out LEA_Scintilla_Type'Class;
-     shebang_offset :    out Natural);
-
-  overriding
-  procedure Read
-    (Stream : in out Editor_Stream_Type;
-     Item   :    out Ada.Streams.Stream_Element_Array;
-     Last   :    out Ada.Streams.Stream_Element_Offset);
-
-  overriding
-  procedure Write
-    (Stream : in out Editor_Stream_Type;
-     Item   : in     Ada.Streams.Stream_Element_Array);
-
 end LEA_GWin.Editor;

@@ -1,4 +1,4 @@
-with LEA_GWin.Editor,
+with LEA_GWin.Editor.Streaming,
      LEA_GWin.Tabs,
      LEA_GWin.Messages,
      LEA_GWin.Search_box,
@@ -64,7 +64,7 @@ package LEA_GWin.MDI_Main is
         --
         Search_box                  : LEA_GWin.Search_box.LEA_search_box_type;
         --  Direct input stream from an editor window:
-        current_editor_stream       : aliased Editor.Editor_Stream_Type;
+        current_editor_stream       : aliased Editor.Streaming.Editor_Stream_Type;
         build_successful            : Boolean := False;
         close_this_search_box       : Boolean := False;
         pragma Volatile (close_this_search_box);
@@ -72,9 +72,9 @@ package LEA_GWin.MDI_Main is
         text_files_filters          : GWindows.Common_Dialogs.Filter_Array
                                         (Initial_text_files_filters'Range) :=
                                            Initial_text_files_filters;
-        --
+        --  HAC Build, activated manually:
         BD                          : HAC_Sys.Builder.Build_Data;
-        --  Semantics analysis (will be moved to a daemon)
+        --  HAC Semantics analysis (will be moved to a daemon):
         BD_sem                      : HAC_Sys.Builder.Build_Data;
         sem_machine                 : HAC_Sys.Targets.Semantics.Semantics_Machine_Reference :=
                                         new HAC_Sys.Targets.Semantics.Machine;
