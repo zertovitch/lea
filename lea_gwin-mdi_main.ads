@@ -63,8 +63,6 @@ package LEA_GWin.MDI_Main is
         Task_bar_gadget             : GWindows.Taskbar.Taskbar_List;
         --
         Search_box                  : LEA_GWin.Search_box.LEA_search_box_type;
-        --  Direct input stream from an editor window:
-        current_editor_stream       : aliased Editor.Streaming.Editor_Stream_Type;
         build_successful            : Boolean := False;
         close_this_search_box       : Boolean := False;
         pragma Volatile (close_this_search_box);
@@ -80,6 +78,7 @@ package LEA_GWin.MDI_Main is
                                         new HAC_Sys.Targets.Semantics.Machine;
         memo_declaration            : Declaration_Point_Pair;
         memo_other_file             : GString_Unbounded;
+        lea_file_cat                : aliased LEA_GWin.Editor.Streaming.LEA_File_Catalogue;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Main_Type);

@@ -20,10 +20,12 @@ with GWindows.Application,
      GWindows.Timers;
 
 with Ada.Command_Line,
+     Ada.Directories,
      Ada.Strings.Fixed,
      Ada.Text_IO,
      Ada.Unchecked_Deallocation,
      Ada.Wide_Characters.Handling;
+with HAC_Sys.Librarian;
 
 package body LEA_GWin.MDI_Main is
 
@@ -52,12 +54,12 @@ package body LEA_GWin.MDI_Main is
             pw.Focus;  --  Focus on document already open in our app.
             --  Scintilla lines are 0-based
             if Line > -1 then
-              pw.Editor.Set_Current_Line (Line);
+              pw.editor.Set_Current_Line (Line);
             end if;
             if Col_a > -1 then
-              new_pos_a := pw.Editor.Get_Current_Pos + Col_a;
-              new_pos_z := pw.Editor.Get_Current_Pos + Col_z;
-              pw.Editor.Set_Sel (new_pos_a, new_pos_z);
+              new_pos_a := pw.editor.Get_Current_Pos + Col_a;
+              new_pos_z := pw.editor.Get_Current_Pos + Col_z;
+              pw.editor.Set_Sel (new_pos_a, new_pos_z);
             end if;
           end if;
         end;
@@ -111,10 +113,11 @@ package body LEA_GWin.MDI_Main is
     new_pos_a, new_pos_z : GWindows.Scintilla.Position;
     New_ID : ID_Type;
     New_Window : MDI_Child_Access;
+    full_name : constant GString := S2G (Ada.Directories.Full_Name (G2S (File_Name)));
     use GWindows.Message_Boxes;
     use type GString_Unbounded;
   begin
-    New_ID := (G2GU (File_Name), G2GU (File_Title));
+    New_ID := (G2GU (full_name), G2GU (File_Title));
     Focus_an_already_opened_window (Window, New_ID, Line, Col_a, Col_z, is_open);
     if is_open then
       return;        -- nothing to do, document already in a window
@@ -128,7 +131,7 @@ package body LEA_GWin.MDI_Main is
     declare
       upper_name : GString := File_Name;
     begin
-      New_Window.Editor.Load_Text;
+      New_Window.editor.Load_Text;
       file_loaded := True;
       To_Upper (upper_name);
       for m of Window.MRU.Item loop
@@ -144,24 +147,24 @@ package body LEA_GWin.MDI_Main is
         file_loaded := False;
     end;
     New_Window.Finish_subwindow_opening;
-    New_Window.Editor.syntax_kind :=
+    New_Window.editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
         GU2G (New_Window.ID.File_Name),
         GU2G (Window.opt.ada_files_filter)
       );
-    New_Window.Editor.Set_Scintilla_Syntax;
-    New_Window.Editor.Focus;
+    New_Window.editor.Set_Scintilla_Syntax;
+    New_Window.editor.Focus;
     --  NB: Scintilla lines are 0-based
     if Line > -1 then
-      New_Window.Editor.Set_Current_Line (Line);
+      New_Window.editor.Set_Current_Line (Line);
     elsif mru_line > -1 then
       --  Set cursor position to memorized line number
-      New_Window.Editor.Set_Current_Line (mru_line);
+      New_Window.editor.Set_Current_Line (mru_line);
     end if;
     if Col_a > -1 then
-      new_pos_a := New_Window.Editor.Get_Current_Pos + Col_a;
-      new_pos_z := New_Window.Editor.Get_Current_Pos + Col_z;
-      New_Window.Editor.Set_Sel (new_pos_a, new_pos_z);
+      new_pos_a := New_Window.editor.Get_Current_Pos + Col_a;
+      new_pos_z := New_Window.editor.Get_Current_Pos + Col_z;
+      New_Window.editor.Set_Sel (new_pos_a, new_pos_z);
     end if;
     if file_loaded then
       New_Window.Set_Foreground_Window;
@@ -390,6 +393,11 @@ package body LEA_GWin.MDI_Main is
     Window.Search_box.Create_as_search_box (Window);
     GWindows.Timers.Set_Timer (Window, search_box_timer_id, 100);
     GWindows.Timers.Set_Timer (Window, file_synch_timer_id, 250);
+    --  Now we instruct the librarians of both HAC compilers
+    --  to use our special LEA-flavoured file catalogue:
+    Window.lea_file_cat.mdi_parent := Window'Unchecked_Access;
+    HAC_Sys.Librarian.Set_Source_Access (Window.BD.LD, Window.lea_file_cat'Unchecked_Access);
+    HAC_Sys.Librarian.Set_Source_Access (Window.BD_sem.LD, Window.lea_file_cat'Unchecked_Access);
   end On_Create;
 
   function Is_Minimized (MDI_Main : GWindows.Base.Base_Window_Type'Class)
@@ -489,7 +497,7 @@ package body LEA_GWin.MDI_Main is
     Window.Update_Common_Menus;
     --
     New_Window.Finish_subwindow_opening;
-    New_Window.Editor.Focus;
+    New_Window.editor.Focus;
   end On_File_New;
 
   ------------------
@@ -777,7 +785,7 @@ package body LEA_GWin.MDI_Main is
         and then Any_Window.all in MDI_Child_Type'Class
         and then Window.Focus = Any_Window
       then
-        MDI_Child_Type (Any_Window.all).Editor.Search (action);
+        MDI_Child_Type (Any_Window.all).editor.Search (action);
       end if;
     end Search_on_focused_editor;
   begin

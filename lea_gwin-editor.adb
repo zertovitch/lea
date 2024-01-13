@@ -1122,10 +1122,10 @@ package body LEA_GWin.Editor is
         (HAC_Sys.Targets.Abstract_Machine_Reference (main.sem_machine));
       HAC_Sys.Targets.Semantics.Machine (main.sem_machine.all).CD := main.BD_sem.CD;
       --  We connect the main editor input stream to this editor.
-      main.current_editor_stream.Reset (Editor, shebang_offset);
+      parent.current_editor_stream.Reset (Editor, shebang_offset);
       Set_Main_Source_Stream
         (main.BD_sem,
-         main.current_editor_stream'Access,
+         parent.current_editor_stream'Unchecked_Access,
          G2S (parent.Best_Name),
          shebang_offset);
       parent.Switch_Current_Directory;

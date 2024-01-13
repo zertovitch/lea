@@ -38,7 +38,7 @@ package body LEA_GWin.Repair is
             prev_is_backslash : Boolean := False;
             alt : constant GString := S2G (HAT.VStr_Pkg.To_String (repair.alternative));
             curr_ind : constant Integer :=
-              pw.Editor.Get_Line_Indentation (repair.location.line - 1);
+              pw.editor.Get_Line_Indentation (repair.location.line - 1);
           begin
             for c of alt loop
               case c is
@@ -50,7 +50,7 @@ package body LEA_GWin.Repair is
                   end if;
                 when 'n' =>  --  New line (\n), followed by current line's indentation.
                   if prev_is_backslash then
-                    expanded := expanded & pw.Editor.EOL & curr_ind * ' ';
+                    expanded := expanded & pw.editor.EOL & curr_ind * ' ';
                   else
                     expanded := expanded & c;
                   end if;
@@ -76,9 +76,9 @@ package body LEA_GWin.Repair is
           if pw.ID.File_Name = file_name then
             pw.Focus;  --  Focus on document already open in our app.
             --
-            pw.Editor.Begin_Undo_Action;
+            pw.editor.Begin_Undo_Action;
             --
-            line_pos := pw.Editor.Position_From_Line (repair.location.line - 1);  --  Scintilla's lines are 0-based
+            line_pos := pw.editor.Position_From_Line (repair.location.line - 1);  --  Scintilla's lines are 0-based
             start_pos := line_pos + Position (repair.location.column_start) - 1;
             end_pos   := line_pos + Position (repair.location.column_stop);
             case repair.repair_kind is
@@ -87,16 +87,16 @@ package body LEA_GWin.Repair is
                 null;
               when insert =>
                 --  Set the caret right at the insersion position:
-                pw.Editor.Set_Sel (start_pos, start_pos);
+                pw.editor.Set_Sel (start_pos, start_pos);
               when replace_token =>
                 --  Mark the string to be deleted and delete it:
-                pw.Editor.Set_Sel (start_pos, end_pos);
-                pw.Editor.Clear;
+                pw.editor.Set_Sel (start_pos, end_pos);
+                pw.editor.Clear;
             end case;
             Expand;
-            pw.Editor.Insert_Text (pw.Editor.Get_Current_Pos, GU2G (expanded));
+            pw.editor.Insert_Text (pw.editor.Get_Current_Pos, GU2G (expanded));
             --
-            pw.Editor.End_Undo_Action;
+            pw.editor.End_Undo_Action;
           end if;
         end;
       end if;

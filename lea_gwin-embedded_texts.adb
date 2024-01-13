@@ -45,7 +45,7 @@ package body LEA_GWin.Embedded_Texts is
           one_child : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
         begin
           if Is_Help then
-            already_open := one_child.Editor.document_kind = help_main;
+            already_open := one_child.editor.document_kind = help_main;
           else
             already_open := Equivalent (one_child.ID, New_ID);
           end if;
@@ -80,25 +80,25 @@ package body LEA_GWin.Embedded_Texts is
     begin
       New_Window := new MDI_Child_Type;
       if Is_Help then
-        New_Window.Editor.document_kind := help_main;
+        New_Window.editor.document_kind := help_main;
       else
         Main_Window.Close_Initial_Document;
       end if;
       Main_Window.User_maximize_restore := False;
       New_Window.Create_LEA_MDI_Child (Main_Window, New_ID);
-      New_Window.Editor.Load_Text (contents => unpacked_str);
+      New_Window.editor.Load_Text (contents => unpacked_str);
       if Is_Help then
-        New_Window.Editor.Set_Read_Only (True);
+        New_Window.editor.Set_Read_Only (True);
       else
-        New_Window.Editor.syntax_kind := Ada_syntax;
-        New_Window.Editor.Set_Scintilla_Syntax;
+        New_Window.editor.syntax_kind := Ada_syntax;
+        New_Window.editor.Set_Scintilla_Syntax;
       end if;
     end;
     --  This is just to set the MRUs in the new window's menu:
     Main_Window.Update_Common_Menus;
     --
     New_Window.Finish_subwindow_opening;
-    New_Window.Editor.Focus;
+    New_Window.editor.Focus;
   exception
     when Zip.Archive_corrupted =>
       Message_Box (Main_Window, "Embedded file", "Could not unpack file from " & S2G (lea_exe));

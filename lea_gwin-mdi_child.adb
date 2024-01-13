@@ -64,7 +64,7 @@ package body LEA_GWin.MDI_Child is
       Modal_Dialogs.Do_Go_to_Line (parent);
     elsif x in ansi_unicode + bar_margin .. ins_ovr - bar_margin then
       --  Click on INS or OVR to toggle it.
-      parent.Editor.Edit_Toggle_Overtype;
+      parent.editor.Edit_Toggle_Overtype;
       parent.Update_Information (status_bar);
     end if;
   end On_Click;
@@ -79,7 +79,7 @@ package body LEA_GWin.MDI_Child is
   procedure Apply_Options (Window : in out MDI_Child_Type) is
   begin
     Window.Update_Information (first_display);
-    Window.Editor.Apply_Options;
+    Window.editor.Apply_Options;
   end Apply_Options;
 
   procedure Update_Information
@@ -104,10 +104,10 @@ package body LEA_GWin.MDI_Child is
         Window.Status_Bar.Text ("Folder selected", 0, How => Owner_Drawn);
         return;
       else
-        case Window.Editor.document_kind is
+        case Window.editor.document_kind is
           when editable_text =>
             Window.Status_Bar.Text (
-              LEA_Common.Syntax.File_type_image (Window.Editor.syntax_kind),
+              LEA_Common.Syntax.File_type_image (Window.editor.syntax_kind),
               0,
               How => Owner_Drawn
             );
@@ -122,8 +122,8 @@ package body LEA_GWin.MDI_Child is
          Background_Color => Color_Convert (Theme_Color (status_bar_background)),
          Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
       Window.Status_Bar.Text
-        ("Length:" & Window.Editor.Get_Length'Wide_Image &
-         "     Lines:" & Window.Editor.Get_Line_Count'Wide_Image,
+        ("Length:" & Window.editor.Get_Length'Wide_Image &
+         "     Lines:" & Window.editor.Get_Line_Count'Wide_Image,
          1,
          How => Owner_Drawn);
 
@@ -132,12 +132,12 @@ package body LEA_GWin.MDI_Child is
         (Part             => 2,
          Background_Color => Color_Convert (Theme_Color (status_bar_background)),
          Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
-      pos   := Window.Editor.Get_Current_Pos;
-      sel_a := Window.Editor.Get_Selection_Start;
-      sel_z := Window.Editor.Get_Selection_End;
+      pos   := Window.editor.Get_Current_Pos;
+      sel_a := Window.editor.Get_Selection_Start;
+      sel_z := Window.editor.Get_Selection_End;
       Window.Status_Bar.Text
-        ("Line:"  & Integer'Wide_Image (1 + Window.Editor.Line_From_Position (pos)) &
-         " Col:" & Integer'Wide_Image (1 + Window.Editor.Get_Column (pos)),
+        ("Line:"  & Integer'Wide_Image (1 + Window.editor.Line_From_Position (pos)) &
+         " Col:" & Integer'Wide_Image (1 + Window.editor.Get_Column (pos)),
          2,
          How => Owner_Drawn);
 
@@ -150,8 +150,8 @@ package body LEA_GWin.MDI_Child is
         ("Sel:" & Scintilla.Position'Wide_Image (sel_z - sel_a) &
          " (ln:" & Integer'Wide_Image
            (1 +
-            Window.Editor.Line_From_Position (sel_z) -
-            Window.Editor.Line_From_Position (sel_a)) & ')',
+            Window.editor.Line_From_Position (sel_z) -
+            Window.editor.Line_From_Position (sel_a)) & ')',
          3,
          How => Owner_Drawn);
 
@@ -160,7 +160,7 @@ package body LEA_GWin.MDI_Child is
         (Part             => 4,
          Background_Color => Color_Convert (Theme_Color (status_bar_background)),
          Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
-      case Window.Editor.Get_EOL_Mode is
+      case Window.editor.Get_EOL_Mode is
         when SC_EOL_CR =>
           Window.Status_Bar.Text ("EOL: Mac (CR)",        4, How => Owner_Drawn);
         when SC_EOL_CRLF =>
@@ -178,7 +178,7 @@ package body LEA_GWin.MDI_Child is
          Text_Color       => Color_Convert (Theme_Color (status_bar_foreground)));
 
       --  Part 6
-      if Window.Editor.Get_Overtype then
+      if Window.editor.Get_Overtype then
         Window.Status_Bar.Part_Colors
           (Part             => 6,
            Background_Color => Color_Convert (Theme_Color (status_bar_background)),
@@ -204,16 +204,16 @@ package body LEA_GWin.MDI_Child is
       bar : Office_Applications.Classic_Main_Tool_Bar_Type
         renames Window.mdi_root.Tool_Bar;
       is_any_selection : constant Boolean :=
-        Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
+        Window.editor.Get_Selection_Start < Window.editor.Get_Selection_End;
       use LEA_Resource_GUI;
     begin
-      bar.Enabled (IDM_Undo, Window.Editor.Can_Undo);
-      bar.Enabled (IDM_Redo, Window.Editor.Can_Redo);
-      bar.Enabled (IDM_Save_File, Window.Editor.modified);
+      bar.Enabled (IDM_Undo, Window.editor.Can_Undo);
+      bar.Enabled (IDM_Redo, Window.editor.Can_Redo);
+      bar.Enabled (IDM_Save_File, Window.editor.modified);
       bar.Enabled (IDM_Save_All, Window.save_all_hint);
       bar.Enabled (IDM_Cut, is_any_selection);
       bar.Enabled (IDM_Copy, is_any_selection);
-      bar.Enabled (IDM_Paste, Window.Editor.Can_Paste);
+      bar.Enabled (IDM_Paste, Window.editor.Can_Paste);
       bar.Enabled (IDM_Indent, True);
       bar.Enabled (IDM_Unindent, True);
       bar.Enabled (IDM_Comment, True);
@@ -230,15 +230,15 @@ package body LEA_GWin.MDI_Child is
     procedure Update_Menus is
       use LEA_Resource_GUI, GWindows.Menus;
       is_any_selection : constant Boolean :=
-        Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
+        Window.editor.Get_Selection_Start < Window.editor.Get_Selection_End;
     begin
       State (Window.menu.Main, Command, IDM_Cut,                    bool_to_state (is_any_selection));
       State (Window.menu.Main, Command, IDM_Copy,                   bool_to_state (is_any_selection));
-      State (Window.menu.Main, Command, IDM_Paste,                  bool_to_state (Window.Editor.Can_Paste));
-      State (Window.menu.Main, Command, IDM_Undo,                   bool_to_state (Window.Editor.Can_Undo));
-      State (Window.menu.Main, Command, IDM_Redo,                   bool_to_state (Window.Editor.Can_Redo));
+      State (Window.menu.Main, Command, IDM_Paste,                  bool_to_state (Window.editor.Can_Paste));
+      State (Window.menu.Main, Command, IDM_Undo,                   bool_to_state (Window.editor.Can_Undo));
+      State (Window.menu.Main, Command, IDM_Redo,                   bool_to_state (Window.editor.Can_Redo));
       State (Window.menu.Main, Command, IDM_Open_Containing_Folder, bool_to_state (Length (Window.ID.File_Name) > 0));
-      State (Window.menu.Main, Command, IDM_Save_File,              bool_to_state (Window.Editor.modified));
+      State (Window.menu.Main, Command, IDM_Save_File,              bool_to_state (Window.editor.modified));
       State (Window.menu.Main, Command, IDM_Save_All,               bool_to_state (Window.save_all_hint));
     end Update_Menus;
 
@@ -249,7 +249,7 @@ package body LEA_GWin.MDI_Child is
     is
     begin
       if Any_Window.all in MDI_Child_Type'Class then
-        any_modified := any_modified or MDI_Child_Type (Any_Window.all).Editor.modified;
+        any_modified := any_modified or MDI_Child_Type (Any_Window.all).editor.modified;
       end if;
     end Check_any_modified;
 
@@ -257,7 +257,7 @@ package body LEA_GWin.MDI_Child is
     GWindows.Base.Enumerate_Children (MDI_Client_Window (Window.mdi_root.all).all,
                                       Check_any_modified'Unrestricted_Access);
     Window.save_all_hint := any_modified;
-    if Window.Editor.modified then
+    if Window.editor.modified then
       Window.Text ("* " & GU2G (Window.ID.Short_Name));
     else
       Window.Text (GU2G (Window.ID.Short_Name));
@@ -312,10 +312,10 @@ package body LEA_GWin.MDI_Child is
        )
     );
 
-    Window.Editor.mdi_parent := Window'Unrestricted_Access;
-    Window.Editor.Create (Window, 50, 1, 20, 20);  --  Widget starts as a small square...
-    Window.Editor.Dock (Fill);                        --  ...expands into MDI child window.
-    Window.Editor.Set_EOL_Mode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
+    Window.editor.mdi_parent := Window'Unrestricted_Access;
+    Window.editor.Create (Window, 50, 1, 20, 20);  --  Widget starts as a small square...
+    Window.editor.Dock (Fill);                        --  ...expands into MDI child window.
+    Window.editor.Set_EOL_Mode (SC_EOL_LF);  --  Windows 10's cmd and notepad accept LF EOL's.
 
     Window.Status_Bar.Dock (At_Bottom);
     Window.Dock_Children;
@@ -408,7 +408,7 @@ package body LEA_GWin.MDI_Child is
       written_name := written_name & temp_ext;
     end if;
     --
-    MDI_Child.Editor.Save_Text (GU2G (written_name));
+    MDI_Child.editor.Save_Text (GU2G (written_name));
     --
     if with_backup then
       --  If there was an exception at writing,
@@ -446,10 +446,10 @@ package body LEA_GWin.MDI_Child is
     --  The possible startup extra new document is now saved as a file.
     --  So, in any case, we won't close it now on next window opening.
     MDI_Child.Extra_First_Doc := False;
-    MDI_Child.Update_Common_Menus (File_Name, MDI_Child.Editor.Get_Current_Line_Number);
-    MDI_Child.Editor.Set_Save_Point;
-    MDI_Child.Editor.modified := False;
-    MDI_Child.Editor.Set_Read_Only (False);
+    MDI_Child.Update_Common_Menus (File_Name, MDI_Child.editor.Get_Current_Line_Number);
+    MDI_Child.editor.Set_Save_Point;
+    MDI_Child.editor.modified := False;
+    MDI_Child.editor.Set_Read_Only (False);
   exception
     when backup_error_1 =>
       Message_Box (MDI_Child, "Save", "Cannot delete old backup" & NL & "-> " & backup_name, OK_Box, Exclamation_Icon);
@@ -464,9 +464,9 @@ package body LEA_GWin.MDI_Child is
   procedure On_Save (Window : in out MDI_Child_Type) is
     File_Name : constant GWindows.GString := GU2G (Window.ID.File_Name);
   begin
-    if File_Name = "" or else Window.Editor.Get_Read_Only then
+    if File_Name = "" or else Window.editor.Get_Read_Only then
       Window.Focus;
-      if Window.Editor.Get_Read_Only then
+      if Window.editor.Get_Read_Only then
         Message_Box (Window, "Save", "This document is read-only" & NL & "You need to save it under another name");
       end if;
       Window.On_Save_As;
@@ -477,7 +477,7 @@ package body LEA_GWin.MDI_Child is
 
   overriding function Is_Document_Modified (Window : in MDI_Child_Type) return Boolean is
   begin
-    return Window.Editor.modified;
+    return Window.editor.modified;
   end Is_Document_Modified;
 
   ----------------
@@ -546,13 +546,13 @@ package body LEA_GWin.MDI_Child is
       end if;
     end loop;
     Window.ID := New_ID;
-    Window.Update_Common_Menus (GU2G (New_File_Name), Window.Editor.Get_Current_Line_Number);
-    Window.Editor.syntax_kind :=
+    Window.Update_Common_Menus (GU2G (New_File_Name), Window.editor.Get_Current_Line_Number);
+    Window.editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
         GU2G (Window.ID.File_Name),
         GU2G (Window.mdi_root.opt.ada_files_filter)
       );
-    Window.Editor.Set_Scintilla_Syntax;
+    Window.editor.Set_Scintilla_Syntax;
   end On_Save_As;
 
   procedure On_Save_All (Window : in out MDI_Child_Type) is
@@ -676,12 +676,12 @@ package body LEA_GWin.MDI_Child is
   begin
     case Window.mdi_root.opt.toolset is
       when HAC_mode =>
-        --  We connect the main editor input stream to this window's editor.
-        Window.mdi_root.current_editor_stream.Reset
-          (Window.Editor, shebang_offset);
+        --  We connect this window's input stream to this window's editor.
+        Window.current_editor_stream.Reset
+          (Window.editor, shebang_offset);
         Set_Main_Source_Stream
           (Window.mdi_root.BD,
-           Window.mdi_root.current_editor_stream'Access,
+           Window.current_editor_stream'Unchecked_Access,
            G2S (Window.Best_Name),
            shebang_offset);
         Window.Switch_Current_Directory;
@@ -758,7 +758,7 @@ package body LEA_GWin.MDI_Child is
   is
     use LEA_Resource_GUI;
   begin
-    if Window.Editor.document_kind /= editable_text then
+    if Window.editor.document_kind /= editable_text then
       --  Call parent method
       GWindows.Windows.Window_Type (Window).On_Menu_Select (Item);
       return;
@@ -778,42 +778,42 @@ package body LEA_GWin.MDI_Child is
       when IDM_Close =>
         Window.Close;
       when IDM_Undo =>
-        Window.Editor.Undo;
+        Window.editor.Undo;
         Window.Update_Information (toolbar_and_menu);  --  Possibly disable Undo if no more available
       when IDM_Redo =>
-        Window.Editor.Redo;
+        Window.editor.Redo;
         Window.Update_Information (toolbar_and_menu);  --  Possibly disable Redo if no more available
-      when IDM_Cut =>           Window.Editor.Cut;
-      when IDM_Copy =>          Window.Editor.Copy;
-      when IDM_Paste =>         Window.Editor.Paste;
-      when IDM_Select_all =>    Window.Editor.Select_All;
+      when IDM_Cut =>           Window.editor.Cut;
+      when IDM_Copy =>          Window.editor.Copy;
+      when IDM_Paste =>         Window.editor.Paste;
+      when IDM_Select_all =>    Window.editor.Select_All;
       when IDM_Indent =>
-        Window.Editor.Set_Tab_Width (Window.mdi_root.opt.indentation);
-        Window.Editor.Tab;
-        Window.Editor.Set_Tab_Width (Window.mdi_root.opt.tab_width);
+        Window.editor.Set_Tab_Width (Window.mdi_root.opt.indentation);
+        Window.editor.Tab;
+        Window.editor.Set_Tab_Width (Window.mdi_root.opt.tab_width);
       when IDM_Unindent =>
-        Window.Editor.Set_Tab_Width (Window.mdi_root.opt.indentation);
-        Window.Editor.Back_Tab;
-        Window.Editor.Set_Tab_Width (Window.mdi_root.opt.tab_width);
-      when IDM_Comment =>       Window.Editor.Selection_Comment;
-      when IDM_Uncomment =>     Window.Editor.Selection_Uncomment;
+        Window.editor.Set_Tab_Width (Window.mdi_root.opt.indentation);
+        Window.editor.Back_Tab;
+        Window.editor.Set_Tab_Width (Window.mdi_root.opt.tab_width);
+      when IDM_Comment =>       Window.editor.Selection_Comment;
+      when IDM_Uncomment =>     Window.editor.Selection_Uncomment;
       when IDM_Find =>          Window.Show_Search_Box;
       when IDM_Find_Next =>
         --  If F3 is pressed or "Find next" menu entry is selected
         --  while search box is focused, we need to update the drop-down list(s).
         Search_box.Update_drop_downs (Window.mdi_root.Search_box);
-        Window.Editor.Search (find_next);
+        Window.editor.Search (find_next);
       when IDM_Find_Previous =>
         Search_box.Update_drop_downs (Window.mdi_root.Search_box);
-        Window.Editor.Search (find_previous);
+        Window.editor.Search (find_previous);
       when IDM_Go_to_line =>
         Modal_Dialogs.Do_Go_to_Line (Window);
       when IDM_Toggle_bookmark =>
-        Window.Editor.Bookmark_Toggle (Window.Editor.Get_Current_Line_Number);
+        Window.editor.Bookmark_Toggle (Window.editor.Get_Current_Line_Number);
       when IDM_Next_bookmark =>
-        Window.Editor.Bookmark_Next;
+        Window.editor.Bookmark_Next;
       when IDM_Previous_bookmark =>
-        Window.Editor.Bookmark_Previous;
+        Window.editor.Bookmark_Previous;
       --  Compile / Build actions
       when IDM_Compile_single =>  Window.Build_as_Main;
       when IDM_Build          =>  Window.Build;
@@ -827,7 +827,7 @@ package body LEA_GWin.MDI_Child is
           not Window.mdi_root.opt.show_indent;
         Options.Apply_Main_Options (Window.mdi_root.all);
       when IDM_Duplicate =>
-        Window.Editor.Duplicate;
+        Window.editor.Duplicate;
       when others =>
         --  Call parent method
         GWindows.Windows.Window_Type (Window).On_Menu_Select (Item);
@@ -839,12 +839,12 @@ package body LEA_GWin.MDI_Child is
     tab_index : Integer;
   begin
     Update_Information (Window, toolbar_and_menu);
-    Window.Editor.Focus;
+    Window.editor.Focus;
     tab_index := tab_bar.Tab_Index (Window.ID);
     if tab_index >= 0 then
       tab_bar.Selected_Tab (tab_index);
     end if;
-    Window.Editor.Semantics;
+    Window.editor.Semantics;
   end On_Focus;
 
   overriding procedure On_Context_Menu
@@ -854,8 +854,8 @@ package body LEA_GWin.MDI_Child is
   is
     main : constant MDI_Main_Access := Window.mdi_root;
     is_any_selection : constant Boolean :=
-      Window.Editor.Get_Selection_Start < Window.Editor.Get_Selection_End;
-    can_paste : constant Boolean := Window.Editor.Can_Paste;
+      Window.editor.Get_Selection_Start < Window.editor.Get_Selection_End;
+    can_paste : constant Boolean := Window.editor.Can_Paste;
     need_separator : Boolean;
     ed_point : GWindows.Types.Point_Type;
     pos : Position;
@@ -865,7 +865,7 @@ package body LEA_GWin.MDI_Child is
       decl : Declaration_Point_Pair;
       declarations : Natural;
     begin
-      Window.Editor.Find_HAC_Declarations (pos, decl (1), decl (2), declarations);
+      Window.editor.Find_HAC_Declarations (pos, decl (1), decl (2), declarations);
       if declarations > 0 and then not decl (1).is_built_in then
         if need_separator then
           Append_Separator (Window.context_menu);
@@ -939,12 +939,12 @@ package body LEA_GWin.MDI_Child is
         when HAC_mode =>
           Add_Entries_for_Spec_Body_Swap;
           if X >= 0 and then Y >= 0 then
-            ed_point := Window.Editor.Point_To_Client ((X, Y));
+            ed_point := Window.editor.Point_To_Client ((X, Y));
             pos :=
-              Window.Editor.Position_From_Point_Close (ed_point.X, ed_point.Y);
+              Window.editor.Position_From_Point_Close (ed_point.X, ed_point.Y);
           else
             --  Invalid mouse coordinates. Likely, the menu key was used.
-            pos := Window.Editor.Get_Current_Pos;
+            pos := Window.editor.Get_Current_Pos;
           end if;
           Add_Entries_for_Go_to_Declaration;
         when GNAT_mode =>
@@ -997,7 +997,7 @@ package body LEA_GWin.MDI_Child is
     else
       --  We can safely close this document.
       Window.Update_Common_Menus
-        (GU2G (Window.ID.File_Name), Window.Editor.Get_Current_Line_Number);
+        (GU2G (Window.ID.File_Name), Window.editor.Get_Current_Line_Number);
     end if;
     if Can_Close then
       --  !! Empty the editor's memory if needed
@@ -1035,11 +1035,11 @@ package body LEA_GWin.MDI_Child is
   procedure Show_Search_Box (Window : in out MDI_Child_Type) is
     sel_a, sel_z : Scintilla.Position;
   begin
-    sel_a := Window.Editor.Get_Selection_Start;
-    sel_z := Window.Editor.Get_Selection_End;
+    sel_a := Window.editor.Get_Selection_Start;
+    sel_z := Window.editor.Get_Selection_End;
     if sel_z > sel_a then
       --  Goodie: put the selected text into the "find" box.
-      Window.mdi_root.Search_box.Find_box.Text (Window.Editor.Get_Text_Range (sel_a, sel_z));
+      Window.mdi_root.Search_box.Find_box.Text (Window.editor.Get_Text_Range (sel_a, sel_z));
     end if;
     Window.mdi_root.Search_box.Show;
     Window.mdi_root.Search_box.Find_box.Focus;

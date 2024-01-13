@@ -1,4 +1,4 @@
-with LEA_GWin.Editor,
+with LEA_GWin.Editor.Streaming,
      LEA_GWin.MDI_Main,
      LEA_GWin.Sliding_Panels;
 
@@ -61,28 +61,30 @@ package LEA_GWin.MDI_Child is
   type MDI_Child_Type is
     new Office_Applications.Classic_Document_Window_Type with
       record
-        ID                : ID_Type;
+        ID                    : ID_Type;
         --  Window title = ID.Short_Name & {""|" *"}
-        mdi_root          : LEA_GWin.MDI_Main.MDI_Main_Access; -- -> access to the containing window
-        menu              : LEA_Resource_GUI.Menu_MDI_Child_Type;
+        mdi_root              : LEA_GWin.MDI_Main.MDI_Main_Access; -- -> access to the containing window
+        menu                  : LEA_Resource_GUI.Menu_MDI_Child_Type;
         --  Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
-        Editor            : LEA_GWin.Editor.LEA_Scintilla_Type;
-        context_menu      : GWindows.Menus.Menu_Type := GWindows.Menus.Null_Menu;
-        Subprogram_Panel  : Sliding_Panels.Subprogram_Panel_Type;
-        selected_path     : GString_Unbounded := Null_GString_Unbounded;
-        --  opt              : Option_Pack_Type;  --  No per-child-window option in this app
-        Status_Bar        : MDI_Child_Status_Bar_Type;
-        name_search       : GString_Unbounded;
-        content_search    : GString_Unbounded;
-        current_password  : GString_Unbounded;
-        temp_name_gen     : Ada.Numerics.Float_Random.Generator;
-        any_path_in_zip   : Boolean;
-        extract_dir       : GString_Unbounded;
-        refreshing_list   : Boolean := False;
-        is_closing        : Boolean := False;  --  True only during and after On_Close
-        last_op_comment_1 : GString_Unbounded;
-        last_op_comment_2 : GString_Unbounded;
-        save_all_hint     : Boolean;  --  Used during Update_Information only.
+        editor                : LEA_GWin.Editor.LEA_Scintilla_Type;
+        --  Direct input stream from the editor widget:
+        current_editor_stream : aliased LEA_GWin.Editor.Streaming.Editor_Stream_Type;
+        context_menu          : GWindows.Menus.Menu_Type := GWindows.Menus.Null_Menu;
+        Subprogram_Panel      : Sliding_Panels.Subprogram_Panel_Type;
+        selected_path         : GString_Unbounded := Null_GString_Unbounded;
+        --  opt                  : Option_Pack_Type;  --  No per-child-window option in this app
+        Status_Bar            : MDI_Child_Status_Bar_Type;
+        name_search           : GString_Unbounded;
+        content_search        : GString_Unbounded;
+        current_password      : GString_Unbounded;
+        temp_name_gen         : Ada.Numerics.Float_Random.Generator;
+        any_path_in_zip       : Boolean;
+        extract_dir           : GString_Unbounded;
+        refreshing_list       : Boolean := False;
+        is_closing            : Boolean := False;  --  True only during and after On_Close
+        last_op_comment_1     : GString_Unbounded;
+        last_op_comment_2     : GString_Unbounded;
+        save_all_hint         : Boolean;  --  Used during Update_Information only.
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);

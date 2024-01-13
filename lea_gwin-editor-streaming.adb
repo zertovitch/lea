@@ -1,8 +1,14 @@
+with LEA_GWin.MDI_Child;
+
+with Ada.Directories;
+with GWindows.GStrings;
+with HAT;
+
 package body LEA_GWin.Editor.Streaming is
 
-  --------------------------------------------------------------
-  --  Output of the editor's text is used as an input stream  --
-  --------------------------------------------------------------
+  --------------------------
+  --  Editor_Stream_Type  --
+  --------------------------
 
   procedure Reset
     (Stream         : in out Editor_Stream_Type;
@@ -83,5 +89,109 @@ package body LEA_GWin.Editor.Streaming is
   begin
     raise write_is_not_supported;
   end Write;
+
+  ----------------------
+  --  File_Catalogue  --
+  ----------------------
+
+  overriding function Exists (cat : LEA_File_Catalogue; name : String) return Boolean is
+  begin
+    return cat.Full_Source_Name (name) /= "";
+  end Exists;
+
+  overriding function Full_Source_Name (cat : LEA_File_Catalogue; name : String) return String is
+    --  !!  To do: add pathes. See HAC_Pkg.
+    full_physical_name : constant String := Ada.Directories.Full_Name (name);
+  begin
+    if HAC_Sys.Files.Default.File_Catalogue (cat).Exists (full_physical_name) then
+      return full_physical_name;
+    end if;
+    return "";
+  end Full_Source_Name;
+
+  overriding function Is_Open (cat : LEA_File_Catalogue; name : String) return Boolean is
+  begin
+    return HAC_Sys.Files.Default.File_Catalogue (cat).Is_Open (cat.Full_Source_Name (name));
+  end Is_Open;
+
+  overriding procedure Source_Open
+    (cat         : in out LEA_File_Catalogue;
+     name        : in     String;
+     stream      :    out HAC_Sys.Files.Root_Stream_Class_Access)
+  is
+    full_name : constant String := cat.Full_Source_Name (name);
+    full_name_upper_GString : GString := S2G (full_name);
+    editor_found : Boolean := False;
+    trace : constant Boolean := False;
+    use GWindows.Base;
+
+    procedure Stream_Fronting (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
+    is
+      use MDI_Child;
+    begin
+      if (not editor_found)
+        and then Any_Window /= null
+        and then Any_Window.all in MDI_Child_Type'Class
+      then
+        declare
+          cw : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
+          fn : GString := GU2G (cw.ID.File_Name);
+          shebang_offset : Natural;
+        begin
+          To_Upper (fn);
+          if trace then
+            HAT.Put ("\--> window: " & G2S (fn));
+          end if;
+          if fn = full_name_upper_GString then
+            if trace then
+              HAT.Put (" - match!");
+            end if;
+            editor_found := True;
+            cw.current_editor_stream.Reset (cw.editor, shebang_offset);
+            --  Here we ignore the file's stream because we prefer to
+            --  substitute the editor's stream.
+            --  That way, all open editor windows are used for a build
+            --  including all possible text modifications.
+            stream := cw.current_editor_stream'Unchecked_Access;
+          end if;
+        end;
+        if trace then
+          HAT.New_Line;
+        end if;
+      end if;
+    end Stream_Fronting;
+
+  begin
+    HAC_Sys.Files.Default.File_Catalogue (cat).Source_Open (full_name, stream);
+    --  We open the "physical" stream even if it is not actually used.
+    --  That way, it is locked.
+
+    To_Upper (full_name_upper_GString);
+    if trace then
+      HAT.Put_Line
+        ("Source_Open: " & G2S (full_name_upper_GString) & " - checking open windows:");
+    end if;
+    Enumerate_Children
+      (MDI_Client_Window (cat.mdi_parent.all).all,
+       Stream_Fronting'Unrestricted_Access);
+    if trace then
+      HAT.New_Line;
+    end if;
+  end Source_Open;
+
+  overriding procedure Skip_Shebang
+    (cat            : in out LEA_File_Catalogue;
+     name           : in     String;
+     shebang_offset :    out Natural) is
+  begin
+    HAC_Sys.Files.Default.File_Catalogue (cat).Skip_Shebang
+      (cat.Full_Source_Name (name),
+       shebang_offset);
+  end Skip_Shebang;
+
+  overriding procedure Close (cat : in out LEA_File_Catalogue; name : String) is
+  begin
+    HAC_Sys.Files.Default.File_Catalogue (cat).Close (cat.Full_Source_Name (name));
+  end Close;
 
 end LEA_GWin.Editor.Streaming;

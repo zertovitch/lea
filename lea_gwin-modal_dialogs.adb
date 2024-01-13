@@ -41,14 +41,14 @@ package body LEA_GWin.Modal_Dialogs is
   begin
     box.Create_Full_Dialog (Child_Window);
     box.Center (Child_Window);
-    box.Line_value_box.Text (Integer'Wide_Image (Child_Window.Editor.Get_Current_Line_Number + 1));
+    box.Line_value_box.Text (Integer'Wide_Image (Child_Window.editor.Get_Current_Line_Number + 1));
     box.Line_value_box.Set_Selection (0, 10);
     box.Line_value_box.Focus;
     On_Destroy_Handler (box, Get_Data'Unrestricted_Access);
     case Show_Dialog (box, Child_Window) is
       when IDOK     =>
         if new_line > 0 then
-          Child_Window.Editor.Set_Current_Line (new_line - 1);
+          Child_Window.editor.Set_Current_Line (new_line - 1);
         end if;
       when others   =>
         null;  --  Contains the IDCANCEL case
