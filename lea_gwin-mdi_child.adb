@@ -11,6 +11,7 @@ with LEA_GWin.Messages,
 
 with HAC_Sys.Co_Defs,
      HAC_Sys.Defs,
+     HAC_Sys.Errors,
      HAC_Sys.Librarian,
      HAC_Sys.Targets.Semantics;
 
@@ -636,7 +637,7 @@ package body LEA_GWin.MDI_Child is
     use HAC_Sys.Defs, Messages;
     MDI_Main : MDI_Main_Type renames Window.mdi_root.all;
     ml : Message_List_Type renames MDI_Main.Message_Panel.Message_List;
-    message_count, err_count : Natural := 0;
+    message_count, err_count, remark_count : Natural := 0;
     --
     procedure LEA_HAC_Build_Error_Feedback (kit : Diagnostic_Kit) is
       use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed, LEA_Common.Color_Themes;
@@ -653,9 +654,16 @@ package body LEA_GWin.MDI_Child is
       ml.Item_Data
         (message_count,
          new Diagnostic_Kit'(kit));  --  Copy `kit` into a new heap allocated object.
-      ml.Set_Sub_Item (S2G (msg_up), message_count, 1);
+      ml.Set_Sub_Item
+        (S2G (HAC_Sys.Errors.Diagnostic_Prefix (kit.diagnostic_kind) & msg_up),
+         message_count,
+         1);
       message_count := message_count + 1;
-      err_count := err_count + 1;
+      case kit.diagnostic_kind is
+        when error       => err_count := err_count + 1;
+        when Remark_Type => remark_count := remark_count + 1;
+        when style       => null;
+      end case;
     end LEA_HAC_Build_Error_Feedback;
     --
     procedure LEA_HAC_Build_Feedback (message : String) is
@@ -709,7 +717,11 @@ package body LEA_GWin.MDI_Child is
              Duration'Wide_Image (t2 - t1) &
              " seconds." &
              Window.mdi_root.BD.Total_Compiled_Lines'Wide_Image &
-             " lines compiled in total. No error, no warning",
+             " lines compiled in total. No error," &
+             (case remark_count is
+                when 0 => " no note or warning",
+                when 1 => " 1 note or warning",
+                when others => remark_count'Wide_Image & " notes or warnings"),
              message_count, 1);
         else
           --  Jump on first error
