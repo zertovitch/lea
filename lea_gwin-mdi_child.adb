@@ -640,8 +640,10 @@ package body LEA_GWin.MDI_Child is
     message_count, err_count, remark_count : Natural := 0;
     --
     procedure LEA_HAC_Build_Error_Feedback (kit : Diagnostic_Kit) is
-      use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed, LEA_Common.Color_Themes;
-      msg_up : String := To_String (kit.message);
+      use Ada.Characters.Handling, Ada.Strings, Ada.Strings.Wide_Fixed,
+        LEA_Common.Color_Themes;
+      msg_up : String :=
+        HAC_Sys.Errors.Diagnostic_Prefix (kit.diagnostic_kind) & To_String (kit.message);
       has_dark_background : constant Boolean := Theme_Dark_Backgrounded;
     begin
       msg_up (msg_up'First) := To_Upper (msg_up (msg_up'First));
@@ -654,13 +656,10 @@ package body LEA_GWin.MDI_Child is
       ml.Item_Data
         (message_count,
          new Diagnostic_Kit'(kit));  --  Copy `kit` into a new heap allocated object.
-      ml.Set_Sub_Item
-        (S2G (HAC_Sys.Errors.Diagnostic_Prefix (kit.diagnostic_kind) & msg_up),
-         message_count,
-         1);
+      ml.Set_Sub_Item (S2G (msg_up), message_count, 1);
       message_count := message_count + 1;
       case kit.diagnostic_kind is
-        when error       => err_count := err_count + 1;
+        when error       => err_count    := err_count    + 1;
         when Remark_Type => remark_count := remark_count + 1;
         when style       => null;
       end case;
