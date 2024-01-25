@@ -1136,6 +1136,8 @@ package body LEA_GWin.Editor is
       --  plus the bodies of immediatly referenced units.
       Build_Main (main.BD_sem, body_compilation_rounds_limit => compile_only + 1);
     end if;
+  exception
+    when others => null;  --  Don't crash LEA if HAC does (on semantics)
   end Semantics;
 
   procedure Set_Tip_Styles (Editor : in out LEA_Scintilla_Type)

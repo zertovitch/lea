@@ -679,6 +679,7 @@ package body LEA_GWin.MDI_Child is
     short_name : constant String := G2S (GU2G (Window.ID.Short_Name));
     shebang_offset : Natural;
     t1, t2 : Time;
+    compiler_bug : Boolean := False;
     --
   begin
     case Window.mdi_root.opt.toolset is
@@ -704,33 +705,46 @@ package body LEA_GWin.MDI_Child is
             progress     => LEA_HAC_Build_Feedback'Unrestricted_Access,
             detail_level => 1));
         t1 := Clock;
-        Build_Main (Window.mdi_root.BD);
+        begin
+          Build_Main (Window.mdi_root.BD);
+        exception
+          when others =>
+            ml.Insert_Item ("", message_count);
+            ml.Set_Sub_Item
+              ("*** Crash in HAC - compiler bug! ***", message_count, 1);
+            message_count := message_count + 1;
+            compiler_bug := True;
+        end;
         t2 := Clock;
         Set_Message_Feedbacks (Window.mdi_root.BD, HAC_Sys.Co_Defs.default_trace);
-        --  Here we have a single-unit build, from the current child window:
-        MDI_Main.build_successful := Build_Successful (Window.mdi_root.BD);
-        if err_count = 0 then
-          ml.Insert_Item ("", message_count);
-          ml.Set_Sub_Item
-            ("Build finished in" &
-             Duration'Wide_Image (t2 - t1) &
-             " seconds." &
-             Window.mdi_root.BD.Total_Compiled_Lines'Wide_Image &
-             " lines compiled in total. No error," &
-             (case remark_count is
-                when 0 => " no note or warning",
-                when 1 => " 1 note or warning",
-                when others => remark_count'Wide_Image & " notes or warnings"),
-             message_count, 1);
+        if compiler_bug then
+          MDI_Main.build_successful := False;
         else
-          --  Jump on first error
-          for Index in 0 .. ml.Item_Count - 1 loop
-            if Trim (ml.Text (Index, 0), Both) /= "" then
-              ml.Selected (Index, True);
-              ml.Message_Line_Action (real_click => False);
-              exit;
-            end if;
-          end loop;
+          --  Here we have a single-unit build, from the current child window:
+          MDI_Main.build_successful := Build_Successful (Window.mdi_root.BD);
+          if err_count = 0 then
+            ml.Insert_Item ("", message_count);
+            ml.Set_Sub_Item
+              ("Build finished in" &
+               Duration'Wide_Image (t2 - t1) &
+               " seconds." &
+               Window.mdi_root.BD.Total_Compiled_Lines'Wide_Image &
+               " lines compiled in total. No error," &
+               (case remark_count is
+                  when 0 => " no note or warning",
+                  when 1 => " 1 note or warning",
+                  when others => remark_count'Wide_Image & " notes or warnings"),
+               message_count, 1);
+          else
+            --  Jump on first error
+            for Index in 0 .. ml.Item_Count - 1 loop
+              if Trim (ml.Text (Index, 0), Both) /= "" then
+                ml.Selected (Index, True);
+                ml.Message_Line_Action (real_click => False);
+                exit;
+              end if;
+            end loop;
+          end if;
         end if;
       when GNAT_mode =>
         null;
