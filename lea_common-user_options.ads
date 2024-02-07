@@ -52,8 +52,7 @@ package LEA_Common.User_options is
                               To_Unbounded_Wide_String ("*.ads;*.adb;*.ada;*.hac");
     --
     --  "Smart editor" feature set: mouse-hover tips, call tips, auto-complete, ...
-    --  Note Sep-2023: it is in its early days and not yet "bullet-proof"...
-    smart_editor : Boolean := False;
+    smart_editor : Boolean := True;
   end record;
 
   procedure Toggle_show_special (o : in out Option_Pack_Type);

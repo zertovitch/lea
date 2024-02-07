@@ -307,6 +307,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Tab width (symbol AND keystroke)", 0, 7, 32, 110, 9, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Tab_width_edit_box, 121, 31, 18, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     AUTOCHECKBOX    "Auto-insert for () and """"", Auto_Insert_Check_Box, 7, 50, 177, 15, 0, WS_EX_LEFT
+    AUTOCHECKBOX    "Smart Editor", Smart_Editor_Check_Box, 117, 50, 177, 15, 0, WS_EX_LEFT
     LTEXT           "Ada file extensions", 0, 8, 76, 63, 9, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Ada_file_extension_edit_box, 84, 74, 213, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     GROUPBOX        "Color theme", Group_color_theme, 6, 127, 291, 28, 0, WS_EX_LEFT

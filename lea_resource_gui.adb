@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2023/11/24  21:32:38
+--  Transcription time: 2024/02/07  21:00:25
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -625,6 +625,8 @@ package body LEA_Resource_GUI is
     Create (Window.Tab_width_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Tab_width_edit_box);
     Dlg_to_Scn (7, 50, 177, 15, x, y, w, h);
     Create (Window.Auto_Insert_Check_Box, Window, "Auto-insert for () and """"", x, y, w, h, ID => Auto_Insert_Check_Box);
+    Dlg_to_Scn (117, 50, 177, 15, x, y, w, h);
+    Create (Window.Smart_Editor_Check_Box, Window, "Smart Editor", x, y, w, h, ID => Smart_Editor_Check_Box);
     Dlg_to_Scn (8, 76, 63, 9, x, y, w, h);
     Create_Label (Window, "Ada file extensions", x, y, w, h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn (84, 74, 213, 15, x, y, w, h);
@@ -663,7 +665,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 327
+  --  Dialog at resource line 328
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -752,7 +754,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 342
+  --  Dialog at resource line 343
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -847,7 +849,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Reload_Files_Box_Type
 
-  --  Dialog at resource line 358
+  --  Dialog at resource line 359
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -983,7 +985,7 @@ package body LEA_Resource_GUI is
     Create (Window.Match_case, Window, "Match case", x, y, w, h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
-  --  Dialog at resource line 380
+  --  Dialog at resource line 381
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1190,6 +1192,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 493
+  --  Last line of resource script file: 494
 
 end LEA_Resource_GUI;
