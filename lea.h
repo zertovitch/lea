@@ -117,3 +117,5 @@
 #define IDM_Go_to_memorized_Body                40113
 #define IDM_Go_to_other_File                    40114
 #define Smart_Editor_Check_Box                  40115
+#define Credits_Box                             40116
+#define Credits_Button                          40117

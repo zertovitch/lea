@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2024/02/07  21:00:25
+--  Transcription time: 2024/02/07  21:12:21
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -92,9 +92,11 @@ package LEA_Resource_GUI is
     ResEdit_URL : Label_Type;
     IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+    Credits_Button : Dialog_Button_Type;    --  Closes parent window after click
+    Credits_Button_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- About_box_Type
 
-  --  Dialog at resource line 263
+  --  Dialog at resource line 264
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -125,6 +127,38 @@ package LEA_Resource_GUI is
        resize      : in     Boolean := False  --  optionally resize Window as designed
      );
 
+  type Credits_Box_Type is new Window_Type with record
+
+    Static_0001 : Group_Box_Type;
+    --  Label: IDC_STATIC
+    IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+  end record; -- Credits_Box_Type
+
+  --  Dialog at resource line 275
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Credits_Box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Credits";
+      Left        : in     Integer := Use_Default;  --  Default = as designed
+      Top         : in     Integer := Use_Default;  --  Default = as designed
+      Width       : in     Integer := Use_Default;  --  Default = as designed
+      Height      : in     Integer := Use_Default;  --  Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+      (Window      : in out Credits_Box_Type;
+       for_dialog  : in     Boolean;          --  True: buttons do close the window
+       resize      : in     Boolean := False  --  optionally resize Window as designed
+     );
+
   type Go_to_line_box_Type is new Window_Type with record
 
     Line_value_box : Edit_Box_Type;
@@ -134,7 +168,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Go_to_line_box_Type
 
-  --  Dialog at resource line 276
+  --  Dialog at resource line 288
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -177,7 +211,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- HAC_example_box_Type
 
-  --  Dialog at resource line 292
+  --  Dialog at resource line 304
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -231,7 +265,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 319
+  --  Dialog at resource line 331
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -264,7 +298,7 @@ package LEA_Resource_GUI is
     Stop_VM_Button_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 333
+  --  Dialog at resource line 345
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -307,7 +341,7 @@ package LEA_Resource_GUI is
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Reload_Files_Box_Type
 
-  --  Dialog at resource line 349
+  --  Dialog at resource line 361
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -353,7 +387,7 @@ package LEA_Resource_GUI is
     Match_case : Check_Box_Type;
   end record; -- Search_box_Type
 
-  --  Dialog at resource line 372
+  --  Dialog at resource line 384
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -387,7 +421,7 @@ package LEA_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- String_Prompt_Type
 
-  --  Dialog at resource line 386
+  --  Dialog at resource line 398
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -421,8 +455,8 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors : constant String := "Gautier de Montmollin";
     FileDescription : constant String := "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion : constant String := "0.87";
-    LegalCopyright : constant String := "Copyright © Gautier de Montmollin 2017 .. 2023";
+    FileVersion : constant String := "0.90";
+    LegalCopyright : constant String := "Copyright © Gautier de Montmollin 2017 .. 2024";
     ProductName : constant String := "LEA";
     Translation : constant := 1033;
   end Version_info;
@@ -550,6 +584,8 @@ package LEA_Resource_GUI is
   IDM_Go_to_memorized_Body        : constant :=  40113;
   IDM_Go_to_other_File            : constant :=  40114;
   Smart_Editor_Check_Box          : constant :=  40115;
+  Credits_Box                     : constant :=  40116;
+  Credits_Button                  : constant :=  40117;
 
   --  ** Some helper utilities (spec).
 
@@ -561,6 +597,6 @@ package LEA_Resource_GUI is
 
   function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  --  Last line of resource script file: 494
+  --  Last line of resource script file: 506
 
 end LEA_Resource_GUI;

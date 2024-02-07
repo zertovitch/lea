@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2024/02/07  21:00:25
+--  Transcription time: 2024/02/07  21:12:21
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -355,9 +355,93 @@ package body LEA_Resource_GUI is
     else  --  Hide the closing button
       Hide (Window.IDOK);
     end if;
+    Dlg_to_Scn (5, 201, 44, 19, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Credits_Button, Window, "Credits", x, y, w, h, ID => Credits_Button);
+    Create (Window.Credits_Button_permanent, Window, "Credits", x, y, w, h, ID => Credits_Button);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Credits_Button_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Credits_Button);
+    end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 272
+  --  Dialog at resource line 271
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Credits_Box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Credits";
+      Left        : in     Integer := Use_Default;  --  Default = as designed
+      Top         : in     Integer := Use_Default;  --  Default = as designed
+      Width       : in     Integer := Use_Default;  --  Default = as designed
+      Height      : in     Integer := Use_Default;  --  Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x, y, w, h : Integer;
+  begin
+    Dlg_to_Scn (0, 0, 301, 199, x, y, w, h);
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
+    Create_As_Dialog
+     (Window => Window_Type (Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then  Client_Area_Width (Window, w); end if;
+    if Height = Use_Default then Client_Area_Height (Window, h); end if;
+    Use_GUI_Font (Window);
+    Create_Contents (Window, True);
+  end Create_Full_Dialog;  --  Credits_Box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+      (Window      : in out Credits_Box_Type;
+       for_dialog  : in     Boolean;          --  True: buttons do close the window
+       resize      : in     Boolean := False  --  optionally resize Window as designed
+     )
+  is
+    x, y, w, h : Integer;
+  begin
+    if resize then
+    Dlg_to_Scn (0, 0, 301, 199, x, y, w, h);
+      Move (Window, x, y);
+      Client_Area_Size (Window, w, h);
+    end if;
+    Use_GUI_Font (Window);
+    Dlg_to_Scn (11, 4, 283, 96, x, y, w, h);
+    Create (Window.Static_0001, Window, "Contributions", x, y, w, h);
+    Dlg_to_Scn (25, 18, 260, 8, x, y, w, h);
+    Create_Label (Window, "Nicolas Pinault (Dr Pi)", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (107, 177, 88, 19, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDOK, Window, "Close", x, y, w, h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "Close", x, y, w, h, ID => IDOK);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDOK_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDOK);
+    end if;
+  end Create_Contents;  --  Credits_Box_Type
+
+  --  Dialog at resource line 284
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -453,7 +537,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  --  Dialog at resource line 285
+  --  Dialog at resource line 297
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -555,7 +639,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  HAC_example_box_Type
 
-  --  Dialog at resource line 301
+  --  Dialog at resource line 313
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -613,19 +697,19 @@ package body LEA_Resource_GUI is
     Use_GUI_Font (Window);
     Dlg_to_Scn (7, 10, 50, 15, x, y, w, h);
     Create_Label (Window, "Indentation", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (49, 9, 18, 15, x, y, w, h);
+    Dlg_to_Scn (49, 8, 18, 15, x, y, w, h);
     Create (Window.Indentation_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Indentation_edit_box);
     Dlg_to_Scn (209, 10, 52, 15, x, y, w, h);
     Create_Label (Window, "Right margin", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (263, 9, 34, 15, x, y, w, h);
+    Dlg_to_Scn (263, 8, 34, 15, x, y, w, h);
     Create (Window.Right_margin_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Right_margin_edit_box);
     Dlg_to_Scn (7, 32, 110, 9, x, y, w, h);
     Create_Label (Window, "Tab width (symbol AND keystroke)", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (121, 31, 18, 15, x, y, w, h);
+    Dlg_to_Scn (121, 30, 18, 15, x, y, w, h);
     Create (Window.Tab_width_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Tab_width_edit_box);
-    Dlg_to_Scn (7, 50, 177, 15, x, y, w, h);
+    Dlg_to_Scn (7, 50, 105, 15, x, y, w, h);
     Create (Window.Auto_Insert_Check_Box, Window, "Auto-insert for () and """"", x, y, w, h, ID => Auto_Insert_Check_Box);
-    Dlg_to_Scn (117, 50, 177, 15, x, y, w, h);
+    Dlg_to_Scn (117, 50, 180, 15, x, y, w, h);
     Create (Window.Smart_Editor_Check_Box, Window, "Smart Editor", x, y, w, h, ID => Smart_Editor_Check_Box);
     Dlg_to_Scn (8, 76, 63, 9, x, y, w, h);
     Create_Label (Window, "Ada file extensions", x, y, w, h, GWindows.Static_Controls.Left, None);
@@ -665,7 +749,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 328
+  --  Dialog at resource line 340
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -754,7 +838,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 343
+  --  Dialog at resource line 355
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -849,7 +933,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Reload_Files_Box_Type
 
-  --  Dialog at resource line 359
+  --  Dialog at resource line 371
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -985,7 +1069,7 @@ package body LEA_Resource_GUI is
     Create (Window.Match_case, Window, "Match case", x, y, w, h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
-  --  Dialog at resource line 381
+  --  Dialog at resource line 393
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1192,6 +1276,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 494
+  --  Last line of resource script file: 506
 
 end LEA_Resource_GUI;

@@ -60,6 +60,15 @@ package body LEA_GWin.Modal_Dialogs is
     box : About_box_Type;
     url_lea, url_gnat, url_gnavi, url_hac, url_resedit, url_zipada : URL_Type;
     --
+    procedure Credits_Clicked (dummy : in out GWindows.Base.Base_Window_Type'Class) is
+      credits_box : LEA_Resource_GUI.Credits_Box_Type;
+    begin
+      credits_box.Create_Full_Dialog (box);
+      credits_box.Small_Icon ("LEA_Icon_Small");
+      credits_box.Center;
+      Show_Dialog (credits_box, box);
+    end Credits_Clicked;
+    --
     package CVer is new GNAT.Compiler_Version;
     GNAT_Version_string : constant String := CVer.Version;
     --
@@ -79,6 +88,9 @@ package body LEA_GWin.Modal_Dialogs is
     box.HAC_Version.Text    (S2G ("version: " & HAC_Sys.version & ", ref. " & HAC_Sys.reference));
     Create_and_Swap (url_zipada,  box.ZipAda_URL,  box, S2G (Zip.web));
     box.ZipAda_Version.Text (S2G ("version: " & Zip.version & ", ref. " & Zip.reference));
+    box.Credits_Button_permanent.Show;
+    box.Credits_Button.Hide;
+    box.Credits_Button_permanent.On_Click_Handler (Credits_Clicked'Unrestricted_Access);
     box.Center;
     if Show_Dialog (box, Main_Window) = IDOK then
       null;

@@ -261,6 +261,18 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Zip-Ada Version", ZipAda_Version, 132, 164, 146, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "ResEdit", ResEdit_URL, 23, 179, 170, 8, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "Close", IDOK, 87, 201, 115, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "Credits", Credits_Button, 5, 201, 44, 19, 0, WS_EX_LEFT
+}
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Credits_Box DIALOG 0, 0, 301, 199
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "Credits"
+FONT 8, "Ms Shell Dlg"
+{
+    GROUPBOX        "Contributions", IDC_STATIC, 11, 4, 283, 96, 0, WS_EX_LEFT
+    LTEXT           "Nicolas Pinault (Dr Pi)", IDC_STATIC, 25, 18, 260, 8, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "Close", IDOK, 107, 177, 88, 19, 0, WS_EX_LEFT
 }
 
 
@@ -301,13 +313,13 @@ CAPTION "Options"
 FONT 8, "Ms Shell Dlg"
 {
     LTEXT           "Indentation", 0, 7, 10, 50, 15, SS_LEFT, WS_EX_LEFT
-    EDITTEXT        Indentation_edit_box, 49, 9, 18, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    EDITTEXT        Indentation_edit_box, 49, 8, 18, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     LTEXT           "Right margin", 0, 209, 10, 52, 15, SS_LEFT, WS_EX_LEFT
-    EDITTEXT        Right_margin_edit_box, 263, 9, 34, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    EDITTEXT        Right_margin_edit_box, 263, 8, 34, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     LTEXT           "Tab width (symbol AND keystroke)", 0, 7, 32, 110, 9, SS_LEFT, WS_EX_LEFT
-    EDITTEXT        Tab_width_edit_box, 121, 31, 18, 15, ES_AUTOHSCROLL, WS_EX_LEFT
-    AUTOCHECKBOX    "Auto-insert for () and """"", Auto_Insert_Check_Box, 7, 50, 177, 15, 0, WS_EX_LEFT
-    AUTOCHECKBOX    "Smart Editor", Smart_Editor_Check_Box, 117, 50, 177, 15, 0, WS_EX_LEFT
+    EDITTEXT        Tab_width_edit_box, 121, 30, 18, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    AUTOCHECKBOX    "Auto-insert for () and """"", Auto_Insert_Check_Box, 7, 50, 105, 15, 0, WS_EX_LEFT
+    AUTOCHECKBOX    "Smart Editor", Smart_Editor_Check_Box, 117, 50, 180, 15, 0, WS_EX_LEFT
     LTEXT           "Ada file extensions", 0, 8, 76, 63, 9, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Ada_file_extension_edit_box, 84, 74, 213, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     GROUPBOX        "Color theme", Group_color_theme, 6, 127, 291, 28, 0, WS_EX_LEFT
@@ -438,7 +450,7 @@ Binoculars_Icon    ICON           "ico_bmp/find.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Binoculars_Icon_Small ICON           "ico_bmp/find16.ico"
+Binoculars_Icon_Small ICON        "ico_bmp/find16.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
@@ -467,8 +479,8 @@ LEA_Icon           ICON           "ico_bmp/lea.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     0,8,7,0
-    PRODUCTVERSION  0,8,7,0
+    FILEVERSION     0,9,0,0
+    PRODUCTVERSION  0,9,0,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -481,8 +493,8 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "LEA - a Lightweight Editor for Ada - Free, MIT license"
-            VALUE "FileVersion", "0.87"
-            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2023"
+            VALUE "FileVersion", "0.90"
+            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2017 .. 2024"
             VALUE "ProductName", "LEA"
         }
     }
