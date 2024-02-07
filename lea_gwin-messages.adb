@@ -87,6 +87,12 @@ package body LEA_GWin.Messages is
     Control.Text_Color (Color_Convert (Theme_Color (messages_foreground)));
     Control.Back_Color (Color_Convert (Theme_Color (messages_background)));
     Control.Control_Back_Color (Color_Convert (Theme_Color (messages_control_background)));
+    Control.Customize_Header
+       (Color_Convert (Theme_Color (messages_foreground)),
+        Color_Convert (Theme_Color (messages_background)),
+        Color_Convert (Theme_Color (foreground)),
+        4,
+        True);
     mdi_root.Message_Panel.Background_Color (Color_Convert (Theme_Color (messages_control_background)));
   end Apply_Options;
 
