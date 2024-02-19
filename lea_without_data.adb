@@ -8,7 +8,8 @@ with GWindows.Application,
      GWindows.Scintilla,
      GWindows.Types;
 
-with LEA_GWin.MDI_Main,
+with LEA_GWin.Single_Instance,
+     LEA_GWin.MDI_Main,
      LEA_GWin.Installer;
 
 with Ada.Command_Line,
@@ -44,12 +45,18 @@ procedure LEA_without_data is
   end Interactive_crash;
 
   procedure LEA_start is
+    Exit_Requested    : Boolean;
   begin
     GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
-    Top.Create_MDI_Top ("LEA - starting");
-    Top.Update_Title;
-    Top.Focus;
-    GWindows.Application.Message_Loop;
+
+    LEA_GWin.Single_Instance.Manage_Single_Instance (Top'Unrestricted_Access, Exit_Requested);
+
+    if not Exit_Requested then
+      Top.Create_MDI_Top ("LEA - starting", CClass => LEA_GWin.Single_Instance.LEA_Class_Name);
+      Top.Update_Title;
+      Top.Focus;
+      GWindows.Application.Message_Loop;
+    end if;
   end LEA_start;
 
 begin
