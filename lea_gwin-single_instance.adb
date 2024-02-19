@@ -1,4 +1,3 @@
-
 with GWindows.Types,
      GWindows.Base,
      GWindows.Application,

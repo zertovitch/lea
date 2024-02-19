@@ -1,7 +1,7 @@
 --
--- Streams writing/reading to/from a bounded memory block
+--  Streams writing/reading to/from a bounded memory block
 --
--- A stream can't be used simultaneously for writing and reading.
+--  A stream can't be used simultaneously for writing and reading.
 --
 
 with System;
@@ -17,12 +17,12 @@ package Memory_Streams is
 
    type Memory_Stream is new Ada.Streams.Root_Stream_Type with private;
 
-   procedure Read (Stream : in out Memory_Stream;
-                   Item   :    out Stream_Element_Array;
-                   Last   :    out Stream_Element_Offset);
+   overriding procedure Read (Stream : in out Memory_Stream;
+                              Item   :    out Stream_Element_Array;
+                              Last   :    out Stream_Element_Offset);
 
-   procedure Write (Stream : in out Memory_Stream;
-                    Item   :        Stream_Element_Array);
+   overriding procedure Write (Stream : in out Memory_Stream;
+                               Item   :        Stream_Element_Array);
 
    procedure Set_Address (Stream  : in out Memory_Stream;
                           Address :        System.Address;

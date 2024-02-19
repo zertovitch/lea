@@ -271,7 +271,7 @@ CAPTION "Credits"
 FONT 8, "Ms Shell Dlg"
 {
     GROUPBOX        "Contributions", IDC_STATIC, 11, 4, 283, 96, 0, WS_EX_LEFT
-    LTEXT           "Nicolas Pinault (Dr Pi)", IDC_STATIC, 25, 18, 260, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Nicolas Pinault (DrPi)", IDC_STATIC, 25, 18, 260, 8, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "Close", IDOK, 107, 177, 88, 19, 0, WS_EX_LEFT
 }
 

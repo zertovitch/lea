@@ -2,10 +2,16 @@
 package body Memory_Streams is
 
   --  *************************************************************************
-  procedure Read (Stream : in out Memory_Stream;
-                  Item   :    out Stream_Element_Array;
-                  Last   :    out Stream_Element_Offset) is
-    Source      : Stream_Element_Array (1 .. Stream.Last_Offset) with Address => Stream.Address;
+  overriding procedure Read (Stream : in out Memory_Stream;
+                             Item   :    out Stream_Element_Array;
+                             Last   :    out Stream_Element_Offset)
+  is
+    Source : Stream_Element_Array (1 .. Stream.Last_Offset) with Address => Stream.Address;
+    pragma Import (Ada, Source);
+    --  ^ This pragma prevents an attempt of initialization (possibly brought by
+    --    a validity check in Debug mode) and solves following error:
+    --        error: invalid address clause for initialized object "Source"
+    --        error: reference to variable "Stream" not allowed (RM 13.1(22))
     Next_Offset : constant Stream_Element_Offset := Stream.Current_Offset + Item'Length;
   begin
     Item := Source (Stream.Current_Offset .. Next_Offset - 1);
@@ -14,9 +20,11 @@ package body Memory_Streams is
   end Read;
 
   --  *************************************************************************
-  procedure Write (Stream : in out Memory_Stream;
-                   Item   :        Stream_Element_Array) is
-    Target      : Stream_Element_Array (1 .. Stream.Last_Offset) with Address => Stream.Address;
+  overriding procedure Write (Stream : in out Memory_Stream;
+                              Item   :        Stream_Element_Array)
+  is
+    Target : Stream_Element_Array (1 .. Stream.Last_Offset) with Address => Stream.Address;
+    pragma Import (Ada, Target);
     Next_Offset : constant Stream_Element_Offset := Stream.Current_Offset + Item'Length;
   begin
     Target (Stream.Current_Offset .. Next_Offset - 1) := Item;
@@ -26,7 +34,8 @@ package body Memory_Streams is
   --  *************************************************************************
   procedure Set_Address (Stream  : in out Memory_Stream;
                          Address :        System.Address;
-                         Length  :        Natural) is
+                         Length  :        Natural)
+  is
   begin
     Stream.Address        := Address;
     Stream.Last_Offset    := Stream_Element_Offset (Length);

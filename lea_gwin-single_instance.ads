@@ -1,5 +1,5 @@
 --
--- Manages a single instance of the editor.
+--  Manages a single instance of the editor.
 --
 
 with GWindows;
