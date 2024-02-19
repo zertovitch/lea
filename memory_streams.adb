@@ -1,4 +1,3 @@
-
 package body Memory_Streams is
 
   --  *************************************************************************
@@ -8,10 +7,12 @@ package body Memory_Streams is
   is
     Source : Stream_Element_Array (1 .. Stream.Last_Offset) with Address => Stream.Address;
     pragma Import (Ada, Source);
-    --  ^ This pragma prevents an attempt of initialization (possibly brought by
-    --    a validity check in Debug mode) and solves following error:
+    --  ^ This pragma prevents an attempt of initialization (possibly brought
+    --    by the configuration pragma Initialize_Scalars (in file debug.pra)
+    --    or a validity check in Debug mode) and solves following error:
     --        error: invalid address clause for initialized object "Source"
     --        error: reference to variable "Stream" not allowed (RM 13.1(22))
+
     Next_Offset : constant Stream_Element_Offset := Stream.Current_Offset + Item'Length;
   begin
     Item := Source (Stream.Current_Offset .. Next_Offset - 1);
