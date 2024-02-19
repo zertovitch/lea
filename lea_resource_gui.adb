@@ -427,7 +427,7 @@ package body LEA_Resource_GUI is
     Dlg_to_Scn (11, 4, 283, 96, x, y, w, h);
     Create (Window.Static_0001, Window, "Contributions", x, y, w, h);
     Dlg_to_Scn (25, 18, 260, 8, x, y, w, h);
-    Create_Label (Window, "Nicolas Pinault (Dr Pi)", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Create_Label (Window, "Nicolas Pinault (DrPi)", x, y, w, h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn (107, 177, 88, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
