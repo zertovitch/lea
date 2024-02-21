@@ -196,6 +196,32 @@ package body LEA_GWin.MDI_Main is
        Scintilla.Position (Col_z));
   end Open_Child_Window_And_Load;
 
+  procedure Process_Argument
+    (Window : in out MDI_Main_Type;
+     Arg    :        String)
+  is
+  begin
+    if Arg (Arg'First) = '+' then  --  Emacs +linenum filename
+      Window.next_arg_start_line := 0;
+      for j in Arg'First + 1 .. Arg'Last loop
+        if Arg (j) in '0' .. '9' then
+          Window.next_arg_start_line :=
+            Window.next_arg_start_line * 10 +
+              (Character'Pos (Arg (j)) - Character'Pos ('0'));
+        else
+          --  Invalid number after '+'.
+          Window.next_arg_start_line := -1;
+          exit;
+        end if;
+      end loop;
+    else
+      Window.Open_Child_Window_And_Load
+        (LEA_Common.To_UTF_16 (Arg),
+         Window.next_arg_start_line - 1);  --  NB: Scintilla lines are 0-based
+      Window.next_arg_start_line := -1;
+    end if;
+  end Process_Argument;
+
   --  Switch between Notepad and Studio views
   --
   procedure Change_View (
@@ -355,29 +381,8 @@ package body LEA_GWin.MDI_Main is
       On_File_New (Window, extra_first_doc => True);
       --  ^ The MS Office-like first, empty document
     end if;
-    --  !! This works on 1st instance only:
     for i in 1 .. Argument_Count loop
-      declare
-        a : constant String := Argument (i);
-      begin
-        if a (a'First) = '+' then  --  Emacs +linenum
-          start_line := 0;
-          for j in a'First + 1 .. a'Last loop
-            if a (j) in '0' .. '9' then
-              start_line := start_line * 10 + (Character'Pos (a (j)) - Character'Pos ('0'));
-            else
-              start_line := -1;  --  Invalid number
-              exit;
-            end if;
-          end loop;
-        else
-          Open_Child_Window_And_Load
-            (Window,
-             To_UTF_16 (a),
-             start_line - 1);  --  NB: Scintilla lines are 0-based
-          start_line := -1;
-        end if;
-      end;
+      Window.Process_Argument (Argument (i));
     end loop;
     --  Dropping files on the MDI background will trigger opening a document:
     Window.Accept_File_Drag_And_Drop;

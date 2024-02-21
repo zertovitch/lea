@@ -240,9 +240,11 @@ package body LEA_GWin.Single_Instance is
                         message : Interfaces.C.unsigned;
                         wParam  : GWindows.Types.Wparam;
                         lParam  : GWindows.Types.Lparam)
-                       return GWindows.Types.Lresult is
+                       return GWindows.Types.Lresult
+  is
   begin
     case message is
+
       when WM_COPYDATA =>
         declare
           use type Ada.Streams.Stream_Element_Offset;
@@ -260,28 +262,8 @@ package body LEA_GWin.Single_Instance is
               begin
                 Memory_Streams.Set_Address (Stream, Copy_Data.lpData, IPC_BUFFER_SIZE);
                 Nb_Params := Natural'Input (Stream'Access);
-
                 for i in 1 .. Nb_Params loop
-                  declare
-                    a : constant String := String'Input (Stream'Access);
-                  begin
-                    if a (a'First) = '+' then  --  Emacs +linenum
-                      start_line := 0;
-                      for j in a'First + 1 .. a'Last loop
-                        if a (j) in '0' .. '9' then
-                          start_line := start_line * 10 + (Character'Pos (a (j)) - Character'Pos ('0'));
-                        else
-                          start_line := -1;  --  Invalid number
-                          exit;
-                        end if;
-                      end loop;
-                    else
-                      Top_Wnd.Open_Child_Window_And_Load
-                                (LEA_Common.To_UTF_16 (a),
-                                 start_line - 1);  --  NB: Scintilla lines are 0-based
-                      start_line := -1;
-                    end if;
-                  end;
+                  Top_Wnd.Process_Argument (String'Input (Stream'Access));
                 end loop;
               end;
               return 1;
