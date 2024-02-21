@@ -40,19 +40,24 @@ procedure LEA_without_data is
     Message_Box
       ("Crash in LEA",
         GWindows.GStrings.To_GString_From_String (insult),
-        OK_Box
-      );
+        OK_Box);
   end Interactive_crash;
 
   procedure LEA_start is
     Exit_Requested    : Boolean;
+    LEA_Class_Name    : constant GWindows.GString := "LEA_Editor_Class_Name";
+    LEA_Instance_Name : constant GWindows.GString := "LEA_Editor_Instance";
   begin
     GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
 
-    LEA_GWin.Single_Instance.Manage_Single_Instance (Top'Unrestricted_Access, Exit_Requested);
+    LEA_GWin.Single_Instance.Manage_Single_Instance
+      (Top_Window                => Top'Unrestricted_Access,
+       Application_Class_Name    => LEA_Class_Name,
+       Application_Instance_Name => LEA_Instance_Name,
+       Exit_Requested            => Exit_Requested);
 
     if not Exit_Requested then
-      Top.Create_MDI_Top ("LEA - starting", CClass => LEA_GWin.Single_Instance.LEA_Class_Name);
+      Top.Create_MDI_Top ("LEA - starting", CClass => LEA_Class_Name);
       Top.Update_Title;
       Top.Focus;
       GWindows.Application.Message_Loop;

@@ -34,29 +34,33 @@ package body LEA_GWin.Single_Instance is
   type BOOL is new Interfaces.C.int;
   type UINT is new Interfaces.C.unsigned;
 
-  procedure Register_Class_Name;
-  function Is_First_Instance return Boolean;
+  procedure Register_Class_Name (Application_Class_Name : GString);
+  function Is_First_Instance (Application_Instance_Name : GString) return Boolean;
   function Find_Window (Class_Name  : GWindows.GString) return GWindows.Types.Handle;
   function Is_Zoomed (hWnd : GWindows.Types.Handle) return Boolean;
   function Is_Iconic (hWnd : GWindows.Types.Handle) return Boolean;
   procedure Set_Foreground_Window (hWnd : GWindows.Types.Handle);
   procedure Show_Window (hWnd : GWindows.Types.Handle; Cmd : Integer);
 
-  function LEA_WndProc (hwnd    : GWindows.Types.Handle;
-                        message : Interfaces.C.unsigned;
-                        wParam  : GWindows.Types.Wparam;
-                        lParam  : GWindows.Types.Lparam)
-                       return GWindows.Types.Lresult;
-  pragma Convention (Stdcall, LEA_WndProc);
+  function Application_Custom_WndProc
+    (hwnd    : GWindows.Types.Handle;
+     message : Interfaces.C.unsigned;
+     wParam  : GWindows.Types.Wparam;
+     lParam  : GWindows.Types.Lparam)
+     return GWindows.Types.Lresult;
+  pragma Convention (Stdcall, Application_Custom_WndProc);
 
   Top_Wnd : LEA_GWin.MDI_Main.MDI_Main_Access;
 
   --  *************************************************************************
   procedure Manage_Single_Instance
-    (Top_Window     : in     LEA_GWin.MDI_Main.MDI_Main_Access;
-     Exit_Requested :    out Boolean)
+    (Top_Window                : in     LEA_GWin.MDI_Main.MDI_Main_Access;
+     Application_Class_Name    : in     GString;
+     Application_Instance_Name : in     GString;
+     Exit_Requested            :    out Boolean)
   is
-    First_Instance : constant Boolean := Is_First_Instance;
+    First_Instance : constant Boolean :=
+      Is_First_Instance (Application_Instance_Name);
 
     procedure Search_and_Activate_Foreign_Instance is
       use type GWindows.Types.Handle;
@@ -120,7 +124,7 @@ package body LEA_GWin.Single_Instance is
 
     begin
       loop
-        Window_Handle := Find_Window (LEA_Class_Name);
+        Window_Handle := Find_Window (Application_Class_Name);
         exit when Window_Handle /= GWindows.Types.Null_Handle;
         Nb_Retry := Nb_Retry - 1;
         exit when Nb_Retry = 0;
@@ -136,7 +140,7 @@ package body LEA_GWin.Single_Instance is
     Exit_Requested := False;
     Top_Wnd        := Top_Window;
 
-    Register_Class_Name;
+    Register_Class_Name (Application_Class_Name);
 
     if not First_Instance then
       Search_and_Activate_Foreign_Instance;
@@ -144,25 +148,26 @@ package body LEA_GWin.Single_Instance is
   end Manage_Single_Instance;
 
   --  *************************************************************************
-  procedure Register_Class_Name is
+  procedure Register_Class_Name (Application_Class_Name : GString) is
       function LoadIcon (hInstance  : GWindows.Types.Handle := GWindows.Types.Null_Handle;
                          lpIconName : Integer := IDI_APPLICATION)
                         return GWindows.Types.Handle;
       pragma Import (StdCall, LoadIcon, "LoadIcon" & GWindows.Character_Mode_Identifier);
 
-      Window_Class_Name_C : constant GWindows.GString_C := GWindows.GStrings.To_GString_C (LEA_Class_Name);
       Window_Class        : GWindows.Base.WNDCLASS;
+      Window_Class_Name_C : constant
+         GWindows.GString_C := GWindows.GStrings.To_GString_C (Application_Class_Name);
   begin
       Window_Class.hInstance     := GWindows.Application.hInstance;
       Window_Class.hIcon         := LoadIcon;
       Window_Class.lpszClassName := Window_Class_Name_C (Window_Class_Name_C'First)'Unrestricted_Access;
-      Window_Class.lpfnWndProc   := LEA_WndProc'Address;
+      Window_Class.lpfnWndProc   := Application_Custom_WndProc'Address;
       GWindows.Base.Register_Class (Window_Class);
   end Register_Class_Name;
 
   --  *************************************************************************
-  --  Returns True if this LEA instance is the first to be running
-  function Is_First_Instance return Boolean is
+  --  Returns True if this application instance is the first to be running.
+  function Is_First_Instance (Application_Instance_Name : GString) return Boolean is
 
     type BOOL is new Interfaces.C.int;
 
@@ -172,28 +177,29 @@ package body LEA_GWin.Single_Instance is
                          return GWindows.Types.Handle;
     pragma Import (StdCall, CreateMutex, "CreateMutex" & GWindows.Character_Mode_Identifier);
 
-    Mutex_Name   : constant GWindows.GString_C := GWindows.GStrings.To_GString_C ("LEA_Editor_Instance");
-    Mutex_Handle : GWindows.Types.Handle;
     Error        : Integer;
+    Mutex_Handle : GWindows.Types.Handle;
+    Mutex_Name   : constant GWindows.GString_C :=
+       GWindows.GStrings.To_GString_C (Application_Instance_Name);
     pragma Unreferenced (Mutex_Handle);
 
     ERROR_ALREADY_EXISTS : constant := 183;
 
   begin
-    --  If the Mutex creation fails, then LEA is already running.
+    --  If the Mutex creation fails, then another instance of this
+    --  application is already running.
     Mutex_Handle := CreateMutex (Name => Mutex_Name);
     Error := GWindows.Errors.Get_Last_Error;
     return not (Error = ERROR_ALREADY_EXISTS);
   end Is_First_Instance;
 
   --  *************************************************************************
-  --  Returns the handle of the first LEA instance Window or NULL
+  --  Returns the handle of the first instance's window of
+  --  the application, or NULL.
   function Find_Window (Class_Name  : GWindows.GString)
-                        --  Window_Name : GWindows.GString)
                        return GWindows.Types.Handle is
 
     function FindWindow (ClassName  : GWindows.GString_C;
-                         --  WindowName : GWindows.GString_C)
                          WindowName : System.Address := System.Null_Address)
                         return GWindows.Types.Handle;
     pragma Import (StdCall, FindWindow,
@@ -202,7 +208,7 @@ package body LEA_GWin.Single_Instance is
     ClassName  : constant GWindows.GString_C := GWindows.GStrings.To_GString_C (Class_Name);
     --  WindowName : constant GWindows.GString_C := GWindows.GStrings.To_GString_C (Window_Name);
   begin
-    return FindWindow (ClassName); --  , WindowName);
+    return FindWindow (ClassName);
   end Find_Window;
 
   --  ************************************************************************
@@ -241,11 +247,12 @@ package body LEA_GWin.Single_Instance is
   end Show_Window;
 
   --  ************************************************************************
-  function LEA_WndProc (hwnd    : GWindows.Types.Handle;
-                        message : Interfaces.C.unsigned;
-                        wParam  : GWindows.Types.Wparam;
-                        lParam  : GWindows.Types.Lparam)
-                       return GWindows.Types.Lresult
+  function Application_Custom_WndProc
+    (hwnd    : GWindows.Types.Handle;
+     message : Interfaces.C.unsigned;
+     wParam  : GWindows.Types.Wparam;
+     lParam  : GWindows.Types.Lparam)
+     return GWindows.Types.Lresult
   is
 
     function Process_Arguments_From_Newer_Instance return GWindows.Types.Lresult is
@@ -285,6 +292,6 @@ package body LEA_GWin.Single_Instance is
                                       wParam  => wParam,
                                       lParam  => lParam);
     end case;
-  end LEA_WndProc;
+  end Application_Custom_WndProc;
 
 end LEA_GWin.Single_Instance;
