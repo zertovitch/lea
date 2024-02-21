@@ -22,9 +22,9 @@ package body LEA_GWin.Single_Instance is
   IDI_APPLICATION : constant := 32512;
 
   type COPY_DATA_STRUCT is record
-    dwData : GWindows.Types.DWORD_PTR;   -- User defined value
-    cbData : GWindows.Types.DWORD;       -- Size of Data
-    lpData : System.Address;             -- Data pointer
+    dwData : GWindows.Types.DWORD_PTR;   --  User defined value
+    cbData : GWindows.Types.DWORD;       --  Size of Data
+    lpData : System.Address;             --  Data pointer
   end record;
 
   type COPY_DATA_STRUCT_PTR is access all COPY_DATA_STRUCT;
@@ -52,9 +52,86 @@ package body LEA_GWin.Single_Instance is
   Top_Wnd : LEA_GWin.MDI_Main.MDI_Main_Access;
 
   --  *************************************************************************
-  procedure Manage_Single_Instance (Top_Window     : LEA_GWin.MDI_Main.MDI_Main_Access;
-                                    Exit_Requested : out Boolean) is
+  procedure Manage_Single_Instance
+    (Top_Window     : in     LEA_GWin.MDI_Main.MDI_Main_Access;
+     Exit_Requested :    out Boolean)
+  is
     First_Instance : constant Boolean := Is_First_Instance;
+
+    procedure Search_and_Activate_Foreign_Instance is
+      use type GWindows.Types.Handle;
+      Window_Handle : GWindows.Types.Handle;
+
+      procedure Activate_Foreign_Instance is
+        SW_MAXIMIZE : constant := 3;
+        SW_RESTORE  : constant := 9;
+        sw : Integer := 0;
+      begin
+        --  Restore the window, bring it to front, etc,
+        if Is_Zoomed (Window_Handle) then
+          sw := SW_MAXIMIZE;
+        elsif Is_Iconic (Window_Handle) then
+          sw := SW_RESTORE;
+        end if;
+        if sw /= 0 then
+          Show_Window (Window_Handle, sw);
+        end if;
+        Set_Foreground_Window (Window_Handle);
+
+        --  Transfert the command line arguments to the first instance
+        if Ada.Command_Line.Argument_Count > 0 then
+          declare
+            use type GWindows.Types.DWORD;
+            use type Ada.Streams.Stream_Element_Offset;
+
+            Copy_Data : COPY_DATA_STRUCT;
+
+            procedure SendMessage (hwnd   : GWindows.Types.Handle;
+                                   uMsg   : Interfaces.C.int;
+                                   wParam : GWindows.Types.Wparam;
+                                   lParam : access COPY_DATA_STRUCT);
+            pragma Import (StdCall, SendMessage, "SendMessage" & GWindows.Character_Mode_Identifier);
+            Stream : aliased Memory_Streams.Memory_Stream;
+            Buffer : System.Storage_Elements.Storage_Array (1 .. IPC_BUFFER_SIZE) := (others => 0);
+
+          begin
+            Memory_Streams.Set_Address (Stream, Buffer (1)'Address, Buffer'Length);
+
+            Natural'Output (Stream'Access, Ada.Command_Line.Argument_Count);
+            for i in 1 .. Ada.Command_Line.Argument_Count loop
+              String'Output (Stream'Access, Ada.Command_Line.Argument (i));
+            end loop;
+
+            Copy_Data.dwData := COPY_DATA_CMD_LINE;
+            Copy_Data.cbData := Buffer'Length;
+            Copy_Data.lpData := Buffer (1)'Address;
+
+            SendMessage (Window_Handle,
+                         WM_COPYDATA,
+                         0,
+                         Copy_Data'Unrestricted_Access);
+          end;
+        end if;
+
+        Exit_Requested := True;
+      end Activate_Foreign_Instance;
+
+      Nb_Retry : Natural := 15;
+
+    begin
+      loop
+        Window_Handle := Find_Window (LEA_Class_Name);
+        exit when Window_Handle /= GWindows.Types.Null_Handle;
+        Nb_Retry := Nb_Retry - 1;
+        exit when Nb_Retry = 0;
+        delay 0.1;
+      end loop;
+
+      if Window_Handle /= GWindows.Types.Null_Handle then
+        Activate_Foreign_Instance;
+      end if;
+    end Search_and_Activate_Foreign_Instance;
+
   begin
     Exit_Requested := False;
     Top_Wnd        := Top_Window;
@@ -62,79 +139,7 @@ package body LEA_GWin.Single_Instance is
     Register_Class_Name;
 
     if not First_Instance then
-      declare
-        use type GWindows.Types.Handle;
-
-        Window_Handle : GWindows.Types.Handle;
-      begin
-        declare
-          Nb_Retry : Natural := 15;
-        begin
-          loop
-            Window_Handle := Find_Window (LEA_Class_Name);
-            exit when Window_Handle /= GWindows.Types.Null_Handle;
-            Nb_Retry := Nb_Retry - 1;
-            exit when Nb_Retry = 0;
-            delay 0.1;
-          end loop;
-        end;
-
-        if Window_Handle /= GWindows.Types.Null_Handle then
-          --  Restore the window, bring it to front, etc
-          declare
-            SW_MAXIMIZE : constant := 3;
-            SW_RESTORE  : constant := 9;
-            sw : Integer := 0;
-          begin
-            if Is_Zoomed (Window_Handle) then
-              sw := SW_MAXIMIZE;
-            elsif Is_Iconic (Window_Handle) then
-              sw := SW_RESTORE;
-            end if;
-            if sw /= 0 then
-              Show_Window (Window_Handle, sw);
-            end if;
-          end;
-          Set_Foreground_Window (Window_Handle);
-
-          --  Transfert the command line arguments to the first instance
-          if Ada.Command_Line.Argument_Count > 0 then
-            declare
-              use type GWindows.Types.DWORD;
-              use type Ada.Streams.Stream_Element_Offset;
-
-              Copy_Data : COPY_DATA_STRUCT;
-
-              procedure SendMessage (hwnd   : GWindows.Types.Handle;
-                                     uMsg   : Interfaces.C.int;
-                                     wParam : GWindows.Types.Wparam;
-                                     lParam : access COPY_DATA_STRUCT);
-              pragma Import (StdCall, SendMessage, "SendMessage" & GWindows.Character_Mode_Identifier);
-              Stream : aliased Memory_Streams.Memory_Stream;
-              Buffer : System.Storage_Elements.Storage_Array (1 .. IPC_BUFFER_SIZE) := (others => 0);
-
-            begin
-              Memory_Streams.Set_Address (Stream, Buffer (1)'Address, Buffer'Length);
-
-              Natural'Output (Stream'Access, Ada.Command_Line.Argument_Count);
-              for i in 1 .. Ada.Command_Line.Argument_Count loop
-                String'Output (Stream'Access, Ada.Command_Line.Argument (i));
-              end loop;
-
-              Copy_Data.dwData := COPY_DATA_CMD_LINE;
-              Copy_Data.cbData := Buffer'Length;
-              Copy_Data.lpData := Buffer (1)'Address;
-
-              SendMessage (Window_Handle,
-                           WM_COPYDATA,
-                           0,
-                           Copy_Data'Unrestricted_Access);
-            end;
-          end if;
-
-          Exit_Requested := True;
-        end if;
-      end;
+      Search_and_Activate_Foreign_Instance;
     end if;
   end Manage_Single_Instance;
 
@@ -162,7 +167,7 @@ package body LEA_GWin.Single_Instance is
     type BOOL is new Interfaces.C.int;
 
     function CreateMutex (MutexAttributes : System.Address := System.Null_Address;
-                          InitialOwner    : BOOL           := 0; -- False
+                          InitialOwner    : BOOL           := 0;  --  False
                           Name            : GWindows.GString_C)
                          return GWindows.Types.Handle;
     pragma Import (StdCall, CreateMutex, "CreateMutex" & GWindows.Character_Mode_Identifier);
@@ -242,37 +247,38 @@ package body LEA_GWin.Single_Instance is
                         lParam  : GWindows.Types.Lparam)
                        return GWindows.Types.Lresult
   is
+
+    function Process_Arguments_From_Newer_Instance return GWindows.Types.Lresult is
+      use type Ada.Streams.Stream_Element_Offset;
+
+      function To_COPY_DATA is
+        new Ada.Unchecked_Conversion (GWindows.Types.Lparam, COPY_DATA_STRUCT_PTR);
+
+      Copy_Data : constant COPY_DATA_STRUCT_PTR := To_COPY_DATA (lParam);
+    begin
+      case Copy_Data.dwData is
+        when COPY_DATA_CMD_LINE =>
+          declare
+            Stream : aliased Memory_Streams.Memory_Stream;
+            Nb_Params : Integer;
+          begin
+            Memory_Streams.Set_Address (Stream, Copy_Data.lpData, IPC_BUFFER_SIZE);
+            Nb_Params := Natural'Input (Stream'Access);
+            for i in 1 .. Nb_Params loop
+              Top_Wnd.Process_Argument (String'Input (Stream'Access));
+            end loop;
+          end;
+          return 1;
+
+        when others =>
+          return 0;
+      end case;
+    end Process_Arguments_From_Newer_Instance;
+
   begin
     case message is
-
       when WM_COPYDATA =>
-        declare
-          use type Ada.Streams.Stream_Element_Offset;
-
-          function To_COPY_DATA is new Ada.Unchecked_Conversion (GWindows.Types.Lparam, COPY_DATA_STRUCT_PTR);
-
-          Copy_Data : constant COPY_DATA_STRUCT_PTR := To_COPY_DATA (lParam);
-        begin
-          case Copy_Data.dwData is
-            when COPY_DATA_CMD_LINE =>
-              declare
-                Stream : aliased Memory_Streams.Memory_Stream;
-                Nb_Params : Integer;
-                start_line : Integer := -1;
-              begin
-                Memory_Streams.Set_Address (Stream, Copy_Data.lpData, IPC_BUFFER_SIZE);
-                Nb_Params := Natural'Input (Stream'Access);
-                for i in 1 .. Nb_Params loop
-                  Top_Wnd.Process_Argument (String'Input (Stream'Access));
-                end loop;
-              end;
-              return 1;
-
-            when others =>
-              return 0;
-          end case;
-        end;
-
+        return Process_Arguments_From_Newer_Instance;
       when others =>
         return GWindows.Base.WndProc (hwnd    => hwnd,
                                       message => message,
