@@ -6,7 +6,7 @@ with LEA_GWin.Messages,
      LEA_GWin.Modal_Dialogs,
      LEA_GWin.Options,
      LEA_GWin.Run_Windowed,
-     LEA_GWin.Search_box,
+     LEA_GWin.Search_Box,
      LEA_GWin.Tabs;
 
 with HAC_Sys.Co_Defs,
@@ -826,10 +826,10 @@ package body LEA_GWin.MDI_Child is
       when IDM_Find_Next =>
         --  If F3 is pressed or "Find next" menu entry is selected
         --  while search box is focused, we need to update the drop-down list(s).
-        Search_box.Update_drop_downs (Window.mdi_root.Search_box);
+        Window.mdi_root.search_box.Update_Drop_Downs;
         Window.editor.Search (find_next);
       when IDM_Find_Previous =>
-        Search_box.Update_drop_downs (Window.mdi_root.Search_box);
+        Window.mdi_root.search_box.Update_Drop_Downs;
         Window.editor.Search (find_previous);
       when IDM_Go_to_line =>
         Modal_Dialogs.Do_Go_to_Line (Window);
@@ -1059,15 +1059,28 @@ package body LEA_GWin.MDI_Child is
 
   procedure Show_Search_Box (Window : in out MDI_Child_Type) is
     sel_a, sel_z : Scintilla.Position;
+    procedure Feed_Text_Boxes (new_text : GString) is
+    begin
+      Window.mdi_root.search_box.Update_Drop_Downs;
+      Window.mdi_root.search_box.Find_box.Text    (new_text);
+      Window.mdi_root.search_box.Replace_box.Text (new_text);
+      Window.mdi_root.search_box.Update_Drop_Downs;
+    end Feed_Text_Boxes;
   begin
     sel_a := Window.editor.Get_Selection_Start;
     sel_z := Window.editor.Get_Selection_End;
     if sel_z > sel_a then
-      --  Goodie: put the selected text into the "find" box.
-      Window.mdi_root.Search_box.Find_box.Text (Window.editor.Get_Text_Range (sel_a, sel_z));
+      --  Goodie: put the selected text into the "find" box and also
+      --  the "replace" box.
+      --  Two advantages of putting the same text
+      --  in the "replace" box are:
+      --    - often, one wants a variation of the searched text as replacement
+      --    - an accidental replacement won't change the text.
+      --  Note that we borrowed this behaviour from GNAT Studio.
+      Feed_Text_Boxes (Window.editor.Get_Text_Range (sel_a, sel_z));
     end if;
-    Window.mdi_root.Search_box.Show;
-    Window.mdi_root.Search_box.Find_box.Focus;
+    Window.mdi_root.search_box.Show;
+    Window.mdi_root.search_box.Find_box.Focus;
   end Show_Search_Box;
 
 end LEA_GWin.MDI_Child;

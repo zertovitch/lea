@@ -1,7 +1,7 @@
 with LEA_GWin.Editor.Streaming,
      LEA_GWin.Tabs,
      LEA_GWin.Messages,
-     LEA_GWin.Search_box,
+     LEA_GWin.Search_Box,
      LEA_GWin.Sliding_Panels;
 
 with LEA_Resource_GUI;
@@ -62,7 +62,7 @@ package LEA_GWin.MDI_Main is
         Task_bar_gadget_ok          : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
         Task_bar_gadget             : GWindows.Taskbar.Taskbar_List;
         --
-        Search_box                  : LEA_GWin.Search_box.LEA_search_box_type;
+        search_box                  : LEA_GWin.Search_Box.LEA_Search_Box_Type;
         build_successful            : Boolean := False;
         close_this_search_box       : Boolean := False;
         pragma Volatile (close_this_search_box);

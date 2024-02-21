@@ -914,8 +914,8 @@ package body LEA_GWin.Editor is
   is
     MDI_Child : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
     MDI_Main  : MDI_Main_Type  renames MDI_Child.mdi_root.all;
-    find_str  : constant GString := MDI_Main.Search_box.Find_box.Text;
-    repl_str  : constant GString := MDI_Main.Search_box.Replace_box.Text;
+    find_str  : constant GString := MDI_Main.search_box.Find_box.Text;
+    repl_str  : constant GString := MDI_Main.search_box.Replace_box.Text;
     --  replace_str : GString:= MDI_Main.Search_box.Replace_Box.Text;
     pos, sel_a, sel_z : Position;
     line, col, count  : Integer;
@@ -946,7 +946,7 @@ package body LEA_GWin.Editor is
     --  Remember selection
     sel_a := Editor.Get_Selection_Start;
     sel_z := Editor.Get_Selection_End;
-    Editor.Set_Search_Flags (MDI_Main.Search_box.Compose_Scintilla_search_flags);
+    Editor.Set_Search_Flags (MDI_Main.search_box.Compose_Scintilla_Search_Flags);
     case action is
       when find_next | find_previous =>
         for attempt in 1 .. 2 loop
@@ -981,9 +981,9 @@ package body LEA_GWin.Editor is
             --  Not found, even *after* the wrap around: find_str is really nowhere!
             --  Restore initial selection
             Editor.Set_Sel (sel_a, sel_z);
-            Message_Box (MDI_Child.mdi_root.Search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
-            if MDI_Main.Search_box.Visible then
-              MDI_Main.Search_box.Focus;
+            Message_Box (MDI_Child.mdi_root.search_box, "Search", "No occurrence found", OK_Box, Information_Icon);
+            if MDI_Main.search_box.Visible then
+              MDI_Main.search_box.Focus;
             end if;
           end if;
         end loop;
@@ -1086,7 +1086,7 @@ package body LEA_GWin.Editor is
           large_message_width
         );
         Message_Box (
-          MDI_Child.mdi_root.Search_box,
+          MDI_Child.mdi_root.search_box,
           "Replace all",
           "Replaced all (" &
           Trim (count'Wide_Image, Left) &
@@ -1095,11 +1095,11 @@ package body LEA_GWin.Editor is
           "        by" & NL &
           "     [" & repl_str & "]." & NL & NL &
           "Operation can be undone in one ""Undo"".");
-        if MDI_Main.Search_box.Visible then
+        if MDI_Main.search_box.Visible then
           --  Without the following, some other application's window
           --  comes to the foreground (typically Explorer), a major annoyance!
           MDI_Main.Set_Foreground_Window;
-          MDI_Main.Search_box.Focus;
+          MDI_Main.search_box.Focus;
         end if;
     end case;
   end Search;

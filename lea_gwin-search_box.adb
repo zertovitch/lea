@@ -6,30 +6,31 @@ with GWindows.Buttons,
      GWindows.Key_States,
      GWindows.Scintilla;
 
-package body LEA_GWin.Search_box is
+package body LEA_GWin.Search_Box is
   use LEA_Common, LEA_GWin.MDI_Main, GWindows.Key_States;
 
-  procedure Update_drop_downs (SB : in out LEA_search_box_type) is
+  procedure Update_Drop_Downs (SB : in out LEA_Search_Box_Type) is
 
-    procedure Update_drop_down (DD : in out Find_Replace_box_type) is
+    procedure Update_Drop_Down (DD : in out Find_Replace_Box_Type) is
       max : constant := 10;
       dd_text : constant GString := DD.Text;
     begin
-      --  If the text is empty or already in the list, do nothing.
       if dd_text'Length = 0 or else DD.Find_Exact (dd_text) > 0 then
-        return;
+        --  If the text is empty or already in the list, do nothing.
+        null;
+      else
+        --  We limit the list to a convenient maximum amount.
+        if DD.Count >= max then
+          DD.Delete (max);
+        end if;
+        DD.Add (1, dd_text);
       end if;
-      --  We limit the list to a convenient maximum amount.
-      if DD.Count >= max then
-        DD.Delete (max);
-      end if;
-      DD.Add (1, dd_text);
-    end Update_drop_down;
+    end Update_Drop_Down;
 
   begin
-    Update_drop_down (SB.Find_box);
-    Update_drop_down (SB.Replace_box);
-  end Update_drop_downs;
+    Update_Drop_Down (SB.Find_box);
+    Update_Drop_Down (SB.Replace_box);
+  end Update_Drop_Downs;
 
   procedure Any_Search_Button_Clicked (
     Window : GWindows.Base.Base_Window_Type'Class;
@@ -39,13 +40,13 @@ package body LEA_GWin.Search_box is
     use GWindows.Base;
     Parent : constant Pointer_To_Base_Window_Class := Window.Parent;
   begin
-    if Parent /= null and then Parent.all in LEA_search_box_type'Class then  --  Should be always the case.
+    if Parent /= null and then Parent.all in LEA_Search_Box_Type'Class then  --  Should be always the case.
       declare
-        SB      : LEA_search_box_type renames LEA_search_box_type (Parent.all);
+        SB      : LEA_Search_Box_Type renames LEA_Search_Box_Type (Parent.all);
         MDI_Top : MDI_Main_Type renames MDI_Main_Type (SB.The_real_MDI_parent.all);
       begin
         --  Ooof.. pointers are behind, we are back into the strong-typed value-type OO world.
-        Update_drop_downs (SB);
+        Update_Drop_Downs (SB);
         MDI_Top.Perform_Search (action);
       end;
     end if;
@@ -77,7 +78,7 @@ package body LEA_GWin.Search_box is
   end Replace_All_Button_Clicked;
 
   procedure On_Message
-     (FRB          : in out Find_Replace_box_type;
+     (FRB          : in out Find_Replace_Box_Type;
       message      : in     Interfaces.C.unsigned;
       wParam       : in     GWindows.Types.Wparam;
       lParam       : in     GWindows.Types.Lparam;
@@ -98,14 +99,14 @@ package body LEA_GWin.Search_box is
     GWindows.Combo_Boxes.Drop_Down_Combo_Box_Type
       (FRB).On_Message (message, wParam, lParam, Return_Value);
     if do_find_next then
-      Update_drop_downs (FRB.parent_SB.all);
+      Update_Drop_Downs (FRB.parent_SB.all);
       MDI_Main_Type (FRB.parent_SB.The_real_MDI_parent.all).Perform_Search (find_next);
     end if;
 
   end On_Message;
 
   procedure On_Message
-     (SB           : in out LEA_search_box_type;
+     (SB           : in out LEA_Search_Box_Type;
       message      : in     Interfaces.C.unsigned;
       wParam       : in     GWindows.Types.Wparam;
       lParam       : in     GWindows.Types.Lparam;
@@ -119,7 +120,7 @@ package body LEA_GWin.Search_box is
     LEA_Resource_GUI.Search_box_Type (SB).On_Message (message, wParam, lParam, Return_Value);
   end On_Message;
 
-  procedure On_Close (SB        : in out LEA_search_box_type;
+  procedure On_Close (SB        : in out LEA_Search_Box_Type;
                       Can_Close :    out Boolean)
   is
   begin
@@ -127,8 +128,8 @@ package body LEA_GWin.Search_box is
     SB.Hide;
   end On_Close;
 
-  procedure Create_as_search_box
-    (SB     : in out LEA_search_box_type;
+  procedure Create_as_Search_Box
+    (SB     : in out LEA_Search_Box_Type;
      Parent : in out GWindows.Base.Base_Window_Type'Class)
   is
   begin
@@ -171,9 +172,9 @@ package body LEA_GWin.Search_box is
     --
     SB.Center;
     SB.Keyboard_Support;
-  end Create_as_search_box;
+  end Create_as_Search_Box;
 
-  function Compose_Scintilla_search_flags (SB : in  LEA_search_box_type) return Integer is
+  function Compose_Scintilla_Search_Flags (SB : in  LEA_Search_Box_Type) return Integer is
     flags : Integer := 0;
     use GWindows.Scintilla, GWindows.Buttons;
   begin
@@ -184,6 +185,6 @@ package body LEA_GWin.Search_box is
       flags := flags + SCFIND_WHOLEWORD;
     end if;
     return flags;
-  end Compose_Scintilla_search_flags;
+  end Compose_Scintilla_Search_Flags;
 
-end LEA_GWin.Search_box;
+end LEA_GWin.Search_Box;

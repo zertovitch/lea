@@ -12,50 +12,49 @@ with GWindows.Base,
 
 with Interfaces.C;
 
-package LEA_GWin.Search_box is
+package LEA_GWin.Search_Box is
 
-  type LEA_search_box_type;
-  type LEA_search_box_access_type is access all LEA_search_box_type;
+  type LEA_Search_Box_Type;
+  type LEA_Search_Box_Access_Type is access all LEA_Search_Box_Type;
 
-  type Find_Replace_box_type is
+  type Find_Replace_Box_Type is
     new GWindows.Combo_Boxes.Drop_Down_Combo_Box_Type with
   record
-    parent_SB : LEA_search_box_access_type;
+    parent_SB : LEA_Search_Box_Access_Type;
   end record;
 
   overriding
   procedure On_Message
-     (FRB          : in out Find_Replace_box_type;
-      message      : in     Interfaces.C.unsigned;
-      wParam       : in     GWindows.Types.Wparam;
-      lParam       : in     GWindows.Types.Lparam;
-      Return_Value : in out GWindows.Types.Lresult);
+    (FRB          : in out Find_Replace_Box_Type;
+     message      : in     Interfaces.C.unsigned;
+     wParam       : in     GWindows.Types.Wparam;
+     lParam       : in     GWindows.Types.Lparam;
+     Return_Value : in out GWindows.Types.Lresult);
 
-  type LEA_search_box_type is new LEA_Resource_GUI.Search_box_Type with record
+  type LEA_Search_Box_Type is new LEA_Resource_GUI.Search_box_Type with record
     The_real_MDI_parent : GWindows.Base.Pointer_To_Base_Window_Class;
     Find_box,
-    Replace_box         : Find_Replace_box_type;
+    Replace_box         : Find_Replace_Box_Type;
   end record;
 
   overriding
   procedure On_Message
-     (SB           : in out LEA_search_box_type;
-      message      : in     Interfaces.C.unsigned;
-      wParam       : in     GWindows.Types.Wparam;
-      lParam       : in     GWindows.Types.Lparam;
-      Return_Value : in out GWindows.Types.Lresult);
+    (SB           : in out LEA_Search_Box_Type;
+     message      : in     Interfaces.C.unsigned;
+     wParam       : in     GWindows.Types.Wparam;
+     lParam       : in     GWindows.Types.Lparam;
+     Return_Value : in out GWindows.Types.Lresult);
 
   overriding
-  procedure On_Close (SB        : in out LEA_search_box_type;
+  procedure On_Close (SB        : in out LEA_Search_Box_Type;
                       Can_Close :    out Boolean);
 
-  procedure Update_drop_downs (SB : in out LEA_search_box_type);
+  procedure Update_Drop_Downs (SB : in out LEA_Search_Box_Type);
 
-  procedure Create_as_search_box (
-    SB     : in out LEA_search_box_type;
-    Parent : in out GWindows.Base.Base_Window_Type'Class
-  );
+  procedure Create_as_Search_Box
+    (SB     : in out LEA_Search_Box_Type;
+     Parent : in out GWindows.Base.Base_Window_Type'Class);
 
-  function Compose_Scintilla_search_flags (SB : in  LEA_search_box_type) return Integer;
+  function Compose_Scintilla_Search_Flags (SB : in  LEA_Search_Box_Type) return Integer;
 
-end LEA_GWin.Search_box;
+end LEA_GWin.Search_Box;

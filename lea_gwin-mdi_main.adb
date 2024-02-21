@@ -390,7 +390,7 @@ package body LEA_GWin.MDI_Main is
       when Taskbar_Interface_Not_Supported =>
         Window.Task_bar_gadget_ok := False;
     end;
-    Window.Search_box.Create_as_search_box (Window);
+    Window.search_box.Create_as_Search_Box (Window);
     GWindows.Timers.Set_Timer (Window, search_box_timer_id, 100);
     GWindows.Timers.Set_Timer (Window, file_synch_timer_id, 250);
     --  Now we instruct the librarians of both HAC compilers
@@ -650,10 +650,10 @@ package body LEA_GWin.MDI_Main is
         when search_box_timer_id =>
           if Window.close_this_search_box then
             Window.close_this_search_box := False;
-            if Window.Search_box.Visible then
+            if Window.search_box.Visible then
               Window.Set_Foreground_Window;
               Window.Focus;
-              Window.Search_box.Hide;
+              Window.search_box.Hide;
             end if;
           end if;
         when file_synch_timer_id =>
