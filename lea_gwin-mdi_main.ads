@@ -38,6 +38,8 @@ package LEA_GWin.MDI_Main is
   type MDI_Main_Type;
   type MDI_Main_Access is access all MDI_Main_Type;
 
+  arg_no_start_line : constant := -1;
+
   type MDI_Main_Type is
     new Office_Applications.Classic_Main_Window_Type with
       record
@@ -80,7 +82,7 @@ package LEA_GWin.MDI_Main is
         memo_other_file             : GString_Unbounded;
         lea_file_cat                : aliased LEA_GWin.Editor.Streaming.LEA_File_Catalogue;
         --
-        next_arg_start_line         : Integer := -1;
+        next_arg_start_line         : Integer := arg_no_start_line;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Main_Type);
@@ -114,8 +116,9 @@ package LEA_GWin.MDI_Main is
      Col_a, Col_z :        Integer := -1);
 
   procedure Process_Argument
-    (Window : in out MDI_Main_Type;
-     Arg    :        String);
+    (Window   : in out MDI_Main_Type;
+     Position : in     Positive;
+     Arg      : in     String);
 
   overriding procedure On_Menu_Select
     (Window : in out MDI_Main_Type;

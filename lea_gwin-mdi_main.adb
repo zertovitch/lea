@@ -197,11 +197,15 @@ package body LEA_GWin.MDI_Main is
   end Open_Child_Window_And_Load;
 
   procedure Process_Argument
-    (Window : in out MDI_Main_Type;
-     Arg    :        String)
+    (Window   : in out MDI_Main_Type;
+     Position : in     Positive;
+     Arg      : in     String)
   is
   begin
-    if Arg (Arg'First) = '+' then  --  Emacs +linenum filename
+    if Position = 1 then
+      Window.next_arg_start_line := arg_no_start_line;
+    end if;
+    if Arg (Arg'First) = '+' then  --  Emacs syntax: +linenum filename
       Window.next_arg_start_line := 0;
       for j in Arg'First + 1 .. Arg'Last loop
         if Arg (j) in '0' .. '9' then
@@ -210,7 +214,7 @@ package body LEA_GWin.MDI_Main is
               (Character'Pos (Arg (j)) - Character'Pos ('0'));
         else
           --  Invalid number after '+'.
-          Window.next_arg_start_line := -1;
+          Window.next_arg_start_line := arg_no_start_line;
           exit;
         end if;
       end loop;
@@ -218,7 +222,7 @@ package body LEA_GWin.MDI_Main is
       Window.Open_Child_Window_And_Load
         (LEA_Common.To_UTF_16 (Arg),
          Window.next_arg_start_line - 1);  --  NB: Scintilla lines are 0-based
-      Window.next_arg_start_line := -1;
+      Window.next_arg_start_line := arg_no_start_line;
     end if;
   end Process_Argument;
 
@@ -382,7 +386,7 @@ package body LEA_GWin.MDI_Main is
       --  ^ The MS Office-like first, empty document
     end if;
     for i in 1 .. Argument_Count loop
-      Window.Process_Argument (Argument (i));
+      Window.Process_Argument (i, Argument (i));
     end loop;
     --  Dropping files on the MDI background will trigger opening a document:
     Window.Accept_File_Drag_And_Drop;

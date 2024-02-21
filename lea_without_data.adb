@@ -6,10 +6,10 @@ with GWindows.Application,
      GWindows.GStrings,
      GWindows.Message_Boxes,
      GWindows.Scintilla,
+     GWindows.Single_Instance,
      GWindows.Types;
 
-with LEA_GWin.Single_Instance,
-     LEA_GWin.MDI_Main,
+with LEA_GWin.MDI_Main,
      LEA_GWin.Installer;
 
 with Ada.Command_Line,
@@ -17,9 +17,17 @@ with Ada.Command_Line,
 
 with GNAT.Traceback.Symbolic;
 
-procedure LEA_without_data is
+procedure LEA_Without_Data is
 
   Top : LEA_GWin.MDI_Main.MDI_Main_Type;
+
+  procedure LEA_Process_Argument (Position : Positive; Arg : String) is
+  begin
+    Top.Process_Argument (Position, Arg);
+  end LEA_Process_Argument;
+
+  package LEA_Single_Instance is
+    new GWindows.Single_Instance (LEA_Process_Argument);
 
   use LEA_GWin;
   use GWindows.Message_Boxes;
@@ -50,9 +58,8 @@ procedure LEA_without_data is
   begin
     GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
 
-    LEA_GWin.Single_Instance.Manage_Single_Instance
-      (Top_Window                => Top'Unrestricted_Access,
-       Application_Class_Name    => LEA_Class_Name,
+    LEA_Single_Instance.Manage_Single_Instance
+      (Application_Class_Name    => LEA_Class_Name,
        Application_Instance_Name => LEA_Instance_Name,
        Exit_Requested            => Exit_Requested);
 
@@ -77,4 +84,4 @@ begin
     LEA_GWin.Installer.Load_Scintilla_DLL_from_Memory;
   end if;
   LEA_start;
-end LEA_without_data;
+end LEA_Without_Data;
