@@ -9,8 +9,12 @@ with GWindows.Application,
      GWindows.Single_Instance,
      GWindows.Types;
 
+with LEA_Common.User_options,
+     LEA_Common.Color_Themes;
+
 with LEA_GWin.MDI_Main,
-     LEA_GWin.Installer;
+     LEA_GWin.Installer,
+     LEA_GWin.Persistence;
 
 with Ada.Command_Line,
      Ada.Exceptions;
@@ -18,6 +22,8 @@ with Ada.Command_Line,
 with GNAT.Traceback.Symbolic;
 
 procedure LEA_Without_Data is
+
+  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
 
   Top : LEA_GWin.MDI_Main.MDI_Main_Type;
 
@@ -58,6 +64,9 @@ procedure LEA_Without_Data is
   begin
     GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
 
+    LEA_GWin.Persistence.Blockwise_IO.Load (Options);
+    LEA_Common.Color_Themes.Select_Theme (Options.color_theme);
+
     LEA_Single_Instance.Manage_Single_Instance
       (Application_Class_Name    => LEA_Class_Name,
        Application_Instance_Name => LEA_Instance_Name,
@@ -69,6 +78,9 @@ procedure LEA_Without_Data is
       Top.Focus;
       GWindows.Application.Message_Loop;
     end if;
+
+    LEA_GWin.Persistence.Blockwise_IO.Save (Options);
+
   end LEA_start;
 
 begin

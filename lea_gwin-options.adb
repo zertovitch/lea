@@ -14,11 +14,13 @@ with GWin_Util;
 
 package body LEA_GWin.Options is
 
+  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+
   procedure On_General_Options (main : in out LEA_GWin.MDI_Main.MDI_Main_Type) is
     use LEA_Resource_GUI, LEA_Common, LEA_Common.Color_Themes, LEA_Common.User_options;
     --
     box : Option_box_Type;
-    candidate : Option_Pack_Type := main.opt;
+    candidate : Option_Pack_Type := Options;
     --
     procedure Set_Data is
       use GWin_Util;
@@ -70,10 +72,10 @@ package body LEA_GWin.Options is
     On_Destroy_Handler (box, Get_Data'Unrestricted_Access);
     case GWindows.Application.Show_Dialog (box, main) is
       when GWindows.Constants.IDOK =>
-        has_changes := main.opt /= candidate;
+        has_changes := Options /= candidate;
         if has_changes then
-          icons_redrawing := main.opt.color_theme /= candidate.color_theme;
-          main.opt := candidate;
+          icons_redrawing := Options.color_theme /= candidate.color_theme;
+          Options := candidate;
           Apply_Main_Options (main);
           if icons_redrawing then
             main.Message_Panel.Message_List.Redraw_Icons;
@@ -97,8 +99,8 @@ package body LEA_GWin.Options is
     --
     use LEA_GWin.MDI_Main, LEA_Common.Color_Themes;
   begin
-    Select_Theme (main.opt.color_theme);
-    main.text_files_filters (main.text_files_filters'First).Filter := main.opt.ada_files_filter;
+    Select_Theme (Options.color_theme);
+    main.text_files_filters (main.text_files_filters'First).Filter := Options.ada_files_filter;
     main.Project_Panel.Apply_Options;
     main.Message_Panel.Apply_Options;
     main.Update_Common_Menus;
