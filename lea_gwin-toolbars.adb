@@ -1,7 +1,9 @@
-with LEA_Resource_GUI;
+with LEA_Resource_GUI,
+     LEA_Common.Color_Themes;
 
 with GWindows.Base,
-     GWindows.Menus;
+     GWindows.Menus,
+     GWindows.Colors;
 
 with GWin_Util;
 
@@ -14,6 +16,7 @@ package body LEA_GWin.Toolbars is
      parent : in out LEA_GWin.MDI_Main.MDI_Main_Type)
   is
     use LEA_Resource_GUI;
+    use LEA_Common.Color_Themes;
     sep_width : constant := 8;
     Fake_Menu : Menu_MDI_Child_Type;
     --
@@ -75,6 +78,17 @@ package body LEA_GWin.Toolbars is
     tb.Add_Separator (sep_width);
     Add_Button_with_Tip (12, IDM_Show_special_symbols);
     Add_Button_with_Tip (16, IDM_Show_indentation_lines);
+    tb.Background_Color (Color_Convert (Theme_Color (background)));
   end Init_Main_Tool_Bar;
+
+  procedure Update_Theme
+    (tb : in out Office_Applications.Classic_Main_Tool_Bar_Type'Class)
+  is
+    use LEA_Common.Color_Themes;
+  begin
+    tb.Background_Color (Color_Convert (Theme_Color (background)));
+    tb.Redraw (Erase      => True,
+               Redraw_Now => True);
+  end Update_Theme;
 
 end LEA_GWin.Toolbars;
