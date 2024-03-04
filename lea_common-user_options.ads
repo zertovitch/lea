@@ -55,6 +55,9 @@ package LEA_Common.User_options is
     smart_editor : Boolean := True;
   end record;
 
+  --  Global options
+  Options : LEA_Common.User_options.Option_Pack_Type;
+
   procedure Toggle_show_special (o : in out Option_Pack_Type);
 
   -----------------

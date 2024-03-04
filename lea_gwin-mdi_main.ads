@@ -58,8 +58,7 @@ package LEA_GWin.MDI_Main is
         User_maximize_restore       : Boolean := True;
         --  ^ Detect user-triggered max/restore commands
         record_dimensions           : Boolean := False; -- in On_Move, On_Size
-        --  Options of a "model" child window.
-        opt                         : LEA_Common.User_options.Option_Pack_Type;
+
         --
         Task_bar_gadget_ok          : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
         Task_bar_gadget             : GWindows.Taskbar.Taskbar_List;

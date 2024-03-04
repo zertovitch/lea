@@ -38,6 +38,8 @@ package body LEA_GWin.MDI_Child is
   use GWindows.Message_Boxes, GWindows.Scintilla;
   use Ada.Strings.Wide_Unbounded;
 
+  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+
   package Status_Bar_Parts is
     --  Values designate the x-value of the *right* side of each part.
     general_info      : constant := 130;
@@ -73,7 +75,7 @@ package body LEA_GWin.MDI_Child is
   function Folder_Focus (MDI_Child : in MDI_Child_Type) return Boolean is
   begin
     return
-      MDI_Child.mdi_root.opt.view_mode = Studio; --  !!  and then
+      Options.view_mode = Studio; --  !!  and then
       --  !! Window.Focus = Window.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
@@ -282,7 +284,7 @@ package body LEA_GWin.MDI_Child is
     --  No per-child-window option in this app
     --
     --  --  We copy options to child level:
-    --  Window.opt:= Window.MDI_Root.opt;
+    --  Window.opt:= Options;
 
     --  Window.Tree_Bar_and_List.Create(Window, Direction => Horizontal);
     --  Window.Tree_Bar_and_List.Dock(At_Top);
@@ -329,7 +331,7 @@ package body LEA_GWin.MDI_Child is
     --  Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
       memo_unmaximized_children : constant Boolean :=
-        not Window.mdi_root.opt.MDI_childen_maximized;
+        not Options.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
         Window.mdi_root.Freeze;
@@ -382,7 +384,7 @@ package body LEA_GWin.MDI_Child is
     MDI_Main : MDI_Main_Type renames Window.mdi_root.all;
   begin
     MDI_Main.User_maximize_restore := True;
-    if MDI_Main.opt.MDI_childen_maximized then
+    if Options.MDI_childen_maximized then
       Window.Zoom;
       MDI_Main.Redraw_all;
     end if;
@@ -398,7 +400,7 @@ package body LEA_GWin.MDI_Child is
     backup_name : constant GString := File_Name & ".bak";
 
     use LEA_Common.User_options;
-    with_backup : constant Boolean := MDI_Child.mdi_root.opt.backup = bak;
+    with_backup : constant Boolean := Options.backup = bak;
 
     backup_error_1, backup_error_2, backup_error_3 : exception;
 
@@ -551,7 +553,7 @@ package body LEA_GWin.MDI_Child is
     Window.editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
         GU2G (Window.ID.File_Name),
-        GU2G (Window.mdi_root.opt.ada_files_filter)
+        GU2G (Options.ada_files_filter)
       );
     Window.editor.Set_Scintilla_Syntax;
   end On_Save_As;
@@ -608,7 +610,7 @@ package body LEA_GWin.MDI_Child is
   is
   begin
     if Window.mdi_root.User_maximize_restore then
-      Window.mdi_root.opt.MDI_childen_maximized := Zoom (Window);
+      Options.MDI_childen_maximized := Zoom (Window);
     end if;
     Dock_Children (Window);
   end On_Size;
@@ -682,7 +684,7 @@ package body LEA_GWin.MDI_Child is
     compiler_bug : Boolean := False;
     --
   begin
-    case Window.mdi_root.opt.toolset is
+    case Options.toolset is
       when HAC_mode =>
         --  We connect this window's input stream to this window's editor.
         Window.current_editor_stream.Reset
@@ -753,9 +755,9 @@ package body LEA_GWin.MDI_Child is
 
   procedure Build (Window : in out MDI_Child_Type) is
   begin
-    case Window.mdi_root.opt.toolset is
+    case Options.toolset is
       when HAC_mode =>
-        case Window.mdi_root.opt.view_mode is
+        case Options.view_mode is
           when Notepad =>
             Window.Build_as_Main;
           when Studio =>
@@ -813,13 +815,13 @@ package body LEA_GWin.MDI_Child is
       when IDM_Paste =>         Window.editor.Paste;
       when IDM_Select_all =>    Window.editor.Select_All;
       when IDM_Indent =>
-        Window.editor.Set_Tab_Width (Window.mdi_root.opt.indentation);
+        Window.editor.Set_Tab_Width (Options.indentation);
         Window.editor.Tab;
-        Window.editor.Set_Tab_Width (Window.mdi_root.opt.tab_width);
+        Window.editor.Set_Tab_Width (Options.tab_width);
       when IDM_Unindent =>
-        Window.editor.Set_Tab_Width (Window.mdi_root.opt.indentation);
+        Window.editor.Set_Tab_Width (Options.indentation);
         Window.editor.Back_Tab;
-        Window.editor.Set_Tab_Width (Window.mdi_root.opt.tab_width);
+        Window.editor.Set_Tab_Width (Options.tab_width);
       when IDM_Comment =>       Window.editor.Selection_Comment;
       when IDM_Uncomment =>     Window.editor.Selection_Uncomment;
       when IDM_Find =>          Window.Show_Search_Box;
@@ -845,12 +847,11 @@ package body LEA_GWin.MDI_Child is
       when IDM_Build_and_run  =>  Window.Build_and_run;
       --
       when IDM_Show_special_symbols =>
-        LEA_Common.User_options.Toggle_show_special (Window.mdi_root.opt);
-        Options.Apply_Main_Options (Window.mdi_root.all);
+        LEA_Common.User_options.Toggle_show_special (Options);
+        LEA_GWin.Options.Apply_Main_Options (Window.mdi_root.all);
       when IDM_Show_indentation_lines =>
-        Window.mdi_root.opt.show_indent :=
-          not Window.mdi_root.opt.show_indent;
-        Options.Apply_Main_Options (Window.mdi_root.all);
+        Options.show_indent := not Options.show_indent;
+        LEA_GWin.Options.Apply_Main_Options (Window.mdi_root.all);
       when IDM_Duplicate =>
         Window.editor.Duplicate;
       when others =>
@@ -959,8 +960,8 @@ package body LEA_GWin.MDI_Child is
     end if;
     --
     need_separator := is_any_selection or can_paste;
-    if main.opt.smart_editor then
-      case main.opt.toolset is
+    if Options.smart_editor then
+      case Options.toolset is
         when HAC_mode =>
           Add_Entries_for_Spec_Body_Swap;
           if X >= 0 and then Y >= 0 then
@@ -1030,10 +1031,10 @@ package body LEA_GWin.MDI_Child is
       --  No per-child-window option in this app
       --  -- Pass view mode and the tree width portion to parent,
       --  -- this will memorize choice of last closed window.
-      --  Window.MDI_Root.opt.view_mode:= Window.opt.view_mode;
+      --  Options.view_mode:= Window.opt.view_mode;
       --
       --  !!  Memorize_splitter(Window);
-      --  Window.MDI_Root.opt.tree_portion:= Window.opt.tree_portion;
+      --  Options.tree_portion:= Window.opt.tree_portion;
       --
       --  For the case there is no more child window, disable toolbar items.
       --  This action is reversed as soon as another child window is focused.

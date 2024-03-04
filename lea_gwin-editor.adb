@@ -32,6 +32,8 @@ package body LEA_GWin.Editor is
   use Ada.Strings, Ada.Strings.Wide_Fixed;
   use GWindows.Message_Boxes;
 
+  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+
   overriding procedure On_Change (Editor : in out LEA_Scintilla_Type) is
     --  parent: MDI_Child_Type renames MDI_Child_Type(Editor.MDI_Root.all);
   begin
@@ -109,7 +111,7 @@ package body LEA_GWin.Editor is
       then
         --  On a "Return" keypress right after "begin", "record" or "(",
         --  we add an extra indentation.
-        new_ind := new_ind + MDI_Child_Type (Editor.mdi_parent.all).mdi_root.opt.indentation;
+        new_ind := new_ind + Options.indentation;
       end if;
       --
       --  Now, add the bonus keystrokes. We merge all keystrokes (the
@@ -238,7 +240,7 @@ package body LEA_GWin.Editor is
     begin
       for pos in reverse Position'Max (0, cur_pos - search_tolerance) .. cur_pos loop
         if Editor.Get_Style_At (pos) = SCE_ADA_IDENTIFIER then
-          case main.opt.toolset is
+          case Options.toolset is
             when HAC_mode =>
               Editor.Find_HAC_Declarations (pos, decl_1, decl_2, found);
               if found > 0 then
@@ -289,8 +291,6 @@ package body LEA_GWin.Editor is
       end if;
     end Try_Auto_Complete;
 
-    opt : LEA_Common.User_options.Option_Pack_Type
-            renames MDI_Child_Type (Editor.mdi_parent.all).mdi_root.opt;
   begin
     if Editor.Get_Selections > 1 then
       --  Auto-insertion of any kind is disabled when there are multiple
@@ -306,21 +306,21 @@ package body LEA_GWin.Editor is
           Process_Return_Keystroke;
         end if;
       when '(' | '"' =>
-        if opt.auto_insert then
+        if Options.auto_insert then
           Try_Auto_Insert;
         end if;
-        if Value = '(' and then opt.smart_editor then
+        if Value = '(' and then Options.smart_editor then
           --  Consider a Call Tip (showing parameters of a subprogram).
           Try_Call_Tip;
         end if;
       when ')' =>
         Editor.Call_Tip_Cancel;
       when 'A' .. 'Z' | 'a' .. 'z' | '_'  | '0' .. '9' =>
-        if opt.smart_editor then
+        if Options.smart_editor then
           Try_Auto_Complete (dot => False);
         end if;
       when '.' =>
-        if opt.smart_editor then
+        if Options.smart_editor then
           Try_Auto_Complete (dot => True);
         end if;
       when others =>
@@ -408,8 +408,8 @@ package body LEA_GWin.Editor is
     --
     found : Natural;
   begin
-    if main.opt.smart_editor then
-      case main.opt.toolset is
+    if Options.smart_editor then
+      case Options.toolset is
         when HAC_mode =>
           Editor.Find_HAC_Declarations (Pos, decl_1, decl_2, found);
           if found > 0 then
@@ -689,8 +689,8 @@ package body LEA_GWin.Editor is
       return;
     end if;
 
-    Editor.Set_Tab_Width (mdi_root.opt.tab_width);
-    Editor.Set_Edge_Column (mdi_root.opt.right_margin);
+    Editor.Set_Tab_Width (Options.tab_width);
+    Editor.Set_Edge_Column (Options.right_margin);
 
     --  Style: parentheses coloring
     --    For matched parentheses:
@@ -727,7 +727,7 @@ package body LEA_GWin.Editor is
       Color_Convert (Theme_Color (matched_word_highlight))
     );
 
-    case mdi_root.opt.show_special is
+    case Options.show_special is
       when none =>
         Editor.Set_View_WS (SCWS_INVISIBLE);
         Editor.Set_View_EOL (False);
@@ -738,7 +738,7 @@ package body LEA_GWin.Editor is
         Editor.Set_View_WS (SCWS_VISIBLEALWAYS);
         Editor.Set_View_EOL (True);
     end case;
-    Editor.Set_Indentation_Guides (mdi_root.opt.show_indent);
+    Editor.Set_Indentation_Guides (Options.show_indent);
   end Apply_Options;
 
   procedure Set_Current_Line (Editor : in out LEA_Scintilla_Type; line : Integer) is
@@ -1117,7 +1117,7 @@ package body LEA_GWin.Editor is
     --
     trace_enabled : constant Boolean := False;
   begin
-    if main.opt.smart_editor then
+    if Options.smart_editor then
       main.BD_sem.Set_Target
         (HAC_Sys.Targets.Abstract_Machine_Reference (main.sem_machine));
       HAC_Sys.Targets.Semantics.Machine (main.sem_machine.all).CD := main.BD_sem.CD;
