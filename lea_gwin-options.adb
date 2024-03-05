@@ -1,6 +1,7 @@
 with LEA_Common.User_options;
 
-with LEA_GWin.MDI_Child;
+with LEA_GWin.MDI_Child,
+     LEA_GWin.Toolbars;
 
 with LEA_Resource_GUI;
 
@@ -104,6 +105,7 @@ package body LEA_GWin.Options is
     main.Project_Panel.Apply_Options;
     main.Message_Panel.Apply_Options;
     main.Update_Common_Menus;
+    LEA_GWin.Toolbars.Update_Theme (main.Tool_Bar);
     MDI_Client_Window (main).Enumerate_Children (Apply_Changes_to_Child'Unrestricted_Access);
   end Apply_Main_Options;
 
