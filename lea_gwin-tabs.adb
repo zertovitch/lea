@@ -1,12 +1,17 @@
+with LEA_Common.Color_Themes;
+
 with LEA_GWin.MDI_Child,
      LEA_GWin.MDI_Main;
 
 with LEA_Resource_GUI;
 
 with GWindows.Cursors,
-     GWindows.Scintilla;
+     GWindows.Scintilla,
+     GWindows.Drawing_Objects;
 
 with Ada.Strings.Wide_Unbounded;
+
+with Ada.Text_IO;
 
 package body LEA_GWin.Tabs is
 
@@ -52,9 +57,20 @@ package body LEA_GWin.Tabs is
 
   overriding procedure On_Create (Control : in out LEA_Tab_Bar_Type) is
     use LEA_Resource_GUI;
+    use LEA_Common.Color_Themes;
   begin
     Append_Item (Control.context_menu, "Close", IDM_Close);
     Append_Item (Control.context_menu, "Open containing &folder", IDM_Open_Containing_Folder);
+    Control.Background_Color (Color_Convert (Theme_Color (tab_bar_background)));
+    Control.Tab_Colors (Background_Color                  => Color_Convert (Theme_Color (tab_bar_background)),
+                        Background_Selected_Color         => Color_Convert (Theme_Color (tab_background_selected)),
+                        Background_Hovered_Color          => Color_Convert (Theme_Color (tab_background_hovered)),
+                        Background_Selected_Hovered_Color => Color_Convert (Theme_Color (tab_background_selected_hovered)),
+                        Foreground_Color                  => Color_Convert (Theme_Color (tab_foreground)),
+                        Foreground_Selected_Color         => Color_Convert (Theme_Color (tab_foreground_selected)),
+                        Foreground_Hovered_Color          => Color_Convert (Theme_Color (tab_foreground_hovered)),
+                        Foreground_Selected_Hovered_Color => Color_Convert (Theme_Color (tab_foreground_selected_hovered)),
+                        Frame_Color                       => Color_Convert (Theme_Color (tab_frame)));
   end On_Create;
 
   overriding procedure On_Message
@@ -125,5 +141,23 @@ package body LEA_GWin.Tabs is
     end loop;
     return -1;
   end Tab_Index;
+
+  procedure Update_Theme (Control : in out LEA_Tab_Bar_Type'Class) is
+    use LEA_Common.Color_Themes;
+  begin
+    Control.Background_Color (Color_Convert (Theme_Color (tab_bar_background)));
+    Control.Tab_Colors (Background_Color                  => Color_Convert (Theme_Color (tab_bar_background)),
+                        Background_Selected_Color         => Color_Convert (Theme_Color (tab_background_selected)),
+                        Background_Hovered_Color          => Color_Convert (Theme_Color (tab_background_hovered)),
+                        Background_Selected_Hovered_Color => Color_Convert (Theme_Color (tab_background_selected_hovered)),
+                        Foreground_Color                  => Color_Convert (Theme_Color (tab_foreground)),
+                        Foreground_Selected_Color         => Color_Convert (Theme_Color (tab_foreground_selected)),
+                        Foreground_Hovered_Color          => Color_Convert (Theme_Color (tab_foreground_hovered)),
+                        Foreground_Selected_Hovered_Color => Color_Convert (Theme_Color (tab_foreground_selected_hovered)),
+                        Frame_Color                       => Color_Convert (Theme_Color (tab_frame)));
+    
+    Control.Redraw (Erase      => True,
+                    Redraw_Now => True);
+  end Update_Theme;
 
 end LEA_GWin.Tabs;

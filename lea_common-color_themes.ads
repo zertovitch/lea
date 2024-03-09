@@ -30,7 +30,17 @@ package LEA_Common.Color_Themes is
      status_bar_foreground_highlighted,
      status_bar_background,
      splitter_background,
-     splitter_dashes);
+     splitter_dashes,
+     tab_bar_background,
+     tab_background,
+     tab_background_selected,
+     tab_background_hovered,
+     tab_background_selected_hovered,
+     tab_foreground,
+     tab_foreground_selected,
+     tab_foreground_hovered,
+     tab_foreground_selected_hovered,
+     tab_frame);
 
   --  Color encoding: each value of Red, Green, Blue on 8 bits.
   --  Red * 16#1_00_00# + Green * 16#1_00# + Blue.
