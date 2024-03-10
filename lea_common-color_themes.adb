@@ -78,7 +78,17 @@ package body LEA_Common.Color_Themes is
         status_bar_foreground_highlighted => Dark_Orange,
         status_bar_background             => White,
         splitter_background               => Light_Gray,
-        splitter_dashes                   => Gray),
+        splitter_dashes                   => Gray,
+        tab_bar_background                => White,
+        tab_background                    => 16#F8F8F8#,
+        tab_background_selected           => 16#F0F0FF#,
+        tab_background_hovered            => 16#F4F4FC#,
+        tab_background_selected_hovered   => 16#D8D8EF#,
+        tab_foreground                    => 16#848484#,
+        tab_foreground_selected           => 16#101010#,
+        tab_foreground_hovered            => 16#4A4A4A#,
+        tab_foreground_selected_hovered   => Black,
+        tab_frame                         => Black),
 
      Dark_Side =>
        (foreground                        => Light_Gray,
@@ -110,7 +120,17 @@ package body LEA_Common.Color_Themes is
         status_bar_foreground_highlighted => Orange,
         status_bar_background             => 16#161718#,
         splitter_background               => Dark_Gray,
-        splitter_dashes                   => Gray),
+        splitter_dashes                   => Gray,
+        tab_bar_background                => 16#222324#,
+        tab_background                    => 16#383334#,
+        tab_background_selected           => 16#402020#,
+        tab_background_hovered            => 16#3C292A#,
+        tab_background_selected_hovered   => 16#503030#,
+        tab_foreground                    => 16#7C7C7C#,
+        tab_foreground_selected           => 16#F8F8F8#,
+        tab_foreground_hovered            => 16#BABABA#,
+        tab_foreground_selected_hovered   => 16#FCFCFC#,
+        tab_frame                         => 16#A09C90#),
 
      Solarized_Light =>
        (foreground                        => Solarized.base01,
@@ -142,7 +162,17 @@ package body LEA_Common.Color_Themes is
         status_bar_foreground_highlighted => Dark_Orange,
         status_bar_background             => Solarized.base3,
         splitter_background               => Solarized.base2,
-        splitter_dashes                   => Solarized.base0));
+        splitter_dashes                   => Solarized.base0,
+        tab_bar_background                => Solarized.base3,
+        tab_background                    => 16#F6ECDC#,
+        tab_background_selected           => 16#FFE8D8#,
+        tab_background_hovered            => 16#FAEADA#,
+        tab_background_selected_hovered   => 16#FFEFDF#,
+        tab_foreground                    => 16#ABB6BA#,
+        tab_foreground_selected           => 16#586E75#,
+        tab_foreground_hovered            => 16#819297#,
+        tab_foreground_selected_hovered   => 16#485E65#,
+        tab_frame                         => 16#D4A6C2#));
 
   --  *************************************************************************
   function Nice_Image (ct : Color_Theme_Type) return UTF_16_String is

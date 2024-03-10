@@ -1,7 +1,8 @@
 with GWindows.Common_Controls,
      GWindows.Menus,
      GWindows.Windows.MDI,
-     GWindows.Types;
+     GWindows.Types,
+     GWindows.Drawing;
 
 with Ada.Containers.Vectors;
 with Interfaces.C;
@@ -45,5 +46,7 @@ package LEA_GWin.Tabs is
   overriding procedure Delete_Tab (Control : in out LEA_Tab_Bar_Type; Where : in Integer);
 
   function Tab_Index (Control : in out LEA_Tab_Bar_Type; ID : ID_Type) return Integer;
+
+  procedure Update_Theme (Control : in out LEA_Tab_Bar_Type'Class);
 
 end LEA_GWin.Tabs;
