@@ -155,7 +155,7 @@ package body LEA_GWin.Tabs is
                         Foreground_Hovered_Color          => Color_Convert (Theme_Color (tab_foreground_hovered)),
                         Foreground_Selected_Hovered_Color => Color_Convert (Theme_Color (tab_foreground_selected_hovered)),
                         Frame_Color                       => Color_Convert (Theme_Color (tab_frame)));
-    
+
     Control.Redraw (Erase      => True,
                     Redraw_Now => True);
   end Update_Theme;

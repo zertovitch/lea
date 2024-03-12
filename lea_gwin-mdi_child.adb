@@ -85,12 +85,40 @@ package body LEA_GWin.MDI_Child is
     Window.editor.Apply_Options;
   end Apply_Options;
 
+  function Simple_Name (path : GString) return GString is
+    start : Natural := path'First;
+  begin
+    for i in reverse path'Range loop
+      if path (i) = '\' then
+        start := i + 1;
+        exit;
+      end if;
+    end loop;
+    return path (start .. path'Last);
+  end Simple_Name;
+
   procedure Update_Information
     (Window : in out MDI_Child_Type;
      need   :        Update_need)
   is
     use GWindows.Common_Controls;
     use LEA_Common.Color_Themes;
+    any_modified : Boolean := False;
+
+    procedure Update_Menus is
+      use LEA_Resource_GUI, GWindows.Menus;
+      is_any_selection : constant Boolean :=
+        Window.editor.Get_Selection_Start < Window.editor.Get_Selection_End;
+    begin
+      State (Window.menu.Main, Command, IDM_Cut,                    bool_to_state (is_any_selection));
+      State (Window.menu.Main, Command, IDM_Copy,                   bool_to_state (is_any_selection));
+      State (Window.menu.Main, Command, IDM_Paste,                  bool_to_state (Window.editor.Can_Paste));
+      State (Window.menu.Main, Command, IDM_Undo,                   bool_to_state (Window.editor.Can_Undo));
+      State (Window.menu.Main, Command, IDM_Redo,                   bool_to_state (Window.editor.Can_Redo));
+      State (Window.menu.Main, Command, IDM_Open_Containing_Folder, bool_to_state (Length (Window.ID.File_Name) > 0));
+      State (Window.menu.Main, Command, IDM_Save_File,              bool_to_state (Window.editor.modified));
+      State (Window.menu.Main, Command, IDM_Save_All,               bool_to_state (any_modified));
+    end Update_Menus;
 
     procedure Update_Status_Bar is
       pos, sel_a, sel_z : Scintilla.Position;
@@ -213,7 +241,7 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Undo, Window.editor.Can_Undo);
       bar.Enabled (IDM_Redo, Window.editor.Can_Redo);
       bar.Enabled (IDM_Save_File, Window.editor.modified);
-      bar.Enabled (IDM_Save_All, Window.save_all_hint);
+      bar.Enabled (IDM_Save_All, any_modified);
       bar.Enabled (IDM_Cut, is_any_selection);
       bar.Enabled (IDM_Copy, is_any_selection);
       bar.Enabled (IDM_Paste, Window.editor.Can_Paste);
@@ -230,36 +258,33 @@ package body LEA_GWin.MDI_Child is
       --  end if;
     end Update_Tool_Bar;
 
-    procedure Update_Menus is
-      use LEA_Resource_GUI, GWindows.Menus;
-      is_any_selection : constant Boolean :=
-        Window.editor.Get_Selection_Start < Window.editor.Get_Selection_End;
-    begin
-      State (Window.menu.Main, Command, IDM_Cut,                    bool_to_state (is_any_selection));
-      State (Window.menu.Main, Command, IDM_Copy,                   bool_to_state (is_any_selection));
-      State (Window.menu.Main, Command, IDM_Paste,                  bool_to_state (Window.editor.Can_Paste));
-      State (Window.menu.Main, Command, IDM_Undo,                   bool_to_state (Window.editor.Can_Undo));
-      State (Window.menu.Main, Command, IDM_Redo,                   bool_to_state (Window.editor.Can_Redo));
-      State (Window.menu.Main, Command, IDM_Open_Containing_Folder, bool_to_state (Length (Window.ID.File_Name) > 0));
-      State (Window.menu.Main, Command, IDM_Save_File,              bool_to_state (Window.editor.modified));
-      State (Window.menu.Main, Command, IDM_Save_All,               bool_to_state (Window.save_all_hint));
-    end Update_Menus;
-
-    any_modified : Boolean := False;
-    --
-    procedure Check_any_modified (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
+    procedure Process_Siblings (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     --  Enumeration call back to check if any MDI child window has a modified document
     is
     begin
       if Any_Window.all in MDI_Child_Type'Class then
-        any_modified := any_modified or MDI_Child_Type (Any_Window.all).editor.modified;
+        declare
+          sibling : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
+          tab_bar : Tabs.LEA_Tab_Bar_Type renames sibling.mdi_root.Tab_Bar;
+        begin
+          any_modified := any_modified or sibling.editor.modified;
+          --  Adapt title in the tab bar (code similar to that in On_Save_As):
+          for index in 0 .. tab_bar.Tab_Count - 1 loop
+            if tab_bar.info (index).ID = sibling.ID then
+              tab_bar.Text
+                (index,
+                 (if sibling.editor.modified then "* " else "") &
+                 Simple_Name (GU2G (sibling.ID.Short_Name)));
+            end if;
+          end loop;
+        end;
       end if;
-    end Check_any_modified;
+    end Process_Siblings;
 
   begin
-    GWindows.Base.Enumerate_Children (MDI_Client_Window (Window.mdi_root.all).all,
-                                      Check_any_modified'Unrestricted_Access);
-    Window.save_all_hint := any_modified;
+    GWindows.Base.Enumerate_Children
+      (MDI_Client_Window (Window.mdi_root.all).all,
+       Process_Siblings'Unrestricted_Access);
     if Window.editor.modified then
       Window.Text ("* " & GU2G (Window.ID.Short_Name));
     else
@@ -348,18 +373,6 @@ package body LEA_GWin.MDI_Child is
     Window.Accept_File_Drag_And_Drop;
     Ada.Numerics.Float_Random.Reset (Window.temp_name_gen);
   end On_Create;
-
-  function Simple_Name (path : GString) return GString is
-    start : Natural := path'First;
-  begin
-    for i in reverse path'Range loop
-      if path (i) = '\' then
-        start := i + 1;
-        exit;
-      end if;
-    end loop;
-    return path (start .. path'Last);
-  end Simple_Name;
 
   procedure Create_LEA_MDI_Child
     (Window : in out MDI_Child_Type;
@@ -610,9 +623,15 @@ package body LEA_GWin.MDI_Child is
   is
   begin
     if Window.mdi_root.User_maximize_restore then
-      Options.MDI_childen_maximized := Zoom (Window);
+      Options.MDI_childen_maximized := Window.Zoom;
     end if;
-    Dock_Children (Window);
+    Window.Dock_Children;
+    --  ^ TBD: remove the flickering that seems to happen
+    --         +/- at the moment of that operation.
+    --
+    --    Possible solution at :
+    --    https://www.codeproject.com/Articles/11204/A-flicker-issue-in-MDI-applications
+    --    In that case, GWindows.Windows.MDI could be fixed directly.
   end On_Size;
 
   function Best_Name (Window : MDI_Child_Type) return GString is
