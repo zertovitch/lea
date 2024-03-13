@@ -200,6 +200,7 @@ package body LEA_GWin.MDI_Main is
   procedure Process_Argument
     (Window   : in out MDI_Main_Type;
      Position : in     Positive;
+     Total    : in     Positive;
      Arg      : in     String)
   is
   begin
@@ -386,7 +387,7 @@ package body LEA_GWin.MDI_Main is
       --  ^ The MS Office-like first, empty document
     end if;
     for i in 1 .. Argument_Count loop
-      Window.Process_Argument (i, Argument (i));
+      Window.Process_Argument (i, Argument_Count, Argument (i));
     end loop;
     --  Dropping files on the MDI background will trigger opening a document:
     Window.Accept_File_Drag_And_Drop;

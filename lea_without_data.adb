@@ -27,9 +27,9 @@ procedure LEA_Without_Data is
 
   Top : LEA_GWin.MDI_Main.MDI_Main_Type;
 
-  procedure LEA_Process_Argument (Position : Positive; Arg : String) is
+  procedure LEA_Process_Argument (Position, Total : Positive; Arg : String) is
   begin
-    Top.Process_Argument (Position, Arg);
+    Top.Process_Argument (Position, Total, Arg);
   end LEA_Process_Argument;
 
   package LEA_Single_Instance is

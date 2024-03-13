@@ -117,6 +117,7 @@ package LEA_GWin.MDI_Main is
   procedure Process_Argument
     (Window   : in out MDI_Main_Type;
      Position : in     Positive;
+     Total    : in     Positive;
      Arg      : in     String);
 
   overriding procedure On_Menu_Select
