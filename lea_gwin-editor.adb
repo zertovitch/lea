@@ -920,8 +920,11 @@ package body LEA_GWin.Editor is
     pos, sel_a, sel_z : Position;
     line, col, count  : Integer;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
+    use LEA_GWin.Messages, Ada.Strings.Unbounded;
     line_msg_col_width : constant := 70;
     col_msg_col_width  : constant := 40;
+    search_for_col_width : constant :=
+      large_message_width - line_msg_col_width - col_msg_col_width;
     --
     function Right_aligned_line_number (line : Positive) return Wide_String is
       s : Wide_String := "12345";
@@ -937,7 +940,6 @@ package body LEA_GWin.Editor is
       return s;
     end Right_aligned_column_number;
     --
-    use LEA_GWin.Messages, Ada.Strings.Unbounded;
   begin
     if find_str = "" then  --  Probably a "find next" (F3) with no search string.
       MDI_Child.Show_Search_Box;
@@ -1016,10 +1018,7 @@ package body LEA_GWin.Editor is
         ml.Clear;
         ml.Set_Column ("Line", 0, line_msg_col_width);
         ml.Set_Column ("Col",  1, col_msg_col_width);
-        ml.Set_Column (
-          "Searching for [" & find_str & ']', 2,
-          large_message_width - line_msg_col_width - col_msg_col_width
-        );
+        ml.Set_Column ("Searching for [" & find_str & "]...", 2, search_for_col_width);
         --  Prepare a forward search in the entire document:
         Editor.Set_Target_Start (0);
         Editor.Set_Target_End (Editor.Get_Length);
@@ -1048,14 +1047,13 @@ package body LEA_GWin.Editor is
         end loop;
         ml.Set_Column_Scroll_Left
           ("Search for [" & find_str & "] (" &
-           Trim (count'Wide_Image, Left) & " items)", 2,
-           large_message_width - line_msg_col_width - col_msg_col_width);
+           Trim (count'Wide_Image, Left) & " items found)", 2,
+           search_for_col_width);
       when replace_all =>
         ml.Clear;
-        ml.Set_Column (
-          "Replacing all [" & find_str & "] by [" & repl_str & ']', 0,
-          large_message_width
-        );
+        ml.Set_Column
+          ("Replacing all [" & find_str & "] by [" & repl_str & ']', 0,
+           large_message_width);
         ml.Set_Column ("", 1, 0);
         ml.Set_Column ("", 2, 0);
         --  Prepare a forward search in the entire document:
