@@ -1,4 +1,5 @@
-with LEA_Common.Syntax;
+with LEA_Common.Syntax,
+     LEA_Common.Color_Themes;
 
 with LEA_GWin.Embedded_Texts,
      LEA_GWin.MDI_Child,
@@ -292,6 +293,7 @@ package body LEA_GWin.MDI_Main is
 
   procedure On_Create (Window : in out MDI_Main_Type) is
     use GWindows.Common_Controls, Ada.Command_Line;
+    use LEA_Common.Color_Themes;
     --
     --  Replace LEA default values by system-dependent ones (here those of GWindows)
     --
@@ -305,6 +307,8 @@ package body LEA_GWin.MDI_Main is
     start_line : Integer := -1;
     use GWindows.Application, GWindows.Taskbar, GWindows.Image_Lists, LEA_Resource_GUI;
   begin
+    Window.Background_Color (Color_Convert (Theme_Color (tab_background_selected)));
+
     for m in Window.MRU.Item'Range loop
       Window.MRU.Item (m) :=
         (Name => Options.mru (m).name,
@@ -827,5 +831,13 @@ package body LEA_GWin.MDI_Main is
     --  NB: the splitter for subprogram tree is part of child window and
     --  memorized at child level.
   end Memorize_Splitters;
+
+  procedure Update_Theme (Window : in out MDI_Main_Type) is
+    use LEA_Common.Color_Themes;
+  begin
+    Window.Background_Color (Color_Convert (Theme_Color (tab_background_selected)));
+    Window.Redraw (Erase      => True,
+                   Redraw_Now => True);
+  end Update_Theme;
 
 end LEA_GWin.MDI_Main;
