@@ -626,12 +626,6 @@ package body LEA_GWin.MDI_Child is
       Options.MDI_childen_maximized := Window.Zoom;
     end if;
     Window.Dock_Children;
-    --  ^ TBD: remove the flickering that seems to happen
-    --         +/- at the moment of that operation.
-    --
-    --    Possible solution at :
-    --    https://www.codeproject.com/Articles/11204/A-flicker-issue-in-MDI-applications
-    --    In that case, GWindows.Windows.MDI could be fixed directly.
   end On_Size;
 
   function Best_Name (Window : MDI_Child_Type) return GString is
