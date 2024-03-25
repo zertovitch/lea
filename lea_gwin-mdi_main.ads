@@ -157,4 +157,6 @@ package LEA_GWin.MDI_Main is
   --  resize. Time is to record the proportions.
   procedure Memorize_Splitters (Window : in out MDI_Main_Type);
 
+  procedure Update_Theme (Window : in out MDI_Main_Type);
+
 end LEA_GWin.MDI_Main;
