@@ -50,7 +50,8 @@ package body LEA_GWin.Tabs is
 
   overriding procedure On_Change (Control : in out LEA_Tab_Bar_Type) is
   begin
-    Control.info (Control.Selected_Tab).Window.Focus;
+    GWindows.Windows.MDI_Active_Window (GWindows.Windows.Window_Type (Control.Controlling_Parent.all),
+                                        Control.info (Control.Selected_Tab).Window.all);
     Control.tip_index := invalid_tip_index;
     Refresh_Tool_Tip (Control);  --  The effect of this is invisible...
   end On_Change;
