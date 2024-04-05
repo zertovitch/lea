@@ -101,12 +101,18 @@ package body LEA_GWin.Editor.Streaming is
 
   overriding function Full_Source_Name (cat : LEA_File_Catalogue; name : String) return String is
     --  !!  To do: add pathes. See HAC_Pkg.
-    full_physical_name : constant String := Ada.Directories.Full_Name (name);
   begin
-    if HAC_Sys.Files.Default.File_Catalogue (cat).Exists (full_physical_name) then
-      return full_physical_name;
-    end if;
+    declare
+      full_physical_name : constant String := Ada.Directories.Full_Name (name);
+    begin
+      if HAC_Sys.Files.Default.File_Catalogue (cat).Exists (full_physical_name) then
+        return full_physical_name;
+      end if;
+    end;
     return "";
+  exception
+    when others =>
+      return "";
   end Full_Source_Name;
 
   overriding function Is_Open (cat : LEA_File_Catalogue; name : String) return Boolean is
@@ -162,6 +168,9 @@ package body LEA_GWin.Editor.Streaming is
     end Stream_Fronting;
 
   begin
+    if full_name = "" then
+      raise Ada.Directories.Name_Error;
+    end if;
     HAC_Sys.Files.Default.File_Catalogue (cat).Source_Open (full_name, stream);
     --  We open the "physical" stream even if it is not actually used.
     --  That way, it is locked.

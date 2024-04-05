@@ -27,6 +27,7 @@ with GWin_Util;
 with Ada.Characters.Handling,
      Ada.Calendar,
      Ada.Directories,
+     Ada.Exceptions,
      Ada.Strings.Unbounded,
      Ada.Strings.Wide_Fixed,
      Ada.Strings.Wide_Unbounded,
@@ -723,10 +724,12 @@ package body LEA_GWin.MDI_Child is
         begin
           Build_Main (Window.mdi_root.BD);
         exception
-          when others =>
+          when e : others =>
             ml.Insert_Item ("", message_count);
             ml.Set_Sub_Item
-              ("*** Crash in HAC - compiler bug! ***", message_count, 1);
+              ("*** Crash in HAC - streaming or compiler bug: " &
+               S2G (Ada.Exceptions.Exception_Message (e)),
+               message_count, 1);
             message_count := message_count + 1;
             compiler_bug := True;
         end;
