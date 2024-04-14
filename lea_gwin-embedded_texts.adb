@@ -70,9 +70,11 @@ package body LEA_GWin.Embedded_Texts is
     Get (mem_stream_unpacked, unpacked);
     if not Is_Help then
       unpacked :=
-        "--  This sample is not saved anywhere on your file system." & ASCII.LF &
-        "--  Don't forget to save it if you modify it!" & ASCII.LF &
-        "--" & ASCII.LF &
+        "--  **************************************************************" & ASCII.LF &
+        "--  **  This sample is not saved anywhere on your file system.  **" & ASCII.LF &
+        "--  **  Don't forget to save it, especially if you modify it!   **" & ASCII.LF &
+        "--  **************************************************************" & ASCII.LF &
+        ASCII.LF &
         unpacked;
     end if;
     declare
