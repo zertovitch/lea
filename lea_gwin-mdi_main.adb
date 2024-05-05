@@ -53,7 +53,9 @@ package body LEA_GWin.MDI_Main is
           if Equivalent (pw.ID, ID) then
             is_open := True;
             pw.Set_Foreground_Window;
-            Window.MDI_Active_Window (pw);  --  Activate document already open in our app.
+            --  Activate and focus on document already open in our app:
+            Window.MDI_Active_Window (pw);
+            pw.Focus;
             --  Scintilla lines are 0-based:
             if Line > -1 then
               pw.editor.Set_Current_Line (Line);
