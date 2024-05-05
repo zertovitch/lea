@@ -28,6 +28,7 @@ package LEA_GWin.Editor is
     sel_z_last_update_UI     : Position    := INVALID_POSITION;
     previous_selection_count : Positive    := 1;
     syntax_kind              : LEA_Common.Syntax.Syntax_type := LEA_Common.Syntax.Undefined;
+    ongoing_context_menu     : Boolean     := False;
   end record;
 
   overriding procedure On_Change (Editor : in out LEA_Scintilla_Type);

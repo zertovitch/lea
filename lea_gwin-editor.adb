@@ -408,7 +408,7 @@ package body LEA_GWin.Editor is
     --
     found : Natural;
   begin
-    if Options.smart_editor then
+    if Options.smart_editor and not Editor.ongoing_context_menu then
       case Options.toolset is
         when HAC_mode =>
           Editor.Find_HAC_Declarations (Pos, decl_1, decl_2, found);

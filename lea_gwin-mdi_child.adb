@@ -998,8 +998,11 @@ package body LEA_GWin.MDI_Child is
       Append_Item (Window.context_menu, "(empty)", 1);
       State (Window.context_menu, GWindows.Menus.Position, 1, Disabled);
     end if;
+    Window.editor.ongoing_context_menu := True;
+    Window.editor.Call_Tip_Cancel;
     Immediate_Popup_Menu (Window.context_menu, main.all);
     Destroy_Menu (Window.context_menu);
+    Window.editor.ongoing_context_menu := False;
   end On_Context_Menu;
 
   overriding procedure On_Close (Window    : in out MDI_Child_Type;
