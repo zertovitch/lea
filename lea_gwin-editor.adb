@@ -142,6 +142,17 @@ package body LEA_GWin.Editor is
       Editor.End_Undo_Action;
     end Process_Return_Keystroke;
 
+    procedure Quote_Selection is
+      a_pos : constant Position := Editor.sel_a_last_update_UI;
+      z_pos : constant Position := Editor.sel_z_last_update_UI;
+    begin
+      Editor.Begin_Undo_Action;
+      Editor.Insert_Text (z_pos, """");
+      Editor.Insert_Text (a_pos, """");
+      Editor.Set_Sel (a_pos + 1, z_pos + 1);
+      Editor.End_Undo_Action;
+    end Quote_Selection;
+
     procedure Try_Auto_Insert is
       auto_insert_ok : Boolean := False;
       closing : constant GCharacter := Matching (Value);
@@ -308,11 +319,21 @@ package body LEA_GWin.Editor is
         if line > 0 then
           Process_Return_Keystroke;
         end if;
-      when '(' | '"' =>
+      when '"' =>
+        Editor.Undo;  --  Undo the lone '"'" keystroke.
+        if Editor.sel_a_last_update_UI < Editor.sel_z_last_update_UI then
+          Quote_Selection;
+        else
+          Editor.Redo;
+          if Options.auto_insert then
+            Try_Auto_Insert;
+          end if;
+        end if;
+      when '(' =>
         if Options.auto_insert then
           Try_Auto_Insert;
         end if;
-        if Value = '(' and then Options.smart_editor then
+        if Options.smart_editor then
           --  Consider a Call Tip (showing parameters of a subprogram).
           Try_Call_Tip;
         end if;
