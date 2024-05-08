@@ -97,7 +97,7 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0004, "Toggle bookmark" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+F2", IDM_Toggle_bookmark);
     New_Menu.Popup_0005 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Actions", New_Menu.Popup_0005);
-    Append_Item (New_Menu.Popup_0005, "&Compile this file" & To_GString_From_String ((1 => ASCII.HT)) & "Shift-F4", IDM_Compile_single);
+    Append_Item (New_Menu.Popup_0005, "&Compile this file" & To_GString_From_String ((1 => ASCII.HT)) & "Shift+F4", IDM_Compile_single);
     Append_Item (New_Menu.Popup_0005, "&Build application" & To_GString_From_String ((1 => ASCII.HT)) & "F4", IDM_Build);
     Append_Item (New_Menu.Popup_0005, "Build and &Run" & To_GString_From_String ((1 => ASCII.HT)) & "F9", IDM_Build_and_run);
     Append_Separator (New_Menu.Popup_0005);

@@ -101,7 +101,7 @@ Menu_MDI_Child MENU
     }
     POPUP "&Actions"
     {
-        MENUITEM "&Compile this file\tShift-F4", IDM_Compile_single
+        MENUITEM "&Compile this file\tShift+F4", IDM_Compile_single
         MENUITEM "&Build application\tF4", IDM_Build
         MENUITEM "Build and &Run\tF9", IDM_Build_and_run
         MENUITEM SEPARATOR

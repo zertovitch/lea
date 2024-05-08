@@ -602,7 +602,7 @@ package body LEA_GWin.MDI_Main is
         Close (Window);
       when IDM_Close =>
         if Window.Count_MDI_Children = 0 then
-          Close (Window);  --  Ctrl-W when no subwindow is open.
+          Close (Window);  --  Ctrl+W when no subwindow is open.
         else
           Call_Parent_Method;
         end if;

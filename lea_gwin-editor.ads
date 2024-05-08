@@ -103,7 +103,7 @@ package LEA_GWin.Editor is
   procedure Bookmark_Previous (Editor : in out LEA_Scintilla_Type);
   procedure Bookmark_Toggle (Editor : in out LEA_Scintilla_Type; line : Integer);
 
-  --  Duplicate current line if no selection, or duplicate selection. Shortcut: Ctrl-D.
+  --  Duplicate current line if no selection, or duplicate selection. Shortcut: Ctrl+D.
   --  Clipboard remains untouched - that the cool aspect in this feature.
   --
   procedure Duplicate (Editor : in out LEA_Scintilla_Type);

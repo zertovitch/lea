@@ -58,7 +58,7 @@ package body LEA_GWin.Modal_Dialogs is
   procedure Show_About_Box (Main_Window : in out MDI_Main.MDI_Main_Type) is
     use LEA_Resource_GUI, GWindows.Application, GWindows.Constants, GWindows.Static_Controls.Web;
     box : About_box_Type;
-    url_lea, url_gnat, url_gnavi, url_hac, url_resedit, url_zipada : URL_Type;
+    url_lea, url_gnat, url_gnavi, url_hac, url_zipada : URL_Type;
     --
     procedure Credits_Clicked (dummy : in out GWindows.Base.Base_Window_Type'Class) is
       credits_box : LEA_Resource_GUI.Credits_Box_Type;

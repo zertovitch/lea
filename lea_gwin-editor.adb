@@ -82,9 +82,11 @@ package body LEA_GWin.Editor is
               Editor.Get_Style_At (old_pos + shift) = SCE_ADA_COMMENTLINE;
         end loop;
         --  Ensure that there is a bit of a comment after (at least one character).
-        --  On Shift-Return, we ignore this limit and the comment is extended even
-        --  when the cursor is at the end of the line.
+        --  On Shift+Return (GNAT Studio style), we ignore this limit and the comment
+        --  is extended even when the cursor is at the end of the line.
+        --
         --  !! Unfortunately Special_Key is always None !!
+        --
         in_ada_comment :=
           in_ada_comment and then
             (Special_Key = GWindows.Windows.Shift
@@ -115,12 +117,13 @@ package body LEA_GWin.Editor is
       end if;
       --
       --  Now, add the bonus keystrokes. We merge all keystrokes (the
-      --  real one and the bonus ones) into a single Undo action.
+      --  real "Return" and the bonus keystrokes) into a single Undo action.
       --
       Editor.Begin_Undo_Action;
       --
-      --  Redo the "Return" keystroke. If text was selected, it is deleted, again.
+      --  Redo the lone "Return" keystroke. If text was selected, it is deleted, again.
       Editor.Redo;
+      --  Add the indentation:
       if new_ind > 0 then
         Editor.Add_Text (new_ind * ' ');
       end if;
@@ -1199,10 +1202,10 @@ package body LEA_GWin.Editor is
   procedure Duplicate (Editor : in out LEA_Scintilla_Type) is
   begin
     if Editor.Get_Selection_Start = Editor.Get_Selection_End then
-      --  No selection: we duplicate the current line
+      --  No selection: we duplicate the current line.
       Editor.Line_Duplicate;
     else
-      --  There is a selection (or selections): we duplicate it (them).
+      --  There is a selection (or multiple selections): we duplicate it (them).
       Editor.Selection_Duplicate;
     end if;
   end Duplicate;

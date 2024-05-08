@@ -1,6 +1,6 @@
   --  The search box is common to all editor windows.
   --  It is created once, then:
-  --    - shown on Ctrl-F or a click on binoculars
+  --    - shown on Ctrl+F or a click on binoculars
   --    - hidden on button Close or Esc.
   --  It is never closed until the end of the application.
 
