@@ -25,6 +25,7 @@ package LEA_Common.Color_Themes is
      caret_line_background,
      bookmark_foreground,
      bookmark_background,
+     line_number_foreground,
      line_number_background,
      status_bar_foreground,
      status_bar_foreground_highlighted,

@@ -703,7 +703,7 @@ package body LEA_GWin.Editor is
     Editor.Style_Set_Fore (SCE_ADA_DEFAULT, Color_Convert (Theme_Color (foreground)));
     Editor.Set_Caret_Fore (Color_Convert (Theme_Color (caret)));
     Editor.Set_Caret_Line_Back (Color_Convert (Theme_Color (caret_line_background)));
-    Editor.Style_Set_Fore (STYLE_LINENUMBER, Color_Convert (Theme_Color (foreground)));
+    Editor.Style_Set_Fore (STYLE_LINENUMBER, Color_Convert (Theme_Color (line_number_foreground)));
     Editor.Style_Set_Back (STYLE_LINENUMBER, Color_Convert (Theme_Color (line_number_background)));
     Editor.Marker_Set_Fore (marker_for_bookmarks, Color_Convert (Theme_Color (bookmark_foreground)));
     Editor.Marker_Set_Back (marker_for_bookmarks, Color_Convert (Theme_Color (bookmark_background)));
