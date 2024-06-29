@@ -24,7 +24,7 @@ package body LEA_GWin.Embedded_Texts is
         HAT,
         GWindows.Message_Boxes, Zip_Streams;
     lea_exe : constant String := Ada.Command_Line.Command_Name;
-    zi : Zip.Zip_info;
+    zi : Zip.Zip_Info;
     mem_stream_unpacked : aliased Memory_Zipstream;
     unpacked : HAT.VString;
     already_open : Boolean := False;

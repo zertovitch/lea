@@ -27,7 +27,7 @@ package body LEA_GWin.Installer is
     use Ada.Command_Line, GWindows.Message_Boxes;
     lea_exe       : constant String := Command_Name;
     scintilla_dll : constant String := "SciLexer.dll";
-    z : Zip.Zip_info;
+    z : Zip.Zip_Info;
     m : Zip_Streams.Memory_Zipstream;
     b : Unbounded_String;
     p : String_Access;
