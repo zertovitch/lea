@@ -9,6 +9,7 @@ package body LEA_Common.Color_Themes is
   Light_Gray      : constant RGB_Type := 16#C0C0C0#;
   Gray            : constant RGB_Type := 16#808080#;
   Dark_Gray       : constant RGB_Type := 16#404040#;
+  Very_Dark_Gray  : constant RGB_Type := 16#101010#;
   Red             : constant RGB_Type := 16#FF0000#;
   Dark_Red        : constant RGB_Type := 16#800000#;
   Green           : constant RGB_Type := 16#00FF00#;
@@ -49,7 +50,7 @@ package body LEA_Common.Color_Themes is
 
   theme_color_array : constant array (Color_Theme_Type, Color_Topic) of RGB_Type :=
     (Default =>
-       (foreground                        => 16#101010#,
+       (foreground                        => Very_Dark_Gray,
         background                        => White,
         keyword                           => Blue,
         number                            => Dark_Orange,
@@ -86,7 +87,7 @@ package body LEA_Common.Color_Themes is
         tab_background_hovered            => 16#F4F4FC#,
         tab_background_selected_hovered   => 16#D8D8EF#,
         tab_foreground                    => 16#848484#,
-        tab_foreground_selected           => 16#101010#,
+        tab_foreground_selected           => Very_Dark_Gray,
         tab_foreground_hovered            => 16#4A4A4A#,
         tab_foreground_selected_hovered   => Black,
         tab_frame                         => Black),
