@@ -40,6 +40,7 @@ package LEA_Common.HAC_Samples is
       (Mathematics, +"series.adb",        +"Series (e.g. 1 + x + x^2 + ...) and partial sums demo"),
       (Mathematics, +"three_lakes_s.adb", +"Three lakes: ordinary differential equation system"),
       --
+      (Script,    +"directories.adb", +"Creates a few directories and then deletes them"),
       (Script,    +"env.adb",         +"System's Environment Variables: Set & Get"),
       (Script,    +"file_append.adb", +"Creates a file in multiple steps, via the Append procedure"),
       (Script,    +"file_copy.adb",   +"Reads a text file (itself) and copies it to another file"),
