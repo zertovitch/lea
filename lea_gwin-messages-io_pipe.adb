@@ -160,13 +160,13 @@ package body LEA_GWin.Messages.IO_Pipe is
     if current_IO_pipe = null then
       raise Program_Error with "IO pipe undefined";
     end if;
-      Input_Boxes.Skip_Line
-        (current_IO_pipe.mdi_main_parent.all,
-         "Press Return key or click OK." & NL & NL &
-         "---" & NL &
-         "Press Esc key or click Cancel" & NL &
-         "for aborting the program.",
-         Result);
+    Input_Boxes.Skip_Line
+      (current_IO_pipe.mdi_main_parent.all,
+       "Press the Return key or click OK." & NL & NL &
+       "---" & NL &
+       "If you rather want to abort the program" & NL &
+       "right now, press the Esc key or click Cancel.",
+       Result);
     New_Line_Console;  --  Reflect the new line on the "console".
     if Result = Cancel then
       is_aborted_flag := True;
