@@ -108,7 +108,7 @@ package body LEA_GWin.Options is
     main.Update_Common_Menus;
     main.Update_Theme;
     LEA_GWin.Toolbars.Update_Theme (main.Tool_Bar);
-    LEA_GWin.Tabs.Update_Theme (main.Tab_Bar);
+    LEA_GWin.Tabs.Update_Theme (main.tab_bar);
     MDI_Client_Window (main).Enumerate_Children (Apply_Changes_to_Child'Unrestricted_Access);
   end Apply_Main_Options;
 

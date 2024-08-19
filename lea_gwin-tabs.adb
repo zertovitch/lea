@@ -39,7 +39,7 @@ package body LEA_GWin.Tabs is
             MDI_Child.MDI_Child_Type
               (Control.info (tab_under_pointer).Window.all);
         fn : constant GString :=
-               GU2G (window_of_tab_under_pointer.ID.File_Name);
+               GU2G (window_of_tab_under_pointer.ID.file_name);
       begin
         Control.tips.Add_Tool_Tip
           (Control,
@@ -119,7 +119,7 @@ package body LEA_GWin.Tabs is
         (Control.context_menu,
          Command,
          LEA_Resource_GUI.IDM_Open_Containing_Folder,
-         bool_to_state (Length (Control.info (chosen_tab).ID.File_Name) > 0));
+         bool_to_state (Length (Control.info (chosen_tab).ID.file_name) > 0));
       Immediate_Popup_Menu (Control.context_menu, chosen_child_window.all);
     end if;
   end On_Right_Click;

@@ -272,7 +272,7 @@ package body LEA_GWin.Editor is
 
       procedure Identifier_Auto_Complete (prefix : String) is
         ref : constant HAC_Sys.Targets.Semantics.Reference_Point :=
-          (HAT.To_VString (G2S (GU2G (parent.ID.File_Name))),
+          (HAT.To_VString (G2S (GU2G (parent.ID.file_name))),
            line + 1,
            Editor.Get_Column (cur_pos) + 1);
       begin
@@ -1056,7 +1056,7 @@ package body LEA_GWin.Editor is
           ml.Item_Data
             (count,
              new HAC_Sys.Defs.Diagnostic_Kit'
-               (file_name => To_Unbounded_String (G2S (GU2G (MDI_Child.ID.File_Name))),
+               (file_name => To_Unbounded_String (G2S (GU2G (MDI_Child.ID.file_name))),
                 location  =>
                   (line         => line + 1,  --  Lines in Diagnostic_Kit are 1-based.
                    column_start => col,
@@ -1259,7 +1259,7 @@ package body LEA_GWin.Editor is
     f : File_Type;
     parent : MDI_Child_Type renames MDI_Child_Type (Editor.mdi_parent.all);
   begin
-    Open (f, In_File, To_UTF_8 (GU2G (parent.ID.File_Name)), Form_For_IO_Open_and_Create);
+    Open (f, In_File, To_UTF_8 (GU2G (parent.ID.file_name)), Form_For_IO_Open_and_Create);
     declare
       l : constant Ada.Streams.Stream_IO.Count := Size (f);
       s : String (1 .. Integer (l));
@@ -1345,7 +1345,7 @@ package body LEA_GWin.Editor is
         if id_pos >= 0 then
           line := Editor.Line_From_Position (id_pos) + 1;
           col  := Editor.Get_Column (id_pos) + 1;
-          ref := (HAT.To_VString (G2S (GU2G (parent.ID.File_Name))), line, col);
+          ref := (HAT.To_VString (G2S (GU2G (parent.ID.file_name))), line, col);
           main.sem_machine.Find_Referenced_Declarations
             (ref    => ref,
              decl_1 => decl_1,

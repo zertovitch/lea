@@ -32,8 +32,8 @@ package LEA_GWin is
   App_default_font_size : constant := 10;
 
   type ID_Type is record
-    File_Name  : GString_Unbounded;  --  If File_Name = "" (no file), then...
-    Short_Name : GString_Unbounded;  --  ... the Short_Name serves as identification.
+    file_name  : GString_Unbounded;  --  If .file_name = "" (no file), then...
+    short_name : GString_Unbounded;  --  ...  .short_name serves as identification.
   end record;
 
   function Equivalent (Id_1, Id_2 : ID_Type) return Boolean;
@@ -47,5 +47,7 @@ package LEA_GWin is
 
   bool_to_state : constant array (Boolean) of GWindows.Menus.State_Type :=
     (GWindows.Menus.Disabled, GWindows.Menus.Enabled);
+
+  function Simple_Name (path : GString) return GString;
 
 end LEA_GWin;

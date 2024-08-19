@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2024/02/07  21:12:21
+--  Transcription time: 2024/08/19  21:32:36
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -247,7 +247,7 @@ package body LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out About_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -448,7 +448,7 @@ package body LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Go_to_line_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -544,7 +544,7 @@ package body LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out HAC_example_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -756,7 +756,7 @@ package body LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Progress_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1076,7 +1076,7 @@ package body LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out String_Prompt_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);

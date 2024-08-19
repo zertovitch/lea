@@ -29,8 +29,8 @@ package body LEA_GWin.Embedded_Texts is
     unpacked : HAT.VString;
     already_open : Boolean := False;
     New_ID : constant ID_Type :=
-      (File_Name  => Null_GString_Unbounded,  --  No file until first "Save".
-       Short_Name => G2GU (S2G (Short_Name)));
+      (file_name  => Null_GString_Unbounded,  --  No file until first "Save".
+       short_name => G2GU (S2G (Short_Name)));
     --
     procedure Check_Duplicate_Embedded_Doc
       (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)

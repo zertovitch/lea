@@ -141,7 +141,7 @@ package body LEA_GWin.Editor.Streaming is
       then
         declare
           cw : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
-          fn : GString := GU2G (cw.ID.File_Name);
+          fn : GString := GU2G (cw.ID.file_name);
           shebang_offset : Natural;
         begin
           To_Upper (fn);

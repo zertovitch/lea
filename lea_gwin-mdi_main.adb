@@ -153,7 +153,7 @@ package body LEA_GWin.MDI_Main is
     New_Window.Finish_subwindow_opening;
     New_Window.editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
-        GU2G (New_Window.ID.File_Name),
+        GU2G (New_Window.ID.file_name),
         GU2G (Options.ada_files_filter)
       );
     New_Window.editor.Set_Scintilla_Syntax;
@@ -177,9 +177,9 @@ package body LEA_GWin.MDI_Main is
         (Window, "Error", "File " & File_Name & " not found", Icon => Exclamation_Icon);
       --  Remove tab (would be done by On_Close if ID.File_Name was
       --  not erased before closing the subwindow).
-      Window.Tab_Bar.Delete_Tab (Window.Tab_Bar.Tab_Index (New_Window.ID));
+      Window.tab_bar.Delete_Tab (Window.tab_bar.Tab_Index (New_Window.ID));
       --  Prevent MRU name addition:
-      New_Window.ID.File_Name := Null_GString_Unbounded;
+      New_Window.ID.file_name := Null_GString_Unbounded;
       New_Window.Close;
     end if;
   end Open_Child_Window_And_Load;
@@ -343,15 +343,15 @@ package body LEA_GWin.MDI_Main is
     --  ** Main tool bar (New / Open / Save / ...) at top left of the main window:
     LEA_GWin.Toolbars.Init_Main_Tool_Bar (Window.Tool_Bar, Window);
     --  ** Main's tab bar:
-    Window.Tab_Bar.MDI_Parent := Window'Unrestricted_Access;
-    Window.Tab_Bar.Create (Window, 0, 30, 10, 25);
-    Window.Tab_Bar.Dock (GWindows.Base.At_Top);
-    GWin_Util.Use_GUI_Font (Window.Tab_Bar);
+    Window.tab_bar.MDI_Parent := Window'Unrestricted_Access;
+    Window.tab_bar.Create (Window, 0, 30, 10, 25);
+    Window.tab_bar.Dock (GWindows.Base.At_Top);
+    GWin_Util.Use_GUI_Font (Window.tab_bar);
     --  Tool Tips for the Tab bar:
-    Window.Tab_Bar.tips.Create (Window);
-    Window.Tab_Bar.Set_Tool_Tips (Window.Tab_Bar.tips);
-    GWin_Util.Use_GUI_Font (Window.Tab_Bar.tips);
-    Window.Tab_Bar.tips.Set_Durations
+    Window.tab_bar.tips.Create (Window);
+    Window.tab_bar.Set_Tool_Tips (Window.tab_bar.tips);
+    GWin_Util.Use_GUI_Font (Window.tab_bar.tips);
+    Window.tab_bar.tips.Set_Durations
       (Initial  => 0.2,
        Reshow   => 0.1,
        Til_Hide => 5.0);
@@ -497,8 +497,8 @@ package body LEA_GWin.MDI_Main is
     Window.User_maximize_restore := False;
     New_Window.Create_LEA_MDI_Child
       (Window,
-       (File_Name  => Null_GString_Unbounded,  --  No file until first "Save".
-        Short_Name => G2GU (Untitled_N)));
+       (file_name  => Null_GString_Unbounded,  --  No file until first "Save".
+        short_name => G2GU (Untitled_N)));
 
     --  Transfer user-defined default options:
     --  New_Window.xxx.Opt:= Gen_Opt.Options_For_New;

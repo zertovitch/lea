@@ -43,7 +43,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
     function HAC_Command_Name return String is
     begin
-      return G2S (GU2G (Window.ID.File_Name));
+      return G2S (GU2G (Window.ID.file_name));
     end HAC_Command_Name;
 
     procedure Fake_Shell_Execute (Command : String; Result : out Integer) is

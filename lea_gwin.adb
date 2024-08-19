@@ -3,10 +3,10 @@ with Ada.Text_IO;
 package body LEA_GWin is
 
   function Equivalent (Id_1, Id_2 : ID_Type) return Boolean is
-    F1 : GString := GU2G (Id_1.File_Name);
-    F2 : GString := GU2G (Id_2.File_Name);
-    S1 : GString := GU2G (Id_1.Short_Name);
-    S2 : GString := GU2G (Id_2.Short_Name);
+    F1 : GString := GU2G (Id_1.file_name);
+    F2 : GString := GU2G (Id_2.file_name);
+    S1 : GString := GU2G (Id_1.short_name);
+    S2 : GString := GU2G (Id_2.short_name);
     trace : constant Boolean := False;
     result : Boolean;
     use Ada.Text_IO;
@@ -57,5 +57,17 @@ package body LEA_GWin is
 --   begin
 --     return Color_Convert (LEA_Common.Color_Themes.theme_color (theme, topic));
 --   end GWindows_Color_Theme;
+
+  function Simple_Name (path : GString) return GString is
+    start : Natural := path'First;
+  begin
+    for i in reverse path'Range loop
+      if path (i) = '\' then
+        start := i + 1;
+        exit;
+      end if;
+    end loop;
+    return path (start .. path'Last);
+  end Simple_Name;
 
 end LEA_GWin;

@@ -77,7 +77,7 @@ package body LEA_GWin.Repair is
           end Expand;
 
         begin
-          if pw.ID.File_Name = file_name then
+          if pw.ID.file_name = file_name then
             pw.Focus;  --  Focus on document already open in our app.
             --
             pw.editor.Begin_Undo_Action;

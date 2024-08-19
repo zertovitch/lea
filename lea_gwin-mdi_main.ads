@@ -48,7 +48,7 @@ package LEA_GWin.MDI_Main is
         Success_in_enumerated_close : Boolean;
         Folders_Images              : GWindows.Image_Lists.Image_List_Type;
         --
-        Tab_Bar                     : Tabs.LEA_Tab_Bar_Type;
+        tab_bar                     : Tabs.LEA_Tab_Bar_Type;
         --
         Project_Panel               : Sliding_Panels.Project_Panel_Type;
         Message_Panel               : Sliding_Panels.Message_Panel_Type;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2024/02/07  21:12:21
+--  Transcription time: 2024/08/19  21:32:36
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -103,7 +103,7 @@ package LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out About_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -175,7 +175,7 @@ package LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Go_to_line_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -218,7 +218,7 @@ package LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out HAC_example_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -305,7 +305,7 @@ package LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Progress_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -428,7 +428,7 @@ package LEA_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out String_Prompt_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -455,7 +455,7 @@ package LEA_Resource_GUI is
   package Version_info is
     Authors : constant String := "Gautier de Montmollin";
     FileDescription : constant String := "LEA - a Lightweight Editor for Ada - Free, MIT license";
-    FileVersion : constant String := "0.90";
+    FileVersion : constant String := "0.91";
     LegalCopyright : constant String := "Copyright © Gautier de Montmollin 2017 .. 2024";
     ProductName : constant String := "LEA";
     Translation : constant := 1033;

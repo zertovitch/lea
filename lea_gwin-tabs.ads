@@ -1,8 +1,7 @@
 with GWindows.Common_Controls,
      GWindows.Menus,
      GWindows.Windows.MDI,
-     GWindows.Types,
-     GWindows.Drawing;
+     GWindows.Types;
 
 with Ada.Containers.Vectors;
 with Interfaces.C;
