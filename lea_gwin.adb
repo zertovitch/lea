@@ -45,9 +45,9 @@ package body LEA_GWin is
   begin
     return
       To_Color
-        (Red   => Color_Range (rgb / 2**16),
-         Green => Color_Range ((rgb / 2**8) mod (2**8)),
-         Blue  => Color_Range (rgb mod (2**8)));
+        (Red_Value   => Color_Range (rgb / 2**16),
+         Green_Value => Color_Range ((rgb / 2**8) mod (2**8)),
+         Blue_Value  => Color_Range (rgb mod (2**8)));
   end Color_Convert;
 
 --   function GWindows_Color_Theme
