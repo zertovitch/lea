@@ -911,7 +911,7 @@ package body LEA_GWin.MDI_Child is
           Append_Item
             (Window.context_menu,
              "Go to item " &
-             (if main.BD_sem.CD.IdTab (decl (1).id_index).entity in
+             (if main.BD_sem.CD.id_table (decl (1).id_index).entity in
                  declared_number_or_enum_item | constant_object | type_mark
               then
                 --  Incomplete & complete declarations of record, constant, etc.

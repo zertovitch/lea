@@ -190,7 +190,8 @@ package body LEA_GWin.Editor is
       decl_1, decl_2 : HAC_Sys.Targets.Semantics.Declaration_Point;
       --
       procedure Show_Call_Tip_HAC is
-        ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl_1.id_index);
+        ide : HAC_Sys.Co_Defs.Identifier_Table_Entry
+          renames main.BD_sem.CD.id_table (decl_1.id_index);
         full_id_name   : constant String := HAC_Sys.Defs.A2S (ide.name_with_case);
         full_id_name_g : constant GString := S2G (full_id_name);
         tip : GString_Unbounded;
@@ -220,7 +221,7 @@ package body LEA_GWin.Editor is
               for param in first_param .. last_param loop
                 declare
                   param_name : constant GString :=
-                    S2G (A2S (main.BD_sem.CD.IdTab (param).name_with_case));
+                    S2G (A2S (main.BD_sem.CD.id_table (param).name_with_case));
                 begin
                   tip := tip & param_name;
                   columns := columns + param_name'Length;
@@ -409,7 +410,8 @@ package body LEA_GWin.Editor is
     decl_1, decl_2 : HAC_Sys.Targets.Semantics.Declaration_Point;
     --
     procedure Show_Mouse_Hover_Tip_HAC is
-      ide : HAC_Sys.Co_Defs.IdTabEntry renames main.BD_sem.CD.IdTab (decl_1.id_index);
+      ide : HAC_Sys.Co_Defs.Identifier_Table_Entry
+        renames main.BD_sem.CD.id_table (decl_1.id_index);
       full_id_name   : constant GString := S2G (HAC_Sys.Defs.A2S (ide.name_with_case));
       padded_id_name : constant GString := NL & ' ' & full_id_name & ' ' & NL;
       use Ada.Directories, LEA_Common.Color_Themes;
