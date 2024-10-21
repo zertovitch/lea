@@ -34,6 +34,7 @@ package LEA_Common.HAC_Samples is
       (Mathematics, +"barnes.adb",        +"John Barnes' puzzle at Ada-Europe 2022 dinner"),
       (Mathematics, +"binomials.adb",     +"Binomial coefficient and factorial"),
       (Mathematics, +"covid_19_s.adb",    +"Model for simulating the Coronavirus (COVID-19) pandemic"),
+      (Mathematics, +"doors.adb",         +"The 100 Doors program in Rosetta Code"),
       (Mathematics, +"hofstadter.adb",    +"Hofstadter mutual recursive functions"),
       (Mathematics, +"mandelbrot.adb",    +"Mandelbrot set"),
       (Mathematics, +"random.adb",        +"Random generation: Rand (discrete) and Rnd (continuous)"),
