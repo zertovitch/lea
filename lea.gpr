@@ -73,13 +73,14 @@ project LEA is
       when "Profiling"       => for Object_Dir use "obj/profiling";
    end case;
 
-   Common_Compiler_Options :=
+   Compiler_Common_Options :=
      ("-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
       --  "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
       "-gnatwcijkmopruvz.c.p.t.w.x",    --  Warnings switches (run "gnatmake" for full list)
       "-gnatf",  --  Full errors. Verbose details, all undefined references
       "-gnatq",  --  Don't quit, try semantics, even if parse errors
       "-gnatQ",  --  Don't quit, write ali/tree file even if compile errors
+      "-g",     --  Generate debugging information
       --
       "-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
       "-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
@@ -88,42 +89,49 @@ project LEA is
       "-gnatyc",       --  Style: check c:comment format (two spaces)
       "-gnatyt");      --  Style: check t:token separation rules
    
-   Debug_Options :=
+   Compiler_Debug_Options :=
      ("-gnata",        --  Assertions enabled
       "-gnato",        --  Enable overflow checking in STRICT mode
       "-gnatVa",       --  Enable all validity checking options
       "-fstack-check",
-      "-fno-inline",
-      --
-      "-g");           --  Generate debugging information
+      "-fno-inline") &
+     Compiler_Common_Options;
 
-   Fast_Options :=
+   Compiler_Fast_Options :=
      ("-O3",
       "-gnatpn", 
-      "-g");           --  Generate debugging information
+      "-g") &
+     Compiler_Common_Options;
 
-   Profiling_Options :=
+   Compiler_Profiling_Options :=
      ("-O2",
       "-gnatp",
       "-fno-inline",
-      "-pg");
+      "-pg") &
+     Compiler_Common_Options;
    
+   Compiler_Small_Options :=
+     ("-Os",
+      --  "-fdata-sections",
+      "-ffunction-sections") &
+     Compiler_Common_Options;
+
    package Compiler is
       case LEA_Build_Mode is
          when "Debug" | "Debug_MinGW" =>
-            for Default_Switches ("ada") use Common_Compiler_Options & Debug_Options;
+            for Default_Switches ("ada") use Compiler_Debug_Options;
             for Local_Configuration_Pragmas use project'Project_Dir & "debug.pra";
          when "Fast"  | "Fast_MinGW" =>
-            for Default_Switches ("ada") use Common_Compiler_Options & Fast_Options;
+            for Default_Switches ("ada") use Compiler_Fast_Options;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small" | "Small_MinGW" =>
-            for Default_Switches ("ada") use Common_Compiler_Options & "-Os";
+            for Default_Switches ("ada") use Compiler_Small_Options;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small_Unchecked" =>
-            for Default_Switches ("ada") use Common_Compiler_Options & ("-Os", "-gnatp");
+            for Default_Switches ("ada") use Compiler_Small_Options & ("-gnatp");
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Profiling" =>
-            for Default_Switches ("ada") use Common_Compiler_Options & Profiling_Options;
+            for Default_Switches ("ada") use Compiler_Profiling_Options;
       end case;
    end Compiler;
 
@@ -132,17 +140,20 @@ project LEA is
       for Default_Switches ("ada") use ("-Es");
    end Binder;
 
-   Common_Linker_Options := ("-g", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+   Linker_Common_Options := ("-g", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+
+   Linker_Small_Options :=
+     Linker_Common_Options & ("-Wl,--gc-sections");
 
    package Linker is
       case LEA_Build_Mode is
          when "Debug" | "Debug_MinGW" =>
-            for Default_Switches ("ada") use Common_Linker_Options;
+            for Default_Switches ("ada") use Linker_Common_Options;
          when "Fast" | "Fast_MinGW" |
               "Small" | "Small_MinGW" | "Small_Unchecked"=>
-            for Default_Switches ("ada") use Common_Linker_Options & ("-mwindows", "-s", "-Wl,--gc-sections");
+            for Default_Switches ("ada") use Linker_Small_Options & ("-mwindows", "-s");
          when "Profiling" =>
-            for Default_Switches ("ada") use Common_Linker_Options & ("-Wl,--gc-sections", "-pg");
+            for Default_Switches ("ada") use Linker_Small_Options & ("-pg");
        end case;
    end Linker;
 

@@ -13,12 +13,11 @@ with Ada.Command_Line;
 
 package body LEA_GWin.Embedded_Texts is
 
-  procedure Show_embedded (
-    Main_Window : in out MDI_Main.MDI_Main_Type;
-    File_Name   :        String;
-    Short_Name  :        String;
-    Is_Help     :        Boolean
-  )
+  procedure Show_Embedded
+    (Main_Window : in out MDI_Main.MDI_Main_Type;
+     File_Name   :        String;
+     Short_Name  :        String;
+     Is_Help     :        Boolean)
   is
     use LEA_Common, LEA_Common.Syntax, LEA_GWin.MDI_Child,
         HAT,
@@ -55,8 +54,17 @@ package body LEA_GWin.Embedded_Texts is
         end;
       end if;
     end Check_Duplicate_Embedded_Doc;
-    --
+
     New_Window : MDI_Child_Access;
+
+    procedure Err_Msg (reason : GString) is
+    begin
+      Message_Box
+        (Main_Window,
+         "Embedded file",
+         "Could not unpack file from " & S2G (lea_exe) & NL & NL & "Reason: " & reason);
+    end Err_Msg;
+
   begin
     --  We want only one copy of the help of any sample document displayed.
     GWindows.Base.Enumerate_Children
@@ -102,18 +110,22 @@ package body LEA_GWin.Embedded_Texts is
     New_Window.Finish_subwindow_opening;
     New_Window.editor.Focus;
   exception
-    when Zip.Archive_corrupted =>
-      Message_Box (Main_Window, "Embedded file", "Could not unpack file from " & S2G (lea_exe));
-  end Show_embedded;
+    when Zip.Archive_corrupted    =>
+      Err_Msg ("embedded archive is damaged or absent.");
+    when Zip.Entry_name_not_found =>
+      --  This happens when LEA's maintainer forgot to run `sample_catalogue.exe`,
+      --  then replace `_lea_data.zip` with `_lea_data_new.zip`.
+      Err_Msg ("resource """ & S2G (File_Name) & """ is missing in embedded archive.");
+  end Show_Embedded;
 
   procedure Show_Help (Main_Window : in out MDI_Main.MDI_Main_Type) is
   begin
-    Show_embedded (Main_Window, "lea_help.txt", "Help", Is_Help => True);
+    Show_Embedded (Main_Window, "lea_help.txt", "Help", Is_Help => True);
   end Show_Help;
 
   procedure Show_Sample (Main_Window : in out MDI_Main.MDI_Main_Type; Dir, Sample_Name : String) is
   begin
-    Show_embedded
+    Show_Embedded
       (Main_Window, "hac_samples/" & Dir & '/' & Sample_Name, Sample_Name, Is_Help => False);
   end Show_Sample;
 
