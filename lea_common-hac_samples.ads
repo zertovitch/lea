@@ -25,11 +25,12 @@ package LEA_Common.HAC_Samples is
 
   standard_sample : constant Sample_List :=
     (
-      (Algorithm, +"bwt.adb",           +"Burrows-Wheeler transform: preprocessing for data compression"),
-      (Algorithm, +"draw_sphere.adb",   +"Shiny sphere in ASCII art (Rosetta Code)"),
-      (Algorithm, +"maze_gen.adb",      +"Maze generator (Rosetta Code)"),
-      (Algorithm, +"merge_sort.adb",    +"Sorting: Merge sort"),
-      (Algorithm, +"shell_sort.adb",    +"Sorting: Shell sort"),
+      (Algorithm, +"bwt.adb",          +"Burrows-Wheeler transform: preprocessing for data compression"),
+      (Algorithm, +"draw_sphere.adb",  +"Shiny sphere in ASCII art (Rosetta Code)"),
+      (Algorithm, +"maze_gen.adb",     +"Maze generator (Rosetta Code)"),
+      (Algorithm, +"permutations.adb", +"Permutations"),
+      (Algorithm, +"merge_sort.adb",   +"Sorting: Merge sort"),
+      (Algorithm, +"shell_sort.adb",   +"Sorting: Shell sort"),
       --
       (Mathematics, +"ackermann.adb",         +"Ackermann recursive function"),
       (Mathematics, +"barnes.adb",            +"John Barnes' puzzle at Ada-Europe 2022 dinner"),
