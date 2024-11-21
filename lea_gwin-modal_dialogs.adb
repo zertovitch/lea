@@ -65,7 +65,7 @@ package body LEA_GWin.Modal_Dialogs is
     begin
       credits_box.Create_Full_Dialog (box);
       credits_box.Small_Icon ("LEA_Icon_Small");
-      credits_box.Center;
+      credits_box.Center (Main_Window);
       Show_Dialog (credits_box, box);
     end Credits_Clicked;
     --
@@ -91,7 +91,7 @@ package body LEA_GWin.Modal_Dialogs is
     box.Credits_Button_permanent.Show;
     box.Credits_Button.Hide;
     box.Credits_Button_permanent.On_Click_Handler (Credits_Clicked'Unrestricted_Access);
-    box.Center;
+    box.Center (Main_Window);
     if Show_Dialog (box, Main_Window) = IDOK then
       null;
     end if;
@@ -192,7 +192,7 @@ package body LEA_GWin.Modal_Dialogs is
   begin
     box.Create_Full_Dialog (Main_Window);
     Set_Data;
-    box.Center;
+    box.Center (Main_Window);
     box.Zipped_file_box.On_Lost_Focus_Handler (On_list_quit'Unrestricted_Access);
     box.Zipped_file_box.On_Double_Click_Handler (On_list_double_click'Unrestricted_Access);
     box.Topic_box.On_Selection_Change_Handler (On_topic_change'Unrestricted_Access);

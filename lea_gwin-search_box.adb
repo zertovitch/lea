@@ -170,7 +170,7 @@ package body LEA_GWin.Search_Box is
     SB.Replace_all_button.Hide;
     SB.Replace_all_button_permanent.Show;
     --
-    SB.Center;
+    SB.Center (Parent);
     SB.Keyboard_Support;
   end Create_as_Search_Box;
 

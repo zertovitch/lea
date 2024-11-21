@@ -217,7 +217,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     progress_box.Stop_VM_Button.Hide;
     progress_box.Stop_VM_Button_permanent.Show;
     progress_box.Stop_VM_Button_permanent.On_Click_Handler (Abort_clicked'Unrestricted_Access);
-    progress_box.Center;
+    progress_box.Center (Window);
     Window.mdi_root.Disable;
     --  Running of the HAC program happens here:
     Windowed_HAC_VM_Interpret (Window.mdi_root.BD, post_mortem);
