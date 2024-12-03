@@ -271,17 +271,23 @@ package body LEA_GWin.Editor is
 
     procedure Try_Auto_Complete (dot : Boolean) is
 
-      procedure Identifier_Auto_Complete (prefix : String) is
+      procedure Identifier_Auto_Complete (prefix : GString) is
+        use Ada.Wide_Characters.Handling;
         ref : constant HAC_Sys.Targets.Semantics.Reference_Point :=
           (HAT.To_VString (G2S (GU2G (parent.ID.file_name))),
            line + 1,
            Editor.Get_Column (cur_pos) + 1);
       begin
+        if To_Upper (prefix) = "IS" then
+          --  Prevent auto-completing to "Is_Open" when typing "is" + Return key.
+          Editor.Auto_C_Cancel;
+          return;
+        end if;
         Editor.Auto_C_Set_Ignore_Case (True);
         Editor.Auto_C_Show
           (prefix'Length,
            S2G (main.sem_machine.Find_Possible_Declarations
-             (ref, prefix, 20, 1000)));
+             (ref, To_String (prefix), 20, 1000)));
       end Identifier_Auto_Complete;
 
       back_pos : constant Position :=
@@ -294,12 +300,12 @@ package body LEA_GWin.Editor is
         null;  --  !! try and call Selector_Auto_Complete
       else
         for pos_first in reverse back_pos .. cur_pos loop
+          --  Crawl back to line start or non-identifier
           if pos_first = 0 or else Editor.Get_Char_At (pos_first - 1) not in
             'A' .. 'Z' | 'a' .. 'z' | '_' | '0' .. '9'
           then
             --  !! If preceded by a '.', call Selector_Auto_Complete
-            Identifier_Auto_Complete
-              (To_String (Editor.Get_Text_Range (pos_first, cur_pos)));
+            Identifier_Auto_Complete (Editor.Get_Text_Range (pos_first, cur_pos));
             exit;
           end if;
         end loop;
