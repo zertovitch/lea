@@ -412,8 +412,8 @@ package body LEA_GWin.MDI_Main is
     --  Now we instruct the librarians of both HAC compilers
     --  to use our special LEA-flavoured file catalogue:
     Window.lea_file_cat.mdi_parent := Window'Unchecked_Access;
-    HAC_Sys.Librarian.Set_Source_Access (Window.BD.LD, Window.lea_file_cat'Unchecked_Access);
-    HAC_Sys.Librarian.Set_Source_Access (Window.BD_sem.LD, Window.lea_file_cat'Unchecked_Access);
+    Window.BD.Set_File_Catalogue     (Window.lea_file_cat'Unchecked_Access);
+    Window.BD_sem.Set_File_Catalogue (Window.lea_file_cat'Unchecked_Access);
   end On_Create;
 
   function Is_Minimized (MDI_Main : GWindows.Base.Base_Window_Type'Class)

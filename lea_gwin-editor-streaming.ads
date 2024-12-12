@@ -1,4 +1,5 @@
 with HAC_Sys.Files.Default;
+with HAT;
 
 package LEA_GWin.Editor.Streaming is
 
@@ -53,9 +54,11 @@ package LEA_GWin.Editor.Streaming is
     limited new HAC_Sys.Files.Default.File_Catalogue with
   record
     mdi_parent : GWindows.Base.Pointer_To_Base_Window_Class;
+    extra_path : HAT.VString;
   end record;
-    --  We enrich the default file system with searching of
-    --  files through pathes.
+
+  --  We enrich the default file system with searching of
+  --  files through pathes and editor streams.
 
   overriding function Exists (cat : LEA_File_Catalogue; name : String) return Boolean;
 
@@ -74,5 +77,7 @@ package LEA_GWin.Editor.Streaming is
      shebang_offset :    out Natural);
 
   overriding procedure Close (cat : in out LEA_File_Catalogue; name : String);
+
+  overriding procedure Add_to_Source_Path (cat : in out LEA_File_Catalogue; new_dir : String);
 
 end LEA_GWin.Editor.Streaming;

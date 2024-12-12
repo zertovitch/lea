@@ -2,7 +2,6 @@ with LEA_GWin.MDI_Child;
 
 with Ada.Directories;
 with GWindows.GStrings;
-with HAT;
 
 package body LEA_GWin.Editor.Streaming is
 
@@ -100,7 +99,7 @@ package body LEA_GWin.Editor.Streaming is
   end Exists;
 
   overriding function Full_Source_Name (cat : LEA_File_Catalogue; name : String) return String is
-    --  !!  To do: add pathes. See HAC_Pkg.
+    --  !!  To do: add more pathes. See HAC_Pkg.
   begin
     declare
       full_physical_name : constant String := Ada.Directories.Full_Name (name);
@@ -109,6 +108,17 @@ package body LEA_GWin.Editor.Streaming is
         return full_physical_name;
       end if;
     end;
+
+    --  Now, extra search capabilities specific to HAC:
+    declare
+      fn : constant String :=
+        HAT.Search_File (name, HAT.To_String (cat.extra_path));
+    begin
+      if fn /= "" then
+        return fn;
+      end if;
+    end;
+
     return "";
   exception
     when others =>
@@ -202,5 +212,11 @@ package body LEA_GWin.Editor.Streaming is
   begin
     HAC_Sys.Files.Default.File_Catalogue (cat).Close (cat.Full_Source_Name (name));
   end Close;
+
+  overriding procedure Add_to_Source_Path (cat : in out LEA_File_Catalogue; new_dir : String) is
+    use HAT;
+  begin
+    cat.extra_path := cat.extra_path & ';' & new_dir;
+  end Add_to_Source_Path;
 
 end LEA_GWin.Editor.Streaming;
