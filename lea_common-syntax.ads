@@ -12,7 +12,7 @@ package LEA_Common.Syntax is
 
   --  GNAT project files
   GPR_keywords : constant UTF_16_String :=
-    "abstract case end external for is package project type use when";
+    "abstract case end extends external for is package project type use when with";
 
   function Guess_syntax (file_name, custom_filter : UTF_16_String) return Syntax_type;
 
