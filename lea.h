@@ -119,6 +119,7 @@
 #define Smart_Editor_Check_Box                  40115
 #define Credits_Box                             40116
 #define Credits_Button                          40117
-#define Remarks_Level_1_Button                  40118
-#define Remarks_Level_2_Button                  40119
-#define IDM_HAC_options                         40120
+#define Group_Remarks                           40118
+#define Remarks_Level_1_Button                  40119
+#define Remarks_Level_2_Button                  40120
+#define IDM_HAC_options                         40121
