@@ -32,7 +32,7 @@ package body LEA_GWin.Editor is
   use Ada.Strings, Ada.Strings.Wide_Fixed;
   use GWindows.Message_Boxes;
 
-  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+  options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.options;
 
   overriding procedure On_Change (Editor : in out LEA_Scintilla_Type) is
     --  parent: MDI_Child_Type renames MDI_Child_Type(Editor.MDI_Root.all);
@@ -113,7 +113,7 @@ package body LEA_GWin.Editor is
       then
         --  On a "Return" keypress right after "begin", "record" or "(",
         --  we add an extra indentation.
-        new_ind := new_ind + Options.indentation;
+        new_ind := new_ind + options.indentation;
       end if;
       --
       --  Now, add the bonus keystrokes. We merge all keystrokes (the
@@ -255,7 +255,7 @@ package body LEA_GWin.Editor is
     begin
       for pos in reverse Position'Max (0, cur_pos - search_tolerance) .. cur_pos loop
         if Editor.Get_Style_At (pos) = SCE_ADA_IDENTIFIER then
-          case Options.toolset is
+          case options.toolset is
             when HAC_mode =>
               Editor.Find_HAC_Declarations (pos, decl_1, decl_2, found);
               if found > 0 then
@@ -332,26 +332,26 @@ package body LEA_GWin.Editor is
           Quote_Selection;
         else
           Editor.Redo;
-          if Options.auto_insert then
+          if options.auto_insert then
             Try_Auto_Insert;
           end if;
         end if;
       when '(' =>
-        if Options.auto_insert then
+        if options.auto_insert then
           Try_Auto_Insert;
         end if;
-        if Options.smart_editor then
+        if options.smart_editor then
           --  Consider a Call Tip (showing parameters of a subprogram).
           Try_Call_Tip;
         end if;
       when ')' =>
         Editor.Call_Tip_Cancel;
       when 'A' .. 'Z' | 'a' .. 'z' | '_'  | '0' .. '9' =>
-        if Options.smart_editor then
+        if options.smart_editor then
           Try_Auto_Complete (dot => False);
         end if;
       when '.' =>
-        if Options.smart_editor then
+        if options.smart_editor then
           Try_Auto_Complete (dot => True);
         end if;
       when others =>
@@ -440,8 +440,8 @@ package body LEA_GWin.Editor is
     --
     found : Natural;
   begin
-    if Options.smart_editor and not Editor.ongoing_context_menu then
-      case Options.toolset is
+    if options.smart_editor and not Editor.ongoing_context_menu then
+      case options.toolset is
         when HAC_mode =>
           Editor.Find_HAC_Declarations (Pos, decl_1, decl_2, found);
           if found > 0 then
@@ -721,8 +721,8 @@ package body LEA_GWin.Editor is
       return;
     end if;
 
-    Editor.Set_Tab_Width (Options.tab_width);
-    Editor.Set_Edge_Column (Options.right_margin);
+    Editor.Set_Tab_Width (options.tab_width);
+    Editor.Set_Edge_Column (options.right_margin);
 
     --  Style: parentheses coloring
     --    For matched parentheses:
@@ -759,7 +759,7 @@ package body LEA_GWin.Editor is
       Color_Convert (Theme_Color (matched_word_highlight))
     );
 
-    case Options.show_special is
+    case options.show_special is
       when none =>
         Editor.Set_View_WS (SCWS_INVISIBLE);
         Editor.Set_View_EOL (False);
@@ -770,7 +770,7 @@ package body LEA_GWin.Editor is
         Editor.Set_View_WS (SCWS_VISIBLEALWAYS);
         Editor.Set_View_EOL (True);
     end case;
-    Editor.Set_Indentation_Guides (Options.show_indent);
+    Editor.Set_Indentation_Guides (options.show_indent);
   end Apply_Options;
 
   procedure Set_Current_Line (Editor : in out LEA_Scintilla_Type; line : Integer) is
@@ -1147,7 +1147,7 @@ package body LEA_GWin.Editor is
     --
     trace_enabled : constant Boolean := False;
   begin
-    if Options.smart_editor then
+    if options.smart_editor then
       main.BD_sem.Set_Target
         (HAC_Sys.Targets.Abstract_Machine_Reference (main.sem_machine));
       HAC_Sys.Targets.Semantics.Machine (main.sem_machine.all).CD := main.BD_sem.CD;

@@ -33,7 +33,7 @@ package body LEA_GWin.MDI_Main is
   use LEA_Common, LEA_GWin.MDI_Child;
   use GWindows.Base, GWindows.Menus;
 
-  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+  options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.options;
 
   procedure Focus_an_already_opened_window
     (Window       : in out MDI_Main_Type;
@@ -154,7 +154,7 @@ package body LEA_GWin.MDI_Main is
     New_Window.editor.syntax_kind :=
       LEA_Common.Syntax.Guess_syntax (
         GU2G (New_Window.ID.file_name),
-        GU2G (Options.ada_files_filter)
+        GU2G (options.ada_files_filter)
       );
     New_Window.editor.Set_Scintilla_Syntax;
     New_Window.editor.Focus;
@@ -239,14 +239,14 @@ package body LEA_GWin.MDI_Main is
         force     :        Boolean
   )
   is
-    old_view : constant View_Mode_Type := Options.view_mode;
+    old_view : constant View_Mode_Type := options.view_mode;
     --  mem_sel_path: constant GString_Unbounded:= MDI_Child.selected_path;
     --  sel_node: Tree_Item_Node;
   begin
     if old_view = new_view and not force then
       return;
     end if;
-    Options.view_mode := new_view;
+    options.view_mode := new_view;
     case new_view is
       when Notepad =>
         if old_view /= Notepad then
@@ -282,7 +282,7 @@ package body LEA_GWin.MDI_Main is
   )
   is
   begin
-    Options.toolset := new_mode;
+    options.toolset := new_mode;
     MDI_Main.Update_Common_Menus;
   end Change_Mode;
 
@@ -313,14 +313,14 @@ package body LEA_GWin.MDI_Main is
 
     for m in Window.MRU.Item'Range loop
       Window.MRU.Item (m) :=
-        (Name => Options.mru (m).name,
-         Line => Options.mru (m).line);
+        (Name => options.mru (m).name,
+         Line => options.mru (m).line);
     end loop;
     --
-    Replace_default (Options.win_left);
-    Replace_default (Options.win_width);
-    Replace_default (Options.win_top);
-    Replace_default (Options.win_height);
+    Replace_default (options.win_left);
+    Replace_default (options.win_width);
+    Replace_default (options.win_top);
+    Replace_default (options.win_height);
 
     Small_Icon (Window, "LEA_Icon_Small");
     Large_Icon (Window, "AAA_Main_Icon");
@@ -372,17 +372,17 @@ package body LEA_GWin.MDI_Main is
 
     --  ** Resize according to options:
 
-    if Screen_Visibility ((Options.win_left, Options.win_top)) = Good then
-      Window.Left (Options.win_left);
-      Window.Top  (Options.win_top);
+    if Screen_Visibility ((options.win_left, options.win_top)) = Good then
+      Window.Left (options.win_left);
+      Window.Top  (options.win_top);
     end if;
     Window.Size (
-      Integer'Max (640, Options.win_width),
-      Integer'Max (400, Options.win_height)
+      Integer'Max (640, options.win_width),
+      Integer'Max (400, options.win_height)
     );
-    Window.Zoom (Options.MDI_main_maximized);
+    Window.Zoom (options.MDI_main_maximized);
 
-    Change_View (Window, Options.view_mode, force => True);
+    Change_View (Window, options.view_mode, force => True);
 
     Window.Dock_Children;
     LEA_GWin.Options.Apply_Main_Options (Window);
@@ -433,8 +433,8 @@ package body LEA_GWin.MDI_Main is
     then
       --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
-      Options.win_left := Left;
-      Options.win_top  := Top;
+      options.win_left := Left;
+      options.win_top  := Top;
       --  Will remember position if moved, maximized and closed
     end if;
   end On_Move;
@@ -446,15 +446,15 @@ package body LEA_GWin.MDI_Main is
     w   : constant Natural := Window.Client_Area_Width;
     tbh : constant Natural := Window.Tool_Bar.Height;
     h   : constant Natural := Integer'Max (2, Window.Client_Area_Height - tbh);
-    tree_w : constant Integer := Integer (Options.project_tree_portion * Float (w));
-    list_h : constant Integer := Integer (Options.message_list_portion * Float (h));
+    tree_w : constant Integer := Integer (options.project_tree_portion * Float (w));
+    list_h : constant Integer := Integer (options.message_list_portion * Float (h));
     use GWindows.Types;
   begin
     --  Resize project tree and message list panels using the recorded proportions
     --  This operation is reciprocal to Memorize_Splitters.
     --
     --  Adapt project tree size:
-    case Options.view_mode is
+    case options.view_mode is
       when Notepad =>
         --  Do nothing about project tree splitter: the panel is invisible and not used
         null;
@@ -467,8 +467,8 @@ package body LEA_GWin.MDI_Main is
     if Window.record_dimensions and not (Window.Zoom or Is_Minimized (Window)) then
       --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
-      Options.win_width := Width;
-      Options.win_height := Height;
+      options.win_width := Width;
+      options.win_height := Height;
       --  Will remember position if sized, maximized and closed
     end if;
   end On_Size;
@@ -619,6 +619,8 @@ package body LEA_GWin.MDI_Main is
         My_MDI_Close_All (Window);
       when IDM_General_options =>
         LEA_GWin.Options.On_General_Options (Window);
+      when IDM_HAC_options =>
+        LEA_GWin.Options.On_HAC_Options (Window);
       when IDM_ABOUT =>
         Modal_Dialogs.Show_About_Box (Window);
       when IDM_Quick_Help =>
@@ -697,12 +699,12 @@ package body LEA_GWin.MDI_Main is
      Can_Close :    out Boolean)
   is
   begin
-    Options.MDI_main_maximized := Zoom (Window);
-    if not (Options.MDI_main_maximized or Is_Minimized (Window)) then
-      Options.win_left   := Left (Window);
-      Options.win_top    := Top (Window);
-      Options.win_width  := Width (Window);
-      Options.win_height := Height (Window);
+    options.MDI_main_maximized := Zoom (Window);
+    if not (options.MDI_main_maximized or Is_Minimized (Window)) then
+      options.win_left   := Left (Window);
+      options.win_top    := Top (Window);
+      options.win_width  := Width (Window);
+      options.win_height := Height (Window);
     end if;
 
     My_MDI_Close_All (Window);
@@ -712,7 +714,7 @@ package body LEA_GWin.MDI_Main is
     --
     if Can_Close then
       for m in Window.MRU.Item'Range loop
-        Options.mru (m) :=
+        options.mru (m) :=
           (name => Window.MRU.Item (m).Name,
            line => Window.MRU.Item (m).Line);
       end loop;
@@ -760,7 +762,7 @@ package body LEA_GWin.MDI_Main is
         cw : MDI_Child_Type renames MDI_Child_Type (Any_Window.all);
       begin
         Update_MRU_Menu (cw.mdi_root.MRU, cw.menu.Popup_0001);
-        Update_View_Menu (cw.menu.Main, Options);
+        Update_View_Menu (cw.menu.Main, options);
         --  Update_Toolbar_Menu(cw.View_menu, cw.MDI_Root.Floating_toolbars);
       end;
     end if;
@@ -777,7 +779,7 @@ package body LEA_GWin.MDI_Main is
       Add_MRU (Window.MRU, top_entry_name, top_entry_line);
     end if;
     Update_MRU_Menu (Window.MRU, Window.Menu.Popup_0001);
-    Update_View_Menu (Window.Menu.Main, Options);
+    Update_View_Menu (Window.Menu.Main, options);
     --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
     GWindows.Base.Enumerate_Children
       (MDI_Client_Window (Window).all,
@@ -815,12 +817,12 @@ package body LEA_GWin.MDI_Main is
   procedure Memorize_Splitters (Window : in out MDI_Main_Type) is
     p : Float;
   begin
-    case Options.view_mode is
+    case options.view_mode is
       when Notepad =>
         --  Do nothing about project tree splitter: the panel is invisible and not used
         null;
       when Studio =>
-        Options.project_tree_portion :=
+        options.project_tree_portion :=
           Float (Window.Project_Panel.Width) /
           Float (Window.Client_Area_Width);
     end case;
@@ -829,7 +831,7 @@ package body LEA_GWin.MDI_Main is
       Float (Window.Client_Area_Height - Window.Tool_Bar.Height);
     p := Float'Max (0.1, p);  --  Avoid complete disappearance
     p := Float'Min (0.9, p);  --  Avoid eating up whole window
-    Options.message_list_portion := p;
+    options.message_list_portion := p;
     --
     --  NB: the splitter for subprogram tree is part of child window and
     --  memorized at child level.

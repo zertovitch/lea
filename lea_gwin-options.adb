@@ -6,6 +6,8 @@ with LEA_GWin.MDI_Child,
 
 with LEA_Resource_GUI;
 
+with HAC_Sys.Defs;
+
 with GWindows.Application,
      GWindows.Base,
      GWindows.Buttons,
@@ -16,13 +18,13 @@ with GWin_Util;
 
 package body LEA_GWin.Options is
 
-  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+  options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.options;
 
   procedure On_General_Options (main : in out LEA_GWin.MDI_Main.MDI_Main_Type) is
     use LEA_Resource_GUI, LEA_Common, LEA_Common.Color_Themes, LEA_Common.User_options;
     --
     box : Option_box_Type;
-    candidate : Option_Pack_Type := Options;
+    candidate : Option_Pack_Type := options;
     --
     procedure Set_Data is
       use GWin_Util;
@@ -74,10 +76,10 @@ package body LEA_GWin.Options is
     On_Destroy_Handler (box, Get_Data'Unrestricted_Access);
     case GWindows.Application.Show_Dialog (box, main) is
       when GWindows.Constants.IDOK =>
-        has_changes := Options /= candidate;
+        has_changes := options /= candidate;
         if has_changes then
-          icons_redrawing := Options.color_theme /= candidate.color_theme;
-          Options := candidate;
+          icons_redrawing := options.color_theme /= candidate.color_theme;
+          options := candidate;
           Apply_Main_Options (main);
           if icons_redrawing then
             main.Message_Panel.Message_List.Redraw_Icons;
@@ -88,6 +90,54 @@ package body LEA_GWin.Options is
         null;  --  Contains the IDCANCEL case
     end case;
   end On_General_Options;
+
+  procedure On_HAC_Options (main : in out LEA_GWin.MDI_Main.MDI_Main_Type) is
+    use LEA_Resource_GUI, LEA_Common, LEA_Common.Color_Themes, LEA_Common.User_options;
+    --
+    box : HAC_Option_Box_Type;
+    candidate : Option_Pack_Type := options;
+    --
+    procedure Set_Data is
+      use GWin_Util, HAC_Sys.Defs;
+    begin
+      box.Remarks_Level_1_Button.State (boolean_to_state (candidate.level_for_remarks = 1));
+      box.Remarks_Level_2_Button.State (boolean_to_state (candidate.level_for_remarks = 2));
+      null;
+    end Set_Data;
+    --
+    procedure Get_Data (Window : in out GWindows.Base.Base_Window_Type'Class) is
+      use GWindows.Buttons, GWindows.Message_Boxes;
+    begin
+      if box.Remarks_Level_1_Button.State = Checked then
+        candidate.level_for_remarks := 1;
+      elsif box.Remarks_Level_2_Button.State = Checked then
+        candidate.level_for_remarks := 2;
+      end if;
+    exception
+      when others =>
+        Message_Box
+          (Window, "Invalid data", "Incomplete reading of your changes", OK_Box, Error_Icon);
+    end Get_Data;
+    --
+    has_changes : Boolean;
+    --
+  begin
+    box.Create_Full_Dialog (main);
+    Set_Data;
+    box.Center (main);
+    box.Small_Icon ("Options_Icon");
+    On_Destroy_Handler (box, Get_Data'Unrestricted_Access);
+    case GWindows.Application.Show_Dialog (box, main) is
+      when GWindows.Constants.IDOK =>
+        has_changes := options /= candidate;
+        if has_changes then
+          options := candidate;
+          Apply_Main_Options (main);
+        end if;
+      when others   =>
+        null;  --  Contains the IDCANCEL case
+    end case;
+  end On_HAC_Options;
 
   procedure Apply_Main_Options (main : in out LEA_GWin.MDI_Main.MDI_Main_Type) is
     --
@@ -101,8 +151,8 @@ package body LEA_GWin.Options is
     --
     use LEA_GWin.MDI_Main, LEA_Common.Color_Themes;
   begin
-    Select_Theme (Options.color_theme);
-    main.text_files_filters (main.text_files_filters'First).Filter := Options.ada_files_filter;
+    Select_Theme (options.color_theme);
+    main.text_files_filters (main.text_files_filters'First).Filter := options.ada_files_filter;
     main.Project_Panel.Apply_Options;
     main.Message_Panel.Apply_Options;
     main.Update_Common_Menus;

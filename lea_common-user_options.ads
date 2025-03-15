@@ -1,5 +1,7 @@
 with LEA_Common.Color_Themes;
 
+with HAC_Sys.Defs;
+
 package LEA_Common.User_options is
 
   use Ada.Strings.Wide_Unbounded;
@@ -53,10 +55,13 @@ package LEA_Common.User_options is
     --
     --  "Smart editor" feature set: mouse-hover tips, call tips, auto-complete, ...
     smart_editor : Boolean := True;
+    --
+    --  HAC options
+    level_for_remarks : HAC_Sys.Defs.Remark_Level := 1;
   end record;
 
   --  Global options
-  Options : LEA_Common.User_options.Option_Pack_Type;
+  options : LEA_Common.User_options.Option_Pack_Type;
 
   procedure Toggle_show_special (o : in out Option_Pack_Type);
 
@@ -82,7 +87,8 @@ package LEA_Common.User_options is
      subprogram_tree_portion,
      mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
      ada_files_filter,
-     smart_editor);
+     smart_editor,
+     level_for_remarks);
 
   --  On Windows "vanilla", persistence is done usually through the registry.
   --  On Linux or Gtk (any platform) persistence is done usually in a config file.

@@ -84,6 +84,8 @@ package body LEA_Common.User_options is
                 end if;
               when smart_editor =>
                 opt.smart_editor := Boolean'Wide_Value (s);
+              when level_for_remarks =>
+                opt.level_for_remarks := HAC_Sys.Defs.Remark_Level'Wide_Value (s);
             end case;
           end;
         exception
@@ -155,6 +157,8 @@ package body LEA_Common.User_options is
               R (To_Wide_String (opt.ada_files_filter));
             when smart_editor =>
               R (opt.smart_editor'Wide_Image);
+            when level_for_remarks =>
+              R (opt.level_for_remarks'Wide_Image);
           end case;
         end;
       end loop;

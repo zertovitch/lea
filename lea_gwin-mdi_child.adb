@@ -39,7 +39,7 @@ package body LEA_GWin.MDI_Child is
   use GWindows.Message_Boxes, GWindows.Scintilla;
   use Ada.Strings.Wide_Unbounded;
 
-  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.options;
 
   package Status_Bar_Parts is
     --  Values designate the x-value of the *right* side of each part.
@@ -691,9 +691,11 @@ package body LEA_GWin.MDI_Child is
         --  We connect this window's input stream to this window's editor.
         Window.current_editor_stream.Reset
           (Window.editor, shebang_offset);
-        Set_Main_Source_Stream
-          (Window.mdi_root.BD,
-           Window.current_editor_stream'Unchecked_Access,
+        Window.mdi_root.BD.Set_Remark_Set
+          (preset_remarks
+            (LEA_Common.User_options.options.level_for_remarks));
+        Window.mdi_root.BD.Set_Main_Source_Stream
+          (Window.current_editor_stream'Unchecked_Access,
            G2S (Window.Best_Name),
            shebang_offset);
         Window.Switch_Current_Directory;

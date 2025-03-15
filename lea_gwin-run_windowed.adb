@@ -27,7 +27,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
   use Ada.Strings.Unbounded, HAC_Sys.PCode.Interpreter, LEA_Common, GWindows.Message_Boxes;
 
   main    : LEA_GWin.MDI_Main.MDI_Main_Type renames Window.mdi_root.all;
-  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+  options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.options;
 
   procedure HAC_VM_Interpret is
 
@@ -232,7 +232,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
 begin
   LEA_GWin.Messages.IO_Pipe.is_aborted_flag := False;
-  case Options.toolset is
+  case options.toolset is
     when HAC_mode =>
       --  !!  Check if anything compiled ?
       if Window.mdi_root.BD.CD.Is_Executable then

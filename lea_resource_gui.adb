@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2024/08/19  21:32:36
+--  Transcription time: 2025/03/15  11:19:03
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -23,7 +23,7 @@ package body LEA_Resource_GUI is
 
   --  ** Generated code begins here \/ \/ \/.
 
-  --  Menu at line 29
+  --  Menu at line 31
   procedure Create_Full_Menu (New_Menu : in out Menu_Fake_Type)
   is
   begin
@@ -35,7 +35,7 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0001, "Go to other file", IDM_Go_to_other_File);
   end Create_Full_Menu;  --  For type: Menu_Fake_Type
 
-  --  Menu at line 42
+  --  Menu at line 44
   procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Child_Type)
   is
   begin
@@ -117,6 +117,7 @@ package body LEA_Resource_GUI is
     New_Menu.Popup_0007 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Options", New_Menu.Popup_0007);
     Append_Item (New_Menu.Popup_0007, "&General options", IDM_General_options);
+    Append_Item (New_Menu.Popup_0007, "&HAC options", IDM_HAC_options);
     New_Menu.Popup_0008 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Window", New_Menu.Popup_0008);
     Append_Item (New_Menu.Popup_0008, "&Cascade", IDM_WINDOW_CASCADE);
@@ -131,7 +132,7 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  For type: Menu_MDI_Child_Type
 
-  --  Menu at line 144
+  --  Menu at line 147
   procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Main_Type)
   is
   begin
@@ -226,6 +227,7 @@ package body LEA_Resource_GUI is
     New_Menu.Popup_0007 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Options", New_Menu.Popup_0007);
     Append_Item (New_Menu.Popup_0007, "&General options", IDM_General_options);
+    Append_Item (New_Menu.Popup_0007, "&HAC options", IDM_HAC_options);
     New_Menu.Popup_0008 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Window", New_Menu.Popup_0008);
     Append_Item (New_Menu.Popup_0008, "&Cascade", IDM_WINDOW_CASCADE);
@@ -240,7 +242,7 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  For type: Menu_MDI_Main_Type
 
-  --  Dialog at resource line 244
+  --  Dialog at resource line 248
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -368,7 +370,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 271
+  --  Dialog at resource line 275
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -441,7 +443,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Credits_Box_Type
 
-  --  Dialog at resource line 284
+  --  Dialog at resource line 288
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -537,7 +539,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  --  Dialog at resource line 297
+  --  Dialog at resource line 301
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -639,14 +641,14 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  HAC_example_box_Type
 
-  --  Dialog at resource line 313
+  --  Dialog at resource line 317
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Option_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "Options";
+      Title       : in     GString := "General Options";
       Left        : in     Integer := Use_Default;  --  Default = as designed
       Top         : in     Integer := Use_Default;  --  Default = as designed
       Width       : in     Integer := Use_Default;  --  Default = as designed
@@ -721,10 +723,10 @@ package body LEA_Resource_GUI is
     Create (Window.Color_theme_list_box, Window, x, y, w, h, False, ID => Color_theme_list_box);
     Dlg_to_Scn (6, 96, 291, 28, x, y, w, h);
     Create (Window.Group_Backup, Window, "Backup", x, y, w, h);
-    Dlg_to_Scn (80, 106, 91, 11, x, y, w, h);
-    Create (Window.Backup_bak_button, Window, "Simple (.bak)", x, y, w, h, ID => Backup_bak_button);
-    Dlg_to_Scn (15, 108, 43, 8, x, y, w, h);
+    Dlg_to_Scn (15, 108, 43, 11, x, y, w, h);
     Create (Window.Backup_none_button, Window, "None", x, y, w, h, ID => Backup_none_button);
+    Dlg_to_Scn (80, 108, 91, 11, x, y, w, h);
+    Create (Window.Backup_bak_button, Window, "Simple (.bak)", x, y, w, h, ID => Backup_bak_button);
     Dlg_to_Scn (247, 168, 50, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
@@ -749,7 +751,93 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 340
+  --  Dialog at resource line 342
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out HAC_Option_Box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "HAC Ada Compiler Options";
+      Left        : in     Integer := Use_Default;  --  Default = as designed
+      Top         : in     Integer := Use_Default;  --  Default = as designed
+      Width       : in     Integer := Use_Default;  --  Default = as designed
+      Height      : in     Integer := Use_Default;  --  Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x, y, w, h : Integer;
+  begin
+    Dlg_to_Scn (0, 0, 316, 198, x, y, w, h);
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
+    Create_As_Dialog
+     (Window => Window_Type (Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then  Client_Area_Width (Window, w); end if;
+    if Height = Use_Default then Client_Area_Height (Window, h); end if;
+    Use_GUI_Font (Window);
+    Create_Contents (Window, True);
+  end Create_Full_Dialog;  --  HAC_Option_Box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+      (Window      : in out HAC_Option_Box_Type;
+       for_dialog  : in     Boolean;          --  True: buttons do close the window
+       resize      : in     Boolean := False  --  optionally resize Window as designed
+     )
+  is
+    x, y, w, h : Integer;
+  begin
+    if resize then
+    Dlg_to_Scn (0, 0, 316, 198, x, y, w, h);
+      Move (Window, x, y);
+      Client_Area_Size (Window, w, h);
+    end if;
+    Use_GUI_Font (Window);
+    Dlg_to_Scn (6, 7, 291, 28, x, y, w, h);
+    Create (Window.Group_Remarks, Window, "Remarks (Warnings && Notes)", x, y, w, h);
+    Dlg_to_Scn (15, 19, 80, 11, x, y, w, h);
+    Create (Window.Remarks_Level_1_Button, Window, "Level 1", x, y, w, h, ID => Remarks_Level_1_Button);
+    Dlg_to_Scn (100, 19, 43, 11, x, y, w, h);
+    Create (Window.Remarks_Level_2_Button, Window, "Level 2", x, y, w, h, ID => Remarks_Level_2_Button);
+    Dlg_to_Scn (247, 168, 50, 19, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "Cancel", x, y, w, h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "Cancel", x, y, w, h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
+    end if;
+    Dlg_to_Scn (192, 168, 50, 19, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDOK, Window, "OK", x, y, w, h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "OK", x, y, w, h, ID => IDOK);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDOK_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDOK);
+    end if;
+  end Create_Contents;  --  HAC_Option_Box_Type
+
+  --  Dialog at resource line 355
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -838,7 +926,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 355
+  --  Dialog at resource line 370
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -933,7 +1021,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Reload_Files_Box_Type
 
-  --  Dialog at resource line 371
+  --  Dialog at resource line 386
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1069,7 +1157,7 @@ package body LEA_Resource_GUI is
     Create (Window.Match_case, Window, "Match case", x, y, w, h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
-  --  Dialog at resource line 393
+  --  Dialog at resource line 408
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1276,6 +1364,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 506
+  --  Last line of resource script file: 521
 
 end LEA_Resource_GUI;

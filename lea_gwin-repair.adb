@@ -14,7 +14,7 @@ with Ada.Strings.Unbounded,
 
 package body LEA_GWin.Repair is
 
-  Options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.Options;
+  options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.options;
 
   procedure Do_Repair (
     MDI_Main : in out LEA_GWin.MDI_Main.MDI_Main_Type;
@@ -48,7 +48,7 @@ package body LEA_GWin.Repair is
               case c is
                 when 't' =>  --  Tab (\t), replaced by spaces matching indentation setting.
                   if prev_is_backslash then
-                    expanded := expanded & (Options.indentation) * ' ';
+                    expanded := expanded & (options.indentation) * ' ';
                   else
                     expanded := expanded & c;
                   end if;

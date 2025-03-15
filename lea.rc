@@ -10,6 +10,8 @@
 
 
 
+
+
 //
 // Bitmap resources
 //
@@ -121,6 +123,7 @@ Menu_MDI_Child MENU
     POPUP "&Options"
     {
         MENUITEM "&General options", IDM_General_options
+        MENUITEM "&HAC options", IDM_HAC_options
     }
     POPUP "&Window"
     {
@@ -215,6 +218,7 @@ Menu_MDI_Main MENU
     POPUP "&Options"
     {
         MENUITEM "&General options", IDM_General_options
+        MENUITEM "&HAC options", IDM_HAC_options
     }
     POPUP "&Window"
     {
@@ -309,7 +313,7 @@ FONT 8, "Ms Shell Dlg"
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Option_box DIALOG 0, 0, 316, 198
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
-CAPTION "Options"
+CAPTION "General Options"
 FONT 8, "Ms Shell Dlg"
 {
     LTEXT           "Indentation", 0, 7, 10, 50, 15, SS_LEFT, WS_EX_LEFT
@@ -324,14 +328,25 @@ FONT 8, "Ms Shell Dlg"
     EDITTEXT        Ada_file_extension_edit_box, 84, 74, 213, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     GROUPBOX        "Color theme", Group_color_theme, 6, 127, 291, 28, 0, WS_EX_LEFT
     COMBOBOX        Color_theme_list_box, 61, 138, 152, 20, CBS_DROPDOWNLIST | CBS_HASSTRINGS, WS_EX_LEFT
-    GROUPBOX        "Backup", Group_Backup, 6, 96, 291, 28, 0, WS_EX_LEFT
-    AUTORADIOBUTTON "Simple (.bak)", Backup_bak_button, 80, 106, 91, 11, 0, WS_EX_LEFT
-    AUTORADIOBUTTON "None", Backup_none_button, 15, 108, 43, 8, 0, WS_EX_LEFT
+    GROUPBOX        "Backup", Group_Backup,              6, 96, 291, 28, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "None", Backup_none_button,         15, 108, 43, 11, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "Simple (.bak)", Backup_bak_button, 80, 108, 91, 11, 0, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 247, 168, 50, 19, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 192, 168, 50, 19, 0, WS_EX_LEFT
 }
 
-
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+HAC_Option_Box DIALOG 0, 0, 316, 198
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "HAC Ada Compiler Options"
+FONT 8, "Ms Shell Dlg"
+{
+    GROUPBOX        "Remarks (Warnings && Notes)", Group_Remarks, 6, 7, 291, 28, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "Level 1", Remarks_Level_1_Button,  15, 19, 80, 11, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "Level 2", Remarks_Level_2_Button, 100, 19, 43, 11, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 247, 168, 50, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 192, 168, 50, 19, 0, WS_EX_LEFT
+}
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Progress_box DIALOG 0, 0, 177, 65
