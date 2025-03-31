@@ -22,7 +22,7 @@ copy /B lea_without_data.exe lea_debug_without_data.exe
 
 if exist lea_without_data.exe del lea_without_data.exe
 
-gprbuild -P lea lea_without_data.adb -XLEA_Build_Mode=Small%target%
+gprbuild -P lea lea_without_data.adb -XLEA_Build_Mode=Release%target%
 copy /B lea_without_data.exe lea_small_without_data.exe
 strip -s lea_small_without_data.exe
 copy /B lea_small_without_data.exe + _lea_data.zip "lea (ver)%target%.exe"

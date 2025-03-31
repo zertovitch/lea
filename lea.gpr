@@ -53,7 +53,8 @@ project LEA is
       "Small",
       "Small_MinGW",
       "Small_Unchecked",  --  Smallest size, at the price of less safety. Not for the release binary!
-       "Profiling");
+      "Profiling",
+      "Release");
 
    LEA_Build_Mode : LEA_Build_Mode_Type := external ("LEA_Build_Mode", "Debug");
 
@@ -71,6 +72,7 @@ project LEA is
       when "Small_MinGW"     => for Object_Dir use "obj/small_ming";
       when "Small_Unchecked" => for Object_Dir use "obj/small_unchecked";
       when "Profiling"       => for Object_Dir use "obj/profiling";
+      when "Release"         => for Object_Dir use "obj/release";
    end case;
 
    Compiler_Common_Options :=
@@ -123,15 +125,15 @@ project LEA is
             for Local_Configuration_Pragmas use project'Project_Dir & "debug.pra";
          when "Fast"  | "Fast_MinGW" =>
             for Default_Switches ("ada") use Compiler_Fast_Options;
-            for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small" | "Small_MinGW" =>
             for Default_Switches ("ada") use Compiler_Small_Options;
-            for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small_Unchecked" =>
             for Default_Switches ("ada") use Compiler_Small_Options & ("-gnatp");
-            for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Profiling" =>
             for Default_Switches ("ada") use Compiler_Profiling_Options;
+         when "Release" =>
+            for Default_Switches ("ada") use Compiler_Small_Options;
+            for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
       end case;
    end Compiler;
 
@@ -150,7 +152,8 @@ project LEA is
          when "Debug" | "Debug_MinGW" =>
             for Default_Switches ("ada") use Linker_Common_Options;
          when "Fast" | "Fast_MinGW" |
-              "Small" | "Small_MinGW" | "Small_Unchecked"=>
+              "Small" | "Small_MinGW" | "Small_Unchecked" |
+              "Release" =>
             for Default_Switches ("ada") use Linker_Small_Options & ("-mwindows", "-s");
          when "Profiling" =>
             for Default_Switches ("ada") use Linker_Small_Options & ("-pg");
