@@ -311,8 +311,8 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "General Options"
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT           "Indentation", 0, 7, 10, 50, 15, SS_LEFT, WS_EX_LEFT
-    EDITTEXT        Indentation_edit_box, 49, 8, 18, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    LTEXT           "Indentation",     0, 79, 10, 50, 15, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        Indentation_edit_box, 121, 8, 18, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     LTEXT           "Right margin", 0, 209, 10, 52, 15, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Right_margin_edit_box, 263, 8, 34, 15, ES_AUTOHSCROLL, WS_EX_LEFT
     LTEXT           "Tab width (symbol AND keystroke)", 0, 7, 32, 110, 9, SS_LEFT, WS_EX_LEFT

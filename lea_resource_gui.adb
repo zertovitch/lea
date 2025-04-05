@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2025/03/24  21:07:00
+--  Transcription time: 2025/04/05  21:02:22
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -697,9 +697,9 @@ package body LEA_Resource_GUI is
       Client_Area_Size (Window, w, h);
     end if;
     Use_GUI_Font (Window);
-    Dlg_to_Scn (7, 10, 50, 15, x, y, w, h);
+    Dlg_to_Scn (79, 10, 50, 15, x, y, w, h);
     Create_Label (Window, "Indentation", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (49, 8, 18, 15, x, y, w, h);
+    Dlg_to_Scn (121, 8, 18, 15, x, y, w, h);
     Create (Window.Indentation_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Indentation_edit_box);
     Dlg_to_Scn (209, 10, 52, 15, x, y, w, h);
     Create_Label (Window, "Right margin", x, y, w, h, GWindows.Static_Controls.Left, None);
