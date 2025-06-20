@@ -45,6 +45,7 @@ package LEA_Common.HAC_Samples is
       (Mathematics, +"triangles_overlap.adb", +"Triangles overlap (Rosetta Code)"),
       --
       (Script,    +"directories.adb", +"Creates a few directories and then deletes them"),
+      (Script,    +"embed_text.adb",  +"Embed a text within an Ada program"),
       (Script,    +"env.adb",         +"System's Environment Variables: Set & Get"),
       (Script,    +"file_append.adb", +"Creates a file in multiple steps, via the Append procedure"),
       (Script,    +"file_copy.adb",   +"Reads a text file (itself) and copies it to another file"),
