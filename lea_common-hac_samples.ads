@@ -50,6 +50,7 @@ package LEA_Common.HAC_Samples is
       (Script,    +"file_append.adb", +"Creates a file in multiple steps, via the Append procedure"),
       (Script,    +"file_copy.adb",   +"Reads a text file (itself) and copies it to another file"),
       (Script,    +"file_read.adb",   +"Reads a text file (itself) and displays it on the console"),
+      (Script,    +"md2html.adb",     +"Markdown to HTML converter"),
       (Script,    +"pack_list.adb",   +"Turn a list of integers into a packed format"),
       (Script,    +"timing.adb",      +"Demo for types Time & Duration"),
       --
