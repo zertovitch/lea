@@ -2530,7 +2530,6 @@ pragma Eliminate (HAT, Head_Before_Match, Source_Location => "hat.ads:183");
 pragma Eliminate (HAT, Tail_After_Match, Source_Location => "hat.ads:188");
 pragma Eliminate (HAT, Tail_After_Match, Source_Location => "hat.ads:189");
 pragma Eliminate (HAT, Starts_With, Source_Location => "hat.ads:175");
-pragma Eliminate (HAT, Starts_With, Source_Location => "hat.ads:176");
 pragma Eliminate (HAT, Ends_With, Source_Location => "hat.ads:154");
 pragma Eliminate (HAT, Ends_With, Source_Location => "hat.ads:155");
 pragma Eliminate (HAT, Index, Source_Location => "hat.ads:159");
