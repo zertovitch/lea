@@ -17,7 +17,8 @@ with GWindows.Panels;
 with GWindows.Types;
 with GWindows.Windows.MDI;
 
-with Ada.Numerics.Float_Random;
+with Ada.Calendar,
+     Ada.Numerics.Float_Random;
 
 package LEA_GWin.MDI_Child is
 
@@ -84,6 +85,7 @@ package LEA_GWin.MDI_Child is
         is_closing            : Boolean := False;  --  True only during and after On_Close
         last_op_comment_1     : GString_Unbounded;
         last_op_comment_2     : GString_Unbounded;
+        last_save_time        : Ada.Calendar.Time;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);

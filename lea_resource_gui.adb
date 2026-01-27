@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2025/04/05  21:02:22
+--  Transcription time: 2026/01/27  22:31:52
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -933,7 +933,7 @@ package body LEA_Resource_GUI is
   procedure Create_Full_Dialog
      (Window      : in out Reload_Files_Box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "Files externally changed";
+      Title       : in     GString := "Files externally changed on disk";
       Left        : in     Integer := Use_Default;  --  Default = as designed
       Top         : in     Integer := Use_Default;  --  Default = as designed
       Width       : in     Integer := Use_Default;  --  Default = as designed
@@ -943,7 +943,7 @@ package body LEA_Resource_GUI is
   is
     x, y, w, h : Integer;
   begin
-    Dlg_to_Scn (0, 0, 375, 188, x, y, w, h);
+    Dlg_to_Scn (0, 0, 420, 188, x, y, w, h);
     if Left   /= Use_Default then x := Left;   end if;
     if Top    /= Use_Default then y := Top;    end if;
     if Width  /= Use_Default then w := Width;  end if;
@@ -977,19 +977,19 @@ package body LEA_Resource_GUI is
     x, y, w, h : Integer;
   begin
     if resize then
-    Dlg_to_Scn (0, 0, 375, 188, x, y, w, h);
+    Dlg_to_Scn (0, 0, 420, 188, x, y, w, h);
       Move (Window, x, y);
       Client_Area_Size (Window, w, h);
     end if;
     Use_GUI_Font (Window);
     Dlg_to_Scn (19, 8, 190, 9, x, y, w, h);
-    Create_Label (Window, "These files have been modified outside of this LEA instance.", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Create_Label (Window, "These files have been modified outside of LEA.", x, y, w, h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn (18, 129, 88, 18, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
-    Create (Window.Select_All_Button, Window, "Select all", x, y, w, h, ID => Select_All_Button);
-    Create (Window.Select_All_Button_permanent, Window, "Select all", x, y, w, h, ID => Select_All_Button);
+    Create (Window.Select_All_Button, Window, "Check all", x, y, w, h, ID => Select_All_Button);
+    Create (Window.Select_All_Button_permanent, Window, "Check all", x, y, w, h, ID => Select_All_Button);
     if for_dialog then  --  Hide the non-closing button
       Hide (Window.Select_All_Button_permanent);
     else  --  Hide the closing button
@@ -999,21 +999,21 @@ package body LEA_Resource_GUI is
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
-    Create (Window.Unselect_All_Button, Window, "Unselect all", x, y, w, h, ID => Unselect_All_Button);
-    Create (Window.Unselect_All_Button_permanent, Window, "Unselect all", x, y, w, h, ID => Unselect_All_Button);
+    Create (Window.Unselect_All_Button, Window, "Uncheck all", x, y, w, h, ID => Unselect_All_Button);
+    Create (Window.Unselect_All_Button_permanent, Window, "Uncheck all", x, y, w, h, ID => Unselect_All_Button);
     if for_dialog then  --  Hide the non-closing button
       Hide (Window.Unselect_All_Button_permanent);
     else  --  Hide the closing button
       Hide (Window.Unselect_All_Button);
     end if;
-    Dlg_to_Scn (18, 23, 344, 103, x, y, w, h);
-    Create (Window.Changed_Files_List, Window, x, y, w, h, Multiple, List_View, No_Sorting, False, Align_Left);
+    Dlg_to_Scn (18, 23, 384, 103, x, y, w, h);
+    Create (Window.Changed_Files_List, Window, x, y, w, h, Multiple, Report_View, No_Sorting, False, Align_Left);
     Dlg_to_Scn (125, 167, 128, 18, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
-    Create (Window.IDOK, Window, "Reload selected", x, y, w, h, ID => IDOK);
-    Create (Window.IDOK_permanent, Window, "Reload selected", x, y, w, h, ID => IDOK);
+    Create (Window.IDOK, Window, "Reload checked files", x, y, w, h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "Reload checked files", x, y, w, h, ID => IDOK);
     if for_dialog then  --  Hide the non-closing button
       Hide (Window.IDOK_permanent);
     else  --  Hide the closing button

@@ -97,6 +97,8 @@ package body LEA_GWin.Embedded_Texts is
       Main_Window.User_maximize_restore := False;
       New_Window.Create_LEA_MDI_Child (Main_Window, New_ID);
       New_Window.editor.Load_Text (contents => unpacked_str);
+      New_Window.editor.Empty_Undo_Buffer;
+
       if Is_Help then
         New_Window.editor.Set_Read_Only (True);
       else

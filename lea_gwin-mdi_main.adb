@@ -1,7 +1,8 @@
 with LEA_Common.Syntax,
      LEA_Common.Color_Themes;
 
-with LEA_GWin.Embedded_Texts,
+with LEA_GWin.Check_Changed_Files,
+     LEA_GWin.Embedded_Texts,
      LEA_GWin.MDI_Child,
      LEA_GWin.Modal_Dialogs,
      LEA_GWin.Options,
@@ -136,6 +137,8 @@ package body LEA_GWin.MDI_Main is
       upper_name : GString := File_Name;
     begin
       New_Window.editor.Load_Text;
+      New_Window.editor.Empty_Undo_Buffer;
+      New_Window.last_save_time := Ada.Directories.Modification_Time (G2S (File_Name));
       file_loaded := True;
       To_Upper (upper_name);
       for m of Window.MRU.Item loop
@@ -416,6 +419,11 @@ package body LEA_GWin.MDI_Main is
     Window.BD.Set_File_Catalogue     (Window.lea_file_cat'Unchecked_Access);
     Window.BD_sem.Set_File_Catalogue (Window.lea_file_cat'Unchecked_Access);
   end On_Create;
+
+  overriding procedure On_Focus (Window : in out MDI_Main_Type) is
+  begin
+    Check_Changed_Files (Window);
+  end On_Focus;
 
   function Is_Minimized (MDI_Main : GWindows.Base.Base_Window_Type'Class)
     return Boolean

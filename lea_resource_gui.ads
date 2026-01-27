@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2025/04/05  21:02:22
+--  Transcription time: 2026/01/27  22:31:52
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -383,7 +383,7 @@ package LEA_Resource_GUI is
   procedure Create_Full_Dialog
      (Window      : in out Reload_Files_Box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "Files externally changed";
+      Title       : in     GString := "Files externally changed on disk";
       Left        : in     Integer := Use_Default;  --  Default = as designed
       Top         : in     Integer := Use_Default;  --  Default = as designed
       Width       : in     Integer := Use_Default;  --  Default = as designed

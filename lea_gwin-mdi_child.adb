@@ -25,7 +25,6 @@ with GWindows.Base,
 with GWin_Util;
 
 with Ada.Characters.Handling,
-     Ada.Calendar,
      Ada.Directories,
      Ada.Exceptions,
      Ada.Strings.Unbounded,
@@ -414,6 +413,7 @@ package body LEA_GWin.MDI_Child is
     end if;
     --
     MDI_Child.editor.Save_Text (GU2G (written_name));
+    MDI_Child.last_save_time := Ada.Calendar.Clock;
     --
     if with_backup then
       --  If there was an exception at writing,

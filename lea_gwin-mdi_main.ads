@@ -90,6 +90,8 @@ package LEA_GWin.MDI_Main is
   procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc : Boolean);
   --  File|New event
 
+  overriding procedure On_Focus (Window : in out MDI_Main_Type);
+
   procedure On_Move (Window : in out MDI_Main_Type;
                      Left   : in     Integer;
                      Top    : in     Integer);

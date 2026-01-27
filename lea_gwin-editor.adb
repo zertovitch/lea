@@ -1257,7 +1257,6 @@ package body LEA_GWin.Editor is
       p := c;
     end loop;
     Editor.Insert_Text (0, S2G (contents));  --  ASCII to Unicode (UTF-16) conversion
-    Editor.Empty_Undo_Buffer;
     Editor.Set_Save_Point;
     Editor.modified := False;
   end Load_Text;
