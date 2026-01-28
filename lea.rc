@@ -364,11 +364,11 @@ EXSTYLE WS_EX_WINDOWEDGE
 CAPTION "Files externally changed on disk"
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT           "These files have been modified outside of LEA.", 0, 19, 8, 190, 9, SS_LEFT, WS_EX_LEFT
-    PUSHBUTTON      "Check all",   Select_All_Button,    18, 129, 88, 18, 0, WS_EX_LEFT
-    PUSHBUTTON      "Uncheck all", Unselect_All_Button, 111, 129, 88, 18, 0, WS_EX_LEFT
-    CONTROL         "", Changed_Files_List, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 18, 23, 384, 103, WS_EX_LEFT
-    DEFPUSHBUTTON   "Reload checked files", IDOK, 125, 167, 128, 18, 0, WS_EX_LEFT
+    LTEXT           "The following files have been modified outside of LEA:", 0, 19, 8, 290, 9, SS_LEFT, WS_EX_LEFT
+    CONTROL         "", Changed_Files_List, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 18, 23, 384, 108, WS_EX_LEFT
+    PUSHBUTTON      "Check all",   Select_All_Button,    18, 134, 88, 18, 0, WS_EX_LEFT
+    PUSHBUTTON      "Uncheck all", Unselect_All_Button, 111, 134, 88, 18, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Reload checked files", IDOK, 125, 162, 170, 23, 0, WS_EX_LEFT
 }
 
 

@@ -1,6 +1,8 @@
 --  The GWindows* packages need to be available to the compiler.
 --  See installation instructions in the header part of the lea.gpr file.
 --
+--  Alternatively, use Alire where all is managed.
+--
 with GWindows.Application,
      GWindows.Base,
      GWindows.GStrings,

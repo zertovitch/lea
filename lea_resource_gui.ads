@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2026/01/27  22:31:52
+--  Transcription time: 2026/01/28  20:03:50
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -367,11 +367,11 @@ package LEA_Resource_GUI is
   type Reload_Files_Box_Type is new Window_Type with record
 
     --  Label: 0
+    Changed_Files_List : List_View_Control_Type;
     Select_All_Button : Dialog_Button_Type;    --  Closes parent window after click
     Select_All_Button_permanent : Button_Type;  --  Doesn't close parent window after click
     Unselect_All_Button : Dialog_Button_Type;    --  Closes parent window after click
     Unselect_All_Button_permanent : Button_Type;  --  Doesn't close parent window after click
-    Changed_Files_List : List_View_Control_Type;
     IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Reload_Files_Box_Type

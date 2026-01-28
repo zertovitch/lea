@@ -41,20 +41,27 @@ procedure LEA_GWin.Check_Changed_Files (main : in out LEA_GWin.MDI_Main.MDI_Main
 
   procedure Get_Data (Window : in out GWindows.Base.Base_Window_Type'Class) is
     index : Integer := -1;
+    memo_line : Integer;
   begin
       for ca of list loop
          index := index + 1;
+
          if box.Changed_Files_List.Is_Checked (index) then
+            --  Reload text from external file and go to the line number of the previous version.
+            memo_line := ca.editor.Get_Current_Line_Number;
             ca.editor.Begin_Undo_Action;
             ca.editor.Clear_All;
             ca.editor.Load_Text;
             ca.editor.End_Undo_Action;
+            ca.editor.Set_Current_Line (memo_line);
          else
-            null;
             --  Keep divergent text.
+            null;
          end if;
-         --  Don't ask again for that time stamp.
-         --  Align the internal save time on the external time stamp.
+
+         --  Don't ask again for that time stamp. We prevent it by aligning
+         --  the internal save time on the external time stamp.
+         --  A later modification time will again trigger the dialog.
          ca.last_save_time := Ada.Directories.Modification_Time (G2S (GU2G (ca.ID.file_name)));
       end loop;
   end Get_Data;
@@ -87,13 +94,15 @@ begin
 
     box.Changed_Files_List.Insert_Column ("Name", 0, 180);
     box.Changed_Files_List.Insert_Column ("Full Name", 1, 200);
-    box.Changed_Files_List.Insert_Column ("Pending modification in LEA?", 2, 160);
+    box.Changed_Files_List.Insert_Column ("Pending modification in LEA ?", 2, 160);
     for ca of list loop
       last_index := last_index + 1;
       box.Changed_Files_List.Insert_Item (Simple_Name (GU2G (ca.ID.short_name)), last_index);
       box.Changed_Files_List.Set_Sub_Item (GU2G (ca.ID.file_name), last_index, 1);
       box.Changed_Files_List.Set_Sub_Item
-        ((if ca.editor.modified then "Yes! Changes lost if reloaded" else "No"), last_index, 2);
+        ((if ca.editor.modified then "Yes! Changes will be lost on file reload" else "No"),
+         last_index,
+         2);
     end loop;
     box.Select_All_Button.Hide;
     box.Select_All_Button_permanent.Show;
@@ -104,6 +113,7 @@ begin
     box.Unselect_All_Button_permanent.On_Click_Handler (Unselect_All'Unrestricted_Access);
 
     box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
+    Select_All (box);
 
     if Show_Dialog (box, main) = IDOK then
       null;
