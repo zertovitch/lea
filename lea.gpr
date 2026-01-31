@@ -4,11 +4,15 @@
 --      home page:     http://l-e-a.sf.net/
 --      project page:  http://sf.net/projects/l-e-a/
 --      mirror:        https://github.com/zertovitch/lea
+--      Alire crate:   https://alire.ada.dev/crates/lea
 --
 --  Build me with "gprbuild -P lea", or open me with GNAT Studio
 --
---  This variant is a single project, which handles all sources.
---  See "lea_project_tree.gpr" for the other variant.
+--  **********************************************************************************  
+--  **  This variant is a single, "flat", .gpr project, which handles all sources.  **
+--  **                                                                              **
+--  **  See "lea_project_tree.gpr" for the other variant.                           **
+--  **********************************************************************************  
 --
 --  *** External libraries (of which all sources are grabbed by this project file) ***
 --  * 
@@ -61,7 +65,7 @@ project LEA is
    for Main use ("lea_without_data.adb", "sample_catalogue.adb");
    for Source_Dirs use (".") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
-   for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
+   for Create_Missing_Dirs use "True";  --  Flips the "-p" switch
 
    case LEA_Build_Mode is
       when "Debug"           => for Object_Dir use "obj/debug";

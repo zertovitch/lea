@@ -4,11 +4,20 @@
 --      home page:     http://l-e-a.sf.net/
 --      project page:  http://sf.net/projects/l-e-a/
 --      mirror:        https://github.com/zertovitch/lea
+--      Alire crate:   https://alire.ada.dev/crates/lea
 --
 --  Build me with "gprbuild -P lea_project_tree", or open me with GNAT Studio
 --
---  This variant is a hierarchical project, which refers to other projects.
---  See "lea.gpr" for the other variant.
+--  ******************************************************************************************************
+--  **  This variant is a hierarchical .gpr project, which refers to other .gpr projects.               **
+--  **                                                                                                  **
+--  **  For instance, Alire (Ada LIbrary REpository) uses it.                                           **
+--  **  The crate https://alire.ada.dev/crates/lea refers to other crates                               **
+--  **  which contain their own .gpr project files. That way, Alire is able to retrieve all             **
+--  **  resources and build everything automatically.                                                   **
+--  **                                                                                                  **
+--  **  See "lea.gpr" for the other, "flat" variant.                                                    **
+--  ******************************************************************************************************
 --
 --  *** External projects ***
 --  * 
@@ -53,20 +62,22 @@ project LEA_Project_Tree extends "GWindows_Contrib" is
    --  package Config (which is in project Ini_Files).
 
    type LEA_Build_Mode_Type is
-      ("Debug",
-       "Debug_MinGW",
-       "Fast",
-       "Fast_MinGW",
-       "Small",
-       "Small_MinGW",
-       "Small_Unchecked");  --  Smallest size, at the price of less safety. Not for the release binary!
+     ("Debug",
+      "Debug_MinGW",
+      "Fast",
+      "Fast_MinGW",
+      "Small",
+      "Small_MinGW",
+      "Small_Unchecked",  --  Smallest size, at the price of less safety. Not for the release binary!
+      "Profiling",
+      "Release");
 
    LEA_Build_Mode : LEA_Build_Mode_Type := external ("LEA_Build_Mode", "Debug");
 
    for Main use ("lea_without_data.adb", "sample_catalogue.adb");
    for Source_Dirs use (".");
    for Exec_Dir use ".";
-   for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
+   for Create_Missing_Dirs use "True";  --  Flips the "-p" switch
 
    case LEA_Build_Mode is
       when "Debug"           => for Object_Dir use "obj/debug";
@@ -76,6 +87,8 @@ project LEA_Project_Tree extends "GWindows_Contrib" is
       when "Fast_MinGW"      => for Object_Dir use "obj/fast_ming";
       when "Small_MinGW"     => for Object_Dir use "obj/small_ming";
       when "Small_Unchecked" => for Object_Dir use "obj/small_unchecked";
+      when "Profiling"       => for Object_Dir use "obj/profiling";
+      when "Release"         => for Object_Dir use "obj/release";
    end case;
 
    Compiler_Common_Options :=
@@ -134,9 +147,18 @@ project LEA_Project_Tree extends "GWindows_Contrib" is
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small_Unchecked" =>
             for Default_Switches ("ada") use Compiler_Small_Options & ("-gnatp");
+         when "Profiling" =>
+            for Default_Switches ("ada") use Compiler_Profiling_Options;
+         when "Release" =>
+            for Default_Switches ("ada") use Compiler_Small_Options;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
       end case;
    end Compiler;
+
+   package Binder is
+      --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
+      for Default_Switches ("ada") use ("-Es");
+   end Binder;
 
    Linker_Common_Options := ("-g", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
 
@@ -148,8 +170,11 @@ project LEA_Project_Tree extends "GWindows_Contrib" is
          when "Debug" | "Debug_MinGW" =>
             for Default_Switches ("ada") use Linker_Common_Options;
          when "Fast" | "Fast_MinGW" |
-              "Small" | "Small_MinGW" | "Small_Unchecked"=>
+              "Small" | "Small_MinGW" | "Small_Unchecked" |
+              "Release" =>
             for Default_Switches ("ada") use Linker_Small_Options & ("-mwindows", "-s");
+         when "Profiling" =>
+            for Default_Switches ("ada") use Linker_Small_Options & ("-pg");
        end case;
    end Linker;
 
