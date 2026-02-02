@@ -8,8 +8,9 @@
 --
 --  Build me with "gprbuild -P lea", or open me with GNAT Studio
 --
---  **********************************************************************************  
---  **  This variant is a single, "flat", .gpr project, which handles all sources.  **
+--  **********************************************************************************
+--  **  This variant is a single, "flat", .gpr project, which handles all           **
+--  **  sources and does not refer to other projects.                               **
 --  **                                                                              **
 --  **  See "lea_project_tree.gpr" for the other variant.                           **
 --  **********************************************************************************  
