@@ -73,9 +73,7 @@ package body LEA_GWin.MDI_Main is
 
   begin
     is_open := False;
-    Enumerate_Children
-      (MDI_Client_Window (Window).all,
-       Identify'Unrestricted_Access);
+    MDI_Client_Window (Window).Enumerate_Children (Identify'Unrestricted_Access);
   end Focus_an_already_opened_window;
 
   procedure Go_to_memorized_Declaration (Window : in out MDI_Main_Type; number : Pair) is
@@ -103,7 +101,7 @@ package body LEA_GWin.MDI_Main is
   begin
     Window.Redraw;
     --  Redraw(Window.Tool_bar);
-    Enumerate_Children (MDI_Client_Window (Window).all, Redraw_Child'Access);
+    MDI_Client_Window (Window).Enumerate_Children (Redraw_Child'Access);
   end Redraw_all;
 
   procedure Open_Child_Window_And_Load
@@ -569,6 +567,7 @@ package body LEA_GWin.MDI_Main is
   ----------------------
 
   procedure My_MDI_Close_All (MDI_Main : in out MDI_Main_Type) is
+
     procedure My_Close_Win (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     --  Enumeration call back to close MDI child windows
     is
@@ -580,10 +579,10 @@ package body LEA_GWin.MDI_Main is
         GWindows.Base.Close (Any_Window.all);
       end if;
     end My_Close_Win;
+
   begin
     MDI_Main.Success_in_enumerated_close := True;
-    GWindows.Base.Enumerate_Children (MDI_Client_Window (MDI_Main).all,
-                                      My_Close_Win'Unrestricted_Access);
+    MDI_Client_Window (MDI_Main).Enumerate_Children (My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
 
   --------------------
@@ -789,9 +788,7 @@ package body LEA_GWin.MDI_Main is
     Update_MRU_Menu (Window.MRU, Window.Menu.Popup_0001);
     Update_View_Menu (Window.Menu.Main, options);
     --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
-    GWindows.Base.Enumerate_Children
-      (MDI_Client_Window (Window).all,
-       Update_Common_Menus_Child'Access);
+    MDI_Client_Window (Window).Enumerate_Children (Update_Common_Menus_Child'Access);
   end Update_Common_Menus;
 
   procedure Update_Title (Window : in out MDI_Main_Type) is
@@ -815,9 +812,7 @@ package body LEA_GWin.MDI_Main is
       end if;
     end Search_on_focused_editor;
   begin
-    Enumerate_Children
-      (MDI_Client_Window (Window).all,
-       Search_on_focused_editor'Unrestricted_Access);
+    MDI_Client_Window (Window).Enumerate_Children (Search_on_focused_editor'Unrestricted_Access);
   end Perform_Search;
 
   --  The operation reciprocal to Memorize_Splitters is done in On_Size.

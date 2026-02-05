@@ -270,14 +270,14 @@ package body LEA_GWin.MDI_Child is
     end Process_Siblings;
 
   begin
-    GWindows.Base.Enumerate_Children
-      (MDI_Client_Window (Window.mdi_root.all).all,
-       Process_Siblings'Unrestricted_Access);
+    MDI_Client_Window (Window.mdi_root.all).Enumerate_Children (Process_Siblings'Unrestricted_Access);
+
     if Window.editor.modified then
       Window.Text ("* " & GU2G (Window.ID.short_name));
     else
       Window.Text (GU2G (Window.ID.short_name));
     end if;
+
     Update_Status_Bar;
     Update_Tool_Bar;
     Update_Menus;
@@ -561,7 +561,7 @@ package body LEA_GWin.MDI_Child is
   end On_Save_As;
 
   procedure On_Save_All (Window : in out MDI_Child_Type) is
-    --
+
     procedure Save_any_modified (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
     begin
@@ -575,10 +575,9 @@ package body LEA_GWin.MDI_Child is
         end;
       end if;
     end Save_any_modified;
-    --
+
   begin
-    GWindows.Base.Enumerate_Children (MDI_Client_Window (Window.mdi_root.all).all,
-                                      Save_any_modified'Unrestricted_Access);
+    MDI_Client_Window (Window.mdi_root.all).Enumerate_Children (Save_any_modified'Unrestricted_Access);
   end On_Save_All;
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;

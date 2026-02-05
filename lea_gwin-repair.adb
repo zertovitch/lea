@@ -116,10 +116,9 @@ package body LEA_GWin.Repair is
        repair.location.column_start - 1,
        repair.location.column_stop);
     --  At this point, focus is on the editor window (if the file still exists).
-    Enumerate_Children (
-      MDI_Client_Window (MDI_Main).all,
-      Repair_in_editor'Unrestricted_Access
-    );
+
+    MDI_Client_Window (MDI_Main).Enumerate_Children (Repair_in_editor'Unrestricted_Access);
+
     --  Disable repair:
     repair.repair_kind := none;
   end Do_Repair;

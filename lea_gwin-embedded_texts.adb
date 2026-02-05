@@ -67,12 +67,12 @@ package body LEA_GWin.Embedded_Texts is
 
   begin
     --  We want only one copy of the help of any sample document displayed.
-    GWindows.Base.Enumerate_Children
-      (Main_Window.MDI_Client_Window.all,
-       Check_Duplicate_Embedded_Doc'Unrestricted_Access);
+    Main_Window.MDI_Client_Window.Enumerate_Children (Check_Duplicate_Embedded_Doc'Unrestricted_Access);
+
     if already_open then
       return;
     end if;
+
     Zip.Load (zi, lea_exe);
     UnZip.Streams.Extract (mem_stream_unpacked, zi, File_Name);
     Get (mem_stream_unpacked, unpacked);

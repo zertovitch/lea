@@ -190,9 +190,7 @@ package body LEA_GWin.Editor.Streaming is
       HAT.Put_Line
         ("Source_Open: " & G2S (full_name_upper_GString) & " - checking open windows:");
     end if;
-    Enumerate_Children
-      (MDI_Client_Window (cat.mdi_parent.all).all,
-       Stream_Fronting'Unrestricted_Access);
+    MDI_Client_Window (cat.mdi_parent.all).Enumerate_Children (Stream_Fronting'Unrestricted_Access);
     if trace then
       HAT.New_Line;
     end if;
