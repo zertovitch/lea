@@ -94,7 +94,7 @@ begin
 
     box.Changed_Files_List.Insert_Column ("Name", 0, 180);
     box.Changed_Files_List.Insert_Column ("Full Name", 1, 200);
-    box.Changed_Files_List.Insert_Column ("Pending modification in LEA ?", 2, 160);
+    box.Changed_Files_List.Insert_Column ("Pending modification in LEA ?", 2, 210);
     for ca of list loop
       last_index := last_index + 1;
       box.Changed_Files_List.Insert_Item (Simple_Name (GU2G (ca.ID.short_name)), last_index);

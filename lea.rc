@@ -358,17 +358,17 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Reload_Files_Box DIALOG 0, 0, 420, 188
+Reload_Files_Box DIALOG 0, 0, 450, 188
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
 EXSTYLE WS_EX_WINDOWEDGE
 CAPTION "Files externally changed on disk"
 FONT 8, "Ms Shell Dlg"
 {
     LTEXT           "The following files have been modified outside of LEA:", 0, 19, 8, 290, 9, SS_LEFT, WS_EX_LEFT
-    CONTROL         "", Changed_Files_List, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 18, 23, 384, 108, WS_EX_LEFT
+    CONTROL         "", Changed_Files_List, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 18, 23, 414, 108, WS_EX_LEFT
     PUSHBUTTON      "Check all",   Select_All_Button,    18, 134, 88, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Uncheck all", Unselect_All_Button, 111, 134, 88, 18, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Reload checked files", IDOK, 125, 162, 170, 23, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Reload checked items", IDOK, 140, 162, 170, 23, 0, WS_EX_LEFT
 }
 
 
