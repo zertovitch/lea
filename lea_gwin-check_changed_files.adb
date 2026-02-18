@@ -4,14 +4,15 @@ with Ada.Directories;
 with GWindows.Application,
      GWindows.Base,
      GWindows.Common_Controls,
-     GWindows.Constants;
+     GWindows.Constants,
+     GWindows.Message_Boxes;
 
 with LEA_GWin.MDI_Child;
 with LEA_Resource_GUI;
 
 procedure LEA_GWin.Check_Changed_Files (main : in out LEA_GWin.MDI_Main.MDI_Main_Type) is
 
-  use GWindows.Application, GWindows.Common_Controls, GWindows.Constants, LEA_GWin.MDI_Child;
+  use GWindows.Application, GWindows.Common_Controls, GWindows.Constants, GWindows.Message_Boxes, LEA_GWin.MDI_Child;
 
   package Externally_Changed_Vectors is new Ada.Containers.Vectors (Natural, MDI_Child_Access);
 
@@ -27,7 +28,7 @@ procedure LEA_GWin.Check_Changed_Files (main : in out LEA_GWin.MDI_Main.MDI_Main
         fn : constant String := G2S (GU2G (cw.ID.file_name));
         time_stamp : Time;
       begin
-        if fn /= "" then
+        if fn /= "" and then Ada.Directories.Exists (fn) then
           time_stamp := Ada.Directories.Modification_Time (fn);
           if time_stamp > cw.last_save_time then
             list.Append (ca);
@@ -43,27 +44,39 @@ procedure LEA_GWin.Check_Changed_Files (main : in out LEA_GWin.MDI_Main.MDI_Main
     index : Integer := -1;
     memo_line : Integer;
   begin
-      for ca of list loop
-         index := index + 1;
+    for ca of list loop
+      index := index + 1;
 
-         if box.Changed_Files_List.Is_Checked (index) then
-            --  Reload text from external file and go to the line number of the previous version.
-            memo_line := ca.editor.Get_Current_Line_Number;
-            ca.editor.Begin_Undo_Action;
-            ca.editor.Clear_All;
-            ca.editor.Load_Text;
-            ca.editor.End_Undo_Action;
-            ca.editor.Set_Current_Line (memo_line);
-         else
-            --  Keep divergent text.
-            null;
-         end if;
+      declare
+        fn : constant String := G2S (GU2G (ca.ID.file_name));
+      begin
+        if Ada.Directories.Exists (fn) then
+          if box.Changed_Files_List.Is_Checked (index) then
+             --  Reload text from external file and go to the line number of the previous version.
+             memo_line := ca.editor.Get_Current_Line_Number;
+             ca.editor.Begin_Undo_Action;
+             ca.editor.Clear_All;
+             ca.editor.Load_Text;
+             ca.editor.End_Undo_Action;
+             ca.editor.Set_Current_Line (memo_line);
+          else
+             --  Keep divergent text.
+             null;
+          end if;
 
-         --  Don't ask again for that time stamp. We prevent it by aligning
-         --  the internal save time on the external time stamp.
-         --  A later modification time will again trigger the dialog.
-         ca.last_save_time := Ada.Directories.Modification_Time (G2S (GU2G (ca.ID.file_name)));
-      end loop;
+          --  Don't ask again for that time stamp. We prevent it by aligning
+          --  the internal save time on the external time stamp.
+          --  A later modification time will again trigger the dialog.
+          ca.last_save_time := Ada.Directories.Modification_Time (fn);
+        else
+          Message_Box
+            (box,
+             "File deleted or renamed", "File " & S2G (fn) & NL &
+             "has been deleted or renamed in the meantime.", OK_Box, Exclamation_Icon);
+        end if;
+      end;
+
+    end loop;
   end Get_Data;
 
   last_index : Integer := -1;
