@@ -232,7 +232,9 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
 begin
   LEA_GWin.Messages.IO_Pipe.is_aborted_flag := False;
+
   case options.toolset is
+
     when HAC_mode =>
       --  !!  Check if anything compiled ?
       if Window.mdi_root.BD.CD.Is_Executable then
@@ -244,7 +246,12 @@ begin
            "Can only execute a parameterless procedure",
            Icon => Information_Icon);
       end if;
+
     when GNAT_mode =>
       null;
+
+    when Alire_mode =>
+      null;  --  alr run
+
   end case;
 end LEA_GWin.Run_Windowed;

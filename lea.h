@@ -123,3 +123,4 @@
 #define Remarks_Level_1_Button                  40119
 #define Remarks_Level_2_Button                  40120
 #define IDM_HAC_options                         40121
+#define IDM_Alire_Mode                          40122

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2026/02/06  17:19:06
+--  Transcription time: 2026/03/02  18:37:42
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -111,9 +111,11 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0006, "&Studio view", IDM_Studio_view);
     State (New_Menu.Popup_0006, Command, IDM_Studio_view, Disabled);
     Append_Separator (New_Menu.Popup_0006);
-    Append_Item (New_Menu.Popup_0006, "&HAC restricted Ada mode", IDM_HAC_Mode);
-    Append_Item (New_Menu.Popup_0006, "&GNAT full Ada mode", IDM_GNAT_Mode);
+    Append_Item (New_Menu.Popup_0006, "&HAC / projectless mode", IDM_HAC_Mode);
+    Append_Item (New_Menu.Popup_0006, "&GNAT mode", IDM_GNAT_Mode);
     State (New_Menu.Popup_0006, Command, IDM_GNAT_Mode, Disabled);
+    Append_Item (New_Menu.Popup_0006, "&Alire mode", IDM_Alire_Mode);
+    State (New_Menu.Popup_0006, Command, IDM_Alire_Mode, Disabled);
     New_Menu.Popup_0007 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Options", New_Menu.Popup_0007);
     Append_Item (New_Menu.Popup_0007, "&General options", IDM_General_options);
@@ -132,7 +134,7 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  For type: Menu_MDI_Child_Type
 
-  --  Menu at line 142
+  --  Menu at line 143
   procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Main_Type)
   is
   begin
@@ -221,9 +223,11 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0006, "&Studio view", IDM_Studio_view);
     State (New_Menu.Popup_0006, Command, IDM_Studio_view, Disabled);
     Append_Separator (New_Menu.Popup_0006);
-    Append_Item (New_Menu.Popup_0006, "&HAC restricted Ada mode", IDM_HAC_Mode);
-    Append_Item (New_Menu.Popup_0006, "&GNAT full Ada mode", IDM_GNAT_Mode);
+    Append_Item (New_Menu.Popup_0006, "&HAC / projectless mode", IDM_HAC_Mode);
+    Append_Item (New_Menu.Popup_0006, "&GNAT mode", IDM_GNAT_Mode);
     State (New_Menu.Popup_0006, Command, IDM_GNAT_Mode, Disabled);
+    Append_Item (New_Menu.Popup_0006, "&Alire mode", IDM_Alire_Mode);
+    State (New_Menu.Popup_0006, Command, IDM_Alire_Mode, Disabled);
     New_Menu.Popup_0007 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Options", New_Menu.Popup_0007);
     Append_Item (New_Menu.Popup_0007, "&General options", IDM_General_options);
@@ -242,7 +246,7 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0009, "&About LEA", IDM_ABOUT);
   end Create_Full_Menu;  --  For type: Menu_MDI_Main_Type
 
-  --  Dialog at resource line 243
+  --  Dialog at resource line 245
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -370,7 +374,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 270
+  --  Dialog at resource line 272
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -443,7 +447,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Credits_Box_Type
 
-  --  Dialog at resource line 283
+  --  Dialog at resource line 285
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -539,7 +543,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Go_to_line_box_Type
 
-  --  Dialog at resource line 296
+  --  Dialog at resource line 298
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -641,7 +645,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  HAC_example_box_Type
 
-  --  Dialog at resource line 312
+  --  Dialog at resource line 314
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -751,7 +755,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 337
+  --  Dialog at resource line 339
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -837,7 +841,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  HAC_Option_Box_Type
 
-  --  Dialog at resource line 350
+  --  Dialog at resource line 352
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -926,7 +930,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 365
+  --  Dialog at resource line 367
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1021,7 +1025,7 @@ package body LEA_Resource_GUI is
     end if;
   end Create_Contents;  --  Reload_Files_Box_Type
 
-  --  Dialog at resource line 381
+  --  Dialog at resource line 383
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1157,7 +1161,7 @@ package body LEA_Resource_GUI is
     Create (Window.Match_case, Window, "Match case", x, y, w, h, ID => Match_case);
   end Create_Contents;  --  Search_box_Type
 
-  --  Dialog at resource line 403
+  --  Dialog at resource line 405
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1364,6 +1368,6 @@ package body LEA_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 516
+  --  Last line of resource script file: 518
 
 end LEA_Resource_GUI;

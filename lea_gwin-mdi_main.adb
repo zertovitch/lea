@@ -642,6 +642,8 @@ package body LEA_GWin.MDI_Main is
         Change_Mode (Window, HAC_mode);
       when IDM_GNAT_Mode =>
         Change_Mode (Window, GNAT_mode);
+      when IDM_Alire_Mode =>
+        Change_Mode (Window, Alire_mode);
       when IDM_Go_to_memorized_Declaration =>
         Window.Go_to_memorized_Declaration (1);
       when IDM_Go_to_memorized_Body =>
@@ -740,6 +742,7 @@ package body LEA_GWin.MDI_Main is
   procedure Update_View_Menu (m : Menu_Type; o : LEA_Common.User_options.Option_Pack_Type) is
     use LEA_Resource_GUI;
   begin
+
     case o.view_mode is
       when Notepad =>
         Check (m, Command, IDM_Notepad_view, True);
@@ -748,14 +751,22 @@ package body LEA_GWin.MDI_Main is
         Check (m, Command, IDM_Notepad_view, False);
         Check (m, Command, IDM_Studio_view, True);
     end case;
+
     case o.toolset is
       when HAC_mode =>
-        Check (m, Command, IDM_HAC_Mode, True);
-        Check (m, Command, IDM_GNAT_Mode, False);
+        Check (m, Command, IDM_HAC_Mode,   True);
+        Check (m, Command, IDM_GNAT_Mode,  False);
+        Check (m, Command, IDM_Alire_Mode, False);
       when GNAT_mode =>
-        Check (m, Command, IDM_HAC_Mode, False);
-        Check (m, Command, IDM_GNAT_Mode, True);
+        Check (m, Command, IDM_HAC_Mode,   False);
+        Check (m, Command, IDM_GNAT_Mode,  True);
+        Check (m, Command, IDM_Alire_Mode, False);
+      when Alire_mode =>
+        Check (m, Command, IDM_HAC_Mode,   False);
+        Check (m, Command, IDM_GNAT_Mode,  False);
+        Check (m, Command, IDM_Alire_Mode, True);
     end case;
+
     Check (m, Command, IDM_Show_special_symbols, not (o.show_special = none));
     Check (m, Command, IDM_Show_indentation_lines, o.show_indent);
   end Update_View_Menu;

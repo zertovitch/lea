@@ -686,6 +686,7 @@ package body LEA_GWin.MDI_Child is
     --
   begin
     case Options.toolset is
+
       when HAC_mode =>
         --  We connect this window's input stream to this window's editor.
         Window.current_editor_stream.Reset
@@ -753,8 +754,13 @@ package body LEA_GWin.MDI_Child is
             end loop;
           end if;
         end if;
+
       when GNAT_mode =>
         null;
+
+      when Alire_mode =>
+        null;
+
     end case;
   end Build_as_Main;
 
@@ -770,8 +776,13 @@ package body LEA_GWin.MDI_Child is
             --  !!  In project/studio mode, we will build
             --      project's main, from editors or files
         end case;
+
       when GNAT_mode =>
         null;
+
+      when Alire_mode =>
+        null;   --  alr build
+
     end case;
   end Build;
 
@@ -967,6 +978,7 @@ package body LEA_GWin.MDI_Child is
     need_separator := is_any_selection or can_paste;
     if Options.smart_editor then
       case Options.toolset is
+
         when HAC_mode =>
           Add_Entries_for_Spec_Body_Swap;
           if X >= 0 and then Y >= 0 then
@@ -978,8 +990,13 @@ package body LEA_GWin.MDI_Child is
             pos := Window.editor.Get_Current_Pos;
           end if;
           Add_Entries_for_Go_to_Declaration;
+
         when GNAT_mode =>
           null;
+
+        when Alire_mode =>
+          null;
+
       end case;
     end if;
     --

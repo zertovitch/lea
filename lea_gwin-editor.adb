@@ -263,6 +263,8 @@ package body LEA_GWin.Editor is
               end if;
             when GNAT_mode =>
               null;
+            when Alire_mode =>
+              null;
           end case;
           exit;
         end if;
@@ -448,6 +450,8 @@ package body LEA_GWin.Editor is
             Show_Mouse_Hover_Tip_HAC;
           end if;
         when GNAT_mode =>
+          null;
+        when Alire_mode =>
           null;
       end case;
     end if;

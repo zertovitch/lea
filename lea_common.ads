@@ -44,7 +44,7 @@ package LEA_Common is
 
   type Show_special_symbol_mode is (none, spaces, spaces_eols);
 
-  type Toolset_mode_type is (HAC_mode, GNAT_mode);
+  type Toolset_mode_type is (HAC_mode, GNAT_mode, Alire_mode);
 
   type Document_kind_type is
     (editable_text,
