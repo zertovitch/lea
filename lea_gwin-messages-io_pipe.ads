@@ -7,6 +7,8 @@ with Ada.Text_IO,
 
 with HAC_Sys.Defs;
 
+with GWindows.Pipes;
+
 package LEA_GWin.Messages.IO_Pipe is
 
   procedure Set_current_IO_pipe (ML : in out Message_List_Type);
@@ -38,7 +40,8 @@ package LEA_GWin.Messages.IO_Pipe is
   procedure Put_Console (S : in String);
   procedure New_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);
 
-  --  A global variable here. We assume there is only one main window.
+  --  Global variables here. We assume there is only one main LEA window.
   is_aborted_flag : Boolean;
+  shell_pipe      : GWindows.Pipes.Piped_Process;
 
 end LEA_GWin.Messages.IO_Pipe;

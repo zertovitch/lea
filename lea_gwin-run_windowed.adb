@@ -14,7 +14,8 @@ with HAT;
 with GWindows.Application,
      GWindows.Base,
      GWindows.Common_Controls,
-     GWindows.Message_Boxes;
+     GWindows.Message_Boxes,
+     GWindows.Pipes;
 
 with Ada.Calendar,
      Ada.Strings.Unbounded,
@@ -46,16 +47,50 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
       return G2S (GU2G (Window.ID.file_name));
     end HAC_Command_Name;
 
-    procedure Fake_Shell_Execute (Command : String; Result : out Integer) is
+    procedure Output_a_Line_to_LEA_Console (s : String) is
     begin
-      Result := -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
-    end Fake_Shell_Execute;
+      LEA_GWin.Messages.IO_Pipe.Put_Console (s);
+      LEA_GWin.Messages.IO_Pipe.New_Line_Console;
+    end Output_a_Line_to_LEA_Console;
 
-    procedure Fake_Shell_Execute_Output (Command : String; Result : out Integer; Output : out HAT.VString) is
+    procedure Shell_Execute_to_LEA_Console (Command : String; Result : out Integer) is
+      p : GWindows.Pipes.Piped_Process renames LEA_GWin.Messages.IO_Pipe.shell_pipe;
     begin
-      Result := -1 + 0 * Command'Length;  --  !! TBD: pipe the console I/O (as in GWenerator)
-      Output := HAT.Null_VString;
-    end Fake_Shell_Execute_Output;
+      p.Start ("cmd.exe /c " & Command, ".", Output_a_Line_to_LEA_Console'Unrestricted_Access);
+      while p.Is_Alive loop
+        p.Check_Progress;
+      end loop;
+      Result := p.Last_Exit_Code;
+    exception
+      when GWindows.Pipes.Cannot_Create_Pipe =>
+        Result := -1;
+      when GWindows.Pipes.Cannot_Start =>
+        Result := -1;
+    end Shell_Execute_to_LEA_Console;
+
+    piped_output : HAT.VString;
+
+    procedure Output_a_Line_to_VString (s : String) is
+    begin
+      Append (piped_output, s & ASCII.LF);
+    end Output_a_Line_to_VString;
+
+    procedure Shell_Execute_to_VString (Command : String; Result : out Integer; Output : out HAT.VString) is
+      p : GWindows.Pipes.Piped_Process renames LEA_GWin.Messages.IO_Pipe.shell_pipe;
+    begin
+      piped_output := HAT.Null_VString;
+      p.Start ("cmd.exe /c " & Command, ".", Output_a_Line_to_VString'Unrestricted_Access);
+      while p.Is_Alive loop
+        p.Check_Progress;
+      end loop;
+      Result := p.Last_Exit_Code;
+      Output := piped_output;
+    exception
+      when GWindows.Pipes.Cannot_Create_Pipe =>
+        Result := -1;
+      when GWindows.Pipes.Cannot_Start =>
+        Result := -1;
+    end Shell_Execute_to_VString;
 
     ml : LEA_GWin.Messages.Message_List_Type renames main.Message_Panel.Message_List;
 
@@ -65,11 +100,10 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
       count : Natural := 0;
 
-      procedure Show_Line_Information (
-        File_Name   : String;   --  Example: hac-pcode-interpreter.adb
-        Block_Name  : String;   --  Example: HAC.PCode.Interpreter.Do_Write_Formatted
-        Line_Number : Positive
-      )
+      procedure Show_Line_Information
+        (File_Name   : String;   --  Example: hac-pcode-interpreter.adb
+         Block_Name  : String;   --  Example: HAC.PCode.Interpreter.Do_Write_Formatted
+         Line_Number : Positive)
       is
         use HAC_Sys.Defs, Ada.Strings, Ada.Strings.Wide_Fixed;
         kit : Diagnostic_Kit;
@@ -132,6 +166,10 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     begin
       LEA_GWin.Messages.IO_Pipe.is_aborted_flag := True;
       --  Will propagate user_abort upon next Boxed_Feedback.
+
+      if LEA_GWin.Messages.IO_Pipe.shell_pipe.Is_Alive then
+        LEA_GWin.Messages.IO_Pipe.shell_pipe.Stop;
+      end if;
     end Abort_clicked;
     --
     tick  : Ada.Calendar.Time;
@@ -193,8 +231,8 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
          (Fake_Argument_Count,
           Fake_Argument,
           HAC_Command_Name,
-          Fake_Shell_Execute,
-          Fake_Shell_Execute_Output,
+          Shell_Execute_to_LEA_Console,
+          Shell_Execute_to_VString,
           HAT.Directory_Separator);
 
     procedure Windowed_HAC_VM_Interpret is new
