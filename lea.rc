@@ -114,7 +114,7 @@ Menu_MDI_Child MENU
         MENUITEM SEPARATOR
         MENUITEM "&HAC / projectless mode", IDM_HAC_Mode
         MENUITEM "&GNAT mode",              IDM_GNAT_Mode, INACTIVE
-        MENUITEM "&Alire mode",             IDM_Alire_Mode, INACTIVE
+        MENUITEM "&Alire mode",             IDM_Alire_Mode
     }
     POPUP "&Options"
     {
@@ -210,7 +210,7 @@ Menu_MDI_Main MENU
         MENUITEM SEPARATOR
         MENUITEM "&HAC / projectless mode", IDM_HAC_Mode
         MENUITEM "&GNAT mode",              IDM_GNAT_Mode, INACTIVE
-        MENUITEM "&Alire mode",             IDM_Alire_Mode, INACTIVE
+        MENUITEM "&Alire mode",             IDM_Alire_Mode
     }
     POPUP "&Options"
     {

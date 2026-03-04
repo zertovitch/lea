@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2026/03/02  18:37:42
+--  Transcription time: 2026/03/04  21:55:31
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -115,7 +115,6 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0006, "&GNAT mode", IDM_GNAT_Mode);
     State (New_Menu.Popup_0006, Command, IDM_GNAT_Mode, Disabled);
     Append_Item (New_Menu.Popup_0006, "&Alire mode", IDM_Alire_Mode);
-    State (New_Menu.Popup_0006, Command, IDM_Alire_Mode, Disabled);
     New_Menu.Popup_0007 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Options", New_Menu.Popup_0007);
     Append_Item (New_Menu.Popup_0007, "&General options", IDM_General_options);
@@ -227,7 +226,6 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0006, "&GNAT mode", IDM_GNAT_Mode);
     State (New_Menu.Popup_0006, Command, IDM_GNAT_Mode, Disabled);
     Append_Item (New_Menu.Popup_0006, "&Alire mode", IDM_Alire_Mode);
-    State (New_Menu.Popup_0006, Command, IDM_Alire_Mode, Disabled);
     New_Menu.Popup_0007 := Create_Popup;
     Append_Menu (New_Menu.Main, "&Options", New_Menu.Popup_0007);
     Append_Item (New_Menu.Popup_0007, "&General options", IDM_General_options);

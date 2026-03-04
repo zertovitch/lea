@@ -1,8 +1,10 @@
 with LEA_Common,
      LEA_Common.User_options;
 
-with LEA_GWin.MDI_Main;
-with LEA_GWin.Messages.IO_Pipe;
+with LEA_GWin.Alire,
+     LEA_GWin.MDI_Main,
+     LEA_GWin.Messages.IO_Pipe,
+     LEA_GWin.Shell;
 
 with LEA_Resource_GUI;
 
@@ -27,7 +29,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
   use Ada.Strings.Unbounded, HAC_Sys.PCode.Interpreter, LEA_Common, GWindows.Message_Boxes;
 
-  main    : LEA_GWin.MDI_Main.MDI_Main_Type renames Window.mdi_root.all;
+  main    : MDI_Main.MDI_Main_Type renames Window.mdi_root.all;
   options : LEA_Common.User_options.Option_Pack_Type renames LEA_Common.User_options.options;
 
   procedure HAC_VM_Interpret is
@@ -47,52 +49,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
       return G2S (GU2G (Window.ID.file_name));
     end HAC_Command_Name;
 
-    procedure Output_a_Line_to_LEA_Console (s : String) is
-    begin
-      LEA_GWin.Messages.IO_Pipe.Put_Console (s);
-      LEA_GWin.Messages.IO_Pipe.New_Line_Console;
-    end Output_a_Line_to_LEA_Console;
-
-    procedure Shell_Execute_to_LEA_Console (Command : String; Result : out Integer) is
-      p : GWindows.Pipes.Piped_Process renames LEA_GWin.Messages.IO_Pipe.shell_pipe;
-    begin
-      p.Start ("cmd.exe /c " & Command, ".", Output_a_Line_to_LEA_Console'Unrestricted_Access);
-      while p.Is_Alive loop
-        p.Check_Progress;
-      end loop;
-      Result := p.Last_Exit_Code;
-    exception
-      when GWindows.Pipes.Cannot_Create_Pipe =>
-        Result := -1;
-      when GWindows.Pipes.Cannot_Start =>
-        Result := -1;
-    end Shell_Execute_to_LEA_Console;
-
-    piped_output : HAT.VString;
-
-    procedure Output_a_Line_to_VString (s : String) is
-    begin
-      Append (piped_output, s & ASCII.LF);
-    end Output_a_Line_to_VString;
-
-    procedure Shell_Execute_to_VString (Command : String; Result : out Integer; Output : out HAT.VString) is
-      p : GWindows.Pipes.Piped_Process renames LEA_GWin.Messages.IO_Pipe.shell_pipe;
-    begin
-      piped_output := HAT.Null_VString;
-      p.Start ("cmd.exe /c " & Command, ".", Output_a_Line_to_VString'Unrestricted_Access);
-      while p.Is_Alive loop
-        p.Check_Progress;
-      end loop;
-      Result := p.Last_Exit_Code;
-      Output := piped_output;
-    exception
-      when GWindows.Pipes.Cannot_Create_Pipe =>
-        Result := -1;
-      when GWindows.Pipes.Cannot_Start =>
-        Result := -1;
-    end Shell_Execute_to_VString;
-
-    ml : LEA_GWin.Messages.Message_List_Type renames main.Message_Panel.Message_List;
+    ml : Messages.Message_List_Type renames main.Message_Panel.Message_List;
 
     post_mortem : Post_Mortem_Data;
 
@@ -152,23 +109,17 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
       ml.Set_Sub_Item (S2G (Message (post_mortem.Unhandled)), count + 2, 1);
     end Show_Error;
 
-    procedure Scroll_Down_To_Last_Input_Line is
-      use GWindows.Common_Controls;
-    begin
-      ml.Ensure_Visible (Integer'Max (0, ml.Item_Count - 1), Full);
-    end Scroll_Down_To_Last_Input_Line;
-
     --  The following is copied and adapted from AZip's progress bar.
     --
     progress_box : LEA_Resource_GUI.Progress_box_Type;
     --
     procedure Abort_clicked (dummy : in out GWindows.Base.Base_Window_Type'Class) is
     begin
-      LEA_GWin.Messages.IO_Pipe.is_aborted_flag := True;
+      Messages.IO_Pipe.is_aborted_flag := True;
       --  Will propagate user_abort upon next Boxed_Feedback.
 
-      if LEA_GWin.Messages.IO_Pipe.shell_pipe.Is_Alive then
-        LEA_GWin.Messages.IO_Pipe.shell_pipe.Stop;
+      if Messages.IO_Pipe.shell_pipe.Is_Alive then
+        Messages.IO_Pipe.shell_pipe.Stop;
       end if;
     end Abort_clicked;
     --
@@ -200,7 +151,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
           (Integer (100.0 * Long_Float (Stack_Current) / Long_Float (Stack_Total)));
         infrequent := infrequent + 1;  --  No overflow.
         if (infrequent and 7) = 0 then
-          Scroll_Down_To_Last_Input_Line;
+          Messages.IO_Pipe.Scroll_Down_To_Last_Output_Line;
         end if;
         Message_Check;
         tick := Wall_Clock;
@@ -210,29 +161,29 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
 
     package Windowed_Console is new
       Console_Traits
-         (LEA_GWin.Messages.IO_Pipe.End_Of_File_Console,
-          LEA_GWin.Messages.IO_Pipe.End_Of_Line_Console,
-          LEA_GWin.Messages.IO_Pipe.Get_Needs_Skip_Line,
-          LEA_GWin.Messages.IO_Pipe.Get_Console,
-          LEA_GWin.Messages.IO_Pipe.Get_Console,
-          LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Console (C)
-          LEA_GWin.Messages.IO_Pipe.Get_Console,  --  For Get_Immediate_Console (C)
-          LEA_GWin.Messages.IO_Pipe.Get_Line_Console,
-          LEA_GWin.Messages.IO_Pipe.Skip_Line_Console,
-          LEA_GWin.Messages.IO_Pipe.Put_Console,
-          LEA_GWin.Messages.IO_Pipe.Put_Console,
-          LEA_GWin.Messages.IO_Pipe.Put_Console,
-          LEA_GWin.Messages.IO_Pipe.Put_Console,
-          LEA_GWin.Messages.IO_Pipe.Put_Console,
-          LEA_GWin.Messages.IO_Pipe.New_Line_Console);
+         (Messages.IO_Pipe.End_Of_File_Console,
+          Messages.IO_Pipe.End_Of_Line_Console,
+          Messages.IO_Pipe.Get_Needs_Skip_Line,
+          Messages.IO_Pipe.Get_Console,
+          Messages.IO_Pipe.Get_Console,
+          Messages.IO_Pipe.Get_Console,  --  For Get_Console (C)
+          Messages.IO_Pipe.Get_Console,  --  For Get_Immediate_Console (C)
+          Messages.IO_Pipe.Get_Line_Console,
+          Messages.IO_Pipe.Skip_Line_Console,
+          Messages.IO_Pipe.Put_Console,
+          Messages.IO_Pipe.Put_Console,
+          Messages.IO_Pipe.Put_Console,
+          Messages.IO_Pipe.Put_Console,
+          Messages.IO_Pipe.Put_Console,
+          Messages.IO_Pipe.New_Line_Console);
 
     package LEA_System_Calls is new
       System_Calls_Traits
          (Fake_Argument_Count,
           Fake_Argument,
           HAC_Command_Name,
-          Shell_Execute_to_LEA_Console,
-          Shell_Execute_to_VString,
+          Shell.Execute_to_LEA_Console,
+          Shell.Execute_to_VString,
           HAT.Directory_Separator);
 
     procedure Windowed_HAC_VM_Interpret is new
@@ -244,11 +195,12 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     use Ada.Calendar, GWindows.Application;
 
   begin
+    Messages.IO_Pipe.Set_Current_IO_Pipe (ml);
     ml.Clear;
-    ml.Set_Column ("Console - Running...", 0, 800);
+    ml.Set_Column ("", 0, 800);
     ml.Set_Column ("", 1, 0);
     ml.Set_Column ("", 2, 0);
-    LEA_GWin.Messages.IO_Pipe.Set_current_IO_pipe (Window.mdi_root.Message_Panel.Message_List);
+    Messages.IO_Pipe.Change_Header ("Console - Program is running...");
     tick := Clock - 5.0;  --  Ensure refresh code in Boxed_Feedback is executed soon
     progress_box.Create_Full_Dialog (Window);
     progress_box.Stack_Bar.Position (0);
@@ -259,8 +211,8 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
     Window.mdi_root.Disable;
     --  Running of the HAC program happens here:
     Windowed_HAC_VM_Interpret (Window.mdi_root.BD, post_mortem);
-    ml.Set_Column ("Console", 0, ml.Column_Width (0));
-    Scroll_Down_To_Last_Input_Line;
+    Messages.IO_Pipe.Change_Header ("Console output");
+    Messages.IO_Pipe.Scroll_Down_To_Last_Output_Line;
     Window.mdi_root.Enable;
     Window.mdi_root.Focus;
     if Is_Exception_Raised (post_mortem.Unhandled) then
@@ -269,7 +221,7 @@ procedure LEA_GWin.Run_Windowed (Window : in out MDI_Child.MDI_Child_Type) is
   end HAC_VM_Interpret;
 
 begin
-  LEA_GWin.Messages.IO_Pipe.is_aborted_flag := False;
+  Messages.IO_Pipe.is_aborted_flag := False;
 
   case options.toolset is
 
@@ -289,7 +241,7 @@ begin
       null;
 
     when Alire_mode =>
-      null;  --  alr run
+      Alire.Alr_Run (Window);
 
   end case;
 end LEA_GWin.Run_Windowed;

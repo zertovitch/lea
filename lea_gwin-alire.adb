@@ -15,7 +15,7 @@ package body LEA_GWin.Alire is
      ml.Set_Column ("", 0, 800);
      Messages.IO_Pipe.Change_Header ("Alire command: " & command);
      if toml = "" then
-       Messages.IO_Pipe.Put_Console ("Manifest (lire.toml) not found");
+       Messages.IO_Pipe.Put_Console ("Alire Manifest (alire.toml) not found");
        Messages.IO_Pipe.New_Line_Console;
      else
        declare

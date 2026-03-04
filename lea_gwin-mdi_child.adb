@@ -2,7 +2,8 @@ with LEA_Common.Syntax,
      LEA_Common.User_options,
      LEA_Common.Color_Themes;
 
-with LEA_GWin.Messages,
+with LEA_GWin.Alire,
+     LEA_GWin.Messages,
      LEA_GWin.Modal_Dialogs,
      LEA_GWin.Options,
      LEA_GWin.Run_Windowed,
@@ -781,17 +782,26 @@ package body LEA_GWin.MDI_Child is
         null;
 
       when Alire_mode =>
-        null;   --  alr build
+        Alire.Alr_Build (Window);
 
     end case;
   end Build;
 
   procedure Build_and_run (Window : in out MDI_Child_Type) is
   begin
-    Window.Build;
-    if Window.mdi_root.build_successful then
-      Run_Windowed (Window);
-    end if;
+
+    case Options.toolset is
+
+      when HAC_mode | GNAT_mode =>
+        Window.Build;
+        if Window.mdi_root.build_successful then
+          Run_Windowed (Window);
+        end if;
+
+      when Alire_mode =>
+        Run_Windowed (Window);
+    end case;
+
   end Build_and_run;
 
   procedure On_Menu_Select (

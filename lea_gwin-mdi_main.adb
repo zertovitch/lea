@@ -4,6 +4,7 @@ with LEA_Common.Syntax,
 with LEA_GWin.Check_Changed_Files,
      LEA_GWin.Embedded_Texts,
      LEA_GWin.MDI_Child,
+     LEA_GWin.Messages.IO_Pipe,
      LEA_GWin.Modal_Dialogs,
      LEA_GWin.Options,
      LEA_GWin.Toolbars;
@@ -287,8 +288,9 @@ package body LEA_GWin.MDI_Main is
     MDI_Main.Update_Common_Menus;
   end Change_Mode;
 
-  search_box_timer_id : constant := 1;
-  file_synch_timer_id : constant := 2;
+  search_box_timer_id           : constant := 1;
+  file_synch_timer_id           : constant := 2;
+  console_pipe_refresh_timer_id : constant := 3;
 
   ---------------
   -- On_Create --
@@ -408,8 +410,10 @@ package body LEA_GWin.MDI_Main is
         Window.Task_bar_gadget_ok := False;
     end;
     Window.search_box.Create_as_Search_Box (Window);
-    GWindows.Timers.Set_Timer (Window, search_box_timer_id, 100);
-    GWindows.Timers.Set_Timer (Window, file_synch_timer_id, 250);
+    GWindows.Timers.Set_Timer (Window, search_box_timer_id,           100);
+    GWindows.Timers.Set_Timer (Window, file_synch_timer_id,           1000);
+    GWindows.Timers.Set_Timer (Window, console_pipe_refresh_timer_id, 50);
+
     --  Now we instruct the librarians of both HAC compilers
     --  to use our special LEA-flavoured file catalogue:
     Window.lea_file_cat.mdi_parent := Window'Unchecked_Access;
@@ -673,32 +677,45 @@ package body LEA_GWin.MDI_Main is
     use Interfaces.C;
   begin
     case message is
+
       when GWindows.Timers.WM_TIMER =>
+
         case wParam is
-        when search_box_timer_id =>
-          if Window.close_this_search_box then
-            Window.close_this_search_box := False;
-            if Window.search_box.Visible then
-              Window.Set_Foreground_Window;
-              Window.Focus;
-              Window.search_box.Hide;
+
+          when search_box_timer_id =>
+            if Window.close_this_search_box then
+              Window.close_this_search_box := False;
+              if Window.search_box.Visible then
+                Window.Set_Foreground_Window;
+                Window.Focus;
+                Window.search_box.Hide;
+              end if;
             end if;
-          end if;
-        when file_synch_timer_id =>
-          null;
-        when others =>
-          null;
+
+          when file_synch_timer_id =>
+            --  NB: we check already file synchronization on On_Focus.
+            null;
+
+          when console_pipe_refresh_timer_id =>
+            if Messages.IO_Pipe.shell_pipe.Is_Alive then
+              Messages.IO_Pipe.shell_pipe.Check_Progress;
+            end if;
+
+          when others =>
+            null;
+
         end case;
+
       when others =>
         null;
     end case;
+
     --  Call parent method
-    GWindows.Windows.MDI.MDI_Main_Window_Type (Window).On_Message (
-      message,
-      wParam,
-      lParam,
-      Return_Value
-    );
+    GWindows.Windows.MDI.MDI_Main_Window_Type (Window).On_Message
+      (message,
+       wParam,
+       lParam,
+       Return_Value);
   end On_Message;
 
   -------------
@@ -734,6 +751,7 @@ package body LEA_GWin.MDI_Main is
       --
       GWindows.Timers.Kill_Timer (Window, search_box_timer_id);
       GWindows.Timers.Kill_Timer (Window, file_synch_timer_id);
+      GWindows.Timers.Kill_Timer (Window, console_pipe_refresh_timer_id);
     end if;
   end On_Close;
 
