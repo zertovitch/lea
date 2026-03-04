@@ -11,7 +11,7 @@ with GWindows.Pipes;
 
 package LEA_GWin.Messages.IO_Pipe is
 
-  procedure Set_current_IO_pipe (ML : in out Message_List_Type);
+  procedure Set_Current_IO_Pipe (ML : in out Message_List_Type);
 
   function End_Of_File_Console return Boolean;
   function End_Of_Line_Console return Boolean;
@@ -39,6 +39,11 @@ package LEA_GWin.Messages.IO_Pipe is
   procedure Put_Console (C : in Character);
   procedure Put_Console (S : in String);
   procedure New_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1);
+
+  procedure Scroll_Down_To_Last_Output_Line;
+
+  procedure Change_Header (title : String);
+  procedure Restore_Header;
 
   --  Global variables here. We assume there is only one main LEA window.
   is_aborted_flag : Boolean;

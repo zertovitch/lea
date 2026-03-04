@@ -14,20 +14,20 @@ package body LEA_GWin.Messages.IO_Pipe is
   current_IO_pipe : ML_access := null;
   tick : Ada.Calendar.Time;  --  For display refresh
 
-  procedure Set_current_IO_pipe (ML : in out Message_List_Type) is
+  procedure Set_Current_IO_Pipe (ML : in out Message_List_Type) is
   begin
     current_IO_pipe := ML'Unchecked_Access;
-  end Set_current_IO_pipe;
+  end Set_Current_IO_Pipe;
 
-  procedure New_line_IO_pipe is
+  procedure New_Line_IO_Pipe is
     last_line : constant Integer := current_IO_pipe.Item_Count - 1;
   begin
     current_IO_pipe.Insert_Item ("", Index => last_line + 1);
-  end New_line_IO_pipe;
+  end New_Line_IO_Pipe;
 
   package RIO is new Ada.Text_IO.Float_IO (HAC_Sys.Defs.HAC_Float);
 
-  procedure Append_to_IO_pipe (new_text : String) is
+  procedure Append_to_IO_Pipe (new_text : String) is
     last_line : Integer := current_IO_pipe.Item_Count - 1;
     use Ada.Calendar, GWindows.Common_Controls;
     now : constant Time := Clock;
@@ -37,16 +37,37 @@ package body LEA_GWin.Messages.IO_Pipe is
       tick := Clock;
       last_line := 0;
     end if;
-    current_IO_pipe.Set_Item (
-      Text => current_IO_pipe.Text (Item => last_line, SubItem => 0) & S2G (new_text),
-      Index => last_line
-    );
+
+    current_IO_pipe.Set_Item
+      (Text => current_IO_pipe.Text (Item => last_line, SubItem => 0) & S2G (new_text),
+       Index => last_line);
+
     if now - tick >= 0.3333 then
       current_IO_pipe.Ensure_Visible (last_line, Partial);  --  Scroll to last line
       GWindows.Application.Message_Check;  --  Refresh display
       tick := now;
     end if;
-  end Append_to_IO_pipe;
+
+  end Append_to_IO_Pipe;
+
+  procedure Scroll_Down_To_Last_Output_Line is
+    use GWindows.Common_Controls;
+  begin
+    current_IO_pipe.Ensure_Visible (Integer'Max (0, current_IO_pipe.Item_Count - 1), Full);
+  end Scroll_Down_To_Last_Output_Line;
+
+  mem_header_title : GString_Unbounded;
+
+  procedure Change_Header (title : String) is
+  begin
+    mem_header_title := G2GU (current_IO_pipe.Column_Text (0));
+    current_IO_pipe.Set_Column (S2G (title), 0, current_IO_pipe.Column_Width (0));
+  end Change_Header;
+
+  procedure Restore_Header is
+  begin
+    current_IO_pipe.Set_Column (GU2G (mem_header_title), 0, current_IO_pipe.Column_Width (0));
+  end Restore_Header;
 
   -------------------------
   -- End_Of_File_Console --
@@ -186,11 +207,11 @@ package body LEA_GWin.Messages.IO_Pipe is
     use Ada.Strings.Fixed, Ada.Strings;
   begin
     HAC_Sys.Defs.IIO.Put (s (1 .. Width), I, Base);
-    Append_to_IO_pipe (s (1 .. Width));
+    Append_to_IO_Pipe (s (1 .. Width));
   exception
     when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. Width
       HAC_Sys.Defs.IIO.Put (s, I, Base);
-      Append_to_IO_pipe (Trim (s, Left));
+      Append_to_IO_Pipe (Trim (s, Left));
   end Put_Console;
 
   -----------------
@@ -211,11 +232,11 @@ package body LEA_GWin.Messages.IO_Pipe is
       l := l - 1;  --  No 'E'
     end if;
     RIO.Put (s (1 .. l), F, Aft, Exp);
-    Append_to_IO_pipe (s (1 .. l));
+    Append_to_IO_Pipe (s (1 .. l));
   exception
     when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. l
       RIO.Put (s, F, Aft, Exp);
-      Append_to_IO_pipe (Trim (s, Left));
+      Append_to_IO_Pipe (Trim (s, Left));
   end Put_Console;
 
   procedure Put_Console
@@ -227,16 +248,16 @@ package body LEA_GWin.Messages.IO_Pipe is
     use Ada.Strings.Fixed, Ada.Strings;
   begin
     HAC_Sys.Defs.BIO.Put (s (1 .. Width), B, Set);
-    Append_to_IO_pipe (s (1 .. Width));
+    Append_to_IO_Pipe (s (1 .. Width));
   exception
     when Ada.Text_IO.Layout_Error =>  --  Cannot fit within 1 .. Width
       HAC_Sys.Defs.BIO.Put (s, B, Set);
-      Append_to_IO_pipe (Trim (s, Left));
+      Append_to_IO_Pipe (Trim (s, Left));
   end Put_Console;
 
   procedure Put_Console (C : in Character) is
   begin
-    Append_to_IO_pipe ((1 => C));
+    Append_to_IO_Pipe ((1 => C));
   end Put_Console;
 
   -----------------
@@ -245,7 +266,7 @@ package body LEA_GWin.Messages.IO_Pipe is
 
   procedure Put_Console (S : in String) is
   begin
-    Append_to_IO_pipe (S);
+    Append_to_IO_Pipe (S);
   end Put_Console;
 
   ----------------------
@@ -255,7 +276,7 @@ package body LEA_GWin.Messages.IO_Pipe is
   procedure New_Line_Console (Spacing : Ada.Text_IO.Positive_Count := 1) is
   begin
     for i in 1 .. Spacing loop
-      New_line_IO_pipe;
+      New_Line_IO_Pipe;
     end loop;
   end New_Line_Console;
 
