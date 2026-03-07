@@ -14,18 +14,19 @@ package body LEA_GWin.Alire is
      Messages.IO_Pipe.Set_Current_IO_Pipe (ml);
      ml.Set_Column ("", 0, 800);
      Messages.IO_Pipe.Change_Header ("Alire command: " & command);
+     ml.Clear;
      if toml = "" then
        Messages.IO_Pipe.Put_Console ("Alire Manifest (alire.toml) not found");
        Messages.IO_Pipe.New_Line_Console;
      else
        declare
          use Ada.Directories;
-         cur_dir : constant String := Current_Directory;
+         old_dir : constant String := Current_Directory;
          new_dir : constant String := Containing_Directory (toml);
        begin
          Set_Directory (new_dir);
          Shell.Execute_to_LEA_Console (command, res);
-         Set_Directory (cur_dir);
+         Set_Directory (old_dir);
        end;
      end if;
    end Alr_Command;
