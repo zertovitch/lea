@@ -20,6 +20,7 @@ procedure LEA_GWin.Check_Changed_Files (main : in out LEA_GWin.MDI_Main.MDI_Main
 
   procedure Check_Time_Stamp (any_window : GWindows.Base.Pointer_To_Base_Window_Class) is
     use Ada.Calendar, GWindows.Base;
+    small_margin : constant := 0.05;  --  Avoid false positives.
   begin
     if any_window /= null and then any_window.all in MDI_Child_Type'Class then
       declare
@@ -30,7 +31,7 @@ procedure LEA_GWin.Check_Changed_Files (main : in out LEA_GWin.MDI_Main.MDI_Main
       begin
         if fn /= "" and then Ada.Directories.Exists (fn) then
           time_stamp := Ada.Directories.Modification_Time (fn);
-          if time_stamp > cw.last_save_time then
+          if time_stamp > cw.last_save_time + small_margin then
             list.Append (ca);
           end if;
         end if;
