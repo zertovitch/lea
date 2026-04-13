@@ -1,3 +1,6 @@
+with Ada.Text_IO;
+with Interfaces;
+
 package body LEA_Common.Color_Themes is
 
   Selected_Theme : Color_Theme_Type := Default;
@@ -179,6 +182,16 @@ package body LEA_Common.Color_Themes is
         tab_frame                         => 16#D4A6C2#));
 
   --  *************************************************************************
+
+  function HTML_Image (rgb : RGB_Type) return String is
+    use Interfaces;
+    package IO_32 is new Ada.Text_IO.Integer_IO (Integer_32);
+    res : String (1 .. 11);
+  begin
+    IO_32.Put (res, Integer_32 (rgb) + 16#1_00_00_00#, Base => 16);
+    return res (5 .. 10);
+  end HTML_Image;
+
   function Nice_Image (ct : Color_Theme_Type) return UTF_16_String is
   begin
     case ct is

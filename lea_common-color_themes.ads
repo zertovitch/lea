@@ -47,6 +47,7 @@ package LEA_Common.Color_Themes is
   --  Red * 16#1_00_00# + Green * 16#1_00# + Blue.
 
   type RGB_Type is range 0 .. 2**24 - 1;
+  function HTML_Image (rgb : RGB_Type) return String;
 
   function Nice_Image (ct : Color_Theme_Type) return UTF_16_String;
   function Nice_Value (im : UTF_16_String) return Color_Theme_Type;

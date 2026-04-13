@@ -111,10 +111,11 @@ package LEA_GWin.Editor is
   --  Get end-of-line string (EOL) of correct type (CR+LF, LF, CR).
   function EOL (Editor : LEA_Scintilla_Type) return GString;
 
-  --  I/O
+  --  I/O & Clipboard
   procedure Load_Text (Editor : in out LEA_Scintilla_Type; contents : String);
   procedure Load_Text (Editor : in out LEA_Scintilla_Type);  --  Loads from File_Name
   procedure Save_Text (Editor : in out LEA_Scintilla_Type; under : GString);
+  procedure Rich_Copy (Editor : in out LEA_Scintilla_Type);
 
   --  Propagate the Editor.syntax_kind value to the corresponding
   --  visible behaviour in the Scintilla widget.

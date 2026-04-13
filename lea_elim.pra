@@ -405,7 +405,6 @@ pragma Eliminate (GWindows.Buttons, "not", Source_Location => "gwindows-buttons.
 pragma Eliminate (GWindows.Clipboard, Get_Clipboard_Text_Unicode, Source_Location => "gwindows-clipboard.adb:72");
 pragma Eliminate (GWindows.Clipboard, Clipboard_Text, Source_Location => "gwindows-clipboard.ads:53");
 pragma Eliminate (GWindows.Clipboard, Get_Clipboard_Text, Source_Location => "gwindows-clipboard.ads:73");
-pragma Eliminate (GWindows.GStrings, To_GString_From_Wide_String, Source_Location => "gwindows-gstrings.ads:73");
 pragma Eliminate (GWindows.Clipboard, Is_Clipboard_Format_Available, Source_Location => "gwindows-clipboard.adb:93");
 pragma Eliminate (GWindows.Clipboard, Is_Clipboard_Text_Available, Source_Location => "gwindows-clipboard.ads:57");
 pragma Eliminate (GWindows.Clipboard, Get_Clipboard_Data, Source_Location => "gwindows-clipboard.adb:204");

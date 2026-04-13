@@ -12,17 +12,20 @@ with HAC_Sys.Builder,
 
 with HAT;
 
-with GWindows.Colors,
+with GWindows.Clipboard,
+     GWindows.Colors,
+     GWindows.GStrings.Unbounded,
      GWindows.Message_Boxes;
 
 with Time_Display;
 
-with Ada.Directories,
+with Ada.Characters.Handling,
+     Ada.Directories,
      Ada.Integer_Wide_Text_IO,
      Ada.Streams.Stream_IO,
      Ada.Strings.Unbounded,
      Ada.Strings.Wide_Fixed,
-     Ada.Strings.Wide_Unbounded,
+     Ada.Text_IO,
      Ada.Wide_Characters.Handling;
 
 package body LEA_GWin.Editor is
@@ -196,7 +199,7 @@ package body LEA_GWin.Editor is
         full_id_name_g : constant GString := S2G (full_id_name);
         tip : GString_Unbounded;
         first_param, last_param, block_idx : HAC_Sys.Defs.Index;
-        use HAC_Sys.Co_Defs, HAC_Sys.Defs, Ada.Strings.Wide_Unbounded;
+        use HAC_Sys.Co_Defs, HAC_Sys.Defs, GWindows.GStrings.Unbounded;
         columns : Natural;
       begin
         case ide.entity is
@@ -742,12 +745,12 @@ package body LEA_GWin.Editor is
     Editor.Style_Set_Size (SCE_ADA_DEFAULT, App_default_font_size);
     Editor.Style_Set_Font (SCE_ADA_DEFAULT, App_default_font);
     --
-    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, Color_Convert (Theme_Color (comment)));
-    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      Color_Convert (Theme_Color (number)));
-    Editor.Style_Set_Fore (SCE_ADA_WORD,        Color_Convert (Theme_Color (keyword)));
-    Editor.Style_Set_Fore (SCE_ADA_STRING,      Color_Convert (Theme_Color (string_literal)));
     Editor.Style_Set_Fore (SCE_ADA_CHARACTER,   Color_Convert (Theme_Color (character_literal)));
+    Editor.Style_Set_Fore (SCE_ADA_COMMENTLINE, Color_Convert (Theme_Color (comment)));
     Editor.Style_Set_Fore (SCE_ADA_IDENTIFIER,  Color_Convert (Theme_Color (foreground)));
+    Editor.Style_Set_Fore (SCE_ADA_NUMBER,      Color_Convert (Theme_Color (number)));
+    Editor.Style_Set_Fore (SCE_ADA_STRING,      Color_Convert (Theme_Color (string_literal)));
+    Editor.Style_Set_Fore (SCE_ADA_WORD,        Color_Convert (Theme_Color (keyword)));
     --
     --  Cases where the text is obviously wrong
     --  (unfinished character or string, illegal identifier)
@@ -956,7 +959,7 @@ package body LEA_GWin.Editor is
     pos, sel_a, sel_z : Position;
     line, col, count  : Integer;
     ml : LEA_GWin.Messages.Message_List_Type renames MDI_Main.Message_Panel.Message_List;
-    use LEA_GWin.Messages, Ada.Strings.Unbounded;
+    use LEA_GWin.Messages;
     line_msg_col_width : constant := 70;
     col_msg_col_width  : constant := 40;
     search_for_col_width : constant :=
@@ -1068,7 +1071,8 @@ package body LEA_GWin.Editor is
           ml.Item_Data
             (count,
              new HAC_Sys.Defs.Diagnostic_Kit'
-               (file_name => To_Unbounded_String (G2S (GU2G (MDI_Child.ID.file_name))),
+               (file_name =>
+                  Ada.Strings.Unbounded.To_Unbounded_String (G2S (GU2G (MDI_Child.ID.file_name))),
                 location  =>
                   (line         => line + 1,  --  Lines in Diagnostic_Kit are 1-based.
                    column_start => col,
@@ -1318,6 +1322,90 @@ package body LEA_GWin.Editor is
     --  end;
     --  Close(f);
   end Save_Text;
+
+  procedure Rich_Copy (Editor : in out LEA_Scintilla_Type) is
+    start, stop : Position;
+    limit : constant := 1_000_000;
+    old_style, cur_style : Integer := -1;
+
+    use Ada.Strings.Unbounded, LEA_Common.Color_Themes;
+
+    html : Unbounded_String;  --  HTML is 8-bit characters (usually, UTF-8).
+
+    procedure Append_Color (c : Color_Topic) is
+    begin
+      Append (html, "<font color=""#" & HTML_Image (Theme_Color (Default, c)) & """>");
+    end Append_Color;
+
+    procedure Dump is
+      use Ada.Text_IO;
+      html_file : File_Type;
+    begin
+      Create (html_file, Out_File, "formatted.html");
+      Put (html_file, Ada.Strings.Unbounded.To_String (html));
+      Close (html_file);
+    end Dump;
+
+    debug : constant Boolean := False;
+
+    function Is_Special_Style (x : Integer) return Boolean is
+    (x in
+       SCE_ADA_CHARACTER | SCE_ADA_COMMENTLINE | SCE_ADA_IDENTIFIER |
+       SCE_ADA_NUMBER | SCE_ADA_STRING | SCE_ADA_WORD);
+
+  begin
+    if Editor.Get_Selections = 1 then
+      start := Editor.Get_Selection_Start;
+      stop  := Editor.Get_Selection_End;
+      if stop - start <= limit then
+        declare
+          plain : constant GString := Editor.Get_Text_Range (Min => start, Max => stop);
+        begin
+          Append (html, "<!--StartFragment --><pre><font face=""Consolas"">");
+          for i in start .. stop loop
+            cur_style := Editor.Get_Style_At (i);
+            if old_style /= cur_style then
+              if Is_Special_Style (old_style) then
+                Append (html, "</font>");
+              end if;
+              case cur_style is
+                when SCE_ADA_CHARACTER   => Append_Color (character_literal);
+                when SCE_ADA_COMMENTLINE => Append_Color (comment);
+                when SCE_ADA_IDENTIFIER  => Append_Color (foreground);
+                when SCE_ADA_NUMBER      => Append_Color (number);
+                when SCE_ADA_STRING      => Append_Color (string_literal);
+                when SCE_ADA_WORD        => Append_Color (keyword);
+                when others =>
+                  null;
+              end case;
+            end if;
+            old_style := cur_style;
+            Append (html, To_UTF_8 ((1 => Editor.Get_Char_At (i))));
+          end loop;
+          if Is_Special_Style (cur_style) then
+            Append (html, "</font>");
+          end if;
+          Append (html, "</font></pre><!--EndFragment-->");
+          GWindows.Clipboard.Clipboard_HTML
+            (Editor, S2G (Ada.Strings.Unbounded.To_String (html)), GWindows.Clipboard.First_Format);
+          if debug then
+            Dump;
+          end if;
+
+          --  Copy as plain text.
+          --  Trick: use `html` instead of `plain` for seeing/debugging the HTML code!
+          GWindows.Clipboard.Clipboard_Text (Editor, plain, GWindows.Clipboard.Last_Format);
+        end;
+      else
+        --  Selection is too large, this "rich" copy would take too long.
+        Editor.Copy;
+      end if;
+    else
+      --  Zero selection or multiple selections (e.g. by vertical editing):
+      --  we use Scintilla's own Copy method.
+      Editor.Copy;
+    end if;
+  end Rich_Copy;
 
   procedure Set_Scintilla_Syntax (Editor : in out LEA_Scintilla_Type) is
     use LEA_Common.Syntax;

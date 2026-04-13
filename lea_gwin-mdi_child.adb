@@ -837,7 +837,7 @@ package body LEA_GWin.MDI_Child is
         Window.editor.Redo;
         Window.Update_Information (toolbar_and_menu);  --  Possibly disable Redo if no more available
       when IDM_Cut =>           Window.editor.Cut;
-      when IDM_Copy =>          Window.editor.Copy;
+      when IDM_Copy =>          Window.editor.Rich_Copy;
       when IDM_Paste =>         Window.editor.Paste;
       when IDM_Select_all =>    Window.editor.Select_All;
       when IDM_Indent =>

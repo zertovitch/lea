@@ -70,7 +70,7 @@ Menu_MDI_Child MENU
         MENUITEM "&Redo\tCtrl+Y", IDM_Redo
         MENUITEM SEPARATOR
         MENUITEM "Cu&t to clipboard\tCtrl+X or Shift+Del", IDM_Cut
-        MENUITEM "&Copy to clipboard\tCtrl+C or Ctrl+Ins", IDM_Copy
+        MENUITEM "&Copy to clipboard\tText Only: Ctrl+C or Ctrl+Ins", IDM_Copy
         MENUITEM "Copy message &list to clipboard", IDM_Copy_Messages
         MENUITEM "&Paste from clipboard\tCtrl+V or Shift+Ins", IDM_Paste
         MENUITEM SEPARATOR
@@ -169,7 +169,7 @@ Menu_MDI_Main MENU
         MENUITEM "&Redo\tCtrl+Y", IDM_Redo, INACTIVE
         MENUITEM SEPARATOR
         MENUITEM "Cu&t to clipboard\tCtrl+X or Shift+Del", IDM_Cut, INACTIVE
-        MENUITEM "&Copy to clipboard\tCtrl+C or Ctrl+Ins", IDM_Copy, INACTIVE
+        MENUITEM "&Copy to clipboard\tText Only: Ctrl+C or Ctrl+Ins", IDM_Copy, INACTIVE
         MENUITEM "Copy message &list to clipboard", IDM_Copy_Messages
         MENUITEM "&Paste from clipboard\tCtrl+V or Shift+Ins", IDM_Paste, INACTIVE
         MENUITEM SEPARATOR
