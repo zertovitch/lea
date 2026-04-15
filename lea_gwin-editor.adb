@@ -1353,57 +1353,90 @@ package body LEA_GWin.Editor is
        SCE_ADA_CHARACTER | SCE_ADA_COMMENTLINE | SCE_ADA_IDENTIFIER |
        SCE_ADA_NUMBER | SCE_ADA_STRING | SCE_ADA_WORD);
 
+    procedure Perform_Rich_Copy is
+      plain : constant GString := Editor.Get_Text_Range (Min => start, Max => stop);
+    begin
+      Append (html, "<!--StartFragment --><pre><font face=""Consolas"">");
+      for i in start .. stop loop
+        cur_style := Editor.Get_Style_At (i);
+
+        if old_style /= cur_style then
+          if Is_Special_Style (old_style) then
+            Append (html, "</font>");
+            if old_style = SCE_ADA_WORD then
+              Append (html, "</b>");
+            end if;
+          end if;
+          case cur_style is
+            when SCE_ADA_CHARACTER   => Append_Color (character_literal);
+            when SCE_ADA_COMMENTLINE => Append_Color (comment);
+            when SCE_ADA_IDENTIFIER  => Append_Color (foreground);
+            when SCE_ADA_NUMBER      => Append_Color (number);
+            when SCE_ADA_STRING      => Append_Color (string_literal);
+            when SCE_ADA_WORD        => Append (html, "<b>"); Append_Color (keyword);
+            when others =>
+              null;
+          end case;
+        end if;
+
+        old_style := cur_style;
+        Append (html, To_UTF_8 ((1 => Editor.Get_Char_At (i))));
+      end loop;
+      if Is_Special_Style (cur_style) then
+        Append (html, "</font>");
+      end if;
+      Append (html, "</font></pre><!--EndFragment-->");
+      GWindows.Clipboard.Clipboard_HTML
+        (Editor, S2G (Ada.Strings.Unbounded.To_String (html)), GWindows.Clipboard.First_Format);
+      if debug then
+        Dump;
+      end if;
+
+      --  Copy as plain text too (another format).
+      --  Trick: use `html` instead of `plain` for seeing/debugging the HTML code!
+      GWindows.Clipboard.Clipboard_Text (Editor, plain, GWindows.Clipboard.Last_Format);
+    end Perform_Rich_Copy;
+
+    procedure Perform_Fallback_Copy is
+    begin
+      Editor.Copy;
+    end Perform_Fallback_Copy;
+
+    no_selection : Boolean;
+
   begin
     if Editor.Get_Selections = 1 then
+
       start := Editor.Get_Selection_Start;
       stop  := Editor.Get_Selection_End;
-      if stop - start <= limit then
-        declare
-          plain : constant GString := Editor.Get_Text_Range (Min => start, Max => stop);
-        begin
-          Append (html, "<!--StartFragment --><pre><font face=""Consolas"">");
-          for i in start .. stop loop
-            cur_style := Editor.Get_Style_At (i);
-            if old_style /= cur_style then
-              if Is_Special_Style (old_style) then
-                Append (html, "</font>");
-              end if;
-              case cur_style is
-                when SCE_ADA_CHARACTER   => Append_Color (character_literal);
-                when SCE_ADA_COMMENTLINE => Append_Color (comment);
-                when SCE_ADA_IDENTIFIER  => Append_Color (foreground);
-                when SCE_ADA_NUMBER      => Append_Color (number);
-                when SCE_ADA_STRING      => Append_Color (string_literal);
-                when SCE_ADA_WORD        => Append_Color (keyword);
-                when others =>
-                  null;
-              end case;
-            end if;
-            old_style := cur_style;
-            Append (html, To_UTF_8 ((1 => Editor.Get_Char_At (i))));
-          end loop;
-          if Is_Special_Style (cur_style) then
-            Append (html, "</font>");
-          end if;
-          Append (html, "</font></pre><!--EndFragment-->");
-          GWindows.Clipboard.Clipboard_HTML
-            (Editor, S2G (Ada.Strings.Unbounded.To_String (html)), GWindows.Clipboard.First_Format);
-          if debug then
-            Dump;
-          end if;
 
-          --  Copy as plain text.
-          --  Trick: use `html` instead of `plain` for seeing/debugging the HTML code!
-          GWindows.Clipboard.Clipboard_Text (Editor, plain, GWindows.Clipboard.Last_Format);
-        end;
+      no_selection := start = stop;
+      if no_selection then
+        --  We copy the current line (VS / VS Code - style).
+        start := Editor.Position_From_Line (Editor.Get_Current_Line_Number);
+        stop  := Editor.Get_Line_End_Position (Editor.Get_Current_Line_Number) + Editor.EOL'Length;
+      end if;
+
+      if stop - start <= limit then
+        Perform_Rich_Copy;
       else
         --  Selection is too large, this "rich" copy would take too long.
-        Editor.Copy;
+        Perform_Fallback_Copy;
       end if;
+
+      if no_selection then
+        --  After the copy we go at the start of the current line, so we are
+        --  ready for pasting the copied line, after n = 0, -1, 1, -2, ...
+        --  vertical arrow key moves.
+        Editor.Set_Selection_Start (start);
+        Editor.Set_Selection_End (start);
+        Editor.Set_Current_Pos (start);
+      end if;
+
     else
-      --  Zero selection or multiple selections (e.g. by vertical editing):
+      --  Multiple selections (e.g. by vertical editing):
       --  we use Scintilla's own Copy method.
-      Editor.Copy;
+      Perform_Fallback_Copy;
     end if;
   end Rich_Copy;
 

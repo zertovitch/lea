@@ -100,7 +100,7 @@ package body LEA_GWin.MDI_Child is
         Window.editor.Get_Selection_Start < Window.editor.Get_Selection_End;
     begin
       State (Window.menu.Main, Command, IDM_Cut,                    bool_to_state (is_any_selection));
-      State (Window.menu.Main, Command, IDM_Copy,                   bool_to_state (is_any_selection));
+      State (Window.menu.Main, Command, IDM_Copy,                   bool_to_state (True));  --  No selection -> copy current line.
       State (Window.menu.Main, Command, IDM_Paste,                  bool_to_state (Window.editor.Can_Paste));
       State (Window.menu.Main, Command, IDM_Undo,                   bool_to_state (Window.editor.Can_Undo));
       State (Window.menu.Main, Command, IDM_Redo,                   bool_to_state (Window.editor.Can_Redo));
@@ -232,7 +232,7 @@ package body LEA_GWin.MDI_Child is
       bar.Enabled (IDM_Save_File, Window.editor.modified);
       bar.Enabled (IDM_Save_All, any_modified);
       bar.Enabled (IDM_Cut, is_any_selection);
-      bar.Enabled (IDM_Copy, is_any_selection);
+      bar.Enabled (IDM_Copy, True);  --  No selection -> copy current line.
       bar.Enabled (IDM_Paste, Window.editor.Can_Paste);
       bar.Enabled (IDM_Indent, True);
       bar.Enabled (IDM_Unindent, True);
@@ -979,8 +979,9 @@ package body LEA_GWin.MDI_Child is
     Window.context_menu := Create_Popup;
     if is_any_selection then
       Append_Item (Window.context_menu, "Cut",    IDM_Cut);
-      Append_Item (Window.context_menu, "Copy",   IDM_Copy);
     end if;
+    --  No selection -> copy current line.
+    Append_Item (Window.context_menu, "Copy",   IDM_Copy);
     if can_paste then
       Append_Item (Window.context_menu, "Paste",  IDM_Paste);
     end if;
