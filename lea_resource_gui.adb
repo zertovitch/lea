@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: LEA.rc
---  Transcription time: 2026/04/13  19:37:03
+--  Transcription time: 2026/04/17  03:06:08
 --  GWenerator project file: lea.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -71,8 +71,8 @@ package body LEA_Resource_GUI is
     Append_Item (New_Menu.Popup_0003, "&Redo" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+Y", IDM_Redo);
     Append_Separator (New_Menu.Popup_0003);
     Append_Item (New_Menu.Popup_0003, "Cu&t to clipboard" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+X or Shift+Del", IDM_Cut);
-    Append_Item (New_Menu.Popup_0003, "&Copy to clipboard" & To_GString_From_String ((1 => ASCII.HT)) & "Text Only: Ctrl+C or Ctrl+Ins", IDM_Copy);
-    Append_Item (New_Menu.Popup_0003, "Copy message &list to clipboard", IDM_Copy_Messages);
+    Append_Item (New_Menu.Popup_0003, "&Copy to clipboard" & To_GString_From_String ((1 => ASCII.HT)) & "(Text Only) Ctrl+C or Ctrl+Ins", IDM_Copy);
+    Append_Item (New_Menu.Popup_0003, "Copy me&ssages to clipboard", IDM_Copy_Messages);
     Append_Item (New_Menu.Popup_0003, "&Paste from clipboard" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+V or Shift+Ins", IDM_Paste);
     Append_Separator (New_Menu.Popup_0003);
     Append_Item (New_Menu.Popup_0003, "&Duplicate line or selection" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+D", IDM_Duplicate);
@@ -167,9 +167,9 @@ package body LEA_Resource_GUI is
     Append_Separator (New_Menu.Popup_0003);
     Append_Item (New_Menu.Popup_0003, "Cu&t to clipboard" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+X or Shift+Del", IDM_Cut);
     State (New_Menu.Popup_0003, Command, IDM_Cut, Disabled);
-    Append_Item (New_Menu.Popup_0003, "&Copy to clipboard" & To_GString_From_String ((1 => ASCII.HT)) & "Text Only: Ctrl+C or Ctrl+Ins", IDM_Copy);
+    Append_Item (New_Menu.Popup_0003, "&Copy to clipboard" & To_GString_From_String ((1 => ASCII.HT)) & "(Text Only) Ctrl+C or Ctrl+Ins", IDM_Copy);
     State (New_Menu.Popup_0003, Command, IDM_Copy, Disabled);
-    Append_Item (New_Menu.Popup_0003, "Copy message &list to clipboard", IDM_Copy_Messages);
+    Append_Item (New_Menu.Popup_0003, "Copy me&ssages to clipboard", IDM_Copy_Messages);
     Append_Item (New_Menu.Popup_0003, "&Paste from clipboard" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+V or Shift+Ins", IDM_Paste);
     State (New_Menu.Popup_0003, Command, IDM_Paste, Disabled);
     Append_Separator (New_Menu.Popup_0003);
