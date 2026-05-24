@@ -147,7 +147,7 @@ project LEA is
       for Default_Switches ("ada") use ("-Es");
    end Binder;
 
-   Linker_Common_Options := ("-g", "lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+   Linker_Common_Options := ("-g", "lea.rbj", "memorymodule.o", "-Xlinker", "--stack=0x2000000,0x20000");
 
    Linker_Small_Options :=
      Linker_Common_Options & ("-Wl,--gc-sections");
