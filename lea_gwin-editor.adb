@@ -1353,10 +1353,25 @@ package body LEA_GWin.Editor is
        SCE_ADA_CHARACTER | SCE_ADA_COMMENTLINE | SCE_ADA_IDENTIFIER |
        SCE_ADA_NUMBER | SCE_ADA_STRING | SCE_ADA_WORD);
 
+    function HTML_Escape_Codes (s : String) return String is
+      res : HAT.VString;
+    begin
+      for c of s loop
+        case c is
+          when '&' => res := res & "&amp;";
+          when '<' => res := res & "&lt;";
+          when '>' => res := res & "&gt;";
+          when others => res := res & c;
+        end case;
+      end loop;
+      return HAT.To_String (res);
+    end HTML_Escape_Codes;
+
     procedure Perform_Rich_Copy is
       plain : constant GString := Editor.Get_Text_Range (Min => start, Max => stop);
     begin
       Append (html, "<!--StartFragment --><pre><font face=""Consolas"">");
+
       for i in start .. stop loop
         cur_style := Editor.Get_Style_At (i);
 
@@ -1380,14 +1395,17 @@ package body LEA_GWin.Editor is
         end if;
 
         old_style := cur_style;
-        Append (html, To_UTF_8 ((1 => Editor.Get_Char_At (i))));
+        Append (html, HTML_Escape_Codes (To_UTF_8 ((1 => Editor.Get_Char_At (i)))));
       end loop;
+
       if Is_Special_Style (cur_style) then
         Append (html, "</font>");
       end if;
       Append (html, "</font></pre><!--EndFragment-->");
+
       GWindows.Clipboard.Clipboard_HTML
         (Editor, S2G (Ada.Strings.Unbounded.To_String (html)), GWindows.Clipboard.First_Format);
+
       if debug then
         Dump;
       end if;
