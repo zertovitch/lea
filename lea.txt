@@ -22,4 +22,10 @@ How to build & modify LEA
 
   * Read the comments in the lea.gpr project file 
       (just open it as a text file) for further instructions.
-  
+
+
+License / Warning / Legal stuff
+===============================
+
+There is NO WARRANTY in the LEA software.
+LEA is licensed under the MIT License.
