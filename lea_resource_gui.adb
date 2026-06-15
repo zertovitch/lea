@@ -16,6 +16,7 @@ with GWindows.Drawing;                  use GWindows.Drawing;
 with GWindows.Drawing_Objects;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with System;
+with Win32_Types;
 
 pragma Warnings ("U");  --  turn off warnings for unused entity
 
@@ -1311,11 +1312,11 @@ package body LEA_Resource_GUI is
      type Face_Name_Type is array (1 .. 32) of GWindows.GChar_C;
 
      type LOGFONT is record
-       lfHeight         : Interfaces.C.long;
-       lfWidth          : Interfaces.C.long;
-       lfEscapement     : Interfaces.C.long;
-       lfOrientation    : Interfaces.C.long;
-       lfWeight         : Interfaces.C.long;
+       lfHeight         : Win32_Types.Long;
+       lfWidth          : Win32_Types.Long;
+       lfEscapement     : Win32_Types.Long;
+       lfOrientation    : Win32_Types.Long;
+       lfWeight         : Win32_Types.Long;
        lfItalic         : Interfaces.C.char;
        lfUnderline      : Interfaces.C.char;
        lfStrikeOut      : Interfaces.C.char;
@@ -1339,12 +1340,14 @@ package body LEA_Resource_GUI is
        return Interfaces.C.int;
      pragma Import (StdCall, GetObject,
                       "GetObject" & Character_Mode_Identifier);
+     pragma Machine_Attribute (GetObject, "ms_abi");
 
      function CreateFontIndirect
        (lpvObject : LPVOID                := Log_of_current_font'Address)
        return GWindows.Types.Handle;
      pragma Import (StdCall, CreateFontIndirect,
                       "CreateFontIndirect" & Character_Mode_Identifier);
+     pragma Machine_Attribute (CreateFontIndirect, "ms_abi");
 
     begin
       GWindows.Drawing_Objects.Create_Stock_Font
