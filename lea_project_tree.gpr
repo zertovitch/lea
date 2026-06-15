@@ -51,11 +51,11 @@
 --  *             C:\Ada\ini;
 --  *             C:\Ada\zip-ada
 
-with "HAC";
-with "Ini_Files";
-with "ZipAda";
+with "hac";
+with "ini_files";
+with "zipada";
 
-project LEA_Project_Tree extends "GWindows_Contrib" is
+project LEA_Project_Tree extends "gwindows_contrib" is
 
    --  The `extends "GWindows_Contrib"` instead of `with "GWindows_Contrib"`
    --  is a trick to handle the dependency of GWindows.Persistence_IO on the
@@ -73,6 +73,9 @@ project LEA_Project_Tree extends "GWindows_Contrib" is
       "Release");
 
    LEA_Build_Mode : LEA_Build_Mode_Type := external ("LEA_Build_Mode", "Debug");
+
+   type Platform_Type is ("Windows", "Winelib");
+   Platform : Platform_Type := external ("PLATFORM", "Windows");
 
    for Main use ("lea_without_data.adb", "sample_catalogue.adb");
    for Source_Dirs use (".");
@@ -134,23 +137,29 @@ project LEA_Project_Tree extends "GWindows_Contrib" is
       "-ffunction-sections") &
      Compiler_Common_Options;
 
+   Winelib_Compiler_Extra := ();
+   case Platform is
+      when "Winelib" => Winelib_Compiler_Extra := ("-fPIC");
+      when "Windows" => null;
+   end case;
+
    package Compiler is
       case LEA_Build_Mode is
          when "Debug" | "Debug_MinGW" =>
-            for Default_Switches ("ada") use Compiler_Debug_Options;
+            for Default_Switches ("ada") use Compiler_Debug_Options & Winelib_Compiler_Extra;
             for Local_Configuration_Pragmas use project'Project_Dir & "debug.pra";
          when "Fast"  | "Fast_MinGW" =>
-            for Default_Switches ("ada") use Compiler_Fast_Options;
+            for Default_Switches ("ada") use Compiler_Fast_Options & Winelib_Compiler_Extra;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small" | "Small_MinGW" =>
-            for Default_Switches ("ada") use Compiler_Small_Options;
+            for Default_Switches ("ada") use Compiler_Small_Options & Winelib_Compiler_Extra;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
          when "Small_Unchecked" =>
-            for Default_Switches ("ada") use Compiler_Small_Options & ("-gnatp");
+            for Default_Switches ("ada") use Compiler_Small_Options & ("-gnatp") & Winelib_Compiler_Extra;
          when "Profiling" =>
-            for Default_Switches ("ada") use Compiler_Profiling_Options;
+            for Default_Switches ("ada") use Compiler_Profiling_Options & Winelib_Compiler_Extra;
          when "Release" =>
-            for Default_Switches ("ada") use Compiler_Small_Options;
+            for Default_Switches ("ada") use Compiler_Small_Options & Winelib_Compiler_Extra;
             for Local_Configuration_Pragmas use project'Project_Dir & "lea_elim.pra";
       end case;
    end Compiler;
@@ -160,21 +169,44 @@ project LEA_Project_Tree extends "GWindows_Contrib" is
       for Default_Switches ("ada") use ("-Es");
    end Binder;
 
-   Linker_Common_Options := ("-g", "lea.rbj", "memorymodule.o", "-Xlinker", "--stack=0x2000000,0x20000");
+   Linker_Common_Options := ("-g");
+   case Platform is
+      when "Windows" =>
+         Linker_Common_Options := Linker_Common_Options &
+           ("lea.rbj", "memorymodule.o", "-Xlinker", "--stack=0x2000000,0x20000");
+      when "Winelib" =>
+         Linker_Common_Options := Linker_Common_Options &
+           ("memorymodule_stub.o");
+   end case;
 
    Linker_Small_Options :=
      Linker_Common_Options & ("-Wl,--gc-sections");
 
+   Winelib_Linker_Extra := ();
+   case Platform is
+      when "Winelib" =>
+         Winelib_Linker_Extra :=
+           ("-lgnat", "-L" & external ("ADALIB_DIR"));
+      when "Windows" =>
+         null;
+   end case;
+
    package Linker is
+      case Platform is
+         when "Winelib" =>
+            for Driver use "winegcc";
+            for Max_Command_Line_Length use "300000";
+         when "Windows" => null;
+      end case;
       case LEA_Build_Mode is
          when "Debug" | "Debug_MinGW" =>
-            for Default_Switches ("ada") use Linker_Common_Options;
+            for Default_Switches ("ada") use Linker_Common_Options & Winelib_Linker_Extra;
          when "Fast" | "Fast_MinGW" |
               "Small" | "Small_MinGW" | "Small_Unchecked" |
               "Release" =>
-            for Default_Switches ("ada") use Linker_Small_Options & ("-mwindows", "-s");
+            for Default_Switches ("ada") use Linker_Small_Options & ("-mwindows", "-s") & Winelib_Linker_Extra;
          when "Profiling" =>
-            for Default_Switches ("ada") use Linker_Small_Options & ("-pg");
+            for Default_Switches ("ada") use Linker_Small_Options & ("-pg") & Winelib_Linker_Extra;
        end case;
    end Linker;
 
