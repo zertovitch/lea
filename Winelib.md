@@ -5,12 +5,23 @@ LEA-specific changes for Winelib.  See gwindows/docs/Winelib.txt
 for the general framework porting documentation.
 
 
-MemoryLoadLibrary Stub
-----------------------
+MemoryModule (vendored)
+-----------------------
 
-  LEA's installer references MemoryLoadLibrary from the
-  MemoryModule C library (Windows-only).  A no-op C stub is
-  provided for Winelib (memorymodule_stub.c), linked via lea.gpr.
+  LEA loads SciLexer.dll from a ZIP archive appended to the
+  executable, using the MemoryModule C library to load the DLL
+  from memory.  The source is vendored directly:
+
+    MemoryModule.c, MemoryModule.h  — from github.com/fancycode/MemoryModule
+    MEMORYMODULE_LICENSE            — MPL-2.0 license text
+
+  On Windows, the pre-compiled memorymodule.o (COFF) is linked.
+  On Winelib, compile the vendored source with winegcc:
+
+    winegcc -c -O2 -fPIC MemoryModule.c -o memorymodule.o
+
+  Both GPR variants (lea.gpr and lea_project_tree.gpr) link
+  memorymodule.o on both platforms.
 
 
 Generic Body Trampoline ('Code_Address)
@@ -41,6 +52,7 @@ Wine Path vs POSIX Path (To_Native_Path)
   Wide_String) strips the drive prefix and converts backslashes
   on Winelib; no-op on Windows.  Applied in:
 
+  - lea_gwin-installer.adb: executable path for Scintilla ZIP loading
   - lea_gwin-embedded_texts.adb: executable path for ZIP loading
   - lea_gwin-mdi_main.adb: file paths from Open dialog and drop
   - lea_gwin-mdi_child.adb: file path from Save As dialog
@@ -87,8 +99,5 @@ Building and Running
   After building with either option, create lea.exe with the
   embedded help and samples ZIP appended:
 
-    cp lea_without_data.exe.so lea.exe.so
-    cat _lea_data.zip >> lea.exe.so
-    sed 's/lea_without_data\.exe\.so/lea.exe.so/' lea_without_data.exe > lea.exe
-    chmod +x lea.exe
+    ./make_lea_exe.sh
     ./lea.exe

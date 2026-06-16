@@ -169,14 +169,12 @@ project LEA_Project_Tree extends "gwindows_contrib" is
       for Default_Switches ("ada") use ("-Es");
    end Binder;
 
-   Linker_Common_Options := ("-g");
+   Linker_Common_Options := ("-g", "memorymodule.o");
    case Platform is
       when "Windows" =>
          Linker_Common_Options := Linker_Common_Options &
-           ("lea.rbj", "memorymodule.o", "-Xlinker", "--stack=0x2000000,0x20000");
-      when "Winelib" =>
-         Linker_Common_Options := Linker_Common_Options &
-           ("memorymodule_stub.o");
+           ("lea.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+      when others => null;
    end case;
 
    Linker_Small_Options :=
