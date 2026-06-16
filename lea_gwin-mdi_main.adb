@@ -28,6 +28,7 @@ with Ada.Command_Line,
      Ada.Unchecked_Deallocation,
      Ada.Wide_Characters.Handling;
 with HAC_Sys.Librarian;
+with Win32_Types;
 
 package body LEA_GWin.MDI_Main is
 
@@ -112,12 +113,13 @@ package body LEA_GWin.MDI_Main is
      Line         :        Integer            := -1;
      Col_a, Col_z :        Scintilla.Position := -1)
   is
+    native_name : constant String := Win32_Types.To_Native_Path (G2S (File_Name));
     is_open, file_loaded : Boolean;
     mru_line : Integer := -1;
     new_pos_a, new_pos_z : GWindows.Scintilla.Position;
     New_ID : ID_Type;
     New_Window : MDI_Child_Access;
-    full_name : constant GString := S2G (Ada.Directories.Full_Name (G2S (File_Name)));
+    full_name : constant GString := S2G (Ada.Directories.Full_Name (native_name));
     use GWindows.Message_Boxes;
     use type GString_Unbounded;
   begin
@@ -137,7 +139,7 @@ package body LEA_GWin.MDI_Main is
     begin
       New_Window.editor.Load_Text;
       New_Window.editor.Empty_Undo_Buffer;
-      New_Window.last_save_time := Ada.Directories.Modification_Time (G2S (File_Name));
+      New_Window.last_save_time := Ada.Directories.Modification_Time (native_name);
       file_loaded := True;
       To_Upper (upper_name);
       for m of Window.MRU.Item loop
@@ -192,11 +194,13 @@ package body LEA_GWin.MDI_Main is
      Line         :        Integer := -1;
      Col_a, Col_z :        Integer := -1)
   is
+    Native_Name : constant GString :=
+      Win32_Types.To_Native_Path (File_Name);
   begin
     Open_Child_Window_And_Load
       (Window,
-       File_Name,
-       Office_Applications.Shorten_File_Name (File_Name, 50),
+       Native_Name,
+       Office_Applications.Shorten_File_Name (Native_Name, 50),
        Line,
        Scintilla.Position (Col_a),
        Scintilla.Position (Col_z));

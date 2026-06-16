@@ -10,6 +10,7 @@ with GWindows.Base,
      GWindows.Message_Boxes;
 
 with Ada.Command_Line;
+with Win32_Types;
 
 package body LEA_GWin.Embedded_Texts is
 
@@ -22,7 +23,8 @@ package body LEA_GWin.Embedded_Texts is
     use LEA_Common, LEA_Common.Syntax, LEA_GWin.MDI_Child,
         HAT,
         GWindows.Message_Boxes, Zip_Streams;
-    lea_exe : constant String := Ada.Command_Line.Command_Name;
+    lea_exe : constant String :=
+      Win32_Types.To_Native_Path (Ada.Command_Line.Command_Name);
     zi : Zip.Zip_Info;
     mem_stream_unpacked : aliased Memory_Zipstream;
     unpacked : HAT.VString;
@@ -112,7 +114,7 @@ package body LEA_GWin.Embedded_Texts is
     New_Window.Finish_subwindow_opening;
     New_Window.editor.Focus;
   exception
-    when Zip.Archive_corrupted    =>
+    when Zip.Archive_open_error | Zip.Archive_corrupted =>
       Err_Msg ("embedded archive is damaged or absent.");
     when Zip.Entry_name_not_found =>
       --  This happens when LEA's maintainer forgot to run `sample_catalogue.exe`,

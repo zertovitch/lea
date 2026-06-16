@@ -24,6 +24,7 @@ with GWindows.Base,
      GWindows.Scintilla;
 
 with GWin_Util;
+with Win32_Types;
 
 with Ada.Characters.Handling,
      Ada.Directories,
@@ -526,6 +527,8 @@ package body LEA_GWin.MDI_Child is
     if not Success then
       return;
     end if;
+    New_File_Name :=
+      To_GString_Unbounded (Win32_Types.To_Native_Path (GU2G (New_File_Name)));
     if File_Exists (To_UTF_8 (GU2G (New_File_Name))) then
       if Message_Box (
         Window,

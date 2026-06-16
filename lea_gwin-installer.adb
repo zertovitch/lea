@@ -8,6 +8,7 @@ with Ada.Command_Line,
      Ada.Strings.Unbounded;
 with Interfaces.C;
 with System;
+with Win32_Types;
 
 package body LEA_GWin.Installer is
 
@@ -25,7 +26,7 @@ package body LEA_GWin.Installer is
 
   procedure Load_Scintilla_DLL_from_Memory is
     use Ada.Command_Line, GWindows.Message_Boxes;
-    lea_exe       : constant String := Command_Name;
+    lea_exe       : constant String := Win32_Types.To_Native_Path (Command_Name);
     scintilla_dll : constant String := "SciLexer.dll";
     z : Zip.Zip_Info;
     m : Zip_Streams.Memory_Zipstream;
