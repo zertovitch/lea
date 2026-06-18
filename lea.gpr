@@ -43,7 +43,7 @@
 --  *       Mirror URL: https://github.com/zertovitch/zip-ada
 --  * 
 --  *  Example: GNAT_SOURCE_PATH=
---  *  =======    C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;
+--  *  =======    C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;C:\Ada\gnavi\gnatcom\framework\platform\windows;
 --  *             C:\Ada\hac\src;C:\Ada\hac\src\compile;C:\Ada\hac\src\compile\emit;C:\Ada\hac\src\execute;C:\Ada\hac\src\manage;
 --  *             C:\Ada\ini;
 --  *             C:\Ada\zip-ada\zip_lib;
