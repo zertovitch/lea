@@ -1698,7 +1698,6 @@ pragma Eliminate (HAC_Sys.Interfacing, To_Native, Source_Location => "hac_sys-in
 pragma Eliminate (HAC_Sys.Interfacing, To_Native, Source_Location => "hac_sys-interfacing.ads:46");
 pragma Eliminate (HAC_Sys.Interfacing, To_Native, Source_Location => "hac_sys-interfacing.ads:47");
 pragma Eliminate (HAC_Sys.Interfacing, Register, Source_Location => "hac_sys-interfacing.ads:77");
-pragma Eliminate (HAC_Sys.Interfacing, Convert, Source_Location => "hac_sys-interfacing.adb:107");
 pragma Eliminate (HAC_Sys.Interfacing, Deregister, Source_Location => "hac_sys-interfacing.ads:82");
 pragma Eliminate (HAC_Sys.Librarian, Has_Element, Source_Location => "a-convec.ads:70[hac_sys-librarian.ads:63]");
 pragma Eliminate (HAC_Sys.Librarian, To_Vector, Source_Location => "a-convec.ads:79[hac_sys-librarian.ads:63]");
