@@ -128,7 +128,7 @@ package body LEA_GWin.Modal_Dialogs is
           --  The list might be filtered by topic, so the row count
           --  is not always the sample count.
           row := row + 1;
-          dir (row) := directory (sel_topic);
+          dir (row) := sample_directory (sel_topic);
           fn (row)  := standard_sample (i).name;
         end if;
       end loop;

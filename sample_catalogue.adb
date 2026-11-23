@@ -12,7 +12,7 @@ procedure Sample_catalogue is
 begin
   HAT.Shell_Execute ("mkdir " & hac_samples_dir);
   for topic in Sample_Topic loop
-    HAT.Shell_Execute ("mkdir " & hac_samples_dir & sep & directory (topic));
+    HAT.Shell_Execute ("mkdir " & hac_samples_dir & sep & sample_directory (topic));
   end loop;
   --
   for i in standard_sample'Range loop
@@ -26,12 +26,12 @@ begin
     end case;
     from := hac_project_dir & sep & from_subdir & sep & standard_sample (i).name;
     to   := hac_samples_dir & sep &
-              directory (standard_sample (i).topic) & sep & standard_sample (i).name;
+              sample_directory (standard_sample (i).topic) & sep & standard_sample (i).name;
     HAT.Copy_File (from, to);
   end loop;
   --
   for topic in Sample_Topic loop
-    samples := samples & hac_samples_dir & sep & directory (topic) & sep & "* ";
+    samples := samples & hac_samples_dir & sep & sample_directory (topic) & sep & "* ";
   end loop;
   HAT.Shell_Execute (+"zipada -eps _lea_data_new.zip SciLexer.dll lea_help.txt " & samples);
 end Sample_catalogue;

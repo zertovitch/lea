@@ -66,7 +66,7 @@ package LEA_Common.HAC_Samples is
       (Compatibility, +"hat-non_standard.adb", +"GNAT-specific part of HAT's body")
     );
 
-  directory : constant array (Sample_Topic) of VString :=
+  sample_directory : constant array (Sample_Topic) of VString :=
      (Algorithm     => +"algorithms",
       Mathematics   => +"mathematics",
       Script        => +"scripts",
