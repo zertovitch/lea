@@ -1965,7 +1965,6 @@ pragma Eliminate (HAC_Sys.PCode.Interpreter, Start_Interpreter, Source_Location 
 pragma Eliminate (HAC_Sys.PCode.Interpreter, Do_HAT_Function, Source_Location => "hac_sys-pcode-interpreter.adb:48[hac_sys-pcode-interpreter.adb:887]");
 pragma Eliminate (HAC_Sys.PCode.Interpreter, Do_Text_Read, Source_Location => "hac_sys-pcode-interpreter.adb:101[hac_sys-pcode-interpreter.adb:887]");
 pragma Eliminate (HAC_Sys.PCode.Interpreter, Do_Write_Formatted, Source_Location => "hac_sys-pcode-interpreter.adb:191[hac_sys-pcode-interpreter.adb:887]");
-pragma Eliminate (HAT, Put, Source_Location => "hat.ads:281");
 pragma Eliminate (HAC_Sys.PCode.Interpreter, Do_Code_for_Automatic_Initialization, Source_Location => "hac_sys-pcode-interpreter.adb:296[hac_sys-pcode-interpreter.adb:887]");
 pragma Eliminate (HAC_Sys.PCode.Interpreter, Do_HAT_Procedure, Source_Location => "hac_sys-pcode-interpreter.adb:308[hac_sys-pcode-interpreter.adb:887]");
 pragma Eliminate (HAC_Sys.PCode.Interpreter, Switch_to_Text_Files, Source_Location => "hac_sys-pcode-interpreter.adb:326[hac_sys-pcode-interpreter.adb:887]");
